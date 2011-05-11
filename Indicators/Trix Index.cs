@@ -108,7 +108,7 @@ namespace Forex_Strategy_Builder
 
             double[] adSignal = MovingAverage(nPeriod, 0, maMethod, adTrix);
 
-            // adHistogram reprezents the Trix Index oscillator
+            // adHistogram represents the Trix Index oscillator
             double[] adHistogram = new double[Bars];
             for (int iBar = iFirstBar; iBar < Bars; iBar++)
                 adHistogram[iBar] = adTrix[iBar] - adSignal[iBar];

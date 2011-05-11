@@ -12,7 +12,7 @@ namespace Forex_Strategy_Builder
     /// The implementation of logic is in Market.AnalyseClose(int iBar)
     /// </summary>
     public class Stop_Loss : Indicator
-	{
+    {
         /// <summary>
         /// Sets the default indicator parameters for the designated slot type
         /// </summary>
@@ -56,7 +56,7 @@ namespace Forex_Strategy_Builder
         public override void Calculate(SlotTypes slotType)
         {
             return;
-		}
+        }
 
         /// <summary>
         /// Sets the indicator logic description

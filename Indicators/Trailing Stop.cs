@@ -79,7 +79,7 @@ namespace Forex_Strategy_Builder
             Component[0].Value	       = new double[Bars];
 
             return;
-		}
+        }
 
         /// <summary>
         /// Sets the indicator logic description
@@ -104,5 +104,5 @@ namespace Forex_Strategy_Builder
 
             return sString;
         }
-	}
+    }
 }

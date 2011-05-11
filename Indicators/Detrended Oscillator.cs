@@ -14,12 +14,12 @@ namespace Forex_Strategy_Builder
     /// Detrended Oscillator Indicator
     /// </summary>
     public class Detrended_Oscillator : Indicator
-	{
+    {
         /// <summary>
         /// Sets the default indicator parameters for the designated slot type
         /// </summary>
         public Detrended_Oscillator(SlotTypes slotType)
-		{
+        {
             // General properties
             IndicatorName  = "Detrended Oscillator";
             PossibleSlots  = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
@@ -293,5 +293,5 @@ namespace Forex_Strategy_Builder
 
             return sString;
         }
-	}
+    }
 }

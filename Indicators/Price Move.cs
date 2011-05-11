@@ -126,7 +126,7 @@ namespace Forex_Strategy_Builder
             }
 
             return;
-		}
+        }
 
         /// <summary>
         /// Sets the indicator logic description

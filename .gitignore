@@ -1,5 +1,6 @@
 Thumbs.db
 /*.suo
+/*.sln.docstates
 /obj
 /bin/*.exe
 /bin/Debug/*.exe

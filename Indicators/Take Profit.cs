@@ -12,7 +12,7 @@ namespace Forex_Strategy_Builder
     /// The implementation of logic is in Backtester.AnalyseClose(int iBar)
     /// </summary>
     public class Take_Profit : Indicator
-	{
+    {
         /// <summary>
         /// Sets the default indicator parameters for the designated slot type
         /// </summary>
@@ -48,7 +48,7 @@ namespace Forex_Strategy_Builder
             IndParam.NumParam[0].ToolTip = "The Take Profit value (in pips).";
 
             return;
-		}
+        }
 
         /// <summary>
         /// Calculates the indicator's components
@@ -56,7 +56,7 @@ namespace Forex_Strategy_Builder
         public override void Calculate(SlotTypes slotType)
         {
             return;
-		}
+        }
 
         /// <summary>
         /// Sets the indicator logic description
@@ -81,5 +81,5 @@ namespace Forex_Strategy_Builder
 
             return sString;
         }
-	}
+    }
 }

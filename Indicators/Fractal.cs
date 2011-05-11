@@ -216,7 +216,7 @@ namespace Forex_Strategy_Builder
             Component[0].Value	    = adFrUp;
 
             Component[1] = new IndicatorComp();
-		    Component[1].CompName   = "Down Fractal";
+            Component[1].CompName   = "Down Fractal";
             Component[1].DataType   = IndComponentType.IndicatorValue;
             Component[1].ChartType	= IndChartType.Level;
             Component[1].ChartColor = Color.DarkRed;
@@ -275,7 +275,7 @@ namespace Forex_Strategy_Builder
             }
 
             return;
-		}
+        }
 
         /// <summary>
         /// Sets the indicator logic description

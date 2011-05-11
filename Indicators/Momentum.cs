@@ -112,7 +112,7 @@ namespace Forex_Strategy_Builder
             double[] adBasePrice = Price(basePrice);
 
             for (int iBar = iPeriod; iBar < Bars; iBar++)
-            	adMomentum[iBar] = adBasePrice[iBar] - adBasePrice[iBar-iPeriod];
+                adMomentum[iBar] = adBasePrice[iBar] - adBasePrice[iBar-iPeriod];
 
             if (iSmooth > 0)
                 adMomentum = MovingAverage(iSmooth, 0, maMethod, adMomentum);
@@ -206,7 +206,7 @@ namespace Forex_Strategy_Builder
             OscillatorLogic(iFirstBar, iPrvs, adMomentum, dLevel, -dLevel, ref Component[1], ref Component[2], indLogic);
 
             return;
-		}
+        }
 
         /// <summary>
         /// Sets the indicator logic description
@@ -300,5 +300,5 @@ namespace Forex_Strategy_Builder
 
             return sString;
         }
-	}
+    }
 }

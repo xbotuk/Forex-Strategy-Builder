@@ -63,7 +63,7 @@ namespace Forex_Strategy_Builder
             IndParam.NumParam[0].ToolTip = "Sensitivity of the indicator.";
 
             return;
-		}
+        }
 
         /// <summary>
         /// Calculates the indicator's components
@@ -390,7 +390,7 @@ namespace Forex_Strategy_Builder
             }
 
             return;
-		}
+        }
 
         /// <summary>
         /// Sets the indicator logic description
