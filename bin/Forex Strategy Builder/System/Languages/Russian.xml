@@ -519,7 +519,7 @@
   </str>
   <str>
     <main>Use the scanner to load the data.</main>
-    <alt>Использовать сканер для загрузки данных.</alt>
+    <alt>Использовать сканер для загрузки данных</alt>
   </str>
   <str>
     <main>Trade until a Margin Call</main>
@@ -535,7 +535,7 @@
   </str>
   <str>
     <main>Show Price Line on Account Chart</main>
-    <alt>Show Price Line on Account Chart</alt>
+    <alt>Показать шкалу цень на диаграмме баланса</alt>
   </str>
   <str>
     <main>Tools</main>
@@ -744,11 +744,11 @@
   </str>
   <str>
     <main>Long balance</main>
-    <alt>Long balance</alt>
+    <alt>Длительный баланс</alt>
   </str>
   <str>
     <main>Short balance</main>
-    <alt>Short balance</alt>
+    <alt>Короткий баланс</alt>
   </str>
   <!-- About Screen -->
   <str>
@@ -1577,7 +1577,7 @@
   </str>
   <str>
     <main>Right click to detach chart.</main>
-    <alt>Right click to detach chart.</alt>
+    <alt>Кликнуть правой клавишей мыши для изъятия диаграммы</alt>
   </str>
   <!-- Journals -->
   <str>
@@ -2601,11 +2601,11 @@
   </str>
   <str>
     <main>Minimum number of trades</main>
-    <alt>Максимальное количество сделок</alt>
+    <alt>Минимальное количество сделок</alt>
   </str>
   <str>
     <main>Maximum number of trades</main>
-    <alt>Минимальное количество сделок</alt>
+    <alt>Максимальное количество сделок</alt>
   </str>
   <str>
     <main>Maximum number of opening logic slots</main>
@@ -2714,11 +2714,11 @@
   </str>
   <str>
     <main>Options</main>
-    <alt>Options</alt>
+    <alt>Опции</alt>
   </str>
   <str>
     <main>Analysis</main>
-    <alt>Analysis</alt>
+    <alt>Анализ</alt>
   </str>
   <str>
     <main>Over-optimization Report</main>
@@ -2726,7 +2726,7 @@
   </str>
   <str>
     <main>Cumulative Strategy</main>
-    <alt>Cumulative Strategy</alt>
+    <alt>Суммарная стратегия</alt>
   </str>
   <str>
     <main>Parameters deviation % [recommended 20]</main>
@@ -2746,15 +2746,15 @@
   </str>
   <str>
     <main>Hide FSB when Analyzer starts</main>
-    <alt>Hide FSB when Analyzer starts</alt>
+    <alt>Скрыть FSB когда анаилзатор запускается</alt>
   </str>
   <str>
     <main>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</main>
-    <alt>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</alt>
+    <alt>Рапорт сверх-оптимизации показывающий как изменяются статистические результаты теста с изменением цифровых параметров стратегии с данными процентами.</alt>
   </str>
   <str>
     <main>View Charts</main>
-    <alt>View Charts</alt>
+    <alt>Показать диаграммы</alt>
   </str>
   <str>
     <main>Open Folder</main>
@@ -2766,11 +2766,11 @@
   </str>
   <str>
     <main>Deviation</main>
-    <alt>Deviation</alt>
+    <alt>Отклонение</alt>
   </str>
   <str>
     <main>Next Chart</main>
-    <alt>Next Chart</alt>
+    <alt>Следующая диаграмма</alt>
   </str>
   <!-- Strategy Properties -->
   <str>
