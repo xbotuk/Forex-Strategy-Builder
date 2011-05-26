@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <update>
   <versions>
-    <release>2560400</release>
-    <beta>2571100</beta>
+    <release>0</release>
+    <beta>0</beta>
   </versions>
   <brokers>
     <broker>
