@@ -506,6 +506,10 @@
     <alt>Export positions in currency as a spreadsheet.</alt>
   </str>
   <str>
+    <main>Without Transfers</main>
+    <alt>Without Transfers</alt>
+  </str>
+  <str>
     <main>Testing</main>
     <alt>Testing</alt>
   </str>

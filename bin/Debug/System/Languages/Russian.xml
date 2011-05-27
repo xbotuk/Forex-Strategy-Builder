@@ -506,6 +506,10 @@
     <alt>Экспорт позиции в валюте в форме электронной таблицы.</alt>
   </str>
   <str>
+    <main>Without Transfers</main>
+    <alt>без трансфер</alt>
+  </str>
+  <str>
     <main>Testing</main>
     <alt>Тестирование</alt>
   </str>

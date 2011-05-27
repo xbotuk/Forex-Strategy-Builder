@@ -267,7 +267,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Exports the positions info
         /// </summary>
-        public void ExportPositions()
+        public void ExportPositions(bool showTransfers)
         {
             string stage = String.Empty;
             if (Data.IsProgramBeta)
@@ -298,6 +298,10 @@ namespace Forex_Strategy_Builder
             {
                 Position position = Backtester.PosFromNumb(iPos);
                 int bar = Backtester.PosCoordinates[iPos].Bar;
+
+                if (!showTransfers && position.Transaction == Transaction.Transfer)
+                    continue;
+                
                 sb.Append((position.PosNumb + 1).ToString()            + "\t");
                 sb.Append((bar + 1).ToString()                         + "\t");
                 sb.Append((Data.Time[bar]).ToString()                  + "\t");
@@ -321,7 +325,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Exports the positions info in currency
         /// </summary>
-        public void ExportPositionsInMoney()
+        public void ExportPositionsInMoney(bool showTransfers)
         {
             string stage = String.Empty;
             if (Data.IsProgramBeta)
@@ -352,6 +356,10 @@ namespace Forex_Strategy_Builder
             {
                 Position position = Backtester.PosFromNumb(iPos);
                 int bar = Backtester.PosCoordinates[iPos].Bar;
+
+                if (!showTransfers && position.Transaction == Transaction.Transfer)
+                    continue;
+
                 sb.Append((position.PosNumb + 1).ToString() + "\t");
                 sb.Append((bar + 1).ToString()              + "\t");
                 sb.Append((Data.Time[bar]).ToString()       + "\t");

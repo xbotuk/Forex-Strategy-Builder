@@ -513,6 +513,14 @@ namespace Forex_Strategy_Builder
             miExpPositions.Click      += new EventHandler(Export_OnClick);
             miExport.DropDownItems.Add(miExpPositions);
 
+            ToolStripMenuItem miExpPositionsNoTransfer = new ToolStripMenuItem();
+            miExpPositionsNoTransfer.Name        = "positionsNoTransfer";
+            miExpPositionsNoTransfer.Text        = Language.T("Positions") + " (" + Language.T("Without Transfers") + ")...";
+            miExpPositionsNoTransfer.ToolTipText = Language.T("Export positions in pips as a spreadsheet.");
+            miExpPositionsNoTransfer.Image       = Properties.Resources.export;
+            miExpPositionsNoTransfer.Click      += new EventHandler(Export_OnClick);
+            miExport.DropDownItems.Add(miExpPositionsNoTransfer);
+
             ToolStripMenuItem miExpMoneyPositions = new ToolStripMenuItem();
             miExpMoneyPositions.Name        = "positionInMoney";
             miExpMoneyPositions.Text        = Language.T("Positions in Currency") + "...";
@@ -520,6 +528,14 @@ namespace Forex_Strategy_Builder
             miExpMoneyPositions.ToolTipText = Language.T("Export positions in currency as a spreadsheet.");
             miExpMoneyPositions.Click      += new EventHandler(Export_OnClick);
             miExport.DropDownItems.Add(miExpMoneyPositions);
+
+            ToolStripMenuItem miExpMoneyPositionsNoTransfer = new ToolStripMenuItem();
+            miExpMoneyPositionsNoTransfer.Name        = "positionInMoneyNoTransfer";
+            miExpMoneyPositionsNoTransfer.Text        = Language.T("Positions in Currency") + " (" + Language.T("Without Transfers") + ")...";
+            miExpMoneyPositionsNoTransfer.Image       = Properties.Resources.export;
+            miExpMoneyPositionsNoTransfer.ToolTipText = Language.T("Export positions in currency as a spreadsheet.");
+            miExpMoneyPositionsNoTransfer.Click      += new EventHandler(Export_OnClick);
+            miExport.DropDownItems.Add(miExpMoneyPositionsNoTransfer);
 
             // Testing
             ToolStripMenuItem miTesting = new ToolStripMenuItem(Language.T("Testing"));
@@ -1301,14 +1317,19 @@ namespace Forex_Strategy_Builder
                     exporter.ExportBarSummary();
                     break;
                 case "positions":
-                    exporter.ExportPositions();
+                    exporter.ExportPositions(true);
+                    break;
+                case "positionsNoTransfer":
+                    exporter.ExportPositions(false);
                     break;
                 case "positionInMoney":
-                    exporter.ExportPositionsInMoney();
+                    exporter.ExportPositionsInMoney(true);
+                    break;
+                case "positionInMoneyNoTransfer":
+                    exporter.ExportPositionsInMoney(false);
                     break;
                 default:
                     break;
-
             }
 
             return;
