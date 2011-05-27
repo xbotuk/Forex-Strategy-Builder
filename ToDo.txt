@@ -1,38 +1,24 @@
-Legend: 
-v Done
-- To Do
-~ Maybe
-? Under question
-
 General:
 - Repair back test of Trailing Stop - tick mode instead of bar mode;
 - Add Break Even stop;
 - Import MT5 data files;
-- Multi-core processors to be supported. 
 - Show Floating P/L in journal during transfer when there are more transactions in the bar.
-- Explorer - show position lots between the points.
 - Money Management - add / subtract after a certain number of pips profit or loss;
-- More MA smoothing methods.
 - Fix loading data without a decimal separator in the data file.
 - User format of data file that can overwrite the default one.
 
-Permanent Protection Type:
-
-Scanner:
-
 Generator:
-? At starting generation reset the strategy layout and balance chart to default. Consider the locked slots;
+- Multi-core processors to be supported.
 
 Optimizer:
-- optimization of Permanent TP / SL.
+- Optimization of Permanent TP / SL.
 
 Analyser
 - Make Cumulative strategy analysis.
 
-jForex Import:
-- Import correct files even when there are wrong ones.
-
 Indicators:
 - Trailing Stop, Stop Loss, Take Profit... to start from previous top/bottom, ATR...
+- More MA smoothing methods.
 
-Languages:
+Bar Explorer
+- Show position lots between the points.

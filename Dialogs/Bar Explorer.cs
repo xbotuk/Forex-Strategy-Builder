@@ -440,7 +440,6 @@ namespace Forex_Strategy_Builder
             else
                 btnNavigate[3].ForeColor = btnNavigate[2].ForeColor;
 
-
             return;
         }
 
@@ -454,10 +453,10 @@ namespace Forex_Strategy_Builder
 
             if (!Data.IsData || !Data.IsResult) return;
 
-            Panel  pnl        = (Panel)sender;
-            Pen    penFore    = new Pen(LayoutColors.ColorControlText);
-            string FF         = Data.FF; // Format modifier to print the floats
-            int    width     = pnl.ClientSize.Width;
+            Panel  pnl     = (Panel)sender;
+            Pen    penFore = new Pen(LayoutColors.ColorControlText);
+            string FF      = Data.FF; // Format modifier to print the floats
+            int    width   = pnl.ClientSize.Width;
 
             Size size = new Size(width, infoRowHeight);
 

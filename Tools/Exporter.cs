@@ -25,7 +25,7 @@ namespace Forex_Strategy_Builder
             FF  = Data.FF; // Format modifier to print the floats
             sDF = Data.DF; // Format modifier to print the date
             sb = new StringBuilder();
-       }
+        }
 
         /// <summary>
         /// Exports the data
@@ -301,7 +301,7 @@ namespace Forex_Strategy_Builder
 
                 if (!showTransfers && position.Transaction == Transaction.Transfer)
                     continue;
-                
+
                 sb.Append((position.PosNumb + 1).ToString()            + "\t");
                 sb.Append((bar + 1).ToString()                         + "\t");
                 sb.Append((Data.Time[bar]).ToString()                  + "\t");
@@ -412,7 +412,6 @@ namespace Forex_Strategy_Builder
                     MessageBox.Show(exc.Message);
                 }
             }
-
         }
     }
 }
