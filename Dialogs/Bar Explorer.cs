@@ -692,34 +692,38 @@ namespace Forex_Strategy_Builder
                 int posNumber = Backtester.WayPoint(bar, point).PosNumb;
                 if (posNumber == -1) continue;
 
-                double posLots = Backtester.PosFromNumb(posNumber).PosLots;
-                PosDirection posDirection = Backtester.PosFromNumb(posNumber).PosDir;
+                Position position = Backtester.PosFromNumb(posNumber);
+                double   posLots  = position.PosLots;
+                PosDirection posDirection = position.PosDir;
                 WayPointType wpType = Backtester.WayPoint(bar, point).WPType;
 
-                int posHight = (int)(Math.Max(posLots * 2, 2));
-                int posY     = YBottom - posHight;
-                int d        = (barPixels - 1) / 2;
-                x = pntWay[point].X - d;
+                int hight  = (int)(Math.Max(posLots * 2, 2));
+                int lenght = barPixels;
+                int posX   = pntWay[point].X - (barPixels - 1) / 2;
+                int posY   = YBottom - hight;
+
+                if (point < points - 1)
+                    lenght = pntWay[point + 1].X - pntWay[point].X + 1;
 
                 if (posDirection == PosDirection.Long)
-                 {   // Long
-                    Rectangle rect = new Rectangle(x - 1, posY, barPixels + 1, posHight);
-                    LinearGradientBrush lgBrush = new LinearGradientBrush(rect, colorLongTrade1, colorLongTrade2, 0f);
-                    rect = new Rectangle(x, posY, barPixels - 1, posHight);
+                {   // Long
+                    Rectangle rect = new Rectangle(posX - 1, posY - 1, lenght, hight + 2);
+                    LinearGradientBrush lgBrush = new LinearGradientBrush(rect, colorLongTrade1, colorLongTrade2, LinearGradientMode.Vertical);
+                    rect = new Rectangle(posX - 1, posY, lenght, hight);
                     g.FillRectangle(lgBrush, rect);
                 }
                 else if (posDirection == PosDirection.Short)
                 {   // Short
-                    Rectangle rect = new Rectangle(x - 1, posY, barPixels + 1, posHight);
-                    LinearGradientBrush lgBrush = new LinearGradientBrush(rect, colorShortTrade1, colorShortTrade2, 0f);
-                    rect = new Rectangle(x, posY, barPixels - 1, posHight);
+                    Rectangle rect = new Rectangle(posX - 1, posY - 1, lenght, hight + 2);
+                    LinearGradientBrush lgBrush = new LinearGradientBrush(rect, colorShortTrade1, colorShortTrade2, LinearGradientMode.Vertical);
+                    rect = new Rectangle(posX - 1, posY, lenght, hight);
                     g.FillRectangle(lgBrush, rect);
                 }
                 else if (posDirection == PosDirection.Closed && wpType == WayPointType.Exit)
                 {   // Closed
-                    Rectangle rect = new Rectangle(x - 1, YBottom - 2, barPixels + 1, 2);
-                    LinearGradientBrush lgBrush = new LinearGradientBrush(rect, colorClosedTrade1, colorClosedTrade2, 0f);
-                    rect = new Rectangle(x, YBottom - 2, barPixels - 1, 2);
+                    Rectangle rect = new Rectangle(posX - 1, YBottom - 2, barPixels + 1, 2);
+                    LinearGradientBrush lgBrush = new LinearGradientBrush(rect, colorClosedTrade1, colorClosedTrade2, LinearGradientMode.Vertical);
+                    rect = new Rectangle(posX, YBottom - 2, barPixels - 1, 2);
                     g.FillRectangle(lgBrush, rect);
                 }
             }
