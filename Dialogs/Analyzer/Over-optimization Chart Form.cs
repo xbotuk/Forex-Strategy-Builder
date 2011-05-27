@@ -35,8 +35,11 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             // Button Close
             btnNextCharts = new Button();
             btnNextCharts.Parent = this;
-            btnNextCharts.Text = Language.T("Next Chart");
-            btnNextCharts.Click += new EventHandler(BtnNextCharts_Click);
+            btnNextCharts.Text   = Language.T("Next Chart");
+            btnNextCharts.Click       += new EventHandler(BtnNextCharts_Click);
+            btnNextCharts.DoubleClick += new EventHandler(BtnNextCharts_Click);
+            btnNextCharts.MouseWheel  += new MouseEventHandler(Chart_MouseWheel);
+            btnNextCharts.KeyUp       += new KeyEventHandler(NextCharts_KeyUp);
             btnNextCharts.UseVisualStyleBackColor = true;
 
             // Button Close
@@ -101,9 +104,55 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         /// </summary>
         void BtnNextCharts_Click(object sender, EventArgs e)
         {
+            ShowNextChart();
+        }
+
+        /// <summary>
+        /// Shows a chart on mouse wheel.
+        /// </summary>
+        void Chart_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+                ShowNextChart();
+            else if (e.Delta < 0)
+                ShowPreviousChart();
+
+            return;
+        }
+
+        /// <summary>
+        /// Shows a chart on keyup.
+        /// </summary>
+        void NextCharts_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.PageDown)
+                ShowNextChart();
+            else if (e.KeyCode == Keys.PageUp)
+                ShowPreviousChart();
+        }
+
+        /// <summary>
+        /// Shows next chart.
+        /// </summary>
+        void ShowNextChart()
+        {
             currentChartNumber++;
             if (currentChartNumber >= tableReport.Length)
                 currentChartNumber = 0;
+
+            currentChart.Parent = this;
+            currentChart.InitChart(tableReport[currentChartNumber]);
+            currentChart.Invalidate();
+        }
+
+        /// <summary>
+        /// Shows previous chart.
+        /// </summary>
+        void ShowPreviousChart()
+        {
+            currentChartNumber--;
+            if (currentChartNumber < 0)
+                currentChartNumber = tableReport.Length - 1;
 
             currentChart.Parent = this;
             currentChart.InitChart(tableReport[currentChartNumber]);

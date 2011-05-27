@@ -1022,7 +1022,7 @@
     <main>No limits</main>
     <alt>Без ограничения</alt>
   </str>
-  <!-- Additional statsitics -->
+  <!-- Additional statistics -->
   <str>
     <main>Additional Statistics</main>
     <alt>Допълнителна статистика</alt>
@@ -2727,6 +2727,10 @@
   <str>
     <main>Cumulative Strategy</main>
     <alt>Сборна стратегия</alt>
+  </str>
+  <str>
+    <main>There are no parameters suitable for analysis.</main>
+    <alt>Няма параметри подоходящи за анализиране.</alt>
   </str>
   <str>
     <main>Parameters deviation % [recommended 20]</main>

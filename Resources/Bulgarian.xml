@@ -765,6 +765,7 @@
   <str><main>Analysis</main><alt>Анализ</alt></str>
   <str><main>Over-optimization Report</main><alt>Рапорт за свръх-оптимизация</alt></str>
   <str><main>Cumulative Strategy</main><alt>Сборна стратегия</alt></str>
+  <str><main>There are no parameters suitable for analysis.</main><alt>Няма параметри подоходящи за анализиране.</alt></str>
   <str><main>Parameters deviation % [recommended 20]</main><alt>Отклонение на параметрите % [препоръчително 20]</alt></str>
   <str><main>Parameters number [recommended 20]</main><alt>Брой на параметрите [препоръчително 20]</alt></str>
   <str><main>Report - decimal separator</main><alt>Десетична точка в рапорта</alt></str>

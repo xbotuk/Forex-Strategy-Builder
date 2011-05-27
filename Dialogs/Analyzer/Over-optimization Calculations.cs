@@ -27,6 +27,18 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         int tablesCount;     // The count of data tables.
 
         /// <summary>
+        /// Counts the numeric params of the strategy.
+        /// </summary>
+        void CountStrategyParams()
+        {
+            countStratParams = 0;
+            for (int slot = 0; slot < Data.Strategy.Slots; slot++)
+                for (int numParam = 0; numParam < 6; numParam++)
+                    if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled)
+                        countStratParams++;
+        }
+
+        /// <summary>
         /// Sets table with parameter values.
         /// </summary>
         void SetParametersValues(int percentDeviation, int countParam)

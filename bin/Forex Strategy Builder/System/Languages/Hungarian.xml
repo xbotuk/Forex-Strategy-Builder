@@ -1023,7 +1023,7 @@
     <main>No limits</main>
     <alt>Nincs határ</alt>
   </str>
-  <!-- Additional statsitics -->
+  <!-- Additional statistics -->
   <str>
     <main>Additional Statistics</main>
     <alt>Kiegészítő statisztikák</alt>
@@ -2728,6 +2728,10 @@
   <str>
     <main>Cumulative Strategy</main>
     <alt>Cumulative Strategy</alt>
+  </str>
+  <str>
+    <main>There are no parameters suitable for analysis.</main>
+    <alt>There are no parameters suitable for analysis.</alt>
   </str>
   <str>
     <main>Parameters deviation % [recommended 20]</main>

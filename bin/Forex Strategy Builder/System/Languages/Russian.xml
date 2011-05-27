@@ -1022,7 +1022,7 @@
     <main>No limits</main>
     <alt>Без ограничений</alt>
   </str>
-  <!-- Additional statsitics -->
+  <!-- Additional statistics -->
   <str>
     <main>Additional Statistics</main>
     <alt>Дополнительная статистика</alt>
@@ -2519,7 +2519,7 @@
   </str>
   <str>
     <main>There are no parameters suitable for optimization.</main>
-    <alt>Нет подходящих параметров для оптимизации</alt>
+    <alt>Нет подходящих параметров для оптимизации.</alt>
   </str>
   <!-- Strategy Description -->
   <str>
@@ -2727,6 +2727,10 @@
   <str>
     <main>Cumulative Strategy</main>
     <alt>Суммарная стратегия</alt>
+  </str>
+  <str>
+    <main>There are no parameters suitable for analysis.</main>
+    <alt>Нет подходящих параметров для анализ.</alt>
   </str>
   <str>
     <main>Parameters deviation % [recommended 20]</main>

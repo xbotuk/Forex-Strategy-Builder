@@ -16,6 +16,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         Label lblIntro;
         Label lblDeviation;
         Label lblParams;
+        Label lblNoParams;
         NumericUpDown nudDeviation;
         NumericUpDown nudParams;
         ProgressBar progressBar;
@@ -36,6 +37,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             lblIntro      = new Label();
             lblDeviation  = new Label();
             lblParams     = new Label();
+            lblNoParams   = new Label();
             nudDeviation  = new NumericUpDown();
             nudParams     = new NumericUpDown();
             btnStart      = new Button();
@@ -45,6 +47,9 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 
             Font font = this.Font;
             Color colorText = LayoutColors.ColorControlText;
+
+            CountStrategyParams();
+            bool isParams = countStratParams > 0;
 
             // Label Intro
             lblIntro.Parent    = this;
@@ -66,6 +71,14 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             lblParams.BackColor = Color.Transparent;
             lblParams.AutoSize  = true;
             lblParams.Text      = Language.T("Parameters number [recommended 20]");
+
+            // lblNoParams
+            lblNoParams.Parent    = this;
+            lblNoParams.Text      = Language.T("There are no parameters suitable for analysis.");
+            lblNoParams.ForeColor = LayoutColors.ColorSignalRed;
+            lblNoParams.BackColor = Color.Transparent;
+            lblNoParams.AutoSize  = true;
+            lblNoParams.Visible   = !isParams;
 
             // NumericUpDown Deviation
             nudDeviation.BeginInit();
@@ -117,10 +130,11 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             btnOpenReport.Click     += new EventHandler(OpenReport_Click);
             btnOpenReport.UseVisualStyleBackColor = true;
 
-            // Button Run
-            btnStart.Parent = this;
-            btnStart.Text   = Language.T("Start");
-            btnStart.Click += new EventHandler(BtnStart_Click);
+            // Button Start
+            btnStart.Parent  = this;
+            btnStart.Text    = Language.T("Start");
+            btnStart.Enabled = isParams;
+            btnStart.Click  += new EventHandler(BtnStart_Click);
             btnStart.UseVisualStyleBackColor = true;
 
             // ProgressBar
@@ -160,6 +174,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 
             lblDeviation.Location = new Point(btnHrzSpace + border, 3 * buttonHeight + 2 * space + 18);
             lblParams.Location    = new Point(btnHrzSpace + border, 4 * buttonHeight + 3 * space + 18);
+            lblNoParams.Location  = new Point(btnHrzSpace + border, 5 * buttonHeight + 4 * space + 18 + 20);
 
             // NUD Parameters
             int maxLabelRight = lblDeviation.Right;
