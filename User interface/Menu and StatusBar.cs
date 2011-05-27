@@ -573,7 +573,7 @@ namespace Forex_Strategy_Builder
             tsmiCumulativeStrategy.Name   = "tsmiCumulativeStrategy";
             tsmiCumulativeStrategy.Image  = Properties.Resources.cumulative_str;
             tsmiCumulativeStrategy.Click += new EventHandler(MenuTools_OnClick);
-            miAnalysis.DropDownItems.Add(tsmiCumulativeStrategy);
+            //miAnalysis.DropDownItems.Add(tsmiCumulativeStrategy);
 
             // Tools
             ToolStripMenuItem miTools = new ToolStripMenuItem(Language.T("Tools"));
