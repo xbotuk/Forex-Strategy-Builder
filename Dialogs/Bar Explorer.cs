@@ -117,6 +117,7 @@ namespace Forex_Strategy_Builder
                 btnNavigate[i].Name   = btnNavigateText[i];
                 btnNavigate[i].Click      += new EventHandler(BtnNavigate_Click);
                 btnNavigate[i].MouseWheel += new MouseEventHandler(Bar_Explorer_MouseWheel);
+                btnNavigate[i].KeyUp      += new KeyEventHandler(BtnNavigate_KeyUp);
                 btnNavigate[i].UseVisualStyleBackColor = true;
                 toolTip.SetToolTip(btnNavigate[i], btnNavigateTips[i]);
             }
@@ -141,6 +142,7 @@ namespace Forex_Strategy_Builder
             btnGo.UseVisualStyleBackColor = true;
             btnGo.Click      += new EventHandler(BtnNavigate_Click);
             btnGo.MouseWheel += new MouseEventHandler(Bar_Explorer_MouseWheel);
+            btnGo.KeyUp      += new KeyEventHandler(BtnNavigate_KeyUp);
             toolTip.SetToolTip(btnGo, Language.T("Go to the chosen bar."));
 
             //Button Close
@@ -345,6 +347,19 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
+        /// Navigate to a bar on button KeyUp.
+        /// </summary>
+        void BtnNavigate_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.PageUp)
+                Navigate(">>");
+            if (e.KeyCode == Keys.PageDown)
+                Navigate("<<");
+
+            return;
+        }
+
+        /// <summary>
         /// Navigates to a bar.
         /// </summary>
         void Navigate(string sDir)
@@ -359,10 +374,6 @@ namespace Forex_Strategy_Builder
                             break;
                         }
                     break;
-                case "<":
-                    if (bar > Data.FirstBar)
-                        bar--;
-                    break;
                 case "! >":
                     for (int i = bar + 1; i < Data.Bars; i++)
                         if (Backtester.BackTestEval(i) == "Ambiguous")
@@ -370,6 +381,26 @@ namespace Forex_Strategy_Builder
                             bar = i;
                             break;
                         }
+                    break;
+                case "<<":
+                    for (int i = bar - 1; i >= Data.FirstBar; i--)
+                        if (Backtester.SummaryTrans(i) != Transaction.Transfer && Backtester.SummaryTrans(i) != Transaction.None)
+                        {
+                            bar = i;
+                            break;
+                        }
+                    break;
+                case ">>":
+                    for (int i = bar + 1; i < Data.Bars; i++)
+                        if (Backtester.SummaryTrans(i) != Transaction.Transfer && Backtester.SummaryTrans(i) != Transaction.None)
+                        {
+                            bar = i;
+                            break;
+                        }
+                    break;
+                case "<":
+                    if (bar > Data.FirstBar)
+                        bar--;
                     break;
                 case ">":
                     if (bar < Data.Bars - 1)
