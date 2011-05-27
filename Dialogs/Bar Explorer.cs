@@ -257,8 +257,8 @@ namespace Forex_Strategy_Builder
                     maxWayPoints = Backtester.WayPoints(iBar);
 
             int btnHrzSpace     = (int)(Data.HorizontalDLU * 3);
-            int iClientSizeWidth = (int)(Math.Max(aiColumnX[columns] + 2 * btnHrzSpace, 500));
-            ClientSize = new Size(iClientSizeWidth, 310 + infoRowHeight * (maxWayPoints + 2));
+            int clientSizeWidth = (int)(Math.Max(aiColumnX[columns] + 2 * btnHrzSpace, 500));
+            ClientSize = new Size(clientSizeWidth, 310 + infoRowHeight * (maxWayPoints + 2));
 
             return;
        }
@@ -605,7 +605,7 @@ namespace Forex_Strategy_Builder
                 g.FillRectangle(lgBrush, rect);
                 g.DrawRectangle(penBarBorder, x, yOpen, barPixels - 2, yClose - yOpen);
             }
-            else    // Cross
+            else // Cross
             {
                 g.DrawLine(penBarBorder, x, yClose, x + barPixels - 2, yClose);
             }
@@ -621,11 +621,11 @@ namespace Forex_Strategy_Builder
                 if (order.OrdPrice > Data.High[bar] || order.OrdPrice < Data.Low[bar])
                     continue;
 
-                int d = barPixels / 2 - 1;
+                int d  = barPixels / 2 - 1;
                 int x1 = x + d;
                 int x2 = x + barPixels - 2;
                 int yDeal = (int)(YBottom - (order.OrdPrice - minPrice) * scaleY);
-                Pen pen = new Pen(LayoutColors.ColorChartGrid, 2);
+                Pen pen   = new Pen(LayoutColors.ColorChartGrid, 2);
 
                 if (order.OrdDir == OrderDirection.Buy)
                 {
@@ -795,16 +795,13 @@ namespace Forex_Strategy_Builder
                 OrderDirection ordDirection = Backtester.OrdFromNumb(ordNumber).OrdDir;
                 WayPointType   wpType       = Backtester.WayPoint(bar, point).WPType;
 
-                if (Backtester.PosFromNumb(posNumber).Transaction == Transaction.Transfer ||
-                    wpType == WayPointType.Cancel || wpType == WayPointType.None ||
-                    wpType == WayPointType.Open   || wpType == WayPointType.High ||
-                    wpType == WayPointType.Low    || wpType == WayPointType.Close )
+                if (wpType == WayPointType.None || wpType == WayPointType.Open || wpType == WayPointType.High ||
+                    wpType == WayPointType.Low  || wpType == WayPointType.Close)
                     continue;
 
                 int yDeal = pntWay[point].Y;
 
-                if (posDirection == PosDirection.Long ||
-                    posDirection == PosDirection.Short)
+                if (posDirection == PosDirection.Long || posDirection == PosDirection.Short || wpType == WayPointType.Cancel)
                 {
                     int d = barPixels / 2 - 1;
                     x = pntWay[point].X - d;
@@ -813,6 +810,8 @@ namespace Forex_Strategy_Builder
                     if (ordDirection == OrderDirection.Buy)
                     {   // Buy
                         Pen pen = new Pen(LayoutColors.ColorTradeLong, 2);
+                        if(wpType == WayPointType.Cancel)
+                            pen = new Pen(LayoutColors.ColorChartGrid, 2);
                         g.DrawLine(pen, x, yDeal, x1, yDeal);
                         g.DrawLine(pen, x1, yDeal, x2, yDeal - d);
                         g.DrawLine(pen, x2 + 1, yDeal - d + 1, x1 + d / 2 + 1, yDeal - d + 1);
@@ -821,13 +820,16 @@ namespace Forex_Strategy_Builder
                     else
                     {   // Sell
                         Pen pen = new Pen(LayoutColors.ColorTradeShort, 2);
+                        if(wpType == WayPointType.Cancel)
+                            pen = new Pen(LayoutColors.ColorChartGrid, 2);
                         g.DrawLine(pen, x, yDeal + 1, x1 + 1, yDeal + 1);
                         g.DrawLine(pen, x1, yDeal, x2, yDeal + d);
                         g.DrawLine(pen, x1 + d / 2 + 1, yDeal + d, x2, yDeal + d);
                         g.DrawLine(pen, x2, yDeal + d, x2, yDeal + d / 2 + 1);
                     }
                 }
-                else if (posDirection == PosDirection.Closed)
+
+                if (posDirection == PosDirection.Closed)
                 {   // Close position
                     int d = barPixels / 2 - 1;
                     x = pntWay[point].X - d;
@@ -849,6 +851,8 @@ namespace Forex_Strategy_Builder
             g.DrawLine(penBorder, 1, infoRowHeight, 1, pnl.ClientSize.Height);
             g.DrawLine(penBorder, pnl.ClientSize.Width - border + 1, infoRowHeight, pnl.ClientSize.Width - border + 1, pnl.ClientSize.Height);
             g.DrawLine(penBorder, 0, pnl.ClientSize.Height - border + 1, pnl.ClientSize.Width, pnl.ClientSize.Height - border + 1);
+
+            return;
         }
 
         /// <summary>
