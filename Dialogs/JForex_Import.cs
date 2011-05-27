@@ -365,7 +365,7 @@ namespace Forex_Strategy_Builder
                 if(Path.GetExtension(filePath) == ".csv")
                 {
                     JForex_Data_Files file = new JForex_Data_Files(filePath);
-                    if (file.Period > -1)
+                    if (file.IsCorrect)
                         files.Add(file);
                 }
             }
@@ -599,6 +599,7 @@ namespace Forex_Strategy_Builder
         string   symbol;
         int      period;
         DateTime timeUpdate;
+        bool     isCorrect = false;
 
         public string FilePath
         {
@@ -630,11 +631,20 @@ namespace Forex_Strategy_Builder
             get { return timeUpdate; }
         }
 
+
+        public bool IsCorrect
+        {
+            get { return isCorrect; }
+        }
+
         public JForex_Data_Files(string filePath)
         {
             this.filePath = filePath;
             fileName = Path.GetFileNameWithoutExtension(filePath);
             string[] fields = fileName.Split(new char[] { '_' });
+
+            if (fields.Length != 5)
+                return;
 
             switch(fields[1])
             {
@@ -670,10 +680,21 @@ namespace Forex_Strategy_Builder
                     break;
             }
 
+            if (period == -1)
+                return;
+
             symbol = fields[0];
-            IFormatProvider formatProvider = System.Globalization.CultureInfo.InvariantCulture;
-            timeUpdate = DateTime.ParseExact(fields[4], "yyyy.MM.dd", formatProvider);
+            try
+            {
+                IFormatProvider formatProvider = System.Globalization.CultureInfo.InvariantCulture;
+                timeUpdate = DateTime.ParseExact(fields[4], "yyyy.MM.dd", formatProvider);
+            }
+            catch
+            {
+                return;
+            }
             fileTargetPath = Data.OfflineDataDir + symbol + period.ToString() + (period == 0 ? ".bin" :  ".csv");
+            isCorrect = true;
         }
     }
 }
