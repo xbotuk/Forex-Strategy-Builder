@@ -55,6 +55,7 @@ namespace Forex_Strategy_Builder
         static int    leverageDefault               = 100;
         static bool   isShowJournalDefault          = true;
         static bool   isJournalByBarsDefault        = false;
+        static bool   isJournalShowTransfersDefault = false;
         static bool   isAutoscanDefault             = false;
         static bool   isTradeUntilMarginCallDefault = true;
         static bool   isAdditionalStatisticsDefault = false;
@@ -687,6 +688,21 @@ namespace Forex_Strategy_Builder
                 isJournalByBars = value;
                 if (isConfigLoaded)
                     xmlConfig.SelectNodes("config/journalByBars").Item(0).InnerText = value.ToString();
+            }
+        }
+
+        static bool isJournalShowTransfers = isJournalShowTransfersDefault;
+        /// <summary>
+        /// Sets if journal shows transfers
+        /// </summary>
+        public static bool JournalShowTransfers
+        {
+            get { return isJournalShowTransfers; }
+            set
+            {
+                isJournalShowTransfers = value;
+                if (isConfigLoaded)
+                    xmlConfig.SelectNodes("config/journalShowTransfers").Item(0).InnerText = value.ToString();
             }
         }
 
@@ -1375,6 +1391,7 @@ namespace Forex_Strategy_Builder
             isGradientView               = ParseNode("config/gradientView", isGradientViewDefault);
             isShowJournal                = ParseNode("config/showJournal", isShowJournalDefault);
             isJournalByBars              = ParseNode("config/journalByBars", isJournalByBarsDefault);
+            isJournalShowTransfers       = ParseNode("config/journalShowTransfers", isJournalShowTransfersDefault);
             isAutoscan                   = ParseNode("config/autoscan", isAutoscanDefault);
             isTradeUntilMarginCall       = ParseNode("config/tradeUntilMarginCall", isTradeUntilMarginCallDefault);
             isAdditionalStatistics       = ParseNode("config/additionalStatistics", isAdditionalStatisticsDefault);

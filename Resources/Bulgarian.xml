@@ -144,7 +144,7 @@
   <str><main>Export positions in pips as a spreadsheet.</main><alt>Експортиране на позициите в пипсове като електронна таблица.</alt></str>
   <str><main>Positions in Currency</main><alt>Позиции във валута</alt></str>
   <str><main>Export positions in currency as a spreadsheet.</main><alt>Експортиране на позициите в пари като електронна таблица.</alt></str>
-  <str><main>Without Transfers</main><alt>без трансферите</alt></str>
+  <str><main>without Transfers</main><alt>без трансферите</alt></str>
 
   <str><main>Testing</main><alt>Тестване</alt></str>
   <str><main>Automatic Scan</main><alt>Автоматично сканиране</alt></str>

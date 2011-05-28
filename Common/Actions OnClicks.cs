@@ -639,27 +639,53 @@ namespace Forex_Strategy_Builder
         {
             ToolStripMenuItem timItem = (ToolStripMenuItem)sender;
 
-            if (timItem.Name == "miJournalByPos")
+            if (timItem.Name == "miJournalByPosWithoutTransfers")
             {
-                if (miJournalByPos.Checked)
+                if (miJournalByPosWithoutTransfers.Checked)
                 {
+                    miJournalByPosWithoutTransfers.Checked = false;
                     miJournalByPos.Checked  = false;
                     miJournalByBars.Checked = false;
                     Configs.ShowJournal     = false;
                     Configs.JournalByBars   = false;
+                    Configs.JournalShowTransfers = false;
                 }
                 else
                 {
+                    miJournalByPosWithoutTransfers.Checked = true;
+                    miJournalByPos.Checked  = false;
+                    miJournalByBars.Checked = false;
+                    Configs.ShowJournal     = true;
+                    Configs.JournalByBars   = false;
+                    Configs.JournalShowTransfers = false;
+               }
+            }
+            if (timItem.Name == "miJournalByPos")
+            {
+                if (miJournalByPos.Checked)
+                {
+                    miJournalByPosWithoutTransfers.Checked = false;
+                    miJournalByPos.Checked  = false;
+                    miJournalByBars.Checked = false;
+                    Configs.ShowJournal     = false;
+                    Configs.JournalByBars   = false;
+                    Configs.JournalShowTransfers = true;
+                }
+                else
+                {
+                    miJournalByPosWithoutTransfers.Checked = false;
                     miJournalByPos.Checked  = true;
                     miJournalByBars.Checked = false;
                     Configs.ShowJournal     = true;
                     Configs.JournalByBars   = false;
+                    Configs.JournalShowTransfers = true;
                 }
             }
             else if (timItem.Name == "miJournalByBars")
             {
                 if (miJournalByBars.Checked)
                 {
+                    miJournalByPosWithoutTransfers.Checked = false;
                     miJournalByPos.Checked  = false;
                     miJournalByBars.Checked = false;
                     Configs.ShowJournal     = false;
@@ -667,6 +693,7 @@ namespace Forex_Strategy_Builder
                 }
                 else
                 {
+                    miJournalByPosWithoutTransfers.Checked = false;
                     miJournalByPos.Checked  = false;
                     miJournalByBars.Checked = true;
                     Configs.ShowJournal     = true;

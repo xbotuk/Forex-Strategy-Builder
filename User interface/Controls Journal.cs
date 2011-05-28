@@ -85,6 +85,7 @@ namespace Forex_Strategy_Builder
             pnlJournalByBars.Visible  = Configs.JournalByBars;
             splJournal.Visible        = Configs.JournalByBars;
             pnlJournalByPositions.Visible = !Configs.JournalByBars;
+            pnlJournalByPositions.ShowTransfers = Configs.JournalShowTransfers;
 
             return;
         }
@@ -110,6 +111,7 @@ namespace Forex_Strategy_Builder
                 }
                 else
                 {
+                    pnlJournalByPositions.ShowTransfers = Configs.JournalShowTransfers;
                     pnlJournalByPositions.SetUpJournal();
                     pnlJournalByPositions.Invalidate();
                     selectedBar = pnlJournalByBars.SelectedBar;
@@ -198,9 +200,33 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void BtnToggleJournal_Click(object sender, EventArgs e)
         {
-            Configs.JournalByBars   = !Configs.JournalByBars;
-            miJournalByPos.Checked  = !Configs.JournalByBars;
-            miJournalByBars.Checked = Configs.JournalByBars;
+            if (Configs.JournalByBars)
+            {
+                Configs.JournalByBars = false;
+                Configs.JournalShowTransfers = false;
+
+                miJournalByPosWithoutTransfers.Checked = true;
+                miJournalByPos.Checked  = false;
+                miJournalByBars.Checked = false;
+            }
+            else if (!Configs.JournalShowTransfers)
+            {
+                Configs.JournalByBars = false;
+                Configs.JournalShowTransfers = true;
+
+                miJournalByPosWithoutTransfers.Checked = false;
+                miJournalByPos.Checked  = true;
+                miJournalByBars.Checked = false;
+            }
+            else
+            {
+                Configs.JournalByBars = true;
+                Configs.JournalShowTransfers = false;
+
+                miJournalByPosWithoutTransfers.Checked = false;
+                miJournalByPos.Checked  = false;
+                miJournalByBars.Checked = true;
+            }
 
             ResetJournal();
 
@@ -218,7 +244,6 @@ namespace Forex_Strategy_Builder
             splJournal.Visible       = Configs.JournalByBars;
             pnlJournalByBars.Visible = Configs.JournalByBars;
             pnlJournalByPositions.Visible = !Configs.JournalByBars;
-
             if (Configs.ShowJournal && Configs.JournalByBars)
             {
                 pnlJournalByBars.Width    = 2 * ClientSize.Width / 3;

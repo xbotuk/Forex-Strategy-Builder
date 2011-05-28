@@ -18,6 +18,7 @@ namespace Forex_Strategy_Builder
         HScrollBar hScrollBar;
         ToolTip    toolTip;
 
+        int[]     aiPosNumber;     // Contains the numbers of all positions without transfered
         Image[]   aiPositionIcons; // Shows the position's type and transaction
         string[,] asJournalData;   // The text journal data
         string[]  asTitlesPips;    // Journal title
@@ -37,6 +38,8 @@ namespace Forex_Strategy_Builder
         int selectedRow;    // The number of the selected row
         int selectedBarOld; // The number of the old selected bar
 
+        bool showTransfers = false;
+
         public event EventHandler SelectedBarChange;
 
         Font  font;
@@ -55,7 +58,16 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Gets the selected bar
         /// </summary>
-        public int SelectedBar { get { return Backtester.PosCoordinates[firstPos + selectedRow].Bar; } }
+        public int SelectedBar
+        {
+            get
+            {
+                if (showTransfers)
+                    return Backtester.PosCoordinates[firstPos + selectedRow].Bar;
+                else
+                    return Backtester.PosCoordinates[aiPosNumber[firstPos + selectedRow]].Bar;
+            }
+        }
 
         /// <summary>
         /// Gets the Button Remove Journal
@@ -66,6 +78,11 @@ namespace Forex_Strategy_Builder
         /// Gets the Journal Toggle Button
         /// </summary>
         public Button BtnToggleJournal { get { return btnToggleJournal; } }
+
+        /// <summary>
+        /// Sets wether Journal shows transfers.
+        /// </summary>
+        public bool ShowTransfers { set { showTransfers = value; } }
 
         /// <summary>
         /// Constructor
@@ -84,7 +101,29 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public void SetUpJournal()
         {
-            positions = Backtester.PositionsTotal;
+            if (showTransfers)
+            {
+                positions = Backtester.PositionsTotal;
+            }
+            else
+            {
+                if (Backtester.PositionsTotal > 0)
+                    aiPosNumber = new int[Backtester.PositionsTotal];
+                else
+                    aiPosNumber = new int[1];
+
+                positions = 0;
+                for (int bar = 0; bar < Data.Bars; bar++)
+                    for (int pos = 0; pos < Backtester.Positions(bar); pos++)
+                    {
+                        Transaction transaction = Backtester.PosTransaction(bar, pos);
+                        if (transaction != Transaction.None && transaction != Transaction.Transfer)
+                        {
+                            aiPosNumber[positions] = Backtester.PosNumb(bar, pos);
+                            positions++;
+                        }
+                    }
+            }
 
             if (positions == 0)
             {
@@ -308,11 +347,16 @@ namespace Forex_Strategy_Builder
             asJournalData   = new string[shownPos, columns];
             aiPositionIcons = new Image[shownPos];
 
-            for (int pos = firstPos; pos < firstPos + shownPos; pos++)
+            for (int posIndex = firstPos; posIndex < firstPos + shownPos; posIndex++)
             {
-                int row = pos - firstPos;
-                int bar = Backtester.PosCoordinates[pos].Bar;
-                Position position = Backtester.PosFromNumb(pos);
+                int posNumber = posIndex;
+
+                if (!showTransfers)
+                    posNumber = aiPosNumber[posIndex];
+
+                int row = posIndex - firstPos;
+                int bar = Backtester.PosCoordinates[posNumber].Bar;
+                Position position = Backtester.PosFromNumb(posNumber);
 
                 string posAmount;
                 if (Configs.AccountInMoney)
@@ -334,7 +378,7 @@ namespace Forex_Strategy_Builder
                     floatingPL = position.FloatingPL.ToString("F2");
 
                 int p = 0;
-                asJournalData[row, p++] = (pos + 1).ToString();
+                asJournalData[row, p++] = (posNumber + 1).ToString();
                 asJournalData[row, p++] = (bar + 1).ToString();
                 asJournalData[row, p++] = Data.Time[bar].ToString(Data.DF) + Data.Time[bar].ToString(" HH:mm");
                 asJournalData[row, p++] = Language.T(position.Transaction.ToString());
@@ -508,7 +552,9 @@ namespace Forex_Strategy_Builder
             Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
 
             // Print the journal caption
-            string stringCaptionText = Language.T("Journal by Positions") + (Configs.AccountInMoney ? " [" + Configs.AccountCurrency + "]" : " [" + Language.T("pips") + "]");
+            string stringCaptionText = Language.T("Journal by Positions") +
+                (showTransfers ? "" : " (" + Language.T("without Transfers") + ")") +
+                (Configs.AccountInMoney ? " [" + Configs.AccountCurrency + "]" : " [" + Language.T("pips") + "]");
             g.DrawString(stringCaptionText, font, brushCaptionText, new RectangleF(Point.Empty, size), sf);
             g.SetClip(new RectangleF(border, rowHeight, ClientSize.Width - 2 * border, rowHeight));
             if (Configs.AccountInMoney)

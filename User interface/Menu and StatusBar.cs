@@ -21,6 +21,7 @@ namespace Forex_Strategy_Builder
         ToolStripStatusLabel sbpTime;
         protected ToolStripMenuItem miJournalByBars;
         protected ToolStripMenuItem miJournalByPos;
+        protected ToolStripMenuItem miJournalByPosWithoutTransfers;
         protected ToolStripMenuItem miAccountShowInMoney;
         protected ToolStripMenuItem miAccountShowInPips;
         protected ToolStripMenuItem miStrategyAUPBV;
@@ -212,10 +213,17 @@ namespace Forex_Strategy_Builder
 
             miView.DropDownItems.Add(new ToolStripSeparator());
 
+            miJournalByPosWithoutTransfers = new ToolStripMenuItem();
+            miJournalByPosWithoutTransfers.Name    = "miJournalByPosWithoutTransfers";
+            miJournalByPosWithoutTransfers.Text    = Language.T("Journal by Positions") + " (" + Language.T("without Transfers") + ")";
+            miJournalByPosWithoutTransfers.Checked = Configs.ShowJournal && !Configs.JournalByBars && !Configs.JournalShowTransfers;
+            miJournalByPosWithoutTransfers.Click  += new EventHandler(MenuJournal_OnClick);
+            miView.DropDownItems.Add(miJournalByPosWithoutTransfers);
+
             miJournalByPos = new ToolStripMenuItem();
             miJournalByPos.Name    = "miJournalByPos";
             miJournalByPos.Text    = Language.T("Journal by Positions");
-            miJournalByPos.Checked = Configs.ShowJournal && !Configs.JournalByBars;
+            miJournalByPos.Checked = Configs.ShowJournal && !Configs.JournalByBars && Configs.JournalShowTransfers;
             miJournalByPos.Click  += new EventHandler(MenuJournal_OnClick);
             miView.DropDownItems.Add(miJournalByPos);
 
@@ -515,7 +523,7 @@ namespace Forex_Strategy_Builder
 
             ToolStripMenuItem miExpPositionsNoTransfer = new ToolStripMenuItem();
             miExpPositionsNoTransfer.Name        = "positionsNoTransfer";
-            miExpPositionsNoTransfer.Text        = Language.T("Positions") + " (" + Language.T("Without Transfers") + ")...";
+            miExpPositionsNoTransfer.Text        = Language.T("Positions") + " (" + Language.T("without Transfers") + ")...";
             miExpPositionsNoTransfer.ToolTipText = Language.T("Export positions in pips as a spreadsheet.");
             miExpPositionsNoTransfer.Image       = Properties.Resources.export;
             miExpPositionsNoTransfer.Click      += new EventHandler(Export_OnClick);
@@ -531,7 +539,7 @@ namespace Forex_Strategy_Builder
 
             ToolStripMenuItem miExpMoneyPositionsNoTransfer = new ToolStripMenuItem();
             miExpMoneyPositionsNoTransfer.Name        = "positionInMoneyNoTransfer";
-            miExpMoneyPositionsNoTransfer.Text        = Language.T("Positions in Currency") + " (" + Language.T("Without Transfers") + ")...";
+            miExpMoneyPositionsNoTransfer.Text        = Language.T("Positions in Currency") + " (" + Language.T("without Transfers") + ")...";
             miExpMoneyPositionsNoTransfer.Image       = Properties.Resources.export;
             miExpMoneyPositionsNoTransfer.ToolTipText = Language.T("Export positions in currency as a spreadsheet.");
             miExpMoneyPositionsNoTransfer.Click      += new EventHandler(Export_OnClick);

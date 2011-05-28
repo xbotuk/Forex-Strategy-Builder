@@ -2,7 +2,6 @@ General:
 - Repair back test of Trailing Stop - tick mode instead of bar mode;
 - Add Break Even stop;
 - Import MT5 data files;
-- Show Floating P/L in journal during transfer when there are more transactions in the bar.
 - Money Management - add / subtract after a certain number of pips profit or loss;
 - Fix loading data without a decimal separator in the data file.
 - User format of data file that can overwrite the default one.
@@ -19,6 +18,3 @@ Analyser
 Indicators:
 - Trailing Stop, Stop Loss, Take Profit... to start from previous top/bottom, ATR...
 - More MA smoothing methods.
-
-Bar Explorer
-- Show position lots between the points.

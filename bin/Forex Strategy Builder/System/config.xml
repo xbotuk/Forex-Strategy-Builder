@@ -14,6 +14,7 @@
   <showJournal>True</showJournal>
   <gradientView>True</gradientView>
   <journalByBars>False</journalByBars>
+  <journalShowTransfers>False</journalShowTransfers>
   <autoscan>False</autoscan>
   <tradeUntilMarginCall>True</tradeUntilMarginCall>
   <additionalStatistics>False</additionalStatistics>
