@@ -545,17 +545,17 @@ namespace Forex_Strategy_Builder
             double deltaPoint = (Data.InstrProperties.Digits == 5 || Data.InstrProperties.Digits == 3) ? Data.InstrProperties.Point * 100 : Data.InstrProperties.Point * 10;
             double delta = Math.Max(Math.Round((maxPrice - minPrice) / iCntLabels, Data.InstrProperties.Point < 0.001 ? 3 : 1), deltaPoint);
 
-            minPrice  = Math.Round(minPrice, Data.InstrProperties.Point < 0.001f ? 3 : 1) - Data.InstrProperties.Point * 10;
-            minPrice -= delta;
-            maxPrice += delta;
+            minPrice   = Math.Round(minPrice, Data.InstrProperties.Point < 0.001f ? 3 : 1) - Data.InstrProperties.Point * 10;
+            minPrice  -= delta;
+            maxPrice  += delta;
             iCntLabels = (int)Math.Ceiling((maxPrice - minPrice) / delta);
-            maxPrice  = minPrice + iCntLabels * delta;
+            maxPrice   = minPrice + iCntLabels * delta;
 
             double scaleY = (YBottom - YTop) / (iCntLabels * delta);
-            int   yOpen   = (int)(YBottom - (Data.Open[bar]  - minPrice) * scaleY);
-            int   yHigh   = (int)(YBottom - (Data.High[bar]  - minPrice) * scaleY);
-            int   yLow    = (int)(YBottom - (Data.Low[bar]   - minPrice) * scaleY);
-            int   yClose  = (int)(YBottom - (Data.Close[bar] - minPrice) * scaleY);
+            int yOpen  = (int)(YBottom - (Data.Open[bar]  - minPrice) * scaleY);
+            int yHigh  = (int)(YBottom - (Data.High[bar]  - minPrice) * scaleY);
+            int yLow   = (int)(YBottom - (Data.Low[bar]   - minPrice) * scaleY);
+            int yClose = (int)(YBottom - (Data.Close[bar] - minPrice) * scaleY);
 
             // Find the price distance
             double priceDistance = 0;
@@ -811,6 +811,41 @@ namespace Forex_Strategy_Builder
             {
                 g.FillEllipse(brushWeyPnt, pntWay[point].X - pointRadius, pntWay[point].Y - pointRadius, 2 * pointRadius, 2 * pointRadius);
                 g.DrawEllipse(penCross,    pntWay[point].X - pointRadius, pntWay[point].Y - pointRadius, 2 * pointRadius, 2 * pointRadius);
+            }
+
+            // Draw O, H, L, C labels
+            for (int point = 0; point < points; point++)
+            {
+                WayPointType wpType = Backtester.WayPoint(bar, point).WPType;
+                if (wpType != WayPointType.Open && wpType != WayPointType.High &&
+                    wpType != WayPointType.Low  && wpType != WayPointType.Close)
+                    continue;
+
+                string label = "?";
+                switch(wpType)
+                {
+                    case WayPointType.Open:
+                        label = "O";
+                        break;
+                    case WayPointType.High:
+                        label = "H";
+                        break;
+                    case WayPointType.Low:
+                        label = "L";
+                        break;
+                    case WayPointType.Close:
+                        label = "C";
+                        break;
+                    default:
+                        break;
+                }
+
+                int xPoint = pntWay[point].X;
+                int yPoint = pntWay[point].Y - Font.Height - 3;
+
+                StringFormat stringFormatLabel = new StringFormat();
+                stringFormatLabel.Alignment = StringAlignment.Center;
+                g.DrawString(label, Font, brushGridText, xPoint, yPoint, stringFormatLabel);
             }
 
             // Draw the deals on the route
