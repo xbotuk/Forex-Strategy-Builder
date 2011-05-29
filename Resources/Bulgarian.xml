@@ -581,7 +581,9 @@
   <str><main>Go to the chosen bar.</main><alt>Предвижване до избрания бар.</alt></str>
   <str><main>Previous ambiguous bar.</main><alt>Предишен двусмислен бар.</alt></str>
   <str><main>Previous bar.</main><alt>Предишен бар.</alt></str>
+  <str><main>Previous deal.</main><alt>Предишна сделка.</alt></str>
   <str><main>Next bar.</main><alt>Следващ бар.</alt></str>
+  <str><main>Next deal.</main><alt>Следваща сделка.</alt></str>
   <str><main>Next ambiguous bar.</main><alt>Следващ двусмислен бар.</alt></str>
   <str><main>Price Route Inside the Bar</main><alt>Маршрут на цената в бара</alt></str>
   <str><main>Way Points Description</main><alt>Описание на точките от маршрута</alt></str>

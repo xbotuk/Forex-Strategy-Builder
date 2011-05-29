@@ -2070,8 +2070,16 @@
     <alt>Предишен бар.</alt>
   </str>
   <str>
+    <main>Previous deal.</main>
+    <alt>Предишна сделка.</alt>
+  </str>
+  <str>
     <main>Next bar.</main>
     <alt>Следващ бар.</alt>
+  </str>
+  <str>
+    <main>Next deal.</main>
+    <alt>Следваща сделка.</alt>
   </str>
   <str>
     <main>Next ambiguous bar.</main>

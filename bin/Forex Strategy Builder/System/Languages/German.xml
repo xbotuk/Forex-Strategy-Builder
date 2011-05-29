@@ -2070,8 +2070,16 @@
     <alt>Vorherige Kerze.</alt>
   </str>
   <str>
+    <main>Previous deal.</main>
+    <alt>Previous deal.</alt>
+  </str>
+  <str>
     <main>Next bar.</main>
     <alt>Nächste Kerze.</alt>
+  </str>
+  <str>
+    <main>Next deal.</main>
+    <alt>Next deal.</alt>
   </str>
   <str>
     <main>Next ambiguous bar.</main>
