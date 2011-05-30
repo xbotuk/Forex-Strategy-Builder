@@ -148,8 +148,9 @@ namespace Forex_Strategy_Builder
         {
             Configs.ShowJournal   = true;
             Configs.JournalByBars = true;
-            miJournalByPos.Checked  = !Configs.JournalByBars;
-            miJournalByBars.Checked = Configs.JournalByBars;
+            miJournalByPosWithoutTransfers.Checked = false;
+            miJournalByPos.Checked  = false;
+            miJournalByBars.Checked = true;
 
             ResetJournal();
         }
@@ -161,8 +162,9 @@ namespace Forex_Strategy_Builder
         {
             Configs.ShowJournal   = true;
             Configs.JournalByBars = false;
-            miJournalByPos.Checked  = !Configs.JournalByBars;
-            miJournalByBars.Checked = Configs.JournalByBars;
+            miJournalByPosWithoutTransfers.Checked = !Configs.JournalShowTransfers;
+            miJournalByPos.Checked  = Configs.JournalShowTransfers;
+            miJournalByBars.Checked = false;
 
             ResetJournal();
         }

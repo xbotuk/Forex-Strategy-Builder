@@ -553,7 +553,7 @@ namespace Forex_Strategy_Builder
 
             // Print the journal caption
             string stringCaptionText = Language.T("Journal by Positions") +
-                (showTransfers ? "" : " (" + Language.T("without Transfers") + ")") +
+                (showTransfers ? "" : " " + Language.T("without Transfers")) +
                 (Configs.AccountInMoney ? " [" + Configs.AccountCurrency + "]" : " [" + Language.T("pips") + "]");
             g.DrawString(stringCaptionText, font, brushCaptionText, new RectangleF(Point.Empty, size), sf);
             g.SetClip(new RectangleF(border, rowHeight, ClientSize.Width - 2 * border, rowHeight));
