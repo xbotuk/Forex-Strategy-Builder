@@ -21,6 +21,7 @@ namespace Forex_Strategy_Builder
         protected Journal_Pos  pnlJournalPosition;
         protected Splitter splJournal;
         protected int selectedBar; // The bar number represented by the selected row
+        int pnlJournalOldWidth;
 
         /// <summary>
         /// Initializes the controls in panel pnlJournal.
@@ -128,9 +129,11 @@ namespace Forex_Strategy_Builder
         {
             if (Configs.ShowJournal && Configs.JournalByBars)
             {
-                pnlJournalByBars.Width    = 2 * this.ClientSize.Width / 3;
+                if(pnlJournalOldWidth != pnlJournal.Width)
+                    pnlJournalByBars.Width = 2 * this.ClientSize.Width / 3;
                 pnlJournalPosition.Height = (pnlJournal.ClientSize.Height - space) / 2;
             }
+            pnlJournalOldWidth = pnlJournal.Width;
 
             return;
         }
