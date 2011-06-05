@@ -214,6 +214,14 @@
     <alt>Отмяна на последната промяна в стратегията.</alt>
   </str>
   <str>
+    <main>Copy Strategy</main>
+    <alt>Копиране на стратегия</alt>
+  </str>
+  <str>
+    <main>Paste Strategy</main>
+    <alt>Вмъкване на стратегия</alt>
+  </str>
+  <str>
     <main>Previous Generated Strategy</main>
     <alt>Предишна генерирана стратегия</alt>
   </str>

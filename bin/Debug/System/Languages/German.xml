@@ -214,6 +214,14 @@
     <alt>Letzte Änderung an der Strategie rückgängig machen.</alt>
   </str>
   <str>
+    <main>Copy Strategy</main>
+    <alt>Copy Strategy</alt>
+  </str>
+  <str>
+    <main>Paste Strategy</main>
+    <alt>Paste Strategy</alt>
+  </str>
+  <str>
     <main>Previous Generated Strategy</main>
     <alt>Zuvor generierte Strategie</alt>
   </str>

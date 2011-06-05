@@ -582,12 +582,12 @@
     <EmbeddedResource Include="Images\str-info-infook.png" />
     <EmbeddedResource Include="Images\str-info-noinfo.png" />
     <EmbeddedResource Include="Images\str-info-warning.png" />
+    <EmbeddedResource Include="Images\paste.png" />
+    <EmbeddedResource Include="Images\copy.png" />
     <None Include="License Agreement.txt" />
     <None Include="ToDo.txt" />
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="README.txt" />
   </ItemGroup>
 </Project>

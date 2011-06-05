@@ -118,6 +118,22 @@ namespace Forex_Strategy_Builder
 
             miEdit.DropDownItems.Add(new ToolStripSeparator());
 
+            ToolStripMenuItem miStrategyCopy = new ToolStripMenuItem();
+            miStrategyCopy.Text         = Language.T("Copy Strategy");
+            miStrategyCopy.Image        = Properties.Resources.copy;
+            miStrategyCopy.ShortcutKeys = Keys.Control | Keys.C;
+            miStrategyCopy.Click       += new EventHandler(MenuStrategyCopy_OnClick);
+            miEdit.DropDownItems.Add(miStrategyCopy);
+
+            ToolStripMenuItem miStrategyPaste = new ToolStripMenuItem();
+            miStrategyPaste.Text         = Language.T("Paste Strategy");
+            miStrategyPaste.Image        = Properties.Resources.paste;
+            miStrategyPaste.ShortcutKeys = Keys.Control | Keys.V;
+            miStrategyPaste.Click       += new EventHandler(MenuStrategyPaste_OnClick);
+            miEdit.DropDownItems.Add(miStrategyPaste);
+
+            miEdit.DropDownItems.Add(new ToolStripSeparator());
+
             ToolStripMenuItem miPrevGenHistory = new ToolStripMenuItem();
             miPrevGenHistory.Text         = Language.T("Previous Generated Strategy");
             miPrevGenHistory.Image        = Properties.Resources.prev_gen;
@@ -1126,6 +1142,20 @@ namespace Forex_Strategy_Builder
         /// Undoes the strategy
         /// </summary>
         protected virtual void MenuStrategyUndo_OnClick(object sender, EventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// Copies the strategy to clipboard.
+        /// </summary>
+        protected virtual void MenuStrategyCopy_OnClick(object sender, EventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// Pastes a strategy from clipboard.
+        /// </summary>
+        protected virtual void MenuStrategyPaste_OnClick(object sender, EventArgs e)
         {
         }
 

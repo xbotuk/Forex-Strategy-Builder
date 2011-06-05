@@ -214,6 +214,14 @@
     <alt>Отменить последнее изменение в стратегии.</alt>
   </str>
   <str>
+    <main>Copy Strategy</main>
+    <alt>Копировать стратегию</alt>
+  </str>
+  <str>
+    <main>Paste Strategy</main>
+    <alt>Вставить стратегию</alt>
+  </str>
+  <str>
     <main>Previous Generated Strategy</main>
     <alt>Предыдущая сгенерирована стратегия</alt>
   </str>

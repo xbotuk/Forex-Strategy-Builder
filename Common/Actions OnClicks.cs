@@ -180,6 +180,62 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
+        /// Copies the strategy to clipboard.
+        /// </summary>
+        protected override void MenuStrategyCopy_OnClick(object sender, EventArgs e)
+        {
+            Strategy_XML strategyXML = new Strategy_XML();
+            System.Xml.XmlDocument xmlDoc = strategyXML.CreateStrategyXmlDoc(Data.Strategy);
+            Clipboard.SetText(xmlDoc.InnerXml);
+
+            return;
+        }
+
+        /// <summary>
+        /// Pastes a strategy from clipboard.
+        /// </summary>
+        protected override void MenuStrategyPaste_OnClick(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = WhetherSaveChangedStrategy();
+
+            if (dialogResult == DialogResult.Yes)
+                SaveStrategy();
+            else if (dialogResult == DialogResult.Cancel)
+                return;
+
+            System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+            Strategy_XML strategyXML = new Strategy_XML();
+            Strategy tempStrategy;
+
+            try
+            {
+                xmlDoc.InnerXml = Clipboard.GetText();
+                tempStrategy = strategyXML.ParseXmlStrategy(xmlDoc);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                return;
+            }
+
+            Data.Strategy = tempStrategy;
+            Data.StrategyName = tempStrategy.StrategyName;
+
+            Data.SetStrategyIndicators();
+            RebuildStrategyLayout();
+
+            this.Text = Data.Strategy.StrategyName + " - " + Data.ProgramName;
+            Data.IsStrategyChanged = false;
+            Data.LoadedSavedStrategy = Data.StrategyPath;
+            Data.StackStrategy.Clear();
+
+            AfterStrategyOpening(false);
+            Calculate(false);
+
+            return;
+        }
+
+        /// <summary>
         /// Load a color scheme.
         /// </summary>
         protected override void MenuLoadColor_OnClick(object sender, EventArgs e)
