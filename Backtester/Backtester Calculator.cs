@@ -280,6 +280,10 @@ namespace Forex_Strategy_Builder
             double posBalanceOld = positionOld.Balance;
             double posEquityOld  = positionOld.Equity;
 
+            // KROG - keep for N Bars Exit
+
+            int openingBarOld = positionOld.OpeningBar;
+
             sessionPosition = sessionPosOld + 1;
             position = session[bar].Position[sessionPosition] = new Position();
 
@@ -300,6 +304,8 @@ namespace Forex_Strategy_Builder
             if (posDirOld == PosDirection.Long && ordDir == OrderDirection.Sell && lotsOld == lots)
             {
                 position.Transaction     = Transaction.Close;
+
+                position.OpeningBar      = openingBarOld;  // KROG -- for N Bars Exit
                 position.PosDir          = PosDirection.Closed;
                 position.PosLots         = 0;
                 position.AbsoluteSL      = 0;
@@ -327,6 +333,8 @@ namespace Forex_Strategy_Builder
             if (posDirOld == PosDirection.Short && ordDir == OrderDirection.Buy && lotsOld == lots)
             {
                 position.Transaction     = Transaction.Close;
+
+                position.OpeningBar      = openingBarOld; // KROG -- for N Bars Exit
                 position.PosDir          = PosDirection.Closed;
                 position.PosLots         = 0;
                 position.AbsoluteSL      = 0;
@@ -354,6 +362,8 @@ namespace Forex_Strategy_Builder
             if (posDirOld == PosDirection.Long && ordDir == OrderDirection.Buy)
             {
                 position.Transaction     = Transaction.Add;
+
+                position.OpeningBar      = openingBarOld; // KROG -- for N Bars Exit
                 position.PosDir          = PosDirection.Long;
                 position.PosLots         = lotsOld + lots;
                 position.AbsoluteSL      = absoluteSL;
@@ -383,6 +393,8 @@ namespace Forex_Strategy_Builder
             if (posDirOld == PosDirection.Short && ordDir == OrderDirection.Sell)
             {
                 position.Transaction     = Transaction.Add;
+
+                position.OpeningBar      = openingBarOld; // KROG -- for N Bars Exit
                 position.PosDir          = PosDirection.Short;
                 position.PosLots         = lotsOld + lots;
                 position.AbsoluteSL      = absoluteSL;
@@ -412,6 +424,8 @@ namespace Forex_Strategy_Builder
             if (posDirOld == PosDirection.Long && ordDir == OrderDirection.Sell && lotsOld > lots)
             {
                 position.Transaction     = Transaction.Reduce;
+
+                position.OpeningBar      = openingBarOld; // KROG -- for N Bars Exit
                 position.PosDir          = PosDirection.Long;
                 position.PosLots         = lotsOld - lots;
                 position.AbsoluteSL      = absoluteSL;
@@ -439,6 +453,8 @@ namespace Forex_Strategy_Builder
             if (posDirOld == PosDirection.Short && ordDir == OrderDirection.Buy && lotsOld > lots)
             {
                 position.Transaction     = Transaction.Reduce;
+
+                position.OpeningBar      = openingBarOld; // KROG -- for N Bars Exit
                 position.PosDir          = PosDirection.Short;
                 position.PosLots         = lotsOld - lots;
                 position.AbsoluteSL      = absoluteSL;
@@ -884,7 +900,7 @@ namespace Forex_Strategy_Builder
                         break;
                 }
 
-                // If entry order closes or reverses the position the exit orders of the
+                // If entry order closes or reverses the position the exit orthers of the
                 // initial position have to be cancelled
                 if (order.OrdSender == OrderSender.Open &&
                     (session[bar].Summary.Transaction == Transaction.Close ||
@@ -904,7 +920,7 @@ namespace Forex_Strategy_Builder
                         }
                     }
 
-                    // In case when the order is not found, this means that the position is transferred
+                    // In case when the order is not found, this means that the position is transfered
                     // so its exit order is not conditional
                     if (!isFound)
                     {
@@ -1084,7 +1100,7 @@ namespace Forex_Strategy_Builder
                     Strategy.Slot[Strategy.CloseSlot].Component[1].Value[bar - 1] = stop;
                 }
 
-                // Saves the Account Percent Stop price
+                // Saves the Account Percen Stop price
                 if (Strategy.Slot[Strategy.CloseSlot].IndicatorName == "Account Percent Stop" &&
                     session[bar - 1].Summary.Transaction != Transaction.Transfer)
                 {
@@ -1095,7 +1111,7 @@ namespace Forex_Strategy_Builder
                 }
             }
             else
-            {   // When there is no position transfer the old balance and equity
+            {   // When there is no position transffer the old balance and equity
                 session[bar].Summary.Balance      = session[bar - 1].Summary.Balance;
                 session[bar].Summary.Equity       = session[bar - 1].Summary.Equity;
                 session[bar].Summary.MoneyBalance = session[bar - 1].Summary.MoneyBalance;
@@ -2002,6 +2018,79 @@ namespace Forex_Strategy_Builder
 
             #endregion
 
+
+
+
+
+            #region Indicator "N Bars Exit"  // KROG 
+
+
+
+            // search if N Bars Exit is present as CloseFilter, could be any slot after first closing slot
+
+            bool hasNBarsExit = false;
+
+            int iCloseSlot = 0;
+
+            for (int i = Strategy.CloseSlot; i < Strategy.Slots; i++) {
+
+                if (Strategy.Slot[i].IndicatorName == "N Bars Exit") {
+
+                    hasNBarsExit = true;
+
+                    iCloseSlot = i;
+
+                    i = Strategy.Slots;
+
+                }
+
+            }
+
+
+
+            // check have N Bars exit close filter
+
+            if (hasNBarsExit) {
+
+                // check there is a position open
+
+                if (session[bar].Summary.PosDir == PosDirection.Long || session[bar].Summary.PosDir == PosDirection.Short) {
+
+                    int nExit = (int)Strategy.Slot[iCloseSlot].IndParam.NumParam[0].Value;
+
+                    int barLength = bar - session[bar].Summary.OpeningBar;
+
+
+
+                    // check if N Bars should close; else set Component Value to 0
+
+                    if (barLength >= nExit) {
+
+                        Strategy.Slot[iCloseSlot].Component[0].Value[bar] = 1.0;
+
+                    }
+
+                    else {
+
+                        Strategy.Slot[iCloseSlot].Component[0].Value[bar] = 0.0;
+
+                    }
+
+                }
+
+                // if no position, set to zero -- fixes bug of changing from oppSignal=Nothing to oppSignal=Close not updating N Bar indicator
+
+                else {
+
+                    Strategy.Slot[iCloseSlot].Component[0].Value[bar] = 0.0;
+
+                }
+
+            }
+
+
+
+            #endregion
 
             // Searching the components to find the exit price for a long position.
             double priceExitLong = 0;
