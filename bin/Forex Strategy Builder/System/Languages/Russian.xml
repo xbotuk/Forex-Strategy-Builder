@@ -223,11 +223,11 @@
   </str>
   <str>
     <main>Previous Generated Strategy</main>
-    <alt>Предыдущая сгенерирована стратегия</alt>
+    <alt>Предыдущая отгенерированая стратегия</alt>
   </str>
   <str>
     <main>Next Generated Strategy</main>
-    <alt>Следующия сгенерирована стратегии</alt>
+    <alt>Следующая отгенерированая стратегия</alt>
   </str>
   <str>
     <main>View</main>
@@ -343,7 +343,7 @@
   </str>
   <str>
     <main>Spread, Swap numbers, Slippage.</main>
-    <alt>Спрэд, своп, проскальзывание.</alt>
+    <alt>Спред, своп, проскальзывание.</alt>
   </str>
   <str>
     <main>Data Horizon</main>
@@ -547,7 +547,7 @@
   </str>
   <str>
     <main>Show Price Line on Account Chart</main>
-    <alt>Показать шкалу цень на диаграмме баланса</alt>
+    <alt>Показать шкалу цены на диаграмме баланса</alt>
   </str>
   <str>
     <main>Tools</main>
@@ -715,7 +715,7 @@
   </str>
   <str>
     <main>New Beta</main>
-    <alt>Новая beta</alt>
+    <alt>Новая бета</alt>
   </str>
   <str>
     <main>Forum</main>
@@ -740,7 +740,7 @@
   <!--Status Bar -->
   <str>
     <main>Symbol Period (Spread, Swap numbers, Slippage)</main>
-    <alt>Период символа (спрэд, своп числа, отклонение)</alt>
+    <alt>Период символа (спред, своп числа, отклонение)</alt>
   </str>
   <str>
     <main>Price close</main>
@@ -903,7 +903,7 @@
   </str>
   <str>
     <main>Charged spread</main>
-    <alt>Начислен спрэд</alt>
+    <alt>Начислен спред</alt>
   </str>
   <str>
     <main>Charged rollover</main>
@@ -1097,19 +1097,19 @@
   </str>
   <str>
     <main>Expected payoff</main>
-    <alt>Ожидаемая прибиль со следующей сделки</alt>
+    <alt>Ожидаемая прибыль со следующей сделки</alt>
   </str>
   <str>
     <main>Average holding period returns</main>
-    <alt>Средний периуд удерживаемой позиции</alt>
+    <alt>Средний период удерживаемой позиции</alt>
   </str>
   <str>
     <main>Geometric holding period returns</main>
-    <alt>Геометрия переиуда удерживаемой позиции</alt>
+    <alt>Геометрия периода удерживаемой позиции</alt>
   </str>
   <str>
     <main>Sharpe ratio</main>
-    <alt>Коефициент на Шарп</alt>
+    <alt>Коэффициент Шарпа</alt>
   </str>
   <!-- Indicator Parameters -->
   <str>
@@ -1231,7 +1231,7 @@
   </str>
   <str>
     <main>when at least one of the following logic conditions is satisfied</main>
-    <alt>когда хотябы одно из следующих условий удовлетворенно</alt>
+    <alt>когда хотя бы одно из следующих условий удовлетворенно</alt>
   </str>
   <str>
     <main>when all the following logic conditions are satisfied</main>
@@ -1359,7 +1359,7 @@
   </str>
   <str>
     <main>pips per open lot (plus the charged spread and rollover).</main>
-    <alt>пипсы на открытый лот (плюс начисленный спрэд и ролловер).</alt>
+    <alt>пипсы на открытый лот (плюс начисленный спред и ролловер).</alt>
   </str>
   <str>
     <main>The strategy does not use a Permanent Take Profit.</main>
@@ -1480,7 +1480,7 @@
   </str>
   <str>
     <main>Add a new exit logic slot to the strategy.</main>
-    <alt>Добавить к стратегии новый слот для изходящей логики.</alt>
+    <alt>Добавить к стратегии новый слот для исходящей логики.</alt>
   </str>
   <str>
     <main>You can use Closing Logic Conditions only if the Closing Point of the Position slot contains one of the following indicators:</main>
@@ -1666,7 +1666,7 @@
   </str>
   <str>
     <main>Spread</main>
-    <alt>Спрэд</alt>
+    <alt>Спред</alt>
   </str>
   <str>
     <main>Rollover</main>
@@ -1714,7 +1714,7 @@
   </str>
   <str>
     <main>Ambiguous</main>
-    <alt>Двусмисленный</alt>
+    <alt>Двусмысленный</alt>
   </str>
   <str>
     <main>Correct</main>
@@ -1822,7 +1822,7 @@
   </str>
   <str>
     <main>Confirmed</main>
-    <alt>Потвержден</alt>
+    <alt>Подтвержден</alt>
   </str>
   <str>
     <main>Executed</main>
@@ -1969,11 +1969,11 @@
   </str>
   <str>
     <main>Forming order number</main>
-    <alt>Номер формирущий ордер</alt>
+    <alt>Номер формирующий ордер</alt>
   </str>
   <str>
     <main>Forming order price</main>
-    <alt>Цену формирущий ордер</alt>
+    <alt>Цену формирующий ордер</alt>
   </str>
   <!-- Order's Comments -->
   <str>
@@ -2222,7 +2222,7 @@
   <!-- Data Directory -->
   <str>
     <main>Offline data directory:</main>
-    <alt>Директория данных офлайн:</alt>
+    <alt>Директория данных оффлайн:</alt>
   </str>
   <!-- Instrument Editor -->
   <str>
@@ -2251,7 +2251,7 @@
   </str>
   <str>
     <main>Spread in</main>
-    <alt>Спрэд в</alt>
+    <alt>Спред в</alt>
   </str>
   <str>
     <main>Swap in</main>
@@ -2381,7 +2381,7 @@
   </str>
   <str>
     <main>Random iterations</main>
-    <alt>Случайные интерации</alt>
+    <alt>Случайные итерации</alt>
   </str>
   <str>
     <main>Interpolation Methods</main>
@@ -2535,7 +2535,7 @@
   </str>
   <str>
     <main>Optimizer writes a report for each optimized strategy</main>
-    <alt>Оптимизатор пишет рапорт для каждой оптимизировонной стратегии</alt>
+    <alt>Оптимизатор пишет рапорт для каждой оптимизированной стратегии</alt>
   </str>
   <str>
     <main>There are no parameters suitable for optimization.</main>
@@ -2705,7 +2705,7 @@
   </str>
   <str>
     <main>Reset all parameters and settings</main>
-    <alt>Востановить все параметры и настройки "по умолчанию"</alt>
+    <alt>Восстановить все параметры и настройки "по умолчанию"</alt>
   </str>
   <str>
     <main>Allow all indicators.</main>
@@ -2721,7 +2721,7 @@
   </str>
   <str>
     <main>banned</main>
-    <alt>запрещенно</alt>
+    <alt>запрещено</alt>
   </str>
   <!-- Strategy Analyzer -->
   <str>
@@ -2754,7 +2754,7 @@
   </str>
   <str>
     <main>Parameters deviation % [recommended 20]</main>
-    <alt>Отклоннение параметров % [рекомендуется 20]</alt>
+    <alt>Отклонение параметров % [рекомендуется 20]</alt>
   </str>
   <str>
     <main>Parameters number [recommended 20]</main>
@@ -2770,7 +2770,7 @@
   </str>
   <str>
     <main>Hide FSB when Analyzer starts</main>
-    <alt>Скрыть FSB когда анаилзатор запускается</alt>
+    <alt>Скрыть FSB когда анализатор запускается</alt>
   </str>
   <str>
     <main>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</main>
@@ -2843,7 +2843,7 @@
   </str>
   <str>
     <main>Trade percent of your account. The percentage values show the part of the account equity used to cover the required margin.</main>
-    <alt>Торговать меньяющимся количеством лотов, в зависимости от текущего капитала аккаунта. Процентные стоимости показывают долю от капитала аккаунта, который используется для удовлетворения требуемой маржы.</alt>
+    <alt>Торговать меняющимся количеством лотов, в зависимости от текущего капитала аккаунта. Процентные стоимости показывают долю от капитала аккаунта, который используется для удовлетворения требуемой маржы.</alt>
   </str>
   <str>
     <main>Maximum number of open lots</main>
@@ -2933,7 +2933,7 @@
   </str>
   <str>
     <main>Could not recognize the data file format!</main>
-    <alt>Не могу разпознать формат данных!</alt>
+    <alt>Не могу распознать формат данных!</alt>
   </str>
   <str>
     <main>Could not determine the number decimal separator!</main>
@@ -3025,7 +3025,7 @@
   </str>
   <str>
     <main>The loaded strategy has been designed for a different market!</main>
-    <alt>Загруженая стратегия разработана для другого рынка!</alt>
+    <alt>Загруженная стратегия разработана для другого рынка!</alt>
   </str>
   <str>
     <main>Do you want to load this market data?</main>
