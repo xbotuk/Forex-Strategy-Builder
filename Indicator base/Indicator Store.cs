@@ -1,4 +1,4 @@
-﻿// Indicator_Store Class
+// Indicator_Store Class
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
 // Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
