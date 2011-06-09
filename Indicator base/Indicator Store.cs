@@ -153,6 +153,7 @@ namespace Forex_Strategy_Builder
             originalIndicators.Add("Money Flow", new Money_Flow(SlotTypes.NotDefined));
             originalIndicators.Add("Moving Average", new Moving_Average(SlotTypes.NotDefined));
             originalIndicators.Add("Moving Averages Crossover", new Moving_Averages_Crossover(SlotTypes.NotDefined));
+            originalIndicators.Add("N Bars Exit", new N_Bars_Exit(SlotTypes.NotDefined));
             originalIndicators.Add("Narrow Range", new Narrow_Range(SlotTypes.NotDefined));
             originalIndicators.Add("OBOS MA Oscillator", new OBOS_MA_Oscillator(SlotTypes.NotDefined));
             originalIndicators.Add("On Balance Volume", new On_Balance_Volume(SlotTypes.NotDefined));
