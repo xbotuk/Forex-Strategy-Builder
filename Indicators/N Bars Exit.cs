@@ -1,4 +1,5 @@
 // N Bars Exit Indicator
+// Contributed by Krog
 // Last changed on 2011-04-11
 // Part of Forex Strategy Builder & Forex Strategy Trader
 // Website http://forexsb.com/
@@ -10,10 +11,10 @@ namespace Forex_Strategy_Builder
     /// <summary>
     /// N Bars Stop Indicator
     /// Exit N Bars after entry
-    /// The implimentation of logic is in Market.AnalyseClose(int iBar)
+    /// The implementation of logic is in Market.AnalyseClose(int iBar)
     /// </summary>
     public class N_Bars_Exit : Indicator
-	{
+    {
         /// <summary>
         /// Sets the default indicator parameters for the designated slot type
         /// </summary>
@@ -63,14 +64,14 @@ namespace Forex_Strategy_Builder
             Component = new IndicatorComp[1];
 
             Component[0] = new IndicatorComp();
-            Component[0].CompName = "N Bars Exit (" + iNExit.ToString() + ")";
-            Component[0].DataType = IndComponentType.ForceClose;
-            Component[0].ChartType = IndChartType.NoChart;
+            Component[0].CompName      = "N Bars Exit (" + iNExit.ToString() + ")";
+            Component[0].DataType      = IndComponentType.ForceClose;
+            Component[0].ChartType     = IndChartType.NoChart;
             Component[0].ShowInDynInfo = true;
-            Component[0].FirstBar = iNExit + 1;
+            Component[0].FirstBar      = iNExit + 1;
             Component[0].Value = new double[Bars];
             return;
-		}
+        }
 
         /// <summary>
         /// Sets the indicator logic description
@@ -79,7 +80,7 @@ namespace Forex_Strategy_Builder
         {
             int iNExit = (int)IndParam.NumParam[0].Value;
 
-            ExitPointLongDescription = iNExit.ToString() + " bars after entry";
+            ExitPointLongDescription  = iNExit.ToString() + " bars after entry";
             ExitPointShortDescription = iNExit.ToString() + " bars after entry";
 
             return;
