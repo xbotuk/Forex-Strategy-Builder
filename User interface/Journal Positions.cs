@@ -18,7 +18,7 @@ namespace Forex_Strategy_Builder
         HScrollBar hScrollBar;
         ToolTip    toolTip;
 
-        int[]     aiPosNumber;     // Contains the numbers of all positions without transfered
+        int[]     aiPosNumber;     // Contains the numbers of all positions without transferred
         Image[]   aiPositionIcons; // Shows the position's type and transaction
         string[,] asJournalData;   // The text journal data
         string[]  asTitlesPips;    // Journal title
@@ -80,7 +80,7 @@ namespace Forex_Strategy_Builder
         public Button BtnToggleJournal { get { return btnToggleJournal; } }
 
         /// <summary>
-        /// Sets wether Journal shows transfers.
+        /// Sets whether Journal shows transfers.
         /// </summary>
         public bool ShowTransfers { set { showTransfers = value; } }
 
@@ -130,6 +130,7 @@ namespace Forex_Strategy_Builder
                 firstPos = 0;
                 lastPos  = 0;
                 shownPos = 0;
+                selectedRow = 0;
 
                 vScrollBar.Enabled = false;
             }
@@ -138,6 +139,7 @@ namespace Forex_Strategy_Builder
                 firstPos = 0;
                 lastPos  = rows;
                 shownPos = positions;
+                selectedRow = 0;
 
                 vScrollBar.Enabled = false;
             }
