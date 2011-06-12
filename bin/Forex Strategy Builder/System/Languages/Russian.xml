@@ -218,8 +218,16 @@
     <alt>Копировать стратегию</alt>
   </str>
   <str>
+    <main>Copy the entire strategy to the clipboard.</main>
+    <alt>Копирование всей стратегии в буфер обмена.</alt>
+  </str>
+  <str>
     <main>Paste Strategy</main>
     <alt>Вставить стратегию</alt>
+  </str>
+  <str>
+    <main>Load a strategy from the clipboard.</main>
+    <alt>Загрузка стратегии из буфера обмена.</alt>
   </str>
   <str>
     <main>Previous Generated Strategy</main>

@@ -219,8 +219,16 @@
     <alt>Copy Strategy</alt>
   </str>
   <str>
+    <main>Copy the entire strategy to the clipboard.</main>
+    <alt>Copy the entire strategy to the clipboard.</alt>
+  </str>
+  <str>
     <main>Paste Strategy</main>
     <alt>Paste Strategy</alt>
+  </str>
+  <str>
+    <main>Load a strategy from the clipboard.</main>
+    <alt>Load a strategy from the clipboard.</alt>
   </str>
   <str>
     <main>Previous Generated Strategy</main>

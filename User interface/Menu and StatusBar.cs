@@ -120,6 +120,7 @@ namespace Forex_Strategy_Builder
 
             ToolStripMenuItem miStrategyCopy = new ToolStripMenuItem();
             miStrategyCopy.Text         = Language.T("Copy Strategy");
+            miStrategyCopy.ToolTipText  = Language.T("Copy the entire strategy to the clipboard.");
             miStrategyCopy.Image        = Properties.Resources.copy;
             miStrategyCopy.ShortcutKeys = Keys.Control | Keys.C;
             miStrategyCopy.Click       += new EventHandler(MenuStrategyCopy_OnClick);
@@ -127,6 +128,7 @@ namespace Forex_Strategy_Builder
 
             ToolStripMenuItem miStrategyPaste = new ToolStripMenuItem();
             miStrategyPaste.Text         = Language.T("Paste Strategy");
+            miStrategyPaste.ToolTipText  = Language.T("Load a strategy from the clipboard.");
             miStrategyPaste.Image        = Properties.Resources.paste;
             miStrategyPaste.ShortcutKeys = Keys.Control | Keys.V;
             miStrategyPaste.Click       += new EventHandler(MenuStrategyPaste_OnClick);
