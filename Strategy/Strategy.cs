@@ -221,7 +221,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets a new strattegy.
+        /// Sets a new strategy.
         /// </summary>
         public Strategy(int openFilters, int closeFilters)
         {
@@ -537,7 +537,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets Use prv bar value automaticaly
+        /// Sets Use previous bar value automatically
         /// </summary>
         public bool AdjustUsePreviousBarValue()
         {
@@ -550,7 +550,7 @@ namespace Forex_Strategy_Builder
                 isSomethingChanged = SetUsePrevBarValueCheckBox(slot) ? true : isSomethingChanged;
             }
 
-            // Reclaculates the indicators
+            // Recalculates the indicators.
             if (isSomethingChanged)
             {
                 for (int slot = 0; slot < Slots; slot++)
@@ -579,7 +579,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the "Use previous bar value" checkbox
+        /// Sets the "Use previous bar value" checkbox.
         /// </summary>
         /// <returns>Is any Changes</returns>
         public bool SetUsePrevBarValueCheckBox(int slot)
@@ -641,7 +641,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Prepare the checkbox
+        /// Prepare the checkbox.
         /// </summary>
         /// <returns>IsChecked</returns>
         public bool PrepareUsePrevBarValueCheckBox(SlotTypes slotType)
@@ -744,12 +744,12 @@ namespace Forex_Strategy_Builder
             tempStrategy.addingLots   = addingLots;
             tempStrategy.reducingLots = reducingLots;
 
-            // Permanet Stop Loss
+            // Permanent Stop Loss
             tempStrategy.usePermanentSL  = usePermanentSL;
             tempStrategy.permanentSLType = permanentSLType;
             tempStrategy.permanentSL     = permanentSL;
 
-            // Permanet Take Profit
+            // Permanent Take Profit
             tempStrategy.usePermanentTP  = usePermanentTP;
             tempStrategy.permanentTPType = permanentTPType;
             tempStrategy.permanentTP     = permanentTP;

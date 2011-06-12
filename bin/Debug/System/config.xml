@@ -8,8 +8,8 @@
   <SIGMA_MODE_MAIN_CHART>1</SIGMA_MODE_MAIN_CHART>
   <SIGMA_MODE_SEPARATED_CHART>5</SIGMA_MODE_SEPARATED_CHART>
   <installed>True</installed>
-  <showStartingTip>True</showStartingTip>
-  <currentTipNumber>-1</currentTipNumber>
+  <showStartingTip>False</showStartingTip>
+  <currentTipNumber>0</currentTipNumber>
   <language>English</language>
   <showJournal>True</showJournal>
   <gradientView>True</gradientView>
@@ -23,8 +23,7 @@
   </dataDirectory>
   <colorScheme>Light Blue</colorScheme>
   <rememberLastStrategy>True</rememberLastStrategy>
-  <lastStrategy>
-  </lastStrategy>
+  <lastStrategy>New.xml</lastStrategy>
   <checkForUpdates>True</checkForUpdates>
   <checkForNewBeta>True</checkForNewBeta>
   <checkData>True</checkData>
