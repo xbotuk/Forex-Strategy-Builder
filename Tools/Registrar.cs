@@ -36,7 +36,7 @@ namespace Forex_Strategy_Builder
 
             string respond = SetStats(request);
 
-            if (respond == "ok")
+            if (respond.Contains("ok"))
                 Configs.IsInstalled = true;
         }
 
