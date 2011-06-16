@@ -712,7 +712,7 @@ namespace Forex_Strategy_Builder
             if (Data.Strategy.sameDirSignal == SameDirSignalAction.Nothing)
                 sb.AppendLine(Language.T("No averaging is allowed. Cancel any additional orders which are in the same direction."));
             else if (Data.Strategy.sameDirSignal == SameDirSignalAction.Winner)
-                sb.AppendLine(Language.T("Add to a wining position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open."));
+                sb.AppendLine(Language.T("Add to a winning position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open."));
             else if (Data.Strategy.sameDirSignal == SameDirSignalAction.Add)
                 sb.AppendLine(Language.T("Add to the position no matter if it is at a profit or loss. Do not exceed the maximum allowed number of lots to open."));
             sb.AppendLine("</li></ul>");

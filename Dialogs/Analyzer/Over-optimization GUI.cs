@@ -56,7 +56,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             lblIntro.ForeColor = colorText;
             lblIntro.BackColor = Color.Transparent;
             lblIntro.AutoSize  = false;
-            lblIntro.Text      = Language.T("The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.");
+            lblIntro.Text      = Language.T("The Over-optimization Report shows how the results of the backtest vary as the numerical parameters of the strategy change by a given percent.");
 
             // Label Deviation
             lblDeviation.Parent    = this;

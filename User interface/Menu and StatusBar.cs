@@ -423,7 +423,7 @@ namespace Forex_Strategy_Builder
 
             ToolStripMenuItem miQuickScan = new ToolStripMenuItem();
             miQuickScan.Text         = Language.T("Quick Scan");
-            miQuickScan.ToolTipText  = Language.T("Perform quick intrabar scanning.");
+            miQuickScan.ToolTipText  = Language.T("Perform quick intrabar scan.");
             miQuickScan.Image        = Properties.Resources.fast_scan;
             miQuickScan.ShortcutKeys = Keys.F6;
             miQuickScan.Click       += new EventHandler(MenuQuickScan_OnClick);
@@ -588,7 +588,7 @@ namespace Forex_Strategy_Builder
             miAdditionalStats.Text         = Language.T("Additional Statistics");
             miAdditionalStats.Checked      = Configs.AdditionalStatistics;
             miAdditionalStats.CheckOnClick = true;
-            miAdditionalStats.ToolTipText  = Language.T("Show long/short balance lines in the chart and more statistics in the overview.");
+            miAdditionalStats.ToolTipText  = Language.T("Show long/short balance lines on the chart and more statistics in the overview.");
             miAdditionalStats.Click       += new EventHandler(AdditionalStats_OnClick);
             miTesting.DropDownItems.Add(miAdditionalStats);
 
@@ -631,7 +631,7 @@ namespace Forex_Strategy_Builder
             ToolStripMenuItem miScanner = new ToolStripMenuItem();
             miScanner.Name        = "Scanner";
             miScanner.Text        = Language.T("Scanner") + "...";
-            miScanner.ToolTipText = Language.T("Perform a deep intrabar scanning.");
+            miScanner.ToolTipText = Language.T("Perform a deep intrabar scan.");
             miScanner.Image       = Properties.Resources.scanner;
             miScanner.Click      += new EventHandler(MenuTools_OnClick);
             miTools.DropDownItems.Add(miScanner);
@@ -791,7 +791,7 @@ namespace Forex_Strategy_Builder
             ToolStripMenuItem miResetConfigs = new ToolStripMenuItem();
             miResetConfigs.Name        = "Reset settings";
             miResetConfigs.Text        = Language.T("Reset Settings");
-            miResetConfigs.ToolTipText = Language.T("Reset the program settings to their default values. You need to restart!");
+            miResetConfigs.ToolTipText = Language.T("Reset the program settings to their default values. You will need to restart!");
             miResetConfigs.Image       = Properties.Resources.warning;
             miResetConfigs.Click      += new EventHandler(MenuTools_OnClick);
             miTools.DropDownItems.Add(miResetConfigs);

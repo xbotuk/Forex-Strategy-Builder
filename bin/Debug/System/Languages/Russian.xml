@@ -426,7 +426,7 @@
     <alt>Быстрое сканирование</alt>
   </str>
   <str>
-    <main>Perform quick intrabar scanning.</main>
+    <main>Perform quick intrabar scan.</main>
     <alt>Быстрое сканирование внутри бара.</alt>
   </str>
   <str>
@@ -574,7 +574,7 @@
     <alt>Сканер</alt>
   </str>
   <str>
-    <main>Perform a deep intrabar scanning.</main>
+    <main>Perform a deep intrabar scan.</main>
     <alt>Выполнить сканирование внутри бара.</alt>
   </str>
   <str>
@@ -622,7 +622,7 @@
     <alt>Восстановить настройки</alt>
   </str>
   <str>
-    <main>Reset the program settings to their default values. You need to restart!</main>
+    <main>Reset the program settings to their default values. You will need to restart!</main>
     <alt>Восстановить настройки программы к их первоначальным значениям. Нужен перезапуск!</alt>
   </str>
   <str>
@@ -1048,7 +1048,7 @@
     <alt>Дополнительная статистика</alt>
   </str>
   <str>
-    <main>Show long/short balance lines in the chart and more statistics in the overview.</main>
+    <main>Show long/short balance lines on the chart and more statistics in the overview.</main>
     <alt>Показать длинную/короткую балансную линию в графике и дополнительную статистику в обзор стратегии.</alt>
   </str>
   <str>
@@ -1322,7 +1322,7 @@
     <alt>Усреднение не допускается. Отменить все дополнительные ордера в том же направлении.</alt>
   </str>
   <str>
-    <main>Add to a wining position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open.</main>
+    <main>Add to a winning position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open.</main>
     <alt>Добавить к позиции выигрыша, но не к позиции убытка. Если позиция в убытке, отменить каждый дополнительный входящий ордер. Не превышать максимальное количество разрешенных лотов для открытия.</alt>
   </str>
   <str>
@@ -1908,7 +1908,7 @@
     <alt>Бумажной П/У</alt>
   </str>
   <str>
-    <main>Indicators chart</main>
+    <main>Indicators charts</main>
     <alt>Диаграмма индикаторов</alt>
   </str>
   <str>
@@ -2278,7 +2278,7 @@
     <alt>Скольжение в</alt>
   </str>
   <str>
-    <main>percents</main>
+    <main>percent</main>
     <alt>проценты</alt>
   </str>
   <str>
@@ -2359,8 +2359,8 @@
     <alt>Публиковать стратегию на форуме программы.</alt>
   </str>
   <str>
-    <main>Open a new topic in the forum</main>
-    <alt>Открыть новую тему на форуме</alt>
+    <main>Open a new topic in the forum;</main>
+    <alt>Открыть новую тему на форуме;</alt>
   </str>
   <str>
     <main>Copy / Paste the following code;</main>
@@ -2429,7 +2429,7 @@
     <alt>Этикетка</alt>
   </str>
   <str>
-    <main>Probably the data is incomplete and the scanning may not be reliable!</main>
+    <main>The data is probably incomplete and the scanning may not be reliable!</main>
     <alt>Возможно, данные неполны и сканирование может быть ненадежным!</alt>
   </str>
   <str>
@@ -2559,7 +2559,7 @@
     <alt>Это описание может быть устаревшим!</alt>
   </str>
   <str>
-    <main>You can write a description to the strategy!</main>
+    <main>You can write a description of the strategy!</main>
     <alt>Можете написать описание стратегии!</alt>
   </str>
   <!-- Strategy Generator -->
@@ -2720,7 +2720,7 @@
     <alt>Позволить все индикаторы.</alt>
   </str>
   <str>
-    <main>Bann all indicators.</main>
+    <main>Ban all indicators.</main>
     <alt>Запретить все индикаторы.</alt>
   </str>
   <str>
@@ -2781,7 +2781,7 @@
     <alt>Скрыть FSB когда анализатор запускается</alt>
   </str>
   <str>
-    <main>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</main>
+    <main>The Over-optimization Report shows how the results of the backtest vary as the numerical parameters of the strategy change by a given percent.</main>
     <alt>Рапорт сверх-оптимизации показывающий как изменяются статистические результаты теста с изменением цифровых параметров стратегии с данными процентами.</alt>
   </str>
   <str>

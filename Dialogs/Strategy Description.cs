@@ -71,7 +71,7 @@ namespace Forex_Strategy_Builder
                     lblWarning.Text = System.IO.Path.GetFileNameWithoutExtension(Data.StrategyName);
             }
             else
-                lblWarning.Text = Language.T("You can write a description to the strategy!");
+                lblWarning.Text = Language.T("You can write a description of the strategy!");
 
             pnlTbxBase.Parent = pnlBase;
             pnlTbxBase.Padding = new Padding(4, (int)pnlTbxBase.CaptionHeight + 1, 2, 3);

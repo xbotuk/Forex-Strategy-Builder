@@ -427,7 +427,7 @@
     <alt>Gyors keresés</alt>
   </str>
   <str>
-    <main>Perform quick intrabar scanning.</main>
+    <main>Perform quick intrabar scan.</main>
     <alt>Gyors gyertyán belüli keresés.</alt>
   </str>
   <str>
@@ -575,7 +575,7 @@
     <alt>Kereső</alt>
   </str>
   <str>
-    <main>Perform a deep intrabar scanning.</main>
+    <main>Perform a deep intrabar scan.</main>
     <alt>Gyertyán belüli keresés.</alt>
   </str>
   <str>
@@ -623,7 +623,7 @@
     <alt>Alapbeállítás</alt>
   </str>
   <str>
-    <main>Reset the program settings to their default values. You need to restart!</main>
+    <main>Reset the program settings to their default values. You will need to restart!</main>
     <alt>Programbeállításokat alapértékre. Újra kell indítani!</alt>
   </str>
   <str>
@@ -1049,8 +1049,8 @@
     <alt>Kiegészítő statisztikák</alt>
   </str>
   <str>
-    <main>Show long/short balance lines in the chart and more statistics in the overview.</main>
-    <alt>Show long/short balance lines in the chart and more statistics in the overview.</alt>
+    <main>Show long/short balance lines on the chart and more statistics in the overview.</main>
+    <alt>Show long/short balance lines on the chart and more statistics in the overview.</alt>
   </str>
   <str>
     <main>Profit factor</main>
@@ -1323,7 +1323,7 @@
     <alt>Átlagolás nem engedélyezett. Minden hozzáadott megbízás törlése ugyanabban az irányban.</alt>
   </str>
   <str>
-    <main>Add to a wining position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open.</main>
+    <main>Add to a winning position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open.</main>
     <alt>Hozzáadás a nyerő pozícióhoz, de a veszteshez nem. Ha a pozíció veszteséges, a hozzáadott megbízás törlődik. Nem lépi túl a maximálisan engedélyezett egységeket.</alt>
   </str>
   <str>
@@ -1909,7 +1909,7 @@
     <alt>Lebegő P/L chart</alt>
   </str>
   <str>
-    <main>Indicators chart</main>
+    <main>Indicators charts</main>
     <alt>Indikátor chart</alt>
   </str>
   <str>
@@ -2279,7 +2279,7 @@
     <alt>Slippage</alt>
   </str>
   <str>
-    <main>percents</main>
+    <main>percent</main>
     <alt>százalék</alt>
   </str>
   <str>
@@ -2360,8 +2360,8 @@
     <alt>Stratégia nyilvánosságra hozása a fórumon:</alt>
   </str>
   <str>
-    <main>Open a new topic in the forum</main>
-    <alt>Nyiss egy új topic-ot a fórumban</alt>
+    <main>Open a new topic in the forum;</main>
+    <alt>Nyiss egy új topic-ot a fórumban;</alt>
   </str>
   <str>
     <main>Copy / Paste the following code;</main>
@@ -2430,7 +2430,7 @@
     <alt>Címke</alt>
   </str>
   <str>
-    <main>Probably the data is incomplete and the scanning may not be reliable!</main>
+    <main>The data is probably incomplete and the scanning may not be reliable!</main>
     <alt>Valószínűleg az adat nem teljes így a keresés nem megbízható!</alt>
   </str>
   <str>
@@ -2560,7 +2560,7 @@
     <alt>A jellemzés lehet, hogy régi!</alt>
   </str>
   <str>
-    <main>You can write a description to the strategy!</main>
+    <main>You can write a description of the strategy!</main>
     <alt>Írd le a stratégiát!</alt>
   </str>
   <!-- Strategy Generator -->
@@ -2721,8 +2721,8 @@
     <alt>Allow all indicators.</alt>
   </str>
   <str>
-    <main>Bann all indicators.</main>
-    <alt>Bann all indicators.</alt>
+    <main>Ban all indicators.</main>
+    <alt>Ban all indicators.</alt>
   </str>
   <str>
     <main>Banned Indicators</main>
@@ -2782,8 +2782,8 @@
     <alt>Hide FSB when Analyzer starts</alt>
   </str>
   <str>
-    <main>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</main>
-    <alt>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</alt>
+    <main>The Over-optimization Report shows how the results of the backtest vary as the numerical parameters of the strategy change by a given percent.</main>
+    <alt>The Over-optimization Report shows how the results of the backtest vary as the numerical parameters of the strategy change by a given percent.</alt>
   </str>
   <str>
     <main>View Charts</main>

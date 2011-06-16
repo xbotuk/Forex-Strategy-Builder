@@ -426,7 +426,7 @@
     <alt>Schneller Scan.</alt>
   </str>
   <str>
-    <main>Perform quick intrabar scanning.</main>
+    <main>Perform quick intrabar scan.</main>
     <alt>Schellen Intrabar-Scan durchführen.</alt>
   </str>
   <str>
@@ -574,7 +574,7 @@
     <alt>Scanner</alt>
   </str>
   <str>
-    <main>Perform a deep intrabar scanning.</main>
+    <main>Perform a deep intrabar scan.</main>
     <alt>Intensives Intrabar-Scanning ausführen.</alt>
   </str>
   <str>
@@ -622,7 +622,7 @@
     <alt>Einstellungen zurücksetzen</alt>
   </str>
   <str>
-    <main>Reset the program settings to their default values. You need to restart!</main>
+    <main>Reset the program settings to their default values. You will need to restart!</main>
     <alt>Programmeinstellungen auf ihre Defaultwerte zurücksetzen. Neustart erforderlich!</alt>
   </str>
   <str>
@@ -1048,7 +1048,7 @@
     <alt>Zusätzliche Statistiken</alt>
   </str>
   <str>
-    <main>Show long/short balance lines in the chart and more statistics in the overview.</main>
+    <main>Show long/short balance lines on the chart and more statistics in the overview.</main>
     <alt>Zeige Long/Short Kontostandslinien im Chart und weitere Statistiken in der Übersicht</alt>
   </str>
   <str>
@@ -1322,7 +1322,7 @@
     <alt>Keine Mittelung erlaubt. Zusätzliche Aufträge stornieren die in die gleiche Richtung gehen.</alt>
   </str>
   <str>
-    <main>Add to a wining position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open.</main>
+    <main>Add to a winning position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open.</main>
     <alt>Zu einer Gewinnposition hinzufügen, nicht aber zu einer Verlustposition. Wenn die Position im Verlust ist, zusätzliche Aufträge stornieren. Nicht mehr als erlaubte Anzahl Lots öffnen.</alt>
   </str>
   <str>
@@ -1908,7 +1908,7 @@
     <alt>Schwebender G/V Chart</alt>
   </str>
   <str>
-    <main>Indicators chart</main>
+    <main>Indicators charts</main>
     <alt>Indikatorchart</alt>
   </str>
   <str>
@@ -2278,7 +2278,7 @@
     <alt>Slippage in</alt>
   </str>
   <str>
-    <main>percents</main>
+    <main>percent</main>
     <alt>Prozenten</alt>
   </str>
   <str>
@@ -2359,8 +2359,8 @@
     <alt>Strategie im Programmforum veröffentlichen.</alt>
   </str>
   <str>
-    <main>Open a new topic in the forum</main>
-    <alt>Neues Thema im Forum eröffnen</alt>
+    <main>Open a new topic in the forum;</main>
+    <alt>Neues Thema im Forum eröffnen;</alt>
   </str>
   <str>
     <main>Copy / Paste the following code;</main>
@@ -2429,7 +2429,7 @@
     <alt>Markierung</alt>
   </str>
   <str>
-    <main>Probably the data is incomplete and the scanning may not be reliable!</main>
+    <main>The data is probably incomplete and the scanning may not be reliable!</main>
     <alt>Wahrscheinlich sind die Daten unvollständig und das Scanning möglicherweise nicht zuverlässig!</alt>
   </str>
   <str>
@@ -2559,7 +2559,7 @@
     <alt>Diese Beschreibung könnte veraltet sein!</alt>
   </str>
   <str>
-    <main>You can write a description to the strategy!</main>
+    <main>You can write a description of the strategy!</main>
     <alt>Sie können eine Beschreibung der Strategie verfassen!</alt>
   </str>
   <!-- Strategy Generator -->
@@ -2720,7 +2720,7 @@
     <alt>Zeige alle Indikatoren.</alt>
   </str>
   <str>
-    <main>Bann all indicators.</main>
+    <main>Ban all indicators.</main>
     <alt>Unterdrücke alle Indikatoren.</alt>
   </str>
   <str>
@@ -2781,8 +2781,8 @@
     <alt>Hide FSB when Analyzer starts</alt>
   </str>
   <str>
-    <main>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</main>
-    <alt>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</alt>
+    <main>The Over-optimization Report shows how the results of the backtest vary as the numerical parameters of the strategy change by a given percent.</main>
+    <alt>The Over-optimization Report shows how the results of the backtest vary as the numerical parameters of the strategy change by a given percent.</alt>
   </str>
   <str>
     <main>View Charts</main>

@@ -63,7 +63,7 @@ namespace Forex_Strategy_Builder
             tsbtScanner.Text        = Language.T("Scanner");
             tsbtScanner.Name        = "Scanner";
             tsbtScanner.Click      += new EventHandler(BtnTools_OnClick);
-            tsbtScanner.ToolTipText = Language.T("Perform a deep intrabar scanning.") + Environment.NewLine + Language.T("Quick scan") + " - F6.";
+            tsbtScanner.ToolTipText = Language.T("Perform a deep intrabar scan.") + Environment.NewLine + Language.T("Quick scan") + " - F6.";
             tsAccount.Items.Add(tsbtScanner);
 
             // Button Analyzer

@@ -64,7 +64,7 @@ namespace Forex_Strategy_Builder
             lblInformation.BackColor   = Color.Transparent;
             lblInformation.ForeColor   = LayoutColors.ColorControlText;
             string strInfo = Language.T("Publishing a strategy in the program's forum:") + Environment.NewLine +
-                "1) " + Language.T("Open a new topic in the forum") + " \"Users' strategies\";" + Environment.NewLine +
+                "1) " + Language.T("Open a new topic in the forum;") + Environment.NewLine +
                 "2) " + Language.T("Copy / Paste the following code;") + Environment.NewLine +
                 "3) " + Language.T("Describe the strategy.");
             lblInformation.Text = strInfo;

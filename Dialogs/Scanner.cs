@@ -541,7 +541,7 @@ namespace Forex_Strategy_Builder
 
             if (warningMessage != string.Empty && Configs.CheckData)
                 MessageBox.Show(warningMessage + Environment.NewLine + Environment.NewLine +
-                    Language.T("Probably the data is incomplete and the scanning may not be reliable!") + Environment.NewLine +
+                    Language.T("The data is probably incomplete and the scanning may not be reliable!") + Environment.NewLine +
                     Language.T("You can try also \"Cut Off Bad Data\"."),
                     Language.T("Scanner"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 

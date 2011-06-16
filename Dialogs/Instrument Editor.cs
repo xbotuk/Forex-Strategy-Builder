@@ -434,14 +434,14 @@ namespace Forex_Strategy_Builder
             cbxPropSwap.Parent        = pnlProperties;
             cbxPropSwap.Name          = "cbxPropSwap";
             cbxPropSwap.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbxPropSwap.Items.AddRange(new string[] { Language.T("pips"), Language.T("percents"), Language.T("money") });
+            cbxPropSwap.Items.AddRange(new string[] { Language.T("pips"), Language.T("percent"), Language.T("money") });
             cbxPropSwap.SelectedIndex = 0;
 
             // cbxPropCommission
             cbxPropCommission.Parent        = pnlProperties;
             cbxPropCommission.Name          = "cbxPropCommission";
             cbxPropCommission.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbxPropCommission.Items.AddRange(new string[] { Language.T("pips"), Language.T("percents"), Language.T("money") });
+            cbxPropCommission.Items.AddRange(new string[] { Language.T("pips"), Language.T("percent"), Language.T("money") });
             cbxPropCommission.SelectedIndex = 0;
             cbxPropCommission.SelectedIndexChanged += new EventHandler(CbxPropCommission_SelectedIndexChanged);
 

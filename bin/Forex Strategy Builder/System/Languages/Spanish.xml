@@ -426,7 +426,7 @@
     <alt>Escaneo Rapido</alt>
   </str>
   <str>
-    <main>Perform quick intrabar scanning.</main>
+    <main>Perform quick intrabar scan.</main>
     <alt>Efectuar escaneo rapido interbarra.</alt>
   </str>
   <str>
@@ -574,7 +574,7 @@
     <alt>Escaneador</alt>
   </str>
   <str>
-    <main>Perform a deep intrabar scanning.</main>
+    <main>Perform a deep intrabar scan.</main>
     <alt>Realizar un profundo escaneo interbarra.</alt>
   </str>
   <str>
@@ -622,7 +622,7 @@
     <alt>Restablecer la Configuracion</alt>
   </str>
   <str>
-    <main>Reset the program settings to their default values. You need to restart!</main>
+    <main>Reset the program settings to their default values. You will need to restart!</main>
     <alt>Restablecer la Configuracion del programa hasta sus valores iniciales. Debe reiniciar!</alt>
   </str>
   <str>
@@ -1048,8 +1048,8 @@
     <alt>Otras Estadísticas</alt>
   </str>
   <str>
-    <main>Show long/short balance lines in the chart and more statistics in the overview.</main>
-    <alt>Show long/short balance lines in the chart and more statistics in the overview.</alt>
+    <main>Show long/short balance lines on the chart and more statistics in the overview.</main>
+    <alt>Show long/short balance lines on the chart and more statistics in the overview.</alt>
   </str>
   <str>
     <main>Profit factor</main>
@@ -1322,7 +1322,7 @@
     <alt>No se permite media. Cancelar todas las ordenes adicionales que estan en la misma direccion.</alt>
   </str>
   <str>
-    <main>Add to a wining position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open.</main>
+    <main>Add to a winning position but not to a losing one. If the position is at a loss, cancel the additional entry order. Do not exceed the maximum allowed number of lots to open.</main>
     <alt>Anadir a una posicion ganadora, pero no a una perdedora. Si la posicion es perdedora, cancelar cualquier orden adicional de entrada. No sobrepasar el numero maximo de lotes permitidos para abrir.</alt>
   </str>
   <str>
@@ -1908,7 +1908,7 @@
     <alt>Diagrama B/ P Flotante</alt>
   </str>
   <str>
-    <main>Indicators chart</main>
+    <main>Indicators charts</main>
     <alt>Diagrama de los indicadores</alt>
   </str>
   <str>
@@ -2278,7 +2278,7 @@
     <alt>Slippage en</alt>
   </str>
   <str>
-    <main>percents</main>
+    <main>percent</main>
     <alt>porcentajes</alt>
   </str>
   <str>
@@ -2359,8 +2359,8 @@
     <alt>Publicacion de estrategia en el foro del programa:</alt>
   </str>
   <str>
-    <main>Open a new topic in the forum</main>
-    <alt>Abrir un nuevo tema en el foro</alt>
+    <main>Open a new topic in the forum;</main>
+    <alt>Abrir un nuevo tema en el foro;</alt>
   </str>
   <str>
     <main>Copy / Paste the following code;</main>
@@ -2429,7 +2429,7 @@
     <alt>Etiqueta</alt>
   </str>
   <str>
-    <main>Probably the data is incomplete and the scanning may not be reliable!</main>
+    <main>The data is probably incomplete and the scanning may not be reliable!</main>
     <alt>Probablemente los datos son incompletos y el escaneo no puede ser seguro!</alt>
   </str>
   <str>
@@ -2559,7 +2559,7 @@
     <alt>Esta descripcion puede ser antigua!</alt>
   </str>
   <str>
-    <main>You can write a description to the strategy!</main>
+    <main>You can write a description of the strategy!</main>
     <alt>Puede anadir descripcion a la estrategia!</alt>
   </str>
   <!-- Strategy Generator -->
@@ -2720,8 +2720,8 @@
     <alt>Allow all indicators.</alt>
   </str>
   <str>
-    <main>Bann all indicators.</main>
-    <alt>Bann all indicators.</alt>
+    <main>Ban all indicators.</main>
+    <alt>Ban all indicators.</alt>
   </str>
   <str>
     <main>Banned Indicators</main>
@@ -2781,8 +2781,8 @@
     <alt>Hide FSB when Analyzer starts</alt>
   </str>
   <str>
-    <main>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</main>
-    <alt>The over-optimization report shows how the stats results of back test are changing with changing of the numerical parameters of the strategy by given percent.</alt>
+    <main>The Over-optimization Report shows how the results of the backtest vary as the numerical parameters of the strategy change by a given percent.</main>
+    <alt>The Over-optimization Report shows how the results of the backtest vary as the numerical parameters of the strategy change by a given percent.</alt>
   </str>
   <str>
     <main>View Charts</main>

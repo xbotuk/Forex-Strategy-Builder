@@ -409,7 +409,7 @@ namespace Forex_Strategy_Builder
 
             // Indicators
             aChartButtons[(int)ChartButtons.Indicators].Image = Properties.Resources.chart_indicators;
-            aChartButtons[(int)ChartButtons.Indicators].ToolTipText = Language.T("Indicators chart") + "   D";
+            aChartButtons[(int)ChartButtons.Indicators].ToolTipText = Language.T("Indicators charts") + "   D";
             aChartButtons[(int)ChartButtons.Indicators].Checked = isIndicatorsShown;
 
             // Balance Equity

@@ -70,7 +70,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             tsbtnSelectNone.Click       += new EventHandler(Buttons_Click);
             tsbtnSelectNone.DisplayStyle = ToolStripItemDisplayStyle.Image;
             tsbtnSelectNone.Image        = Properties.Resources.optimizer_select_none;
-            tsbtnSelectNone.ToolTipText  = Language.T("Bann all indicators.");
+            tsbtnSelectNone.ToolTipText  = Language.T("Ban all indicators.");
             tsbtnSelectNone.Alignment    = ToolStripItemAlignment.Right;
 
             tsbtnStatus = new ToolStripButton();

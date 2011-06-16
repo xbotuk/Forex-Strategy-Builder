@@ -97,7 +97,7 @@ namespace Forex_Strategy_Builder
                 if (commissionType == Commission_Type.pips)
                     return Language.T("pips");
                 else if (commissionType == Commission_Type.percents)
-                    return Language.T("percents");
+                    return Language.T("percent");
                 else
                     return Language.T("money");
             }
