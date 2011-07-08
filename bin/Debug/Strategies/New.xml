@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <strategy>
   <programName>Forex Strategy Builder</programName>
-  <programVersion>2.57.22.0</programVersion>
+  <programVersion>2.60.0.0</programVersion>
   <strategyName>New</strategyName>
   <instrumentSymbol>EURUSD</instrumentSymbol>
   <instrumentPeriod>day</instrumentPeriod>

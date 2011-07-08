@@ -12,7 +12,7 @@ Generator:
 Optimizer:
 - Optimization of Permanent TP / SL.
 
-Analyser
+Analyzer
 - Make Cumulative strategy analysis.
 
 Indicators:

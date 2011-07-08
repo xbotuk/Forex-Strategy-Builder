@@ -26,7 +26,7 @@
   <lastStrategy>
   </lastStrategy>
   <checkForUpdates>True</checkForUpdates>
-  <checkForNewBeta>True</checkForNewBeta>
+  <checkForNewBeta>False</checkForNewBeta>
   <checkData>True</checkData>
   <fillDataGaps>False</fillDataGaps>
   <cutBadData>False</cutBadData>

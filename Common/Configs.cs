@@ -34,7 +34,7 @@ namespace Forex_Strategy_Builder
         static bool   isRememberLastStrDefault      = true;
         static string lastStrategyDefault           = "";
         static bool   isCheckForUpdatesDefault      = true;
-        static bool   isCheckForNewBetaDefault      = true;
+        static bool   isCheckForNewBetaDefault      = false;
         static bool   isCheckDataDefault            = true;
         static bool   isFillDataGapsDefault         = false;
         static bool   isCutBadDataDefault           = false;

@@ -40,7 +40,7 @@ namespace Forex_Strategy_Builder
     /// </summary>
     public class Data
     {
-        static bool isBetaVersion = true;
+        static bool isBetaVersion = false;
         static bool isReleaseCandidate = false;
 
         static string programVersion;

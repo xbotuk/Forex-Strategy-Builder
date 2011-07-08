@@ -252,8 +252,9 @@ namespace Forex_Strategy_Builder
             chbPermaSL.Text      = Language.T("Permanent Stop Loss");
 
             // ComboBox cbxPermaSLType
-            cbxPermaSLType.Parent = pnlProtection;
-            cbxPermaSLType.Name   = "cbxPermaSLType";
+            cbxPermaSLType.Parent  = pnlProtection;
+            cbxPermaSLType.Name    = "cbxPermaSLType";
+            cbxPermaSLType.Visible = false;
             cbxPermaSLType.DropDownStyle = ComboBoxStyle.DropDownList;
             cbxPermaSLType.Items.AddRange(new string[] { Language.T("Relative"), Language.T("Absolute") });
             cbxPermaSLType.SelectedIndex = 0;
@@ -280,8 +281,9 @@ namespace Forex_Strategy_Builder
             chbPermaTP.Text      = Language.T("Permanent Take Profit");
 
             // ComboBox cbxPermaTPType
-            cbxPermaTPType.Parent = pnlProtection;
-            cbxPermaTPType.Name   = "cbxPermaTPType";
+            cbxPermaTPType.Parent  = pnlProtection;
+            cbxPermaTPType.Name    = "cbxPermaTPType";
+            cbxPermaTPType.Visible = false;
             cbxPermaTPType.DropDownStyle = ComboBoxStyle.DropDownList;
             cbxPermaTPType.Items.AddRange(new string[] { Language.T("Relative"), Language.T("Absolute") });
             cbxPermaTPType.SelectedIndex = 0;

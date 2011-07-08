@@ -865,40 +865,10 @@ namespace Forex_Strategy_Builder
             // Forex
             miForex = new ToolStripMenuItem(Language.T("Forex"));
 
-            ToolStripMenuItem miEconomicCalendar = new ToolStripMenuItem();
-            miEconomicCalendar.Text   = Language.T("Economic Calendar") + "...";
-            miEconomicCalendar.Image  = Properties.Resources._1day;
-            miEconomicCalendar.Tag    = "http://forexsb.com/pages/calendar.html";
-            miEconomicCalendar.Click += new EventHandler(MenuForexContentsOnClick);
-            miForex.DropDownItems.Add(miEconomicCalendar);
-
-            ToolStripMenuItem miMarketCommentary = new ToolStripMenuItem();
-            miMarketCommentary.Text   = Language.T("Market Commentary") + "...";
-            miMarketCommentary.Image  = Properties.Resources.pie;
-            miMarketCommentary.Tag    = "http://forexsb.com/pages/commentary.html";
-            miMarketCommentary.Click += new EventHandler(MenuForexContentsOnClick);
-            miForex.DropDownItems.Add(miMarketCommentary);
-
-            ToolStripMenuItem miForexDailyOutlook = new ToolStripMenuItem();
-            miForexDailyOutlook.Text   = Language.T("Daily Forex Outlook") + "...";
-            miForexDailyOutlook.Image  = Properties.Resources.fx_overview;
-            miForexDailyOutlook.Tag    = "http://forexsb.com/pages/daily-outlook.html";
-            miForexDailyOutlook.Click += new EventHandler(MenuForexContentsOnClick);
-            miForex.DropDownItems.Add(miForexDailyOutlook);
-
-            ToolStripMenuItem miForexWeeklyOutlook = new ToolStripMenuItem();
-            miForexWeeklyOutlook.Text   = Language.T("Weekly Forex Outlook") + "...";
-            miForexWeeklyOutlook.Image  = Properties.Resources.fx_overview;
-            miForexWeeklyOutlook.Tag    = "http://forexsb.com/pages/weekly-outlook.html";
-            miForexWeeklyOutlook.Click += new EventHandler(MenuForexContentsOnClick);
-            miForex.DropDownItems.Add(miForexWeeklyOutlook);
-
-            miForex.DropDownItems.Add(new ToolStripSeparator());
-
             ToolStripMenuItem miForexBrokers = new ToolStripMenuItem();
             miForexBrokers.Text   = Language.T("Forex Brokers") + "...";
             miForexBrokers.Image  = Properties.Resources.forex_brokers;
-            miForexBrokers.Tag    = "http://forexsb.com/wiki/brokers";
+            miForexBrokers.Tag    = "http://forexsb.com/forex-brokers/";
             miForexBrokers.Click += new EventHandler(MenuForexContentsOnClick);
 
             miForex.DropDownItems.Add(miForexBrokers);

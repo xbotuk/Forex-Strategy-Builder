@@ -7,7 +7,7 @@
   <MAX_EXIT_FILTERS>2</MAX_EXIT_FILTERS>
   <SIGMA_MODE_MAIN_CHART>1</SIGMA_MODE_MAIN_CHART>
   <SIGMA_MODE_SEPARATED_CHART>5</SIGMA_MODE_SEPARATED_CHART>
-  <installed>True</installed>
+  <installed>False</installed>
   <showStartingTip>True</showStartingTip>
   <currentTipNumber>-1</currentTipNumber>
   <language>English</language>
@@ -26,7 +26,7 @@
   <lastStrategy>
   </lastStrategy>
   <checkForUpdates>True</checkForUpdates>
-  <checkForNewBeta>True</checkForNewBeta>
+  <checkForNewBeta>False</checkForNewBeta>
   <checkData>True</checkData>
   <fillDataGaps>False</fillDataGaps>
   <cutBadData>False</cutBadData>
