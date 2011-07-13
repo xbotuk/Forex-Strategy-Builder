@@ -235,6 +235,21 @@ namespace Forex_Strategy_Builder
             return;
         }
 
+        protected override void LoadDroppedStrategy(string filePath)
+        {
+            try
+            {
+                OpenStrategy(filePath);
+                AfterStrategyOpening(true);
+                Calculate(false);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, Text);
+                return;
+            }
+        }
+
         /// <summary>
         /// Load a color scheme.
         /// </summary>

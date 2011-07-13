@@ -706,17 +706,16 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Reads the strategy from a file.
         /// </summary>
-        /// <param name="strategyName">The strategy name.</param>
         /// <returns>0 - success.</returns>
-        int OpenStrategy(string strategyName)
+        int OpenStrategy(string strategyFilePath)
         {
             try
             {
-                if (File.Exists(strategyName) && Strategy.Load(strategyName))
+                if (File.Exists(strategyFilePath) && Strategy.Load(strategyFilePath))
                 {   // Successfully opening
-                    Data.Strategy.StrategyName = Path.GetFileNameWithoutExtension(strategyName);
-                    Data.StrategyDir  = Path.GetDirectoryName(strategyName);
-                    Data.StrategyName = Path.GetFileName(strategyName);
+                    Data.Strategy.StrategyName = Path.GetFileNameWithoutExtension(strategyFilePath);
+                    Data.StrategyDir  = Path.GetDirectoryName(strategyFilePath);
+                    Data.StrategyName = Path.GetFileName(strategyFilePath);
                 }
                 else
                 {

@@ -77,9 +77,13 @@ namespace Forex_Strategy_Builder
             Splitter splitVert2 = new Splitter();
 
             // Panel Workspace
-            pnlWorkspace.Parent    = this;
-            pnlWorkspace.Dock      = DockStyle.Fill;
-            pnlWorkspace.BackColor = LayoutColors.ColorFormBack;
+            pnlWorkspace.Parent     = this;
+            pnlWorkspace.Dock       = DockStyle.Fill;
+            pnlWorkspace.BackColor  = LayoutColors.ColorFormBack;
+            pnlWorkspace.AllowDrop  = true;
+            pnlWorkspace.DragEnter += new DragEventHandler(Workspace_DragEnter);
+            pnlWorkspace.DragDrop  += new DragEventHandler(Workspace_DragDrop);
+
 
             // Main menu
             MainMenuStrip.Parent = this;
@@ -169,6 +173,25 @@ namespace Forex_Strategy_Builder
             pnlStrategyBase.Width  = pnlDataBase.ClientSize.Width / 3;
 
             return;
+        }
+
+        void Workspace_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.All;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        void Workspace_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+            string filePath = s[0];
+            LoadDroppedStrategy(filePath);
+        }
+
+        protected virtual void LoadDroppedStrategy(string filePath)
+        {
         }
     }
 }
