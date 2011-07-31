@@ -184,6 +184,8 @@ namespace Forex_Strategy_Builder
 
             Configs.SaveConfigs();
             Instruments.SaveInstruments();
+            this.Hide();
+            Data.SendStats();
 
             return;
         }
@@ -766,6 +768,7 @@ namespace Forex_Strategy_Builder
                     this.Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + " - " + Data.ProgramName;
                     Data.IsStrategyChanged = false;
                     Data.LoadedSavedStrategy = Data.StrategyPath;
+                    Data.SavedStrategies++;
                 }
                 catch (Exception exc)
                 {
@@ -801,6 +804,7 @@ namespace Forex_Strategy_Builder
                     this.Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + " - " + Data.ProgramName;
                     Data.IsStrategyChanged = false;
                     Data.LoadedSavedStrategy = Data.StrategyPath;
+                    Data.SavedStrategies++;
                 }
                 catch (Exception exc)
                 {
@@ -1170,7 +1174,9 @@ namespace Forex_Strategy_Builder
             {   // When we cancel the Generating, we return the original strategy.
                 UndoStrategy();
             }
+
             Data.IsStrategyReady = true;
+            Data.GeneratorStarts++;
 
             return;
         }
@@ -1210,7 +1216,10 @@ namespace Forex_Strategy_Builder
             {   // When we cancel the optimizing, we return the original strategy.
                 UndoStrategy();
             }
+
             Data.IsStrategyReady = true;
+            Data.OptimizerStarts++;
+
         }
 
         /// <summary>

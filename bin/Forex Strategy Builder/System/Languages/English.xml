@@ -191,6 +191,7 @@
   <str><main>Show the program's forum.</main><alt>Show the program's forum.</alt></str>
   <str><main>Check for Updates at Startup</main><alt>Check for Updates at Startup</alt></str>
   <str><main>Check for New Beta Versions</main><alt>Check for New Beta Versions</alt></str>
+  <str><main>Send anonymous usage statistics</main><alt>Send anonymous usage statistics</alt></str>
   <str><main>About</main><alt>About</alt></str>
   <str><main>Show the program information.</main><alt>Show the program information.</alt></str>
 
@@ -915,3 +916,4 @@
   <!-- Command Console -->
   <str><main>Command Console</main><alt>Command Console</alt></str>
 </lang>
+

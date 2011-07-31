@@ -686,6 +686,10 @@
     <alt>Проверять наличие новых бета-версий</alt>
   </str>
   <str>
+    <main>Send anonymous usage statistics</main>
+    <alt>Отправлять анонимную статистику использования</alt>
+  </str>
+  <str>
     <main>About</main>
     <alt>О программе</alt>
   </str>

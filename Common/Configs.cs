@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using Microsoft.Win32;
 
 namespace Forex_Strategy_Builder
 {
@@ -72,6 +73,7 @@ namespace Forex_Strategy_Builder
         static string bannedIndicatorsDefault       = "";
         static bool   showPriceChartOnAccountChartDefault = false;
         static bool   analyzerHideFSBDefault        = true;
+        static bool   sendUsageStatsDefault         = true;
 
         // Indicator Chart
         static int  indicatorChartZoomDefault                     = 8;
@@ -920,6 +922,18 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        static bool sendUsageStats = sendUsageStatsDefault;
+        public static bool SendUsageStats
+        {
+            get { return sendUsageStats; }
+            set
+            {
+                sendUsageStats = value;
+                if (isConfigLoaded)
+                    xmlConfig.SelectNodes("config/sendUsageStats").Item(0).InnerText = value.ToString();
+            }
+        }
+
 
 // -------------------------------------------------------------
 
@@ -1419,6 +1433,7 @@ namespace Forex_Strategy_Builder
             bannedIndicators             = ParseNode("config/bannedIndicators", bannedIndicatorsDefault);
             showPriceChartOnAccountChart = ParseNode("config/showPriceChartOnAccountChart", showPriceChartOnAccountChartDefault);
             analyzerHideFSB              = ParseNode("config/analyzerHideFSB", analyzerHideFSBDefault);
+            sendUsageStats               = ParseNode("config/sendUsageStats", sendUsageStatsDefault);
 
             // Data Horizon
             maxBars                      = ParseNode("config/dataHorizon/maxBars", maxBarsDefault);
@@ -1471,6 +1486,13 @@ namespace Forex_Strategy_Builder
 
             if (maxBars > iMAX_BARS)
                 maxBars = iMAX_BARS;
+
+            if (!isInstalled)
+            {
+                RegistryKey regKey = Registry.CurrentUser;
+                regKey = regKey.CreateSubKey("Software\\Forex Software\\Forex Strategy Builder");
+                SendUsageStats = (regKey.GetValue("UsageStats") == null || regKey.GetValue("UsageStats").ToString() == "0");
+            }
 
             return;
         }

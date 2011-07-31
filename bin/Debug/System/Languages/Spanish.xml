@@ -686,6 +686,10 @@
     <alt>Buscar nuevas versiones Beta</alt>
   </str>
   <str>
+    <main>Send anonymous usage statistics</main>
+    <alt>Enviar estadísticas de uso anónimas</alt>
+  </str>
+  <str>
     <main>About</main>
     <alt>Acerca de</alt>
   </str>

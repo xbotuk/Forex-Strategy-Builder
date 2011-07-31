@@ -49,6 +49,7 @@
   </bannedIndicators>
   <showPriceChartOnAccountChart>False</showPriceChartOnAccountChart>
   <analyzerHideFSB>True</analyzerHideFSB>
+  <sendUsageStats>True</sendUsageStats>
   <dataHorizon>
     <maxBars>20000</maxBars>
     <useStartDate>False</useStartDate>

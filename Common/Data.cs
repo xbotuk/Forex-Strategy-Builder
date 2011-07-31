@@ -6,12 +6,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder
@@ -290,6 +290,17 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public static bool[] MarketStatsFlag { get { return marketStatsFlag; } }
 
+#endregion
+
+#region Usage stats
+        static DateTime fsbStartTime = DateTime.Now;
+        static int generatorStarts = 0;
+        static int optimizerStarts = 0;
+        static int savedStrategies = 0;
+        public static DateTime FsbStartTime { get { return fsbStartTime; } set { fsbStartTime = value; } }
+        public static int GeneratorStarts { get { return generatorStarts; } set { generatorStarts = value; } }
+        public static int OptimizerStarts { get { return optimizerStarts; } set { optimizerStarts = value; } }
+        public static int SavedStrategies { get { return savedStrategies; } set { savedStrategies = value; } }
 #endregion
 
         /// <summary>
@@ -612,6 +623,45 @@ namespace Forex_Strategy_Builder
                 swLogFile.Close();
                 toLog = false;
             }
+        }
+
+        /// <summary>
+        /// Collects usage statistics and sends them if it's allowed.
+        /// </summary>
+        public static void SendStats()
+        {
+            string fileURL = "http://forexsb.com/ustats/set-fsb.php";
+
+            string mac = "";
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (nic.OperationalStatus == OperationalStatus.Up)
+                {
+                    mac = nic.GetPhysicalAddress().ToString();
+                    break;
+                }
+            }
+
+            string parameters = string.Empty;
+
+            if (Configs.SendUsageStats)
+            {
+                parameters =
+                   "?mac="  + mac +
+                   "&reg="  + System.Globalization.RegionInfo.CurrentRegion.EnglishName +
+                   "&time=" + (DateTime.Now - fsbStartTime).Seconds +
+                   "&gen="  + generatorStarts +
+                   "&opt="  + optimizerStarts +
+                   "&str="  + savedStrategies;
+            }
+
+            try
+            {
+                WebClient webClient = new WebClient();
+                Stream data = webClient.OpenRead(fileURL + parameters);
+                data.Close();
+            }
+            catch { }
         }
 
         /// <summary>

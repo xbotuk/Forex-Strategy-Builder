@@ -1,8 +1,8 @@
 [Setup]
 AppName            = Forex Strategy Builder
-AppVersion         = 2.60.0.0
-VersionInfoVersion = 2.60.0.0
-AppVerName         = Forex Strategy Builder v2.60.0.0 Beta
+AppVersion         = 2.61.2.0
+VersionInfoVersion = 2.61.2.0
+AppVerName         = Forex Strategy Builder v2.61.2.0
 
 ArchitecturesInstallIn64BitMode = x64 ia64
 AppPublisher       = Forex Software Ltd.
@@ -55,6 +55,19 @@ Filename: "{app}\FSB Starter.exe"; Description: "Launch the application"; Flags:
 Filename: "{app}\ReadMe.html";     Description: "View the ReadMe file";   Flags: postinstall skipifsilent shellexec unchecked;
 
 [code]
+var
+  UsagePage: TInputOptionWizardPage;
+procedure InitializeWizard;
+begin
+  UsagePage := CreateInputOptionPage(wpSelectProgramGroup,
+    'Usage Statistics', 'Help us improve Forex Strategy Builder',
+    'We would greatly appreciate if you allow us to collect anonymous usage statistics to help us provide a better quality product. The information collected is not used to identify or contact you. You can interrupt collecting usage statistics at any time from Help - Send anonymous usage statistics menu option in the program.',
+    True, False);
+  UsagePage.Add('Allow anonymous usage statistics (recomended).');
+  UsagePage.Add('Do not send anonymous usage statistics.');
+  UsagePage.SelectedValueIndex := 0;
+end;
+
 function InitializeSetup(): Boolean;
 var
   ErrorCode : Integer;
@@ -69,4 +82,13 @@ begin
 			    ShellExec('open', 'http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe', '','', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 		    end;
     end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  if CurPageID = UsagePage.ID then
+  begin
+    RegWriteStringValue(HKCU, 'Software\Forex Software\Forex Strategy Builder', 'UsageStats', IntToStr(UsagePage.SelectedValueIndex));
+  end;
+  Result := True;
 end;
