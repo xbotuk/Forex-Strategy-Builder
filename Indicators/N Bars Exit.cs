@@ -1,6 +1,5 @@
 // N Bars Exit Indicator
 // Contributed by Krog
-// Last changed on 2011-04-11
 // Part of Forex Strategy Builder & Forex Strategy Trader
 // Website http://forexsb.com/
 // Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
@@ -80,8 +79,8 @@ namespace Forex_Strategy_Builder
         {
             int iNExit = (int)IndParam.NumParam[0].Value;
 
-            ExitPointLongDescription  = iNExit.ToString() + " bars after entry";
-            ExitPointShortDescription = iNExit.ToString() + " bars after entry";
+            ExitFilterLongDescription  = iNExit.ToString() + " bars passed after the entry";
+            ExitFilterShortDescription = iNExit.ToString() + " bars passed after the entry";
 
             return;
         }
