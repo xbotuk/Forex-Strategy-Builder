@@ -19,12 +19,10 @@
   <tradeUntilMarginCall>True</tradeUntilMarginCall>
   <additionalStatistics>False</additionalStatistics>
   <useLogicalGroups>False</useLogicalGroups>
-  <dataDirectory>
-  </dataDirectory>
+  <dataDirectory></dataDirectory>
   <colorScheme>Light Blue</colorScheme>
   <rememberLastStrategy>True</rememberLastStrategy>
-  <lastStrategy>
-  </lastStrategy>
+  <lastStrategy></lastStrategy>
   <checkForUpdates>True</checkForUpdates>
   <checkForNewBeta>False</checkForNewBeta>
   <checkData>True</checkData>
@@ -34,19 +32,15 @@
   <showCustomIndicators>False</showCustomIndicators>
   <playSounds>True</playSounds>
   <optimizerWriteReport>False</optimizerWriteReport>
-  <generatorOptions>
-  </generatorOptions>
-  <optimizerOptions>
-  </optimizerOptions>
+  <generatorOptions></generatorOptions>
+  <optimizerOptions></optimizerOptions>
   <columnSeparator>,</columnSeparator>
   <decimalSeparator>.</decimalSeparator>
   <useTickData>False</useTickData>
-  <jforexDataPath>
-  </jforexDataPath>
+  <jforexDataPath></jforexDataPath>
   <marketClosingHour>21</marketClosingHour>
   <marketOpeningHour>21</marketOpeningHour>
-  <bannedIndicators>
-  </bannedIndicators>
+  <bannedIndicators></bannedIndicators>
   <showPriceChartOnAccountChart>False</showPriceChartOnAccountChart>
   <analyzerHideFSB>True</analyzerHideFSB>
   <sendUsageStats>True</sendUsageStats>

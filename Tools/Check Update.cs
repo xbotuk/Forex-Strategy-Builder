@@ -80,7 +80,15 @@ namespace Forex_Strategy_Builder
         {
             try
             {
-                xmlUpdateFile.Load(pathUpdateFile);
+                if (!File.Exists(pathUpdateFile))
+                {
+                    xmlUpdateFile = new XmlDocument();
+                    xmlUpdateFile.InnerXml = Properties.Resources.fsb_update;
+                }
+                else
+                {
+                    xmlUpdateFile.Load(pathUpdateFile);
+                }
             }
             catch (Exception e)
             {
