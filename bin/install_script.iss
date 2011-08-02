@@ -1,8 +1,8 @@
 [Setup]
 AppName            = Forex Strategy Builder
-AppVersion         = 2.61.2.0
-VersionInfoVersion = 2.61.2.0
-AppVerName         = Forex Strategy Builder v2.61.2.0
+AppVersion         = 2.62.0.0
+VersionInfoVersion = 2.62.0.0
+AppVerName         = Forex Strategy Builder v2.62.0.0
 
 ArchitecturesInstallIn64BitMode = x64 ia64
 AppPublisher       = Forex Software Ltd.
@@ -18,6 +18,8 @@ OutputDir          = ..\
 
 [InstallDelete]
 Type: files; Name: "{app}\System\lcconfig.xml"
+Type: files; Name: "{app}\System\config.xml"
+Type: files; Name: "{app}\System\fsb-update.xml"
 
 [Files]
 Source: Forex Strategy Builder.exe; DestDir: "{app}";
