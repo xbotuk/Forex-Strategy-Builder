@@ -1469,7 +1469,7 @@ namespace Forex_Strategy_Builder
             isIndicatorChartTrueCharts             = ParseNode("config/indicatorChart/trueCharts", isIndicatorChartTrueChartsDefault);
 
             // Balance Chart
-            balanceChartZoom                    = ParseNode("config/balanceChart/zoom", balanceChartZoomDefault);
+            balanceChartZoom                     = ParseNode("config/balanceChart/zoom", balanceChartZoomDefault);
             isBalanceChartInfoPanel              = ParseNode("config/balanceChart/infoPanel", isBalanceChartInfoPanelDefault);
             isBalanceChartDynamicInfo            = ParseNode("config/balanceChart/dynamicInfo", isBalanceChartDynamicInfoDefault);
             isBalanceChartGrid                   = ParseNode("config/balanceChart/grid", isBalanceChartGridDefault);
@@ -1484,6 +1484,14 @@ namespace Forex_Strategy_Builder
             isBalanceChartAmbiguousMark          = ParseNode("config/balanceChart/ambiguousMark", isBalanceChartAmbiguousMarkDefault);
             isBalanceChartTrueCharts             = ParseNode("config/balanceChart/trueCharts", isBalanceChartTrueChartsDefault);
 
+            return;
+        }
+
+        /// <summary>
+        /// Sets params after loading config file.
+        /// </summary>
+        static void ConfigAfterLoading()
+        {
             if (maxBars > iMAX_BARS)
                 maxBars = iMAX_BARS;
 
@@ -1492,9 +1500,13 @@ namespace Forex_Strategy_Builder
                 RegistryKey regKey = Registry.CurrentUser;
                 regKey = regKey.CreateSubKey("Software\\Forex Software\\Forex Strategy Builder");
                 SendUsageStats = (regKey.GetValue("UsageStats") == null || regKey.GetValue("UsageStats").ToString() == "0");
+                IsInstalled = true;
             }
 
-            return;
+            if (dataDirectory != "" && Directory.Exists(dataDirectory))
+            {
+                Data.OfflineDataDir = dataDirectory;
+            }
         }
 
         /// <summary>
@@ -1594,12 +1606,7 @@ namespace Forex_Strategy_Builder
                 }
                 ParseConfigs();
                 isConfigLoaded = true;
-
-                // Data directory
-                if (dataDirectory != "" && Directory.Exists(dataDirectory))
-                {
-                    Data.OfflineDataDir = dataDirectory;
-                }
+                ConfigAfterLoading();
             }
             catch (Exception ex)
             {

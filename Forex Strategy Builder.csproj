@@ -128,7 +128,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Indicators\N Bars Exit.cs" />
-    <Compile Include="Tools\Registrar.cs" />
     <Compile Include="Tools\About Screen.cs">
       <SubType>Form</SubType>
     </Compile>

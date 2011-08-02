@@ -101,9 +101,6 @@ namespace Forex_Strategy_Builder
 
             Check_Update liveContent = new Check_Update(Data.SystemDir, miLiveContent, miForex);
 
-            Registrar registrar = new Registrar();
-            registrar.Register();
-
             // Starting tips
             if (Configs.ShowStartingTip)
             {
