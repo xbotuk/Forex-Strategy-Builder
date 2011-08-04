@@ -17,5 +17,5 @@ Thumbs.db
 /bin/Forex\ Strategy\ Builder/*.pdb
 /bin/Forex\ Strategy\ Builder/*.manifest
 /bin/Forex\ Strategy\ Builder/Strategies/*.csv
-/bin/Forex\ Strategy\ Trader/System/config.xml
-/bin/Forex\ Strategy\ Trader/System/fsb-update.xml
+/bin/Forex\ Strategy\ Builder/System/config.xml
+/bin/Forex\ Strategy\ Builder/System/fsb-update.xml
