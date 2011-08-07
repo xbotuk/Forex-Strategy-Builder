@@ -386,17 +386,16 @@ namespace Forex_Strategy_Builder
             width -= 2; // the width of the border
 
             Font fontCaption = new Font(Font.FontFamily, 9f);
-            int  iVPosition  = (int)Math.Max(fontCaption.Height, 18) + 3;
+            int  vPosition  = (int)Math.Max(fontCaption.Height, 18) + 3;
 
             Font  fontAveraging = new Font(Font.FontFamily, 9f);
 
             if (slotMinMidMax == SlotSizeMinMidMax.min)
-                iVPosition += fontAveraging.Height;
+                vPosition += fontAveraging.Height;
             else
-                //iVPosition += 5 * fontAveraging.Height + 5; // Break Even
-                iVPosition += 4 * fontAveraging.Height + 5;
+                vPosition += 5 * fontAveraging.Height + 5;
 
-            return iVPosition + 8;
+            return vPosition + 8;
         }
 
         /// <summary>
@@ -795,7 +794,8 @@ namespace Forex_Strategy_Builder
                 string param = Language.T(strategy.SameSignalAction.ToString()) + "; " +
                                Language.T(strategy.OppSignalAction.ToString())  + "; " +
                                "SL-" + strPermaSL + "; " +
-                               "TP-" + strPermaTP;// +"; " + "BE-" + strBreakEven;
+                               "TP-" + strPermaTP + "; " +
+                               "BE-" + strBreakEven;
 
                 SizeF sizeParam      = g.MeasureString(param, fontParam);
                 float maxParamWidth = sizeParam.Width;
@@ -927,19 +927,19 @@ namespace Forex_Strategy_Builder
                 g.DrawString(sValue, fontValue, brushValue, rectfValue, stringFormat);
                 vPosition += fontValue.Height;
 
-                //// Break Even
-                //sParam = Language.T("Break Even");
-                //sValue = strBreakEven;
-                //pointParam = new PointF(fTabParam, iVPosition);
-                //pointDash1 = new PointF(fTabDash, iVPosition + fontParam.Height / 2 + 2);
-                //pointDash2 = new PointF(fTabDash + fDashWidth, iVPosition + fontParam.Height / 2 + 2);
-                //pointValue = new PointF(fTabValue, iVPosition);
-                //sizefValue = new SizeF(Math.Max(width - fTabValue, 0), fontValue.Height + 2);
-                //rectfValue = new RectangleF(pointValue, sizefValue);
-                //g.DrawString(sParam, fontParam, brushParam, pointParam);
-                //g.DrawLine(penDash, pointDash1, pointDash2);
-                //g.DrawString(sValue, fontValue, brushValue, rectfValue, stringFormat);
-                //iVPosition += fontValue.Height + 2;
+                // Break Even
+                sParam = Language.T("Break Even");
+                sValue = strBreakEven;
+                pointParam = new PointF(tabParam, vPosition);
+                pointDash1 = new PointF(tabDash, vPosition + fontParam.Height / 2 + 2);
+                pointDash2 = new PointF(tabDash + dashWidth, vPosition + fontParam.Height / 2 + 2);
+                pointValue = new PointF(tabValue, vPosition);
+                sizefValue = new SizeF(Math.Max(width - tabValue, 0), fontValue.Height + 2);
+                rectfValue = new RectangleF(pointValue, sizefValue);
+                g.DrawString(sParam, fontParam, brushParam, pointParam);
+                g.DrawLine(penDash, pointDash1, pointDash2);
+                g.DrawString(sValue, fontValue, brushValue, rectfValue, stringFormat);
+                vPosition += fontValue.Height + 2;
             }
 
             return;

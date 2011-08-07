@@ -48,7 +48,7 @@ namespace Forex_Strategy_Builder
 
         /// <summary>
         /// Gets the maximum number of orders.
-        /// Entry - 2, Exit - 3, Exit Perm. S/L - 3, Exit Perm. T/P - 3, Exit Margin Call - 1
+        /// Entry - 2, Exit - 3, Exit Perm. S/L - 3, Exit Perm. T/P - 3, Exit Break Even - 3, Exit Margin Call - 1
         /// </summary>
         static int MaxOrders
         {
@@ -58,6 +58,8 @@ namespace Forex_Strategy_Builder
                 if (Strategy.UsePermanentSL)
                     maxOrders += 3;
                 if (Strategy.UsePermanentTP)
+                    maxOrders += 3;
+                if (Strategy.UseBreakEven)
                     maxOrders += 3;
                 return maxOrders;
             }
@@ -910,7 +912,7 @@ namespace Forex_Strategy_Builder
                         break;
                 }
 
-                // If entry order closes or reverses the position the exit orthers of the
+                // If entry order closes or reverses the position the exit orders of the
                 // initial position have to be cancelled
                 if (order.OrdSender == OrderSender.Open &&
                     (session[bar].Summary.Transaction == Transaction.Close ||
@@ -930,7 +932,7 @@ namespace Forex_Strategy_Builder
                         }
                     }
 
-                    // In case when the order is not found, this means that the position is transfered
+                    // In case when the order is not found, this means that the position is transferred
                     // so its exit order is not conditional
                     if (!isFound)
                     {
@@ -1110,7 +1112,7 @@ namespace Forex_Strategy_Builder
                     Strategy.Slot[Strategy.CloseSlot].Component[1].Value[bar - 1] = stop;
                 }
 
-                // Saves the Account Percen Stop price
+                // Saves the Account Percent Stop price
                 if (Strategy.Slot[Strategy.CloseSlot].IndicatorName == "Account Percent Stop" &&
                     session[bar - 1].Summary.Transaction != Transaction.Transfer)
                 {
@@ -1121,7 +1123,7 @@ namespace Forex_Strategy_Builder
                 }
             }
             else
-            {   // When there is no position transffer the old balance and equity
+            {   // When there is no position transfer the old balance and equity
                 session[bar].Summary.Balance      = session[bar - 1].Summary.Balance;
                 session[bar].Summary.Equity       = session[bar - 1].Summary.Equity;
                 session[bar].Summary.MoneyBalance = session[bar - 1].Summary.MoneyBalance;
@@ -2273,6 +2275,55 @@ namespace Forex_Strategy_Builder
             }
 
             return;
+        }
+
+        /// <summary>
+        /// Sets Break Even close order for the current position.
+        /// </summary>
+        static bool AnalyseBreakEvenExit(int bar, double price, int lastPosBreakEven)
+        {
+            if (!IsOpenPos(bar))
+                return false;
+
+            // First cancel no executed Break Even exits if any.
+            if (session[bar].Summary.PosNumb > lastPosBreakEven)
+            {
+                for (int ord = 0; ord < Backtester.Orders(bar); ord++)
+                {
+                    Order order = Backtester.OrdFromNumb(Backtester.OrdNumb(bar, ord));
+                    if (order.OrdOrigin == OrderOrigin.BreakEven && order.OrdStatus != OrderStatus.Executed)
+                    {
+                        order.OrdStatus = OrderStatus.Cancelled;
+                        session[bar].Summary.IsBreakEvenActivated = false;
+                    }
+                }
+            }
+
+            double targetBreakEven = Strategy.BreakEven * Data.InstrProperties.Point;
+
+            // Check if Break Even has to be activated (if position has profit).
+            if (!session[bar].Summary.IsBreakEvenActivated)
+            {
+                if (session[bar].Summary.PosDir == PosDirection.Long  && price >= session[bar].Summary.PosPrice + targetBreakEven ||
+                    session[bar].Summary.PosDir == PosDirection.Short && price <= session[bar].Summary.PosPrice - targetBreakEven)
+                    session[bar].Summary.IsBreakEvenActivated = true;
+                else
+                    return false;
+            }
+
+            // Set Break Even to the current position.
+            int    ifOrder = 0;
+            int    toPos   = session[bar].Summary.PosNumb;
+            double lots    = session[bar].Summary.PosLots;
+            double stop    = session[bar].Summary.PosPrice;
+            string note    = Language.T("Break Even to position") + " " + (toPos + 1);
+
+            if (session[bar].Summary.PosDir == PosDirection.Long)
+                OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
+                OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
+
+            return true;
         }
 
         /// <summary>

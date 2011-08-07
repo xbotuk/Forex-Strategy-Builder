@@ -1386,6 +1386,10 @@
     <alt>пипсы прибыли.</alt>
   </str>
   <str>
+    <main>The position's Stop Loss will be set to Break Even price when the profit reaches</main>
+    <alt>The position's Stop Loss will be set to Break Even price when the profit reaches</alt>
+  </str>
+  <str>
     <main>Use the indicator value from the previous bar for all asterisk-marked indicators!</main>
     <alt>Использовать значение индикатора от предыдущего бара для всех индикаторов, помеченных звездочкой.</alt>
   </str>
@@ -2076,6 +2080,10 @@
     <main>Permanent T/P to order</main>
     <alt>Постоянный T/P к ордеру</alt>
   </str>
+  <str>
+    <main>Break Even to position</main>
+    <alt>Break Even to position</alt>
+  </str>
   <!-- Bar Explorer -->
   <str>
     <main>Go to the chosen bar.</main>
@@ -2606,6 +2614,10 @@
   <str>
     <main>Do not change the Permanent Take Profit</main>
     <alt>Не изменять постоянный тейк профит</alt>
+  </str>
+  <str>
+    <main>Do not change the Break Even</main>
+    <alt>Do not change the Break Even</alt>
   </str>
   <str>
     <main>Perform an initial optimization</main>

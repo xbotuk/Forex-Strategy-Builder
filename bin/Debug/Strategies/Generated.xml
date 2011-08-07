@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<strategy>
+  <programName>Forex Strategy Builder</programName>
+  <programVersion>2.62.0.0</programVersion>
+  <strategyName>Generated</strategyName>
+  <instrumentSymbol>EURUSD</instrumentSymbol>
+  <instrumentPeriod>day</instrumentPeriod>
+  <sameDirSignalAction>Add</sameDirSignalAction>
+  <oppDirSignalAction>Reduce</oppDirSignalAction>
+  <permanentStopLoss usePermanentSL="True" permanentSLType="Relative">3000</permanentStopLoss>
+  <permanentTakeProfit usePermanentTP="True" permanentTPType="Relative">3000</permanentTakeProfit>
+  <breakEven useBreakEven="True">500</breakEven>
+  <maxOpenLots>20</maxOpenLots>
+  <useAccountPercentEntry>False</useAccountPercentEntry>
+  <entryLots>0.01</entryLots>
+  <addingLots>0.01</addingLots>
+  <reducingLots>1</reducingLots>
+  <description>Automatically generated on 07/08/2011 07:58.</description>
+  <openFilters>1</openFilters>
+  <closeFilters>1</closeFilters>
+  <slot slotNumber="0" slotType="Open">
+    <indicatorName>Bar Closing</indicatorName>
+    <listParam paramNumber="0">
+      <caption>Logic</caption>
+      <index>0</index>
+      <value>Enter the market at the end of the bar</value>
+    </listParam>
+    <listParam paramNumber="1">
+      <caption>Base price</caption>
+      <index>0</index>
+      <value>Close</value>
+    </listParam>
+  </slot>
+  <slot slotNumber="1" slotType="OpenFilter" logicalGroup="A">
+    <indicatorName>Ichimoku Kinko Hyo</indicatorName>
+    <listParam paramNumber="0">
+      <caption>Logic</caption>
+      <index>9</index>
+      <value>The Tenkan Sen is above the Kumo</value>
+    </listParam>
+    <numParam paramNumber="0">
+      <caption>Tenkan</caption>
+      <value>9</value>
+    </numParam>
+    <numParam paramNumber="2">
+      <caption>Kijun</caption>
+      <value>23</value>
+    </numParam>
+    <numParam paramNumber="4">
+      <caption>Senkou Span B</caption>
+      <value>71</value>
+    </numParam>
+    <checkParam paramNumber="0">
+      <caption>Use previous bar value</caption>
+      <value>False</value>
+    </checkParam>
+  </slot>
+  <slot slotNumber="2" slotType="Close">
+    <indicatorName>Bar Closing</indicatorName>
+    <listParam paramNumber="0">
+      <caption>Logic</caption>
+      <index>0</index>
+      <value>Exit the market at the end of the bar</value>
+    </listParam>
+    <listParam paramNumber="1">
+      <caption>Base price</caption>
+      <index>0</index>
+      <value>Close</value>
+    </listParam>
+  </slot>
+  <slot slotNumber="3" slotType="CloseFilter" logicalGroup="a">
+    <indicatorName>ATR MA Oscillator</indicatorName>
+    <listParam paramNumber="0">
+      <caption>Logic</caption>
+      <index>5</index>
+      <value>The ATR MA Oscillator crosses the zero line downward</value>
+    </listParam>
+    <listParam paramNumber="1">
+      <caption>Smoothing method</caption>
+      <index>2</index>
+      <value>Exponential</value>
+    </listParam>
+    <listParam paramNumber="2">
+      <caption>Signal line method</caption>
+      <index>3</index>
+      <value>Smoothed</value>
+    </listParam>
+    <numParam paramNumber="0">
+      <caption>ATR period</caption>
+      <value>163</value>
+    </numParam>
+    <numParam paramNumber="1">
+      <caption>Signal line period</caption>
+      <value>61</value>
+    </numParam>
+    <checkParam paramNumber="0">
+      <caption>Use previous bar value</caption>
+      <value>False</value>
+    </checkParam>
+  </slot>
+</strategy>

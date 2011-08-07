@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<strategy>
+  <programName>Forex Strategy Builder</programName>
+  <programVersion>2.62.0.0</programVersion>
+  <strategyName>BUG Break Even</strategyName>
+  <instrumentSymbol>EURUSD</instrumentSymbol>
+  <instrumentPeriod>day</instrumentPeriod>
+  <sameDirSignalAction>Add</sameDirSignalAction>
+  <oppDirSignalAction>Nothing</oppDirSignalAction>
+  <permanentStopLoss usePermanentSL="False" permanentSLType="Relative">1000</permanentStopLoss>
+  <permanentTakeProfit usePermanentTP="False" permanentTPType="Relative">1000</permanentTakeProfit>
+  <breakEven useBreakEven="True">900</breakEven>
+  <maxOpenLots>20</maxOpenLots>
+  <useAccountPercentEntry>False</useAccountPercentEntry>
+  <entryLots>0.01</entryLots>
+  <addingLots>0.01</addingLots>
+  <reducingLots>1</reducingLots>
+  <description>Automatically generated on 07/08/2011 09:03.
+BUG bar 5689. 
+Break Even remains on the position before adding.</description>
+  <openFilters>1</openFilters>
+  <closeFilters>1</closeFilters>
+  <slot slotNumber="0" slotType="Open">
+    <indicatorName>Starc Bands</indicatorName>
+    <listParam paramNumber="0">
+      <caption>Logic</caption>
+      <index>0</index>
+      <value>Enter long at the Upper Band</value>
+    </listParam>
+    <listParam paramNumber="1">
+      <caption>Smoothing method</caption>
+      <index>1</index>
+      <value>Weighted</value>
+    </listParam>
+    <listParam paramNumber="2">
+      <caption>Base price</caption>
+      <index>0</index>
+      <value>Close</value>
+    </listParam>
+    <numParam paramNumber="0">
+      <caption>MA period</caption>
+      <value>109</value>
+    </numParam>
+    <numParam paramNumber="1">
+      <caption>Multiplier</caption>
+      <value>4.44</value>
+    </numParam>
+    <checkParam paramNumber="0">
+      <caption>Use previous bar value</caption>
+      <value>True</value>
+    </checkParam>
+  </slot>
+  <slot slotNumber="1" slotType="OpenFilter" logicalGroup="A">
+    <indicatorName>Relative Vigor Index</indicatorName>
+    <listParam paramNumber="0">
+      <caption>Logic</caption>
+      <index>2</index>
+      <value>The RVI line is higher than zero</value>
+    </listParam>
+    <numParam paramNumber="0">
+      <caption>RVI period</caption>
+      <value>17</value>
+    </numParam>
+    <checkParam paramNumber="0">
+      <caption>Use previous bar value</caption>
+      <value>True</value>
+    </checkParam>
+  </slot>
+  <slot slotNumber="2" slotType="Close">
+    <indicatorName>Bar Closing</indicatorName>
+    <listParam paramNumber="0">
+      <caption>Logic</caption>
+      <index>0</index>
+      <value>Exit the market at the end of the bar</value>
+    </listParam>
+    <listParam paramNumber="1">
+      <caption>Base price</caption>
+      <index>0</index>
+      <value>Close</value>
+    </listParam>
+  </slot>
+  <slot slotNumber="3" slotType="CloseFilter" logicalGroup="a">
+    <indicatorName>MA Oscillator</indicatorName>
+    <listParam paramNumber="0">
+      <caption>Logic</caption>
+      <index>7</index>
+      <value>The MA Oscillator changes its direction downward</value>
+    </listParam>
+    <listParam paramNumber="1">
+      <caption>Smoothing method</caption>
+      <index>3</index>
+      <value>Smoothed</value>
+    </listParam>
+    <listParam paramNumber="2">
+      <caption>Base price</caption>
+      <index>5</index>
+      <value>Typical</value>
+    </listParam>
+    <numParam paramNumber="0">
+      <caption>Fast MA period</caption>
+      <value>41</value>
+    </numParam>
+    <numParam paramNumber="1">
+      <caption>Slow MA period</caption>
+      <value>11</value>
+    </numParam>
+    <numParam paramNumber="2">
+      <caption>Level</caption>
+      <value>0.0000</value>
+    </numParam>
+    <checkParam paramNumber="0">
+      <caption>Use previous bar value</caption>
+      <value>False</value>
+    </checkParam>
+  </slot>
+</strategy>

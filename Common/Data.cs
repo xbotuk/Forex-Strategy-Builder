@@ -507,6 +507,9 @@ namespace Forex_Strategy_Builder
             stckStrategy   = new Stack<Strategy>();
             lstGenStrategy = new List<Strategy>();
 
+            if (int.Parse(version[1]) % 2 != 0)
+                isBetaVersion = true;
+
             isIntrabarData = false;
         }
 

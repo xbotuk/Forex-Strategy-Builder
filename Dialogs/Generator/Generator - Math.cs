@@ -402,6 +402,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     GenerateSameOppSignal();
                     GeneratePermanentSL();
                     GeneratePermanentTP();
+                    GenerateBreakEven();
 
                     // Calculates the back test.
                     bool isBetter = CalculateTheResult(false);
@@ -485,9 +486,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
                 SetLabelCyclesText(cycles.ToString());
             }
-            catch (Exception excaption)
+            catch (Exception exception)
             {
-                string text    = GenerateCalculationErrorMessage(excaption.Message);
+                string text = GenerateCalculationErrorMessage(exception.Message);
                 string caption = "Strategy Calculation Error";
                 ReportIndicatorError(text, caption);
 
@@ -508,7 +509,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 indicator.Calculate(slotType);
                 okStatus = true;
             }
-            catch (Exception excaption)
+            catch (Exception exception)
             {
                 string message = "Please report this error in the support forum!";
                 if (indicator.CustomIndicator)
@@ -516,13 +517,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                         "You may remove this indicator from the Custom Indicators folder.";
 
                 string text =
-                    "<h1>Error: " + excaption.Message + "</h1>" +
-                    "<p>" + 
-                        "Slot type: <strong>" + slotType.ToString()  + "</strong><br />" +
-                        "Indicator: <strong>" + indicator.ToString() + "</strong>" + 
+                    "<h1>Error: " + exception.Message + "</h1>" +
+                    "<p>" +
+                        "Slot type: <strong>" + slotType.ToString() + "</strong><br />" +
+                        "Indicator: <strong>" + indicator.ToString() + "</strong>" +
                     "</p>" +
-                    "<p>" + 
-                        message + 
+                    "<p>" +
+                        message +
                     "</p>";
 
                 string caption = "Indicator Calculation Error";
@@ -530,6 +531,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 indicatorBlackList.Add(indicator.IndicatorName);
                 okStatus = false;
             }
+
             return okStatus;
         }
 
@@ -894,11 +896,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 {
                     int multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
                     Data.Strategy.PermanentSL = multiplier * random.Next(5, 50);
-                    if (random.Next(100) > 80 &&
-                        (Data.Strategy.SameSignalAction == SameDirSignalAction.Add   || 
-                        Data.Strategy.SameSignalAction == SameDirSignalAction.Winner ||
-                        Data.Strategy.OppSignalAction == OppositeDirSignalAction.Reduce))
-                        Data.Strategy.PermanentSLType = PermanentProtectionType.Absolute;
+                    //if (random.Next(100) > 80 &&
+                    //    (Data.Strategy.SameSignalAction == SameDirSignalAction.Add   || 
+                    //    Data.Strategy.SameSignalAction == SameDirSignalAction.Winner ||
+                    //    Data.Strategy.OppSignalAction == OppositeDirSignalAction.Reduce))
+                    //    Data.Strategy.PermanentSLType = PermanentProtectionType.Absolute;
                 }
             }
         }
@@ -924,11 +926,34 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 {
                     int multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
                     Data.Strategy.PermanentTP = multiplier * random.Next(5, 50);
-                    if (random.Next(100) > 80 &&
-                        (Data.Strategy.SameSignalAction == SameDirSignalAction.Add    ||
-                        Data.Strategy.SameSignalAction  == SameDirSignalAction.Winner ||
-                        Data.Strategy.OppSignalAction   == OppositeDirSignalAction.Reduce))
-                        Data.Strategy.PermanentTPType = PermanentProtectionType.Absolute;
+                    //if (random.Next(100) > 80 &&
+                    //    (Data.Strategy.SameSignalAction == SameDirSignalAction.Add    ||
+                    //    Data.Strategy.SameSignalAction  == SameDirSignalAction.Winner ||
+                    //    Data.Strategy.OppSignalAction   == OppositeDirSignalAction.Reduce))
+                    //    Data.Strategy.PermanentTPType = PermanentProtectionType.Absolute;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Generates Break Even stop.
+        /// </summary>
+        void GenerateBreakEven()
+        {
+            if (chbPreservBreakEven.Checked || strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+            {
+                Data.Strategy.UseBreakEven = strategyBest.UseBreakEven;
+                Data.Strategy.BreakEven    = strategyBest.BreakEven;
+            }
+            else
+            {
+                bool useBreakEven    = random.Next(100) > 30;
+                bool changeBreakEven = random.Next(100) > 50;
+                Data.Strategy.UseBreakEven = useBreakEven;
+                if (useBreakEven && changeBreakEven)
+                {
+                    int multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
+                    Data.Strategy.BreakEven = multiplier * random.Next(5, 50);
                 }
             }
         }

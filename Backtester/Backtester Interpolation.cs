@@ -24,9 +24,10 @@ namespace Forex_Strategy_Builder
             double low     = Low[bar];
             double close   = Close[bar];
             double current = open;
-            int reachedIntrabar = 0;
-            int tradedIntrabar  = -1;
-            int reachedTick     = 0;
+            int reachedIntrabar  = 0;
+            int tradedIntrabar   = -1;
+            int reachedTick      = 0;
+            int lastPosBreakEven = 0;
 
             do
             {
@@ -40,6 +41,11 @@ namespace Forex_Strategy_Builder
                 bool isBottomReachable  = true;
                 bool isClosingAmbiguity = false;
                 bool isScanningResult   = false;
+
+                // Break Even
+                if (Strategy.UseBreakEven && lastPosBreakEven != session[bar].Summary.PosNumb && IsOpenPos(bar))
+                    if (AnalyseBreakEvenExit(bar, current, lastPosBreakEven))
+                        lastPosBreakEven = session[bar].Summary.PosNumb;
 
                 // Setting the parameters
                 for (int ord = 0; ord < session[bar].Orders; ord++)

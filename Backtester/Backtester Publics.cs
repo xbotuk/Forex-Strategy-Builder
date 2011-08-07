@@ -132,6 +132,18 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
+        /// Checks whether we have got a position.
+        /// </summary>
+        public static bool IsOpenPos(int bar)
+        {
+            bool isPosition =
+                session[bar].Summary.PosDir == PosDirection.Long ||
+                session[bar].Summary.PosDir == PosDirection.Short;
+
+            return isPosition;
+        }
+
+        /// <summary>
         /// Last Position's number.
         /// </summary>
         public static int SummaryPosNumb(int bar)

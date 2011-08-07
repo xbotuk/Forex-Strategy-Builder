@@ -36,6 +36,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     // Change Permanent Take Profit
                     ChangePermanentTP(worker);
 
+                    // Change BreakEven
+                    ChangeBreakEven(worker);
                 }
 
                 // Remove needless filters
@@ -51,6 +53,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 // Remove Permanent Take Profit
                 if (!chbPreservPermTP.Checked && strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UsePermanentTP && !worker.CancellationPending)
                     RemovePermanentTP(worker);
+
+                // Remove Break Even
+                if (!chbPreservBreakEven.Checked && strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UseBreakEven && !worker.CancellationPending)
+                    RemoveBreakEven(worker);
 
                 // Reduce the value of numeric parameters
                 if (!chbUseDefaultIndicatorValues.Checked)
@@ -219,6 +225,48 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             {
                 Data.Strategy.UsePermanentTP = true;
                 Data.Strategy.PermanentTP = oldPermTP;
+            }
+        }
+
+        /// <summary>
+        /// Change Break Even
+        /// </summary>
+        void ChangeBreakEven(BackgroundWorker worker)
+        {
+            int repeats = 0;
+            bool isDoAgain;
+            do
+            {
+                if (worker.CancellationPending) break;
+                if (chbPreservBreakEven.Checked || strategyBest.PropertiesStatus == StrategySlotStatus.Locked || !Data.Strategy.UseBreakEven)
+                    break;
+
+                int oldBreakEven = Data.Strategy.BreakEven;
+                Data.Strategy.UseBreakEven = true;
+                int multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
+                Data.Strategy.BreakEven = multiplier * random.Next(5, 100);
+
+                repeats++;
+                isDoAgain = repeats < 5;
+                isDoAgain = CalculateTheResult(false);
+                if (!isDoAgain)
+                    Data.Strategy.BreakEven = oldBreakEven;
+            } while (isDoAgain);
+        }
+
+        /// <summary>
+        /// Removes the Break Even
+        /// </summary>
+        void RemoveBreakEven(BackgroundWorker worker)
+        {
+            int oldBreakEven = Data.Strategy.BreakEven;
+            Data.Strategy.UseBreakEven = false;
+            Data.Strategy.BreakEven = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
+            bool isBetterORSame = CalculateTheResult(true);
+            if (!isBetterORSame)
+            {
+                Data.Strategy.UseBreakEven = true;
+                Data.Strategy.BreakEven = oldBreakEven;
             }
         }
 

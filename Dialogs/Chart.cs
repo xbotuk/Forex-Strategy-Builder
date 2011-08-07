@@ -1195,17 +1195,21 @@ namespace Forex_Strategy_Builder
                     }
                 }
 
-                //// Draw Permanent SL and TP
-                //for (int iPos = 0; iPos < Backtester.Positions(bar) && isPositionPriceShown; iPos++)
-                //{
-                //    int yAbsSL = (int)Math.Round(YBottom - (Backtester.SummaryAbsoluteSL(bar) - minPrice) * YScale);
-                //    int yAbsTP = (int)Math.Round(YBottom - (Backtester.SummaryAbsoluteTP(bar) - minPrice) * YScale);
-
-                //    if (yAbsTP < YBottom && yAbsTP > YTop)
-                //        g.DrawLine(penTradeLong, x, yAbsTP, x + barPixels - 2, yAbsTP);
-                //    if (yAbsSL < YBottom && yAbsSL > YTop)
-                //        g.DrawLine(penTradeShort, x, yAbsSL, x + barPixels - 2, yAbsSL);
-                //}
+                // Draw Break Even
+                for (int ord = 0; ord < Backtester.Orders(bar); ord++)
+                {
+                    Order order = Backtester.OrdFromNumb(Backtester.OrdNumb(bar, ord));
+                    if (order.OrdOrigin == OrderOrigin.BreakEven)
+                    {
+                        int yOrder = (int)Math.Round(YBottom - (order.OrdPrice - minPrice) * YScale);
+                        if (yOrder < YBottom && yOrder > YTop)
+                        {
+                            Pen penBreakEven = new Pen(LayoutColors.ColorTradeClose);
+                            penBreakEven.DashStyle = DashStyle.Dash;
+                            g.DrawLine(penBreakEven, x, yOrder, x + barPixels - 2, yOrder);
+                        }
+                    }
+                }
 
                 // Draw the deals
                 for (int iPos = 0; iPos < Backtester.Positions(bar) && isOrdersShown; iPos++)
@@ -1235,7 +1239,7 @@ namespace Forex_Strategy_Builder
                                 int d = barPixels / 2 - 1;
                                 int x1 = x + d;
                                 int x2 = x + barPixels - 2;
-                                g.DrawLine(pen, x,  yDeal, x1, yDeal);
+                                g.DrawLine(pen, x, yDeal, x1, yDeal);
                                 g.DrawLine(pen, x1, yDeal, x2, yDeal - d);
                                 g.DrawLine(pen, x2 + 1, yDeal - d + 1, x1 + d / 2 + 1, yDeal - d + 1);
                                 g.DrawLine(pen, x2, yDeal - d, x2, yDeal - d / 2);
@@ -1259,7 +1263,7 @@ namespace Forex_Strategy_Builder
                                 int d = barPixels / 2 - 1;
                                 int x1 = x + d;
                                 int x2 = x + barPixels - 2;
-                                g.DrawLine(pen, x,  yDeal + 1, x1 + 1, yDeal + 1);
+                                g.DrawLine(pen, x, yDeal + 1, x1 + 1, yDeal + 1);
                                 g.DrawLine(pen, x1, yDeal, x2, yDeal + d);
                                 g.DrawLine(pen, x1 + d / 2 + 1, yDeal + d, x2, yDeal + d);
                                 g.DrawLine(pen, x2, yDeal + d, x2, yDeal + d / 2 + 1);

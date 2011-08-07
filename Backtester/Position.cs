@@ -59,7 +59,7 @@ namespace Forex_Strategy_Builder
         double posPrice;           // Calculated middle price including the rollover fee
         double absoluteSL;         // Absolute mode Permanent SL
         double absoluteTP;         // Absolute mode Permanent TP
-        double breakEven;          // Break Even
+        bool   breakEvenActivated; // Break Even
         double requiredMargin;     // The required margin
         double profitLoss;         // Position Profit Loss
         double floatingPL;         // Position Floating Profit Loss
@@ -121,7 +121,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Break Even
         /// </summary>
-        public double BreakEven { get { return breakEven; } set { breakEven = value; } }
+        public bool IsBreakEvenActivated { get { return breakEvenActivated; } set { breakEvenActivated = value; } }
 
         /// <summary>
         /// The required margin
@@ -283,34 +283,34 @@ namespace Forex_Strategy_Builder
         {
             Position position = new Position();
 
-            position.transaction       = this.transaction;
-            position.posDirection      = this.posDirection;
-            position.openingBar        = this.openingBar;
-            position.ordNumb           = this.ordNumb;
-            position.ordPrice          = this.ordPrice;
-            position.posNumb           = this.posNumb;
-            position.posLots           = this.posLots;
-            position.posPrice          = this.posPrice;
-            position.absoluteSL        = this.absoluteSL;
-            position.absoluteTP        = this.absoluteTP;
-            position.breakEven         = this.breakEven;
-            position.requiredMargin    = this.requiredMargin;
-            position.profitLoss        = this.profitLoss;
-            position.floatingPL        = this.floatingPL;
-            position.balance           = this.balance;
-            position.equity            = this.equity;
-            position.chargedSpread     = this.chargedSpread;
-            position.chargedRollover   = this.chargedRollover;
-            position.chargedCommission = this.chargedCommission;
-            position.chargedSlippage   = this.chargedSlippage;
-            position.moneyProfitLoss   = this.moneyProfitLoss;
-            position.moneyFloatingPL   = this.moneyFloatingPL;
-            position.moneyBalance      = this.moneyBalance;
-            position.moneyEquity       = this.moneyEquity;
-            position.moneySpread       = this.moneySpread;
-            position.moneyRollover     = this.moneyRollover;
-            position.moneyCommission   = this.moneyCommission;
-            position.moneySlippage     = this.moneySlippage;
+            position.transaction        = this.transaction;
+            position.posDirection       = this.posDirection;
+            position.openingBar         = this.openingBar;
+            position.ordNumb            = this.ordNumb;
+            position.ordPrice           = this.ordPrice;
+            position.posNumb            = this.posNumb;
+            position.posLots            = this.posLots;
+            position.posPrice           = this.posPrice;
+            position.absoluteSL         = this.absoluteSL;
+            position.absoluteTP         = this.absoluteTP;
+            position.breakEvenActivated = this.breakEvenActivated;
+            position.requiredMargin     = this.requiredMargin;
+            position.profitLoss         = this.profitLoss;
+            position.floatingPL         = this.floatingPL;
+            position.balance            = this.balance;
+            position.equity             = this.equity;
+            position.chargedSpread      = this.chargedSpread;
+            position.chargedRollover    = this.chargedRollover;
+            position.chargedCommission  = this.chargedCommission;
+            position.chargedSlippage    = this.chargedSlippage;
+            position.moneyProfitLoss    = this.moneyProfitLoss;
+            position.moneyFloatingPL    = this.moneyFloatingPL;
+            position.moneyBalance       = this.moneyBalance;
+            position.moneyEquity        = this.moneyEquity;
+            position.moneySpread        = this.moneySpread;
+            position.moneyRollover      = this.moneyRollover;
+            position.moneyCommission    = this.moneyCommission;
+            position.moneySlippage      = this.moneySlippage;
 
             return position;
         }
@@ -325,37 +325,37 @@ namespace Forex_Strategy_Builder
             string NL = Environment.NewLine;
             string AC = Configs.AccountCurrency;
 
-            pos += "Pos Numb           "        + (posNumb + 1).ToString()     + NL;
-            pos += "Transaction        "        + transaction.ToString()       + NL;
-            pos += "Direction          "        + posDirection.ToString()      + NL;
-            pos += "Opening Bar        "        + (openingBar + 1).ToString()  + NL;
-            pos += "Order Number       "        + (ordNumb + 1).ToString()     + NL;
-            pos += "Order Price        "        + ordPrice.ToString()          + NL;
-            pos += "Position Lots      "        + posLots.ToString()           + NL;
-            pos += "Position Price     "        + posPrice.ToString()          + NL;
-            pos += "Req. Margin [" + AC + "]  " + requiredMargin.ToString()    + NL;
+            pos += "Pos Numb             "      + (posNumb + 1).ToString()      + NL;
+            pos += "Transaction          "      + transaction.ToString()        + NL;
+            pos += "Direction            "      + posDirection.ToString()       + NL;
+            pos += "Opening Bar          "      + (openingBar + 1).ToString()   + NL;
+            pos += "Order Number         "      + (ordNumb + 1).ToString()      + NL;
+            pos += "Order Price          "      + ordPrice.ToString()           + NL;
+            pos += "Position Lots        "      + posLots.ToString()            + NL;
+            pos += "Position Price       "      + posPrice.ToString()           + NL;
+            pos += "Req. Margin [" + AC + "]  " + requiredMargin.ToString()     + NL;
             pos += "---------------------------------"  + NL;
-            pos += "Abs Permanent SL   "        + absoluteSL.ToString()        + NL;
-            pos += "Abs Permanent TP   "        + absoluteTP.ToString()        + NL;
-            pos += "Break Even         "        + breakEven.ToString()         + NL;
+            pos += "Abs Permanent SL     "      + absoluteSL.ToString()         + NL;
+            pos += "Abs Permanent TP     "      + absoluteTP.ToString()         + NL;
+            pos += "Break Even Activated "      + breakEvenActivated.ToString() + NL;
             pos += "---------------------------------"  + NL;
-            pos += "Spread      [pips] "        + chargedSpread.ToString()     + NL;
-            pos += "Rollover    [pips] "        + chargedRollover.ToString()   + NL;
-            pos += "Commission  [pips] "        + chargedCommission.ToString() + NL;
-            pos += "Slippage    [pips] "        + chargedSlippage.ToString()   + NL;
-            pos += "Floating PL [pips] "        + floatingPL.ToString()        + NL;
-            pos += "Profit Loss [pips] "        + profitLoss.ToString()        + NL;
-            pos += "Balance     [pips] "        + balance.ToString()           + NL;
-            pos += "Equity      [pips] "        + equity.ToString()            + NL;
+            pos += "Spread      [pips] "        + chargedSpread.ToString()      + NL;
+            pos += "Rollover    [pips] "        + chargedRollover.ToString()    + NL;
+            pos += "Commission  [pips] "        + chargedCommission.ToString()  + NL;
+            pos += "Slippage    [pips] "        + chargedSlippage.ToString()    + NL;
+            pos += "Floating PL [pips] "        + floatingPL.ToString()         + NL;
+            pos += "Profit Loss [pips] "        + profitLoss.ToString()         + NL;
+            pos += "Balance     [pips] "        + balance.ToString()            + NL;
+            pos += "Equity      [pips] "        + equity.ToString()             + NL;
             pos += "---------------------------------"  + NL;
-            pos += "Spread      [" + AC + "]  " + moneySpread.ToString()       + NL;
-            pos += "Rollover    [" + AC + "]  " + moneyRollover.ToString()     + NL;
-            pos += "Commission  [" + AC + "]  " + moneyCommission.ToString()   + NL;
-            pos += "Slippage    [" + AC + "]  " + moneySlippage.ToString()     + NL;
-            pos += "Floating PL [" + AC + "]  " + moneyFloatingPL.ToString()   + NL;
-            pos += "Profit Loss [" + AC + "]  " + moneyProfitLoss.ToString()   + NL;
-            pos += "Balance     [" + AC + "]  " + moneyBalance.ToString()      + NL;
-            pos += "Equity      [" + AC + "]  " + moneyEquity.ToString()       + NL;
+            pos += "Spread      [" + AC + "]  " + moneySpread.ToString()        + NL;
+            pos += "Rollover    [" + AC + "]  " + moneyRollover.ToString()      + NL;
+            pos += "Commission  [" + AC + "]  " + moneyCommission.ToString()    + NL;
+            pos += "Slippage    [" + AC + "]  " + moneySlippage.ToString()      + NL;
+            pos += "Floating PL [" + AC + "]  " + moneyFloatingPL.ToString()    + NL;
+            pos += "Profit Loss [" + AC + "]  " + moneyProfitLoss.ToString()    + NL;
+            pos += "Balance     [" + AC + "]  " + moneyBalance.ToString()       + NL;
+            pos += "Equity      [" + AC + "]  " + moneyEquity.ToString()        + NL;
 
             return pos;
         }

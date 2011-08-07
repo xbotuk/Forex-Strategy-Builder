@@ -181,7 +181,7 @@ namespace Forex_Strategy_Builder
 
             Configs.SaveConfigs();
             Instruments.SaveInstruments();
-            this.Hide();
+            if (!e.Cancel) this.Hide();
             Data.SendStats();
 
             return;

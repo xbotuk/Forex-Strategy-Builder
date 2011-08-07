@@ -23,9 +23,9 @@ namespace Forex_Strategy_Builder
         Label lblPercent1, lblPercent2, lblPercent3;
 
         ComboBox cbxSameDirAction, cbxOppDirAction;
-        CheckBox chbPermaSL, chbPermaTP;
+        CheckBox chbPermaSL, chbPermaTP, chbBreakEven;
         RadioButton rbConstantUnits, rbVariableUnits;
-        NUD nudPermaSL, nudPermaTP;
+        NUD nudPermaSL, nudPermaTP, nudBreakEven;
         ComboBox cbxPermaSLType, cbxPermaTPType;
         NUD nudMaxOpenLots, nudEntryLots, nudAddingLots, nudReducingLots;
 
@@ -72,6 +72,8 @@ namespace Forex_Strategy_Builder
             chbPermaTP = new CheckBox();
             cbxPermaTPType = new ComboBox();
             nudPermaTP = new NUD();
+            chbBreakEven = new CheckBox();
+            nudBreakEven = new NUD();
 
             btnAccept  = new Button();
             btnDefault = new Button();
@@ -266,7 +268,7 @@ namespace Forex_Strategy_Builder
             nudPermaSL.Minimum   = 5;
             nudPermaSL.Maximum   = 5000;
             nudPermaSL.Increment = 1;
-            nudPermaSL.Value     = (Data.InstrProperties.Digits == 5 || Data.InstrProperties.Digits == 3) ? 1000 : 100;
+            nudPermaSL.Value     = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
             nudPermaSL.TextAlign = HorizontalAlignment.Center;
             nudPermaSL.EndInit();
 
@@ -295,9 +297,30 @@ namespace Forex_Strategy_Builder
             nudPermaTP.Minimum   = 5;
             nudPermaTP.Maximum   = 5000;
             nudPermaTP.Increment = 1;
-            nudPermaTP.Value     = (Data.InstrProperties.Digits == 5 || Data.InstrProperties.Digits == 3) ? 1000 : 100;
+            nudPermaTP.Value     = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
             nudPermaTP.TextAlign = HorizontalAlignment.Center;
             nudPermaTP.EndInit();
+
+            // CheckBox Break Even
+            chbBreakEven.Name      = "chbBreakEven";
+            chbBreakEven.Parent    = pnlProtection;
+            chbBreakEven.ForeColor = colorText;
+            chbBreakEven.BackColor = Color.Transparent;
+            chbBreakEven.AutoCheck = true;
+            chbBreakEven.AutoSize  = true;
+            chbBreakEven.Checked   = false;
+            chbBreakEven.Text      = Language.T("Break Even");
+
+            // NumericUpDown Break Even
+            nudBreakEven.Parent    = pnlProtection;
+            nudBreakEven.Name      = "nudBreakEven";
+            nudBreakEven.BeginInit();
+            nudBreakEven.Minimum   = 5;
+            nudBreakEven.Maximum   = 5000;
+            nudBreakEven.Increment = 1;
+            nudBreakEven.Value     = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
+            nudBreakEven.TextAlign = HorizontalAlignment.Center;
+            nudBreakEven.EndInit();
 
             //Button Default
             btnDefault.Parent = this;
@@ -396,10 +419,10 @@ namespace Forex_Strategy_Builder
             int space        = btnHrzSpace;
             int textHeight   = Font.Height;
             int border       = 2;
-            int leftComboBxWith = 80;
+            int leftComboBxWith  = 80;
             int rightComboBxWith = 95;
-            int nudWidth     = 60;
-            int lblPercentWidth = 15;
+            int nudWidth         = 60;
+            int lblPercentWidth  = 15;
 
             // pnlAveraging
             pnlAveraging.Size = new Size(leftPanelsWidth, 84);
@@ -410,7 +433,7 @@ namespace Forex_Strategy_Builder
             pnlAmounts.Location = new Point(space, pnlAveraging.Bottom + space);
 
             // pnlProtection
-            pnlProtection.Size = new Size(rightPanelsWidth, 84);
+            pnlProtection.Size = new Size(rightPanelsWidth, 110);
             pnlProtection.Location = new Point(pnlAveraging.Right + space, pnlAveraging.Top);
 
             // Averaging
@@ -470,7 +493,12 @@ namespace Forex_Strategy_Builder
             cbxPermaTPType.Location = new Point(comboBxLeft, 1 * buttonHeight + 2 * space + 19);
             nudPermaTP.Location = new Point(nudLeft, 1 * buttonHeight + 2 * space + 20);
 
-            pnlSmallBalanceChart.Size = new Size(rightPanelsWidth, pnlAmounts.Height);
+            // Break Even
+            chbBreakEven.Location = new Point(border + space, 2 * buttonHeight + 3 * space + 20);
+            nudBreakEven.Size = new Size(nudWidth, buttonHeight);
+            nudBreakEven.Location = new Point(nudLeft, 2 * buttonHeight + 3 * space + 18);
+
+            pnlSmallBalanceChart.Size = new Size(rightPanelsWidth, pnlAmounts.Bottom - pnlProtection.Bottom - space);
             pnlSmallBalanceChart.Location = new Point(pnlAveraging.Right + space, pnlProtection.Bottom + space);
 
             // Button Accept
@@ -501,11 +529,13 @@ namespace Forex_Strategy_Builder
                 Data.Strategy.OppSignalAction = OppositeDirSignalAction.Nothing;
 
             Data.Strategy.UsePermanentSL  = false;
-            Data.Strategy.PermanentSL     = (Data.InstrProperties.Digits == 5 || Data.InstrProperties.Digits == 3) ? 1000 : 100;
+            Data.Strategy.PermanentSL     = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
             Data.Strategy.PermanentSLType = PermanentProtectionType.Relative;
             Data.Strategy.UsePermanentTP  = false;
-            Data.Strategy.PermanentTP     = (Data.InstrProperties.Digits == 5 || Data.InstrProperties.Digits == 3) ? 1000 : 100;
+            Data.Strategy.PermanentTP     = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
             Data.Strategy.PermanentTPType = PermanentProtectionType.Relative;
+            Data.Strategy.UseBreakEven    = false;
+            Data.Strategy.BreakEven       = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
             Data.Strategy.UseAccountPercentEntry = false;
             Data.Strategy.MaxOpenLots     = 20;
             Data.Strategy.EntryLots       = 1;
@@ -521,8 +551,9 @@ namespace Forex_Strategy_Builder
 
         void Param_Changed(object sender, EventArgs e)
         {
-            nudPermaSL.Enabled = chbPermaSL.Checked;
-            nudPermaTP.Enabled = chbPermaTP.Checked;
+            nudPermaSL.Enabled   = chbPermaSL.Checked;
+            nudPermaTP.Enabled   = chbPermaTP.Checked;
+            nudBreakEven.Enabled = chbBreakEven.Checked;
             cbxPermaSLType.Enabled = chbPermaSL.Checked;
             cbxPermaTPType.Enabled = chbPermaTP.Checked;
 
@@ -538,10 +569,12 @@ namespace Forex_Strategy_Builder
             Data.Strategy.ReducingLots     = (double)nudReducingLots.Value;
             Data.Strategy.UsePermanentSL   = chbPermaSL.Checked;
             Data.Strategy.UsePermanentTP   = chbPermaTP.Checked;
+            Data.Strategy.UseBreakEven     = chbBreakEven.Checked;
             Data.Strategy.PermanentSLType  = (PermanentProtectionType)cbxPermaSLType.SelectedIndex;
             Data.Strategy.PermanentTPType  = (PermanentProtectionType)cbxPermaTPType.SelectedIndex;
             Data.Strategy.PermanentSL      = (int)nudPermaSL.Value;
             Data.Strategy.PermanentTP      = (int)nudPermaTP.Value;
+            Data.Strategy.BreakEven        = (int)nudBreakEven.Value;
 
             SetLabelPercent();
             CalculateStrategy();
@@ -583,6 +616,10 @@ namespace Forex_Strategy_Builder
             cbxPermaTPType.Enabled = Data.Strategy.UsePermanentTP;
             cbxPermaTPType.SelectedIndex = (int)Data.Strategy.PermanentTPType;
 
+            chbBreakEven.Checked = Data.Strategy.UseBreakEven;
+            nudBreakEven.Value   = Data.Strategy.BreakEven;
+            nudBreakEven.Enabled = Data.Strategy.UseBreakEven;
+
             SetParamEventHandlers();
             SetLabelPercent();
 
@@ -605,6 +642,8 @@ namespace Forex_Strategy_Builder
             chbPermaTP.CheckedChanged             += new EventHandler(Param_Changed);
             cbxPermaTPType.SelectedIndexChanged   += new EventHandler(Param_Changed);
             nudPermaTP.ValueChanged               += new EventHandler(Param_Changed);
+            nudBreakEven.ValueChanged             += new EventHandler(Param_Changed);
+            chbBreakEven.CheckedChanged           += new EventHandler(Param_Changed);
         }
 
         void RemoveParamEventHandlers()
@@ -623,6 +662,8 @@ namespace Forex_Strategy_Builder
             chbPermaTP.CheckedChanged             -= new EventHandler(Param_Changed);
             cbxPermaTPType.SelectedIndexChanged   -= new EventHandler(Param_Changed);
             nudPermaTP.ValueChanged               -= new EventHandler(Param_Changed);
+            nudBreakEven.ValueChanged             -= new EventHandler(Param_Changed);
+            chbBreakEven.CheckedChanged           -= new EventHandler(Param_Changed);
         }
 
         void SetLabelPercent()

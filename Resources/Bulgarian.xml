@@ -382,6 +382,7 @@
   <str><main>The strategy does not use a Permanent Take Profit.</main><alt>Стратегията не използва постоянен Take Profit.</alt></str>
   <str><main>The Permanent Take Profit closes a position at</main><alt>Постоянният Take Profit затваря позицията на</alt></str>
   <str><main>pips profit.</main><alt>пипса печалба.</alt></str>
+  <str><main>The position's Stop Loss will be set to Break Even price when the profit reaches</main><alt>Stop Loss на позицията ще се премести на цената Break Even, когато печалбата на позицията достигне</alt></str>
   <str><main>Use the indicator value from the previous bar for all asterisk-marked indicators!</main><alt>Използвайте стойността на индикатора от предишния бар за всички индикатори маркирани със звездичка.</alt></str>
   <str><main>The averaging rules apply to the entry signals only. Exit signals close a position. They cannot open, add or reduce one.</main><alt>Правилата за усредняване важат само за входящите сигнали. Изходящите сигнали затварят позицията. Те не могат да отварят, усредняват или отнемат от една позиция.</alt></str>
   <str><main>Required margin</main><alt>Изискван марджин</alt></str>
@@ -567,6 +568,7 @@
   <str><main>Permanent S/L to order</main><alt>Постоянен С/Л към ордер</alt></str>
   <str><main>Permanent T/P to position</main><alt>Постоянен Т/P към позиция</alt></str>
   <str><main>Permanent T/P to order</main><alt>Постоянен T/P към ордер</alt></str>
+  <str><main>Break Even to position</main><alt>Break Even към позиция</alt></str>
 
   <!-- Bar Explorer -->
   <str><main>Go to the chosen bar.</main><alt>Предвижване до избрания бар.</alt></str>
@@ -719,6 +721,7 @@
   <str><main>Generate a new strategy at every start</main><alt>Генериране на нова стратегия при всеки старт</alt></str>
   <str><main>Do not change the Permanent Stop Loss</main><alt>Без промяна на постоянния Stop Loss</alt></str>
   <str><main>Do not change the Permanent Take Profit</main><alt>Без промяна на постоянния Take Profit</alt></str>
+  <str><main>Do not change the Break Even</main><alt>Без промяна на Break Even</alt></str>
   <str><main>Perform an initial optimization</main><alt>Извършване на първоначална оптимизация</alt></str>
   <str><main>Working time</main><alt>Време за работа</alt></str>
   <str><main>Set the number of minutes for the Generator to work.</main><alt>Настройване на броя минути за работа на генератора.</alt></str>
