@@ -77,6 +77,7 @@
     <indicators>True</indicators>
     <ambiguousMark>True</ambiguousMark>
     <trueCharts>False</trueCharts>
+    <protections>False</protections>
   </indicatorChart>
   <balanceChart>
     <zoom>8</zoom>
@@ -93,5 +94,6 @@
     <indicators>False</indicators>
     <ambiguousMark>True</ambiguousMark>
     <trueCharts>False</trueCharts>
+    <protections>False</protections>
   </balanceChart>
 </config>

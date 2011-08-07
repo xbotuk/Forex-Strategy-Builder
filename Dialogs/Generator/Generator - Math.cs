@@ -446,8 +446,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 if (slot.SlotStatus == StrategySlotStatus.Open)
                     slot.LogicalGroup = Data.Strategy.GetDefaultGroup(slot.SlotNumber);
 
+#if !DEBUG
             try
             {
+#endif
                 Backtester.Calculate();
 
                 int balance = (isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance);
@@ -485,6 +487,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 }
 
                 SetLabelCyclesText(cycles.ToString());
+#if !DEBUG
             }
             catch (Exception exception)
             {
@@ -494,6 +497,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
                 isBetter = false;
             }
+#endif
 
             return isBetter;
         }
@@ -503,11 +507,14 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         bool CalculateIndicator(SlotTypes slotType, Indicator indicator)
         {
-            bool okStatus;
+            bool okStatus = false;
+#if !DEBUG
             try
             {
+#endif
                 indicator.Calculate(slotType);
                 okStatus = true;
+#if !DEBUG
             }
             catch (Exception exception)
             {
@@ -519,7 +526,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 string text =
                     "<h1>Error: " + exception.Message + "</h1>" +
                     "<p>" +
-                        "Slot type: <strong>" + slotType.ToString() + "</strong><br />" +
+                        "Slot type: <strong>" + slotType.ToString()  + "</strong><br />" +
                         "Indicator: <strong>" + indicator.ToString() + "</strong>" +
                     "</p>" +
                     "<p>" +
@@ -531,6 +538,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 indicatorBlackList.Add(indicator.IndicatorName);
                 okStatus = false;
             }
+#endif
 
             return okStatus;
         }
@@ -811,9 +819,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                             continue;
                         if (!chbUseDefaultIndicatorValues.Checked)
                         {
-                            double step = Math.Pow(10, -num.Point);
+                            double step    = Math.Pow(10, -num.Point);
                             double minimum = num.Min;
-                            double value = num.Min;
+                            double value   = num.Min;
                             double maximum = num.Max;
 
                             if (maximum > Data.Bars / 3 && ((num.Caption.ToLower()).Contains("period") ||

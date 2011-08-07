@@ -15,7 +15,7 @@ namespace Forex_Strategy_Builder
     public enum ChartButtons
     {
         Grid, Cross,
-        Volume, Orders, PositionLots, PositionPrice, AmbiguousBars,
+        Volume, Orders, PositionLots, PositionPrice, Protections, AmbiguousBars,
         Indicators, BalanceEquity, FloatingPL,
         ZoomIn, ZoomOut, TrueCharts,
         DInfoUp, DInfoDwn, DynamicInfo
@@ -74,6 +74,7 @@ namespace Forex_Strategy_Builder
         bool isOrdersShown;
         bool isPositionLotsShown;
         bool isPositionPriceShown;
+        bool isProtectionsShown;
         bool isAmbiguousBarsShown;
         bool isIndicatorsShown;
         bool isBalanceEquityShown;
@@ -88,51 +89,61 @@ namespace Forex_Strategy_Builder
             get { return barPixels; }
             set { barPixels = value;}
         }
+
         public bool ShowInfoPanel
         {
             get { return isInfoPanelShown; }
             set { isInfoPanelShown = value; }
         }
+
         public bool ShowGrid
         {
             get { return isGridShown; }
             set { isGridShown = value; }
         }
+
         public bool ShowCross
         {
             get { return isCrossShown; }
             set { isCrossShown = value; }
         }
+
         public bool ShowVolume
         {
             get { return isVolumeShown; }
             set { isVolumeShown = value; }
         }
+
         public bool ShowPositionLots
         {
             get { return isPositionLotsShown; }
             set { isPositionLotsShown = value; }
         }
+
         public bool ShowOrders
         {
             get { return isOrdersShown; }
             set { isOrdersShown = value; }
         }
+
         public bool ShowDynInfo
         {
             get { return isDynInfoShown; }
             set { isDynInfoShown = value; }
         }
+
         public bool ShowPositionPrice
         {
             get { return isPositionPriceShown; }
             set { isPositionPriceShown = value; }
         }
+
         public bool ShowBalanceEquity
         {
             get { return isBalanceEquityShown; }
             set { isBalanceEquityShown = value; }
         }
+
         public bool ShowFloatingPL
         {
             get { return isFloatingPLShown; }
@@ -143,6 +154,12 @@ namespace Forex_Strategy_Builder
         {
             get { return isIndicatorsShown; }
             set { isIndicatorsShown = value; }
+        }
+
+        public bool ShowProtections
+        {
+            get { return isProtectionsShown; }
+            set { isProtectionsShown = value; }
         }
 
         public bool ShowAmbiguousBars
@@ -358,17 +375,17 @@ namespace Forex_Strategy_Builder
             tsChartButtons = new ToolStrip();
             tsChartButtons.Parent = pnlCharts;
 
-            aChartButtons = new ToolStripButton[16];
-            for (int i = 0; i < 16; i++)
+            aChartButtons = new ToolStripButton[17];
+            for (int i = 0; i < 17; i++)
             {
                 aChartButtons[i] = new ToolStripButton();
                 aChartButtons[i].Tag = (ChartButtons)i;
                 aChartButtons[i].DisplayStyle = ToolStripItemDisplayStyle.Image;
                 aChartButtons[i].Click += new EventHandler(ButtonChart_Click);
                 tsChartButtons.Items.Add(aChartButtons[i]);
-                if (i > 12)
+                if (i > 13)
                     aChartButtons[i].Alignment = ToolStripItemAlignment.Right;
-                if (i == 1 || i == 6 || i == 9 || i == 11)
+                if (i == 1 || i == 6 || i == 10 || i == 12)
                     tsChartButtons.Items.Add(new ToolStripSeparator());
             }
 
@@ -401,6 +418,11 @@ namespace Forex_Strategy_Builder
             aChartButtons[(int)ChartButtons.PositionPrice].Image = Properties.Resources.chart_pos_price;
             aChartButtons[(int)ChartButtons.PositionPrice].ToolTipText = Language.T("Corrected position price") + "   P";
             aChartButtons[(int)ChartButtons.PositionPrice].Checked = isPositionPriceShown;
+
+            // Position price
+            aChartButtons[(int)ChartButtons.Protections].Image = Properties.Resources.chart_protection;
+            aChartButtons[(int)ChartButtons.Protections].ToolTipText = Language.T("Break Even, Permanent SL, Permanent TP") + "   E";
+            aChartButtons[(int)ChartButtons.Protections].Checked = isProtectionsShown;
 
             // Ambiguous Bars
             aChartButtons[(int)ChartButtons.AmbiguousBars].Image = Properties.Resources.chart_ambiguous_bars;
@@ -1196,7 +1218,8 @@ namespace Forex_Strategy_Builder
                 }
 
                 // Draw Break Even
-                for (int ord = 0; ord < Backtester.Orders(bar); ord++)
+
+                for (int ord = 0; ord < Backtester.Orders(bar) && isProtectionsShown; ord++)
                 {
                     Order order = Backtester.OrdFromNumb(Backtester.OrdNumb(bar, ord));
                     if (order.OrdOrigin == OrderOrigin.BreakEven)
@@ -1207,6 +1230,26 @@ namespace Forex_Strategy_Builder
                             Pen penBreakEven = new Pen(LayoutColors.ColorTradeClose);
                             penBreakEven.DashStyle = DashStyle.Dash;
                             g.DrawLine(penBreakEven, x, yOrder, x + barPixels - 2, yOrder);
+                        }
+                    }
+                    else if (order.OrdOrigin == OrderOrigin.PermanentStopLoss)
+                    {
+                        int yOrder = (int)Math.Round(YBottom - (order.OrdPrice - minPrice) * YScale);
+                        if (yOrder < YBottom && yOrder > YTop)
+                        {
+                            Pen penPermSL = new Pen(LayoutColors.ColorTradeShort);
+                            penPermSL.DashStyle = DashStyle.Dash;
+                            g.DrawLine(penPermSL, x, yOrder, x + barPixels - 2, yOrder);
+                        }
+                    }
+                    else if (order.OrdOrigin == OrderOrigin.PermanentTakeProfit)
+                    {
+                        int yOrder = (int)Math.Round(YBottom - (order.OrdPrice - minPrice) * YScale);
+                        if (yOrder < YBottom && yOrder > YTop)
+                        {
+                            Pen penPermTP = new Pen(LayoutColors.ColorTradeLong);
+                            penPermTP.DashStyle = DashStyle.Dash;
+                            g.DrawLine(penPermTP, x, yOrder, x + barPixels - 2, yOrder);
                         }
                     }
                 }
@@ -1273,6 +1316,7 @@ namespace Forex_Strategy_Builder
                     else if (Backtester.PosDir(bar, iPos) == PosDirection.Closed)
                     {   // Close
                         Pen pen = new Pen(brushTradeClose, 2);
+                        
                         if (barPixels < 8)
                         {
                             g.DrawLine(pen, x, yDeal, x + barPixels - 1, yDeal);
@@ -2931,6 +2975,9 @@ namespace Forex_Strategy_Builder
                 case ChartButtons.PositionPrice:
                     ShortcutKeyUp(new KeyEventArgs(Keys.P));
                     break;
+                case ChartButtons.Protections:
+                    ShortcutKeyUp(new KeyEventArgs(Keys.E));
+                    break;
                 case ChartButtons.AmbiguousBars:
                     ShortcutKeyUp(new KeyEventArgs(Keys.M));
                     break;
@@ -3077,6 +3124,13 @@ namespace Forex_Strategy_Builder
             {
                 isPositionPriceShown = !isPositionPriceShown;
                 aChartButtons[(int)ChartButtons.PositionPrice].Checked = isPositionPriceShown;
+                pnlPrice.Invalidate();
+            }
+            // Protections
+            else if (e.KeyCode == Keys.E)
+            {
+                isProtectionsShown = !isProtectionsShown;
+                aChartButtons[(int)ChartButtons.Protections].Checked = isProtectionsShown;
                 pnlPrice.Invalidate();
             }
             // Ambiguous bars mark

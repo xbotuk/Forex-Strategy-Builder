@@ -157,6 +157,7 @@ namespace Forex_Strategy_Builder
                 chart.ShowIndicators    = Configs.BalanceChartIndicators;
                 chart.ShowAmbiguousBars = Configs.BalanceChartAmbiguousMark;
                 chart.TrueCharts        = Configs.BalanceChartTrueCharts;
+                chart.ShowProtections   = Configs.BalanceChartProtections;
 
                 chart.ShowDialog();
 
@@ -174,6 +175,7 @@ namespace Forex_Strategy_Builder
                 Configs.BalanceChartIndicators             = chart.ShowIndicators;
                 Configs.BalanceChartAmbiguousMark          = chart.ShowAmbiguousBars;
                 Configs.BalanceChartTrueCharts             = chart.TrueCharts;
+                Configs.BalanceChartProtections            = chart.ShowProtections;
             }
             else if (Data.IsData && Data.IsResult && e.Button == MouseButtons.Right)
             {

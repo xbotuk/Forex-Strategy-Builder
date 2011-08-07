@@ -450,6 +450,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\chart_protection.png" />
     <Content Include="Resources\config.xml" />
     <Content Include="Resources\fsb-update.xml" />
     <EmbeddedResource Include="Properties\Resources.resx">

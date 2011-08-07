@@ -169,6 +169,7 @@ namespace Forex_Strategy_Builder
                 chart.ShowIndicators    = Configs.IndicatorChartIndicators;
                 chart.ShowAmbiguousBars = Configs.IndicatorChartAmbiguousMark;
                 chart.TrueCharts        = Configs.IndicatorChartTrueCharts;
+                chart.ShowProtections   = Configs.IndicatorChartProtections;
 
                 chart.ShowDialog();
 
@@ -186,6 +187,7 @@ namespace Forex_Strategy_Builder
                 Configs.IndicatorChartIndicators             = chart.ShowIndicators;
                 Configs.IndicatorChartAmbiguousMark          = chart.ShowAmbiguousBars;
                 Configs.IndicatorChartTrueCharts             = chart.TrueCharts;
+                Configs.IndicatorChartProtections            = chart.ShowProtections;
             }
         }
 

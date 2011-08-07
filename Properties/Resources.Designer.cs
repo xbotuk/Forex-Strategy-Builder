@@ -217,6 +217,13 @@ namespace Forex_Strategy_Builder.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap chart_protection {
+            get {
+                object obj = ResourceManager.GetObject("chart_protection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap chart_true_charts {
             get {
                 object obj = ResourceManager.GetObject("chart_true_charts", resourceCulture);
