@@ -361,7 +361,7 @@ namespace Forex_Strategy_Builder
 
                 for (int iComp = 0; iComp < iComponentLenght[iSlot]; iComp++)
                     if (Data.Strategy.Slot[iSlot].Component[iComp].ChartType != IndChartType.NoChart)
-                        for (bar = Math.Max(firstBar, Data.Strategy.Slot[iSlot].Component[iComp].FirstBar); bar <= lastBar; bar++)
+                        for (int bar = Math.Max(firstBar, Data.Strategy.Slot[iSlot].Component[iComp].FirstBar); bar <= lastBar; bar++)
                         {
                             dValue = Data.Strategy.Slot[iSlot].Component[iComp].Value[bar];
                             if (dValue > dMaxValue[ind]) dMaxValue[ind] = dValue;
@@ -388,7 +388,7 @@ namespace Forex_Strategy_Builder
                     {   // Line
                         chartBrush[iSlot][iComp] = new SolidBrush(Data.Strategy.Slot[iSlot].Component[iComp].ChartColor);
                         chartLine[iSlot][iComp]  = new Point[lastBar - firstBar + 1];
-                        for (bar = firstBar; bar <= lastBar; bar++)
+                        for (int bar = firstBar; bar <= lastBar; bar++)
                         {
                             dValue = Data.Strategy.Slot[iSlot].Component[iComp].Value[bar];
                             int ix = (bar - firstBar) * barPixels + xLeft;
@@ -400,7 +400,7 @@ namespace Forex_Strategy_Builder
                     {   // Histogram
                         chartValue[iSlot][iComp] = new double[lastBar - firstBar + 1];
                         chartPen[iSlot][iComp]   = new Pen[lastBar - firstBar + 1];
-                        for (bar = firstBar; bar <= lastBar; bar++)
+                        for (int bar = firstBar; bar <= lastBar; bar++)
                         {
                             dValue = Data.Strategy.Slot[iSlot].Component[iComp].Value[bar];
                             chartValue[iSlot][iComp][bar - firstBar] = dValue;
@@ -440,7 +440,7 @@ namespace Forex_Strategy_Builder
             // Draws Volume, Lots and Price
             int index = 0;
             Pen penBar = new Pen(LayoutColors.ColorBarBorder);
-            for (bar = firstBar; bar <= lastBar; bar++)
+            for (int bar = firstBar; bar <= lastBar; bar++)
             {
                 // Draw the volume
                 if (yVolume[index] != yPrcBottom)
@@ -468,12 +468,12 @@ namespace Forex_Strategy_Builder
                     }
                     else if (chartType[slot][iComp] == IndChartType.Dot)
                     {   // Dots
-                        for (bar = firstBar; bar <= lastBar; bar++)
+                        for (int bar = firstBar; bar <= lastBar; bar++)
                             g.FillRectangle(chartBrush[slot][iComp], chartDot[slot][iComp][bar - firstBar]);
                     }
                     else if (chartType[slot][iComp] == IndChartType.Level)
                     {   // Level
-                        for (bar = firstBar; bar <= lastBar; bar++)
+                        for (int bar = firstBar; bar <= lastBar; bar++)
                             g.FillRectangle(chartBrush[slot][iComp], chartLevel[slot][iComp][bar - firstBar]);
                     }
                     else if (chartType[slot][iComp] == IndChartType.CloudUp)
@@ -510,7 +510,7 @@ namespace Forex_Strategy_Builder
                         if (zero > dMaxValue[ind]) zero = dMaxValue[ind];
                         int y0 = (int)(yIndBottom[ind] - (zero - dMinValue[ind]) * dScale[ind]);
                         g.DrawLine(penDarkGray, xLeft, y0, xRight, y0);
-                        for (bar = firstBar; bar <= lastBar; bar++)
+                        for (int bar = firstBar; bar <= lastBar; bar++)
                         {
                             double val = chartValue[slot][comp][bar - firstBar];
                             int x = (bar - firstBar) * barPixels + xLeft;
@@ -582,8 +582,5 @@ namespace Forex_Strategy_Builder
             this.InitChart();
             this.Invalidate();
         }
-
-
-        public int bar { get; set; }
     }
 }

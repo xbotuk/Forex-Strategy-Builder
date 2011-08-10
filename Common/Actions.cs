@@ -166,23 +166,26 @@ namespace Forex_Strategy_Builder
             else if (dialogResult == DialogResult.Cancel)
                 e.Cancel = true;
 
-            // Remember the last used strategy
-            if (Configs.RememberLastStr)
+            if (!e.Cancel)
             {
-                if (Data.LoadedSavedStrategy != "")
+                // Remember the last used strategy
+                if (Configs.RememberLastStr)
                 {
-                    string strategyPath = Path.GetDirectoryName(Data.LoadedSavedStrategy) + Path.DirectorySeparatorChar;
-                    string defaultPath  = Path.Combine(Data.ProgramDir, Data.DefaultStrategyDir);
-                    if (strategyPath == defaultPath)
-                        Data.LoadedSavedStrategy = Path.GetFileName(Data.LoadedSavedStrategy);
+                    if (Data.LoadedSavedStrategy != "")
+                    {
+                        string strategyPath = Path.GetDirectoryName(Data.LoadedSavedStrategy) + Path.DirectorySeparatorChar;
+                        string defaultPath  = Path.Combine(Data.ProgramDir, Data.DefaultStrategyDir);
+                        if (strategyPath == defaultPath)
+                            Data.LoadedSavedStrategy = Path.GetFileName(Data.LoadedSavedStrategy);
+                    }
+                    Configs.LastStrategy = Data.LoadedSavedStrategy;
                 }
-                Configs.LastStrategy = Data.LoadedSavedStrategy;
-            }
 
-            Configs.SaveConfigs();
-            Instruments.SaveInstruments();
-            if (!e.Cancel) this.Hide();
-            Data.SendStats();
+                Configs.SaveConfigs();
+                Instruments.SaveInstruments();
+                this.Hide();
+                Data.SendStats();
+            }
 
             return;
         }

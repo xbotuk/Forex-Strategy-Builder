@@ -1991,6 +1991,10 @@
     <main>Forming order price</main>
     <alt>Auftragskurs</alt>
   </str>
+  <str>
+    <main>Break Even, Permanent SL, Permanent TP</main>
+    <alt>Break Even, Permanent SL, Permanent TP</alt>
+  </str>
   <!-- Order's Comments -->
   <str>
     <main>Close due to a Margin Call</main>

@@ -544,6 +544,7 @@
   <str><main>Type of the transaction</main><alt>Тип на транзакцията</alt></str>
   <str><main>Forming order number</main><alt>Номер на формиращ ордер</alt></str>
   <str><main>Forming order price</main><alt>Цена на формиращ ордер</alt></str>
+  <str><main>Break Even, Permanent SL, Permanent TP</main><alt>Break Even, Permanent SL, Permanent TP</alt></str>
 
   <!-- Order's Comments -->
   <str><main>Close due to a Margin Call</main><alt>Затваряне поради повикване за марджин</alt></str>

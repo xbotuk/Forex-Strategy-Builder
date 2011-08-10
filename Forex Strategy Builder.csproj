@@ -344,9 +344,6 @@
     </Compile>
     <Compile Include="Backtester\Order.cs" />
     <Compile Include="Backtester\Position.cs" />
-    <Compile Include="User interface\Micro Balance Chart.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="User interface\NUD.cs">
       <SubType>Component</SubType>
     </Compile>

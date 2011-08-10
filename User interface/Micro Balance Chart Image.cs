@@ -55,27 +55,27 @@ namespace Forex_Strategy_Builder
             firstBar = Data.FirstBar;
             bars = Data.Bars;
             chartBars = Data.Bars - firstBar;
-            int iMaxBalance = Configs.AccountInMoney ? (int)Backtester.MaxMoneyBalance : Backtester.MaxBalance;
-            int iMinBalance = Configs.AccountInMoney ? (int)Backtester.MinMoneyBalance : Backtester.MinBalance;
-            int iMaxEquity  = Configs.AccountInMoney ? (int)Backtester.MaxMoneyEquity : Backtester.MaxEquity;
-            int iMinEquity  = Configs.AccountInMoney ? (int)Backtester.MinMoneyEquity : Backtester.MinEquity;
+            int maxBalance = Configs.AccountInMoney ? (int)Backtester.MaxMoneyBalance : Backtester.MaxBalance;
+            int minBalance = Configs.AccountInMoney ? (int)Backtester.MinMoneyBalance : Backtester.MinBalance;
+            int maxEquity  = Configs.AccountInMoney ? (int)Backtester.MaxMoneyEquity : Backtester.MaxEquity;
+            int minEquity  = Configs.AccountInMoney ? (int)Backtester.MinMoneyEquity : Backtester.MinEquity;
 
             if (Configs.AdditionalStatistics)
             {
-                int iMaxLongBalance  = Configs.AccountInMoney ? (int)Backtester.MaxLongMoneyBalance : Backtester.MaxLongBalance;
-                int iMinLongBalance  = Configs.AccountInMoney ? (int)Backtester.MinLongMoneyBalance : Backtester.MinLongBalance;
-                int iMaxShortBalance = Configs.AccountInMoney ? (int)Backtester.MaxShortMoneyBalance : Backtester.MaxShortBalance;
-                int iMinShortBalance = Configs.AccountInMoney ? (int)Backtester.MinShortMoneyBalance : Backtester.MinShortBalance;
-                int iMaxLSBalance = Math.Max(iMaxLongBalance, iMaxShortBalance);
-                int iMinLSBalance = Math.Min(iMinLongBalance, iMinShortBalance);
+                int maxLongBalance  = Configs.AccountInMoney ? (int)Backtester.MaxLongMoneyBalance : Backtester.MaxLongBalance;
+                int minLongBalance  = Configs.AccountInMoney ? (int)Backtester.MinLongMoneyBalance : Backtester.MinLongBalance;
+                int maxShortBalance = Configs.AccountInMoney ? (int)Backtester.MaxShortMoneyBalance : Backtester.MaxShortBalance;
+                int minShortBalance = Configs.AccountInMoney ? (int)Backtester.MinShortMoneyBalance : Backtester.MinShortBalance;
+                int maxLSBalance = Math.Max(maxLongBalance, maxShortBalance);
+                int minLSBalance = Math.Min(minLongBalance, minShortBalance);
 
-                maximum = Math.Max(Math.Max(iMaxBalance, iMaxEquity), iMaxLSBalance) + 1;
-                minimum = Math.Min(Math.Min(iMinBalance, iMinEquity), iMinLSBalance) - 1;
+                maximum = Math.Max(Math.Max(maxBalance, maxEquity), maxLSBalance) + 1;
+                minimum = Math.Min(Math.Min(minBalance, minEquity), minLSBalance) - 1;
             }
             else
             {
-                maximum = Math.Max(iMaxBalance, iMaxEquity) + 1;
-                minimum = Math.Min(iMinBalance, iMinEquity) - 1;
+                maximum = Math.Max(maxBalance, maxEquity) + 1;
+                minimum = Math.Min(minBalance, minEquity) - 1;
             }
 
             YTop = border + space;
@@ -93,19 +93,19 @@ namespace Forex_Strategy_Builder
             apntShortBalance = new PointF[chartBars];
 
             int index = 0;
-            for (int iBar = firstBar; iBar < bars; iBar++)
+            for (int bar = firstBar; bar < bars; bar++)
             {
                 apntBalance[index].X = XLeft + index * XScale;
                 apntEquity[index].X  = XLeft + index * XScale;
                 if (Configs.AccountInMoney)
                 {
-                    apntBalance[index].Y = (float)(YBottom - (Backtester.MoneyBalance(iBar) - minimum) * YScale);
-                    apntEquity[index].Y  = (float)(YBottom - (Backtester.MoneyEquity(iBar) - minimum) * YScale);
+                    apntBalance[index].Y = (float)(YBottom - (Backtester.MoneyBalance(bar) - minimum) * YScale);
+                    apntEquity[index].Y  = (float)(YBottom - (Backtester.MoneyEquity(bar) - minimum) * YScale);
                 }
                 else
                 {
-                    apntBalance[index].Y = YBottom - (Backtester.Balance(iBar) - minimum) * YScale;
-                    apntEquity[index].Y  = YBottom - (Backtester.Equity(iBar) - minimum) * YScale;
+                    apntBalance[index].Y = YBottom - (Backtester.Balance(bar) - minimum) * YScale;
+                    apntEquity[index].Y  = YBottom - (Backtester.Equity(bar) - minimum) * YScale;
                 }
 
                 if (Configs.AdditionalStatistics)
@@ -114,13 +114,13 @@ namespace Forex_Strategy_Builder
                     apntShortBalance[index].X = XLeft + index * XScale;
                     if (Configs.AccountInMoney)
                     {
-                        apntLongBalance[index].Y = (float)(YBottom - (Backtester.LongMoneyBalance(iBar) - minimum) * YScale);
-                        apntShortBalance[index].Y = (float)(YBottom - (Backtester.ShortMoneyBalance(iBar) - minimum) * YScale);
+                        apntLongBalance[index].Y = (float)(YBottom - (Backtester.LongMoneyBalance(bar) - minimum) * YScale);
+                        apntShortBalance[index].Y = (float)(YBottom - (Backtester.ShortMoneyBalance(bar) - minimum) * YScale);
                     }
                     else
                     {
-                        apntLongBalance[index].Y = YBottom - (Backtester.LongBalance(iBar) - minimum) * YScale;
-                        apntShortBalance[index].Y = YBottom - (Backtester.ShortBalance(iBar) - minimum) * YScale;
+                        apntLongBalance[index].Y = YBottom - (Backtester.LongBalance(bar) - minimum) * YScale;
+                        apntShortBalance[index].Y = YBottom - (Backtester.ShortBalance(bar) - minimum) * YScale;
                     }
                 }
 
