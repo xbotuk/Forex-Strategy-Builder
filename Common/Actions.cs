@@ -183,8 +183,10 @@ namespace Forex_Strategy_Builder
 
                 Configs.SaveConfigs();
                 Instruments.SaveInstruments();
+#if !DEBUG
                 this.Hide();
                 Data.SendStats();
+#endif
             }
 
             return;
