@@ -48,7 +48,7 @@ namespace Forex_Strategy_Builder
 
         /// <summary>
         /// Gets the maximum number of orders.
-        /// Entry - 2, Exit - 3, Exit Perm. S/L - 3, Exit Perm. T/P - 3, Exit Break Even - 3, Exit Margin Call - 1
+        /// Entry - 2, Exit - 3, Exit Perm. S/L - 3, Exit Perm. T/P - 3, Exit Break Even - 6, Exit Margin Call - 1
         /// </summary>
         static int MaxOrders
         {
@@ -60,7 +60,7 @@ namespace Forex_Strategy_Builder
                 if (Strategy.UsePermanentTP)
                     maxOrders += 3;
                 if (Strategy.UseBreakEven)
-                    maxOrders += 3;
+                    maxOrders += 6;
                 return maxOrders;
             }
         }
@@ -808,9 +808,18 @@ namespace Forex_Strategy_Builder
                 {   // Exit orders
                     if (ordDir == OrderDirection.Buy  && posDir == PosDirection.Short ||
                         ordDir == OrderDirection.Sell && posDir == PosDirection.Long)
-                    {   // The Close strategy can only close the position
-                        order.OrdLots = position.PosLots;
-                        wayPointType = WayPointType.Exit;
+                    {
+                        // Check for Break Even Activation
+                        if (order.OrdOrigin == OrderOrigin.BreakEvenActivation)
+                        {   // This is a fictive order
+                            order.OrdStatus = OrderStatus.Cancelled;
+                            wayPointType    = WayPointType.Cancel;
+                        }
+                        else
+                        {   // The Close orders can only close the position
+                            order.OrdLots = position.PosLots;
+                            wayPointType = WayPointType.Exit;
+                        }
                     }
                     else
                     {   // If the direction of the exit order is same as the position's direction
@@ -2280,11 +2289,8 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Sets Break Even close order for the current position.
         /// </summary>
-        static bool AnalyseBreakEvenExit(int bar, double price, int lastPosBreakEven)
+        static bool SetBreakEvenExit(int bar, double price, int lastPosBreakEven)
         {
-            if (!IsOpenPos(bar))
-                return false;
-
             // First cancel no executed Break Even exits if any.
             if (session[bar].Summary.PosNumb > lastPosBreakEven)
             {
@@ -2322,6 +2328,33 @@ namespace Forex_Strategy_Builder
                 OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
             else if (session[bar].Summary.PosDir == PosDirection.Short)
                 OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Calculates at what price to activate Break Even and sends a fictive order.
+        /// </summary>
+        static bool SetBreakEvenActivation(int bar)
+        {
+            double price = 0;
+            double targetBreakEven = Strategy.BreakEven * Data.InstrProperties.Point;
+
+            if (session[bar].Summary.PosDir == PosDirection.Long)
+                price = session[bar].Summary.PosPrice + targetBreakEven;
+
+            if (session[bar].Summary.PosDir == PosDirection.Short)
+                price = session[bar].Summary.PosPrice - targetBreakEven;
+
+            int    ifOrder = 0;
+            int    toPos   = session[bar].Summary.PosNumb;
+            double lots    = 0;
+            string note    = Language.T("Break Even activation") + " " + (toPos + 1);
+
+            if (session[bar].Summary.PosDir == PosDirection.Long)
+                OrdSellStop(bar, ifOrder, toPos, lots, price, OrderSender.Close, OrderOrigin.BreakEvenActivation, note);
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
+                OrdBuyStop(bar, ifOrder, toPos, lots, price, OrderSender.Close, OrderOrigin.BreakEvenActivation, note);
 
             return true;
         }

@@ -37,7 +37,7 @@ namespace Forex_Strategy_Builder
     /// <summary>
     /// Order origin
     /// </summary>
-    public enum OrderOrigin { Error, None, Strategy, PermanentStopLoss, PermanentTakeProfit, BreakEven, MarginCall }
+    public enum OrderOrigin { Error, None, Strategy, PermanentStopLoss, PermanentTakeProfit, BreakEven, BreakEvenActivation, MarginCall }
 
     /// <summary>
     /// Keeps the coordinates of each order

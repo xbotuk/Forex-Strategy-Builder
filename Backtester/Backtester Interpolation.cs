@@ -28,6 +28,7 @@ namespace Forex_Strategy_Builder
             int tradedIntrabar   = -1;
             int reachedTick      = 0;
             int lastPosBreakEven = 0;
+            int lastPosActivatedBE = 0;
 
             do
             {
@@ -43,9 +44,18 @@ namespace Forex_Strategy_Builder
                 bool isScanningResult   = false;
 
                 // Break Even
-                if (Strategy.UseBreakEven && lastPosBreakEven != session[bar].Summary.PosNumb && IsOpenPos(bar))
-                    if (AnalyseBreakEvenExit(bar, current, lastPosBreakEven))
-                        lastPosBreakEven = session[bar].Summary.PosNumb;
+                int currentPosNumber = session[bar].Summary.PosNumb;
+                if (Strategy.UseBreakEven && lastPosBreakEven != currentPosNumber && IsOpenPos(bar))
+                {
+                    if (lastPosActivatedBE != currentPosNumber && !session[bar].Summary.IsBreakEvenActivated)
+                    {
+                        SetBreakEvenActivation(bar);
+                        lastPosActivatedBE = currentPosNumber;
+                    }
+
+                    if (SetBreakEvenExit(bar, current, lastPosBreakEven))
+                        lastPosBreakEven = currentPosNumber;
+                }
 
                 // Setting the parameters
                 for (int ord = 0; ord < session[bar].Orders; ord++)

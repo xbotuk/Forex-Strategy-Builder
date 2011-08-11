@@ -103,7 +103,7 @@ namespace Forex_Strategy_Builder
             order           = new Order[maxOrd];
             position[0]     = new Position();
             backTestEval    = BacktestEval.None;
-            wayPoint        = new Way_Point[15];
+            wayPoint        = new Way_Point[maxOrd + 4];
             wayPoints       = 0;
             isTopReached    = false;
             isBottomReached = false;
