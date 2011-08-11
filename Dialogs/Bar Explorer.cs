@@ -138,7 +138,7 @@ namespace Forex_Strategy_Builder
             nudGo.Maximum   = Data.Bars;
             nudGo.Increment = 1;
             nudGo.Value     = barCurrent + 1;
-            nudGo.KeyUp    += new KeyEventHandler(NudGo_KeyUp);
+            nudGo.KeyUp    += new KeyEventHandler(BtnNavigate_KeyUp);
             nudGo.EndInit();
 
             btnGo = new Button();
@@ -358,18 +358,14 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void BtnNavigate_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.PageUp)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.PageUp)
+                Navigate(">max");
+            else if (e.KeyCode == Keys.PageUp)
                 Navigate(">>");
-            if (e.KeyCode == Keys.PageDown)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.PageDown)
+                Navigate("<max");
+            else if (e.KeyCode == Keys.PageDown)
                 Navigate("<<");
-
-            return;
-        }
-
-        void NudGo_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                Navigate("Go");
 
             return;
         }
@@ -412,6 +408,28 @@ namespace Forex_Strategy_Builder
                             barCurrent = i;
                             break;
                         }
+                    break;
+                case "<max":
+                    int maxWP = 0;
+                    int maxBar = barCurrent;
+                    for (int i = barCurrent - 1; i >= Data.FirstBar; i--)
+                        if (Backtester.WayPoints(i) > maxWP)
+                        {
+                            maxWP = Backtester.WayPoints(i);
+                            maxBar = i;
+                        }
+                    barCurrent = maxBar;
+                    break;
+                case ">max":
+                    maxWP = 0;
+                    maxBar = barCurrent;
+                    for (int i = barCurrent + 1; i < Data.Bars; i++)
+                        if (Backtester.WayPoints(i) > maxWP)
+                        {
+                            maxWP = Backtester.WayPoints(i);
+                            maxBar = i;
+                        }
+                    barCurrent = maxBar;
                     break;
                 case "<":
                     if (barCurrent > Data.FirstBar)
@@ -568,7 +586,7 @@ namespace Forex_Strategy_Builder
             int chartWidth  = XRight - XLeft;
             int YTop        = 2 * infoRowHeight + 6;
             int YBottom     = pnl.ClientSize.Height - 22;
-            int barPixels   = 28;
+            int barPixels   = maxWayPoints < 10 ? 28 : maxWayPoints < 15 ? 24 : 20;
             int spcLeft     = 3;
             int x           = barPixels + spcLeft;
 
