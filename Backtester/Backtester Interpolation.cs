@@ -18,17 +18,19 @@ namespace Forex_Strategy_Builder
         /// </summary>
         static void BarInterpolation(int bar)
         {
-            BacktestEval eval = BacktestEval.Error;
+            BacktestEval eval;
             double open    = Open[bar];
             double high    = High[bar];
             double low     = Low[bar];
             double close   = Close[bar];
             double current = open;
-            int reachedIntrabar  = 0;
-            int tradedIntrabar   = -1;
-            int reachedTick      = 0;
-            int lastPosBreakEven = 0;
-            int lastPosActivatedBE = 0;
+
+            int reachedIntrabar = 0;
+            int tradedIntrabar  = -1;
+            int reachedTick     = 0;
+
+            int lastPosBreakEven   = -1;
+            int lastPosActivatedBE = -1;
 
             do
             {
@@ -61,54 +63,33 @@ namespace Forex_Strategy_Builder
                 for (int ord = 0; ord < session[bar].Orders; ord++)
                 {
                     if (!CheckOrd(bar, ord)) continue;
+
                     Order order = session[bar].Order[ord];
-
-                    double price0 = order.OrdPrice;
-                    double price1 = order.OrdPrice2;
-
-                    if (high + micron > price0 && price0 > low - micron)
+                    var prices = new double[] {order.OrdPrice, order.OrdPrice2};
+                    foreach (double price in prices)
                     {
-                        if (isTopReachable)
-                            isTopReachable = current > price0 + micron;
+                        if (high + micron > price && price > low - micron)
+                        {
+                            if (isTopReachable)
+                                isTopReachable = current > price + micron;
 
-                        if (isBottomReachable)
-                            isBottomReachable = current < price0 - micron;
+                            if (isBottomReachable)
+                                isBottomReachable = current < price - micron;
 
-                        if (price0 > current - micron && price0 < priceHigher + micron)
-                        {   // New nearer Upper price
-                            isHigherPrice  = true;
-                            priceHigher    = price0;
-                            orderHigher    = order;
-                            isTopReachable = false;
-                        }
-                        else if (price0 < current && price0 > priceLower - micron)
-                        {   // New nearer Lower price
-                            isLowerPrice      = true;
-                            priceLower        = price0;
-                            orderLower        = order;
-                            isBottomReachable = false;
-                        }
-                    }
-
-                    if (high + micron > price1 && price1 > low - micron)
-                    {
-                        if (isTopReachable)
-                            isTopReachable = current > price1 + micron;
-
-                        if (isBottomReachable)
-                            isBottomReachable = current < price1 - micron;
-
-                        if (price1 > current - micron && price1 < priceHigher + micron)
-                        {   // New nearer Upper price
-                            isHigherPrice = true;
-                            priceHigher   = price1;
-                            orderHigher   = order;
-                        }
-                        else if (price1 < current && price1 > priceLower - micron)
-                        {   // New nearer Lower price
-                            isLowerPrice = true;
-                            priceLower   = price1;
-                            orderLower   = order;
+                            if (price > current - micron && price < priceHigher + micron)
+                            {   // New nearer Upper price
+                                isHigherPrice  = true;
+                                priceHigher    = price;
+                                orderHigher    = order;
+                                isTopReachable = false;
+                            }
+                            else if (price < current && price > priceLower - micron)
+                            {   // New nearer Lower price
+                                isLowerPrice      = true;
+                                priceLower        = price;
+                                orderLower        = order;
+                                isBottomReachable = false;
+                            }
                         }
                     }
                 }
@@ -1385,7 +1366,7 @@ namespace Forex_Strategy_Builder
                 {   // The order or the bottom
                     bool goUpward;
 
-                    if (current - low < micron)
+                    if (current < low + micron)
                         goUpward = false;
                     else if (thePrice - current < micron)
                         goUpward = true;
@@ -1412,7 +1393,7 @@ namespace Forex_Strategy_Builder
                 {   // The order or the top
                     bool goUpward;
 
-                    if (current - high < micron)
+                    if (current > high - micron)
                         goUpward = true;
                     else if (current - thePrice < micron)
                         goUpward = false;
