@@ -65,68 +65,75 @@ namespace Forex_Strategy_Builder
                     if (!CheckOrd(bar, ord)) continue;
 
                     Order order = session[bar].Order[ord];
-                    var prices = new double[] {order.OrdPrice, order.OrdPrice2};
+                    double[] prices = new double[] { order.OrdPrice, order.OrdPrice2 }; 
                     foreach (double price in prices)
                     {
-                        if (high + micron > price && price > low - micron)
-                        {
-                            if (isTopReachable)
-                                isTopReachable = current > price + micron;
+                        if (high + micron <= price || price <= low - micron)
+                            continue;
 
-                            if (isBottomReachable)
-                                isBottomReachable = current < price - micron;
+                        if (isTopReachable)
+                            isTopReachable = current > price + micron;
 
-                            if (price > current - micron && price < priceHigher + micron)
-                            {   // New nearer Upper price
-                                isHigherPrice  = true;
-                                priceHigher    = price;
-                                orderHigher    = order;
-                                isTopReachable = false;
-                            }
-                            else if (price < current && price > priceLower - micron)
-                            {   // New nearer Lower price
-                                isLowerPrice      = true;
-                                priceLower        = price;
-                                orderLower        = order;
-                                isBottomReachable = false;
-                            }
+                        if (isBottomReachable)
+                            isBottomReachable = current < price - micron;
+
+                        if (price > current - micron && price < priceHigher + micron)
+                        {   // New nearer Upper price
+                            isHigherPrice  = true;
+                            priceHigher    = price;
+                            orderHigher    = order;
+                            isTopReachable = false;
+                        }
+                        else if (price < current && price > priceLower - micron)
+                        {   // New nearer Lower price
+                            isLowerPrice      = true;
+                            priceLower        = price;
+                            orderLower        = order;
+                            isBottomReachable = false;
                         }
                     }
                 }
 
                 // Evaluate the bar
                 if (!isLowerPrice && !isHigherPrice)
-                {
+                {   // No more ordrs
                     eval = BacktestEval.None;
                 }
                 else if (isLowerPrice && isHigherPrice)
-                {
+                {   // There are a higher and a lower order
                     eval = BacktestEval.Ambiguous;
                 }
+                else if (isHigherPrice && priceHigher - current < micron)
+                {   // There is an order at the current price
+                    eval = BacktestEval.Correct;
+                }
+                else if(isLowerPrice && current - priceLower < micron)
+                {   // There is an order at the current price
+                    eval = BacktestEval.Correct;
+                }
                 else
-                {
-                    // Check for a Closing Ambiguity
+                {   // Check for a Closing Ambiguity
                     if (session[bar].IsBottomReached && session[bar].IsTopReached &&
-                        ((current > close - micron && close > priceLower) ||
-                         (current < close + micron && close < priceHigher)))
-                    {
+                        current > close - micron && close > priceLower)
                         isClosingAmbiguity = true;
-                        eval = BacktestEval.Ambiguous;
-                    }
-                    else
-                    {
-                        eval = BacktestEval.Correct;
-                    }
+
+                    else if (session[bar].IsBottomReached && session[bar].IsTopReached &&
+                        current < close + micron && close < priceHigher)
+                        isClosingAmbiguity = true;
+
+                    else if (session[bar].IsTopReached && isHigherPrice && 
+                        current > close - micron)
+                        isClosingAmbiguity = true;
+                    
+                    else if (session[bar].IsBottomReached && isLowerPrice && 
+                        current < close + micron)
+                        isClosingAmbiguity = true;
+
+                    eval = isClosingAmbiguity
+                        ? BacktestEval.Ambiguous
+                        : BacktestEval.Correct;
                 }
 
-                //if (session[bar].IsTopReached && isHigherPrice && current > close - micron)
-                //{
-                //    Console.WriteLine("Ambiguous - " + bar);
-                //}
-                //else if (session[bar].IsBottomReached && isLowerPrice && current < close + micron)
-                //{
-                //    Console.WriteLine("Ambiguous - " + bar);
-                //}
 
                 if (isScanning && Configs.UseTickData && Data.IsTickData && Data.TickData[bar] != null)
                 {
@@ -150,49 +157,46 @@ namespace Forex_Strategy_Builder
                                 isClosingAmbiguity);
                 }
 
-                // Calls a method
-                if (!isScanningResult)
-                {
-                    switch (interpolationMethod)
-                    {
-                        case InterpolationMethod.Optimistic:
-                        case InterpolationMethod.Pessimistic:
-                            OptimisticPessimisticMethod(bar, eval, ref current,
-                                isTopReachable, isBottomReachable,
-                                isHigherPrice, isLowerPrice,
-                                priceHigher, priceLower,
-                                orderHigher, orderLower,
-                                isClosingAmbiguity);
-                            break;
-                        case InterpolationMethod.Shortest:
-                            ShortestMethod(bar, eval, ref current,
-                                isTopReachable, isBottomReachable,
-                                isHigherPrice, isLowerPrice,
-                                priceHigher, priceLower,
-                                orderHigher, orderLower,
-                                isClosingAmbiguity);
-                            break;
-                        case InterpolationMethod.Nearest:
-                            NearestMethod(bar, eval, ref current,
-                                isTopReachable, isBottomReachable,
-                                isHigherPrice, isLowerPrice,
-                                priceHigher, priceLower,
-                                orderHigher, orderLower,
-                                isClosingAmbiguity);
-                            break;
-                        case InterpolationMethod.Random:
-                            RandomMethod(bar, eval, ref current,
-                                isTopReachable, isBottomReachable,
-                                isHigherPrice, isLowerPrice,
-                                priceHigher, priceLower,
-                                orderHigher, orderLower,
-                                isClosingAmbiguity);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                if (isScanningResult) continue;
 
+                switch (interpolationMethod)
+                {   // Calls a method
+                    case InterpolationMethod.Optimistic:
+                    case InterpolationMethod.Pessimistic:
+                        OptimisticPessimisticMethod(bar, eval, ref current,
+                                                    isTopReachable, isBottomReachable,
+                                                    isHigherPrice, isLowerPrice,
+                                                    priceHigher, priceLower,
+                                                    orderHigher, orderLower,
+                                                    isClosingAmbiguity);
+                        break;
+                    case InterpolationMethod.Shortest:
+                        ShortestMethod(bar, eval, ref current,
+                                       isTopReachable, isBottomReachable,
+                                       isHigherPrice, isLowerPrice,
+                                       priceHigher, priceLower,
+                                       orderHigher, orderLower,
+                                       isClosingAmbiguity);
+                        break;
+                    case InterpolationMethod.Nearest:
+                        NearestMethod(bar, eval, ref current,
+                                      isTopReachable, isBottomReachable,
+                                      isHigherPrice, isLowerPrice,
+                                      priceHigher, priceLower,
+                                      orderHigher, orderLower,
+                                      isClosingAmbiguity);
+                        break;
+                    case InterpolationMethod.Random:
+                        RandomMethod(bar, eval, ref current,
+                                     isTopReachable, isBottomReachable,
+                                     isHigherPrice, isLowerPrice,
+                                     priceHigher, priceLower,
+                                     orderHigher, orderLower,
+                                     isClosingAmbiguity);
+                        break;
+                    default:
+                        break;
+                }
             } while (!(eval == BacktestEval.None && session[bar].IsTopReached && session[bar].IsBottomReached));
 
             return;
@@ -811,6 +815,7 @@ namespace Forex_Strategy_Builder
             double high  = High[bar];
             double low   = Low[bar];
             double close = Close[bar];
+            Random random = new Random();
 
             if (eval == BacktestEval.None)
             {   // There is no more orders
@@ -1161,12 +1166,35 @@ namespace Forex_Strategy_Builder
                 }
                 else
                 {   // Exit the bar
-                    current = close;
-                    session[bar].BacktestEval = BacktestEval.Ambiguous;
-                    if (isHigherPrice)
-                        orderHigher.OrdStatus = OrderStatus.Cancelled;
-                    else if (isLowerPrice)
-                        orderLower.OrdStatus = OrderStatus.Cancelled;
+                    double orderRange = isHigherPrice ? priceHigher - current : current - priceLower;
+                    double closeRange = Math.Abs(current - close);
+
+                    if (orderRange < closeRange)
+                    {   // Execute the order
+                        Order  theOrder;
+                        double thePrice;
+                        if (isHigherPrice)
+                        {
+                            theOrder = orderHigher;
+                            thePrice = priceHigher;
+                        }
+                        else
+                        {
+                            theOrder = orderLower;
+                            thePrice = priceLower;
+                        }
+                        current = thePrice;
+                        ExecOrd(bar, theOrder, thePrice, eval);
+                    }
+                    else
+                    {   // Cancel the order, go ot Close
+                        current = close;
+                        session[bar].BacktestEval = BacktestEval.Ambiguous;
+                        if (isHigherPrice)
+                            orderHigher.OrdStatus = OrderStatus.Cancelled;
+                        else if (isLowerPrice)
+                            orderLower.OrdStatus = OrderStatus.Cancelled;
+                    }
                 }
             }
 

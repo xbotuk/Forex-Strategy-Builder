@@ -32,7 +32,6 @@ namespace Forex_Strategy_Builder
 
         // Additional
         static double micron = InstrProperties.Point / 2;
-        static Random random = new Random();
         static DateTime lastEntryTime;
         static int calculations;
 
