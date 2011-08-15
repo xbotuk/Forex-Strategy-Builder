@@ -96,7 +96,7 @@ namespace Forex_Strategy_Builder
 
                 // Evaluate the bar
                 if (!isLowerPrice && !isHigherPrice)
-                {   // No more ordrs
+                {   // No more orders
                     eval = BacktestEval.None;
                 }
                 else if (isLowerPrice && isHigherPrice)
@@ -1187,7 +1187,7 @@ namespace Forex_Strategy_Builder
                         ExecOrd(bar, theOrder, thePrice, eval);
                     }
                     else
-                    {   // Cancel the order, go ot Close
+                    {   // Cancel the order, go to Close
                         current = close;
                         session[bar].BacktestEval = BacktestEval.Ambiguous;
                         if (isHigherPrice)

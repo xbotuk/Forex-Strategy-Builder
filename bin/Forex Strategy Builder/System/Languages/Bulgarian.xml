@@ -2088,6 +2088,10 @@
     <main>Break Even to position</main>
     <alt>Break Even към позиция</alt>
   </str>
+  <str>
+    <main>Break Even activation to position</main>
+    <alt>Break Even активация към позиция</alt>
+  </str>
   <!-- Bar Explorer -->
   <str>
     <main>Go to the chosen bar.</main>

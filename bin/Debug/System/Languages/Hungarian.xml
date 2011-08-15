@@ -2089,6 +2089,10 @@
     <main>Break Even to position</main>
     <alt>Break Even to position</alt>
   </str>
+  <str>
+    <main>Break Even activation to position</main>
+    <alt>Break Even activation to position</alt>
+  </str>
   <!-- Bar Explorer -->
   <str>
     <main>Go to the chosen bar.</main>

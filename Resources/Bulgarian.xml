@@ -570,6 +570,7 @@
   <str><main>Permanent T/P to position</main><alt>Постоянен Т/P към позиция</alt></str>
   <str><main>Permanent T/P to order</main><alt>Постоянен T/P към ордер</alt></str>
   <str><main>Break Even to position</main><alt>Break Even към позиция</alt></str>
+  <str><main>Break Even activation to position</main><alt>Break Even активация към позиция</alt></str>
 
   <!-- Bar Explorer -->
   <str><main>Go to the chosen bar.</main><alt>Предвижване до избрания бар.</alt></str>

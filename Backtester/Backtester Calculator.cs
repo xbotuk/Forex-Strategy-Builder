@@ -2352,7 +2352,7 @@ namespace Forex_Strategy_Builder
             int    ifOrder = 0;
             int    toPos   = session[bar].Summary.PosNumb;
             double lots    = 0;
-            string note    = Language.T("Break Even activation") + " " + (toPos + 1);
+            string note    = Language.T("Break Even activation to position") + " " + (toPos + 1);
 
             if (session[bar].Summary.PosDir == PosDirection.Long)
                 OrdSellStop(bar, ifOrder, toPos, lots, price, OrderSender.Close, OrderOrigin.BreakEvenActivation, note);

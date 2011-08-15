@@ -1387,7 +1387,7 @@
   </str>
   <str>
     <main>The position's Stop Loss will be set to Break Even price when the profit reaches</main>
-    <alt>The position's Stop Loss will be set to Break Even price when the profit reaches</alt>
+    <alt>Стоп лосс будет установлен на уровень безубыточности, когда прибыль достигает</alt>
   </str>
   <str>
     <main>Use the indicator value from the previous bar for all asterisk-marked indicators!</main>
@@ -1548,7 +1548,7 @@
   </str>
   <str>
     <main>Break Even</main>
-    <alt>Break Even</alt>
+    <alt>Безубыточность</alt>
   </str>
   <!-- Account Panel -->
   <str>
@@ -1993,7 +1993,7 @@
   </str>
   <str>
     <main>Break Even, Permanent SL, Permanent TP</main>
-    <alt>Break Even, Permanent SL, Permanent TP</alt>
+    <alt>Break Even, Постоянный СЛ, Постоянный ТП</alt>
   </str>
   <!-- Order's Comments -->
   <str>
@@ -2062,11 +2062,11 @@
   </str>
   <str>
     <main>Trailing Stop Limit to position</main>
-    <alt>Trailing Stop Limit к позиции</alt>
+    <alt>Скользящий Стоп Лимит к позиции</alt>
   </str>
   <str>
     <main>Trailing Stop Limit to order</main>
-    <alt>Trailing Stop Limit к ордеру</alt>
+    <alt>Скользящий Стоп Лимит к ордеру</alt>
   </str>
   <str>
     <main>Permanent S/L to position</main>
@@ -2086,7 +2086,11 @@
   </str>
   <str>
     <main>Break Even to position</main>
-    <alt>Break Even to position</alt>
+    <alt>Break Even к позицию</alt>
+  </str>
+  <str>
+    <main>Break Even activation to position</main>
+    <alt>Break Even активация к позицию</alt>
   </str>
   <!-- Bar Explorer -->
   <str>
@@ -2621,7 +2625,7 @@
   </str>
   <str>
     <main>Do not change the Break Even</main>
-    <alt>Do not change the Break Even</alt>
+    <alt>Не изменять Break Even</alt>
   </str>
   <str>
     <main>Perform an initial optimization</main>
