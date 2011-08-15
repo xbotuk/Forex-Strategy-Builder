@@ -5,6 +5,8 @@
 // Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
+using System;
+
 namespace Forex_Strategy_Builder
 {
     /// <summary>
@@ -56,19 +58,18 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public override void Calculate(SlotTypes slotType)
         {
-            int iNExit = (int)IndParam.NumParam[0].Value;
-
+            int nExit = (int)IndParam.NumParam[0].Value;
 
             // Saving the components
             Component = new IndicatorComp[1];
 
             Component[0] = new IndicatorComp();
-            Component[0].CompName      = "N Bars Exit (" + iNExit.ToString() + ")";
+            Component[0].CompName      = "N Bars Exit (" + nExit.ToString() + ")";
             Component[0].DataType      = IndComponentType.ForceClose;
             Component[0].ChartType     = IndChartType.NoChart;
             Component[0].ShowInDynInfo = true;
-            Component[0].FirstBar      = iNExit + 1;
-            Component[0].Value = new double[Bars];
+            Component[0].FirstBar      = 1;
+            Component[0].Value         = new double[Bars];
             return;
         }
 
@@ -77,10 +78,10 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public override void SetDescription(SlotTypes slotType)
         {
-            int iNExit = (int)IndParam.NumParam[0].Value;
+            int nExit = (int)IndParam.NumParam[0].Value;
 
-            ExitFilterLongDescription  = iNExit.ToString() + " bars passed after the entry";
-            ExitFilterShortDescription = iNExit.ToString() + " bars passed after the entry";
+            ExitFilterLongDescription  = nExit + " bars passed after the entry";
+            ExitFilterShortDescription = nExit + " bars passed after the entry";
 
             return;
         }

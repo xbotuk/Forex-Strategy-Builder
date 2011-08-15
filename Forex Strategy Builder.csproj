@@ -294,9 +294,7 @@
     <Compile Include="Indicators\Lot Limiter.cs" />
     <Compile Include="Indicators\Stop Loss.cs" />
     <Compile Include="Indicators\Take Profit.cs" />
-    <Compile Include="Dialogs\Chart.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Dialogs\Chart.cs" />
     <Compile Include="User interface\Controls Market.cs">
       <SubType>Form</SubType>
     </Compile>
