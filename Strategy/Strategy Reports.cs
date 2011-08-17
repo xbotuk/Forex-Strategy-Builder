@@ -803,17 +803,17 @@ namespace Forex_Strategy_Builder
             sb.AppendLine("<h3>" + Language.T("Account") + "</h3>");
             sb.AppendLine("<table class=\"fsb_table_cleen\" cellspacing=\"0\">");
             sb.AppendLine("<tr><td>" + Language.T("Initial account") + "</td><td> - "   + Configs.InitialAccount.ToString("F2") + " " + Configs.AccountCurrency + "</td></tr>");
-            sb.AppendLine("<tr><td>" + Language.T("Lot size")        + "</td><td> - "   + Data.InstrProperties.LotSize.ToString() + "</td></tr>");
+            sb.AppendLine("<tr><td>" + Language.T("Lot size")        + "</td><td> - "   + Data.InstrProperties.LotSize + "</td></tr>");
             sb.AppendLine("<tr><td>" + Language.T("Leverage")        + "</td><td> - 1/" + Configs.Leverage + "</td></tr>");
             sb.AppendLine("<tr><td>" + Language.T("Required margin") + "</td><td> - "   + Backtester.RequiredMargin(1, Data.Bars - 1).ToString("F2") + " " + Configs.AccountCurrency + "* " + Language.T("for each open lot") + "</td></tr>");
             sb.AppendLine("</table>");
 
             sb.AppendLine("<h3>" + Language.T("Charges") + "</h3>");
             sb.AppendLine("<table class=\"fsb_table_cleen\" cellspacing=\"0\">");
-            sb.AppendLine("<tr><td>" + Language.T("Spread") + "</td><td> - " + Plural("pip", Data.InstrProperties.Spread) + "</td><td>(" + Backtester.PipsToMoney(Data.InstrProperties.Spread, Data.Bars - 1).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
-            sb.AppendLine("<tr><td>" + Language.T("Swap number for a long position rollover")  + "</td><td> - " + Data.InstrProperties.SwapLong.ToString()  + " " + swapUnit + "</td><td>(" + Backtester.RolloverInMoney(PosDirection.Long,  1, 1, Data.Close[Data.Bars - 1]).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
-            sb.AppendLine("<tr><td>" + Language.T("Swap number for a short position rollover") + "</td><td> - " + Data.InstrProperties.SwapShort.ToString() + " " + swapUnit + "</td><td>(" + Backtester.RolloverInMoney(PosDirection.Short, 1, 1, Data.Close[Data.Bars - 1]).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
-            sb.AppendLine("<tr><td>" + commission + "</td><td> - " + Data.InstrProperties.Commission.ToString() + " " + commUnit + "</td><td>(" + Backtester.CommissionInMoney(1, Data.Close[Data.Bars-1], false).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
+            sb.AppendLine("<tr><td>" + Language.T("Spread") + "</td><td> - " + Data.InstrProperties.Spread.ToString("F2") + " " + Language.T("pips") + "</td><td>(" + Backtester.PipsToMoney(Data.InstrProperties.Spread, Data.Bars - 1).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
+            sb.AppendLine("<tr><td>" + Language.T("Swap number for a long position rollover")  + "</td><td> - " + Data.InstrProperties.SwapLong.ToString("F2")  + " " + swapUnit + "</td><td>(" + Backtester.RolloverInMoney(PosDirection.Long,  1, 1, Data.Close[Data.Bars - 1]).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
+            sb.AppendLine("<tr><td>" + Language.T("Swap number for a short position rollover") + "</td><td> - " + Data.InstrProperties.SwapShort.ToString("F2") + " " + swapUnit + "</td><td>(" + Backtester.RolloverInMoney(PosDirection.Short, 1, 1, Data.Close[Data.Bars - 1]).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
+            sb.AppendLine("<tr><td>" + commission + "</td><td> - " + Data.InstrProperties.Commission.ToString("F2") + " " + commUnit + "</td><td>(" + Backtester.CommissionInMoney(1, Data.Close[Data.Bars-1], false).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
             sb.AppendLine("<tr><td>" + Language.T("Slippage") + "</td><td> - " + Plural("pip", Data.InstrProperties.Slippage) + "</td><td>(" + Backtester.PipsToMoney(Data.InstrProperties.Slippage, Data.Bars - 1).ToString("F2") + " " + Configs.AccountCurrency + "*)</td></tr>");
             sb.AppendLine("</table>");
 
@@ -889,7 +889,7 @@ namespace Forex_Strategy_Builder
             string oppDir  = Language.T(Data.Strategy.OppSignalAction.ToString());
             string permSL  = Data.Strategy.UsePermanentSL ? (Data.Strategy.PermanentSLType == PermanentProtectionType.Absolute ? "(Abs) " : "") + Data.Strategy.PermanentSL : Language.T("None");
             string permTP  = Data.Strategy.UsePermanentTP ? (Data.Strategy.PermanentTPType == PermanentProtectionType.Absolute ? "(Abs) " : "") + Data.Strategy.PermanentTP : Language.T("None");
-            string brkEven = Data.Strategy.UseBreakEven ? Data.Strategy.BreakEven.ToString() : "- " + Language.T("None");
+            string brkEven = Data.Strategy.UseBreakEven ? Data.Strategy.BreakEven.ToString() : Language.T("None");
             sb.AppendLine("<div class=\"fsb_strategy_slot\" style=\"border: solid 2px #966\">");
             sb.AppendLine("\t<div class=\"fsb_properties_slot\">" + Language.T("Strategy Properties") + "</div>");
             sb.AppendLine("\t<table style=\"margin-left: auto; margin-right: auto;\">");
@@ -897,7 +897,7 @@ namespace Forex_Strategy_Builder
             sb.AppendLine("\t\t<tr><td>" + Language.T("Opposite direction signal") + "</td><td> - " + oppDir    + "</td></tr>");
             sb.AppendLine("\t\t<tr><td>" + Language.T("Permanent Stop Loss")       + "</td><td> - " + permSL    + "</td></tr>");
             sb.AppendLine("\t\t<tr><td>" + Language.T("Permanent Take Profit")     + "</td><td> - " + permTP    + "</td></tr>");
-            sb.AppendLine("\t\t<tr><td>" + Language.T("Break Even")                + "</td><td> - " + brkEven + "</td></tr>");
+            sb.AppendLine("\t\t<tr><td>" + Language.T("Break Even")                + "</td><td> - " + brkEven   + "</td></tr>");
             sb.AppendLine("\t</table>");
             sb.AppendLine("</div>");
 
