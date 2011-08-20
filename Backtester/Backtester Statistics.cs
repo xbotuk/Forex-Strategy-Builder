@@ -597,7 +597,7 @@ namespace Forex_Strategy_Builder
             accountStatsValue[13] = GrossMoneyLoss.ToString("F2")   + unit;
             accountStatsValue[14] = SentOrders.ToString();
             accountStatsValue[15] = ExecutedOrders.ToString();
-            accountStatsValue[16] = TradedLots.ToString();
+            accountStatsValue[16] = TradedLots.ToString("F2");
             accountStatsValue[17] = WinningTrades.ToString();
             accountStatsValue[18] = LosingTrades.ToString();
             accountStatsValue[19] = WinLossRatio.ToString("F2");
@@ -680,7 +680,7 @@ namespace Forex_Strategy_Builder
             accountStatsValue[12] = GrossLoss.ToString()   + unit;
             accountStatsValue[13] = SentOrders.ToString();
             accountStatsValue[14] = ExecutedOrders.ToString();
-            accountStatsValue[15] = TradedLots.ToString();
+            accountStatsValue[15] = TradedLots.ToString("F2");
             accountStatsValue[16] = winningTrades.ToString();
             accountStatsValue[17] = losingTrades.ToString();
             accountStatsValue[18] = ((float)winningTrades/(winningTrades + losingTrades)).ToString("F2");
@@ -688,7 +688,7 @@ namespace Forex_Strategy_Builder
             accountStatsValue[20] = Math.Round(TotalChargedSpread).ToString()     + unit;
             accountStatsValue[21] = Math.Round(TotalChargedRollOver).ToString()   + unit;
             accountStatsValue[22] = Math.Round(TotalChargedCommission).ToString() + unit;
-            accountStatsValue[23] = TotalChargedSlippage.ToString()   + unit;
+            accountStatsValue[23] = TotalChargedSlippage.ToString("F2")   + unit;
             accountStatsValue[24] = Math.Round(TotalChargedSpread + TotalChargedRollOver + TotalChargedSlippage).ToString() + unit;
             accountStatsValue[25] = Math.Round(NetBalance + TotalChargedSpread + TotalChargedRollOver + TotalChargedSlippage).ToString() + unit;
 
@@ -733,7 +733,7 @@ namespace Forex_Strategy_Builder
 
         /// <summary>
         /// Normalizes an entry order's size.
-        /// <summary>
+        /// </summary>
         static double NormalizeEntryLots(double lots)
         {
             double minlot  = 0.01;

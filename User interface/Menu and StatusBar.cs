@@ -924,6 +924,14 @@ namespace Forex_Strategy_Builder
             sbpChartInfo.Spring      = true;
             statusStrip.Items.Add(sbpChartInfo);
 
+#if DEBUG
+            statusStrip.Items.Add(new ToolStripSeparator());
+            ToolStripStatusLabel lblDebug = new ToolStripStatusLabel();
+            lblDebug.ForeColor = Color.LightCoral;
+            lblDebug.Text = "[Debug]";
+            statusStrip.Items.Add(lblDebug);
+#endif
+
             statusStrip.Items.Add(new ToolStripSeparator());
 
             sbpDate = new ToolStripStatusLabel();

@@ -651,8 +651,8 @@ namespace Forex_Strategy_Builder
             {
                 parameters =
                    "?mac="  + mac +
-                   "&reg="  + System.Globalization.RegionInfo.CurrentRegion.EnglishName +
-                   "&time=" + (DateTime.Now - fsbStartTime).TotalSeconds.ToString("N0") +
+                   "&reg="  + RegionInfo.CurrentRegion.EnglishName +
+                   "&time=" + (int)(DateTime.Now - fsbStartTime).TotalSeconds +
                    "&gen="  + generatorStarts +
                    "&opt="  + optimizerStarts +
                    "&str="  + savedStrategies;
