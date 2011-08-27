@@ -851,9 +851,6 @@ namespace Forex_Strategy_Builder
             // Searches the indicators' components to determine the Data.FirstBar
             Data.FirstBar = Data.Strategy.SetFirstBar();
 
-            // Logging
-            Data.Log("Calculate the strategy");
-
             // Calculates the backtest
             Backtester.Calculate();
             Backtester.CalculateAccountStats();

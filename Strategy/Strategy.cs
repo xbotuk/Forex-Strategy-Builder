@@ -341,8 +341,6 @@ namespace Forex_Strategy_Builder
         /// <returns>The number of new Open Filter Slot.</returns>
         public int AddOpenFilter()
         {
-            Data.Log("Adding an Open Filter");
-
             OpenFilters++;
             IndicatorSlot[] aIndSlotOld = (IndicatorSlot[])indicatorSlot.Clone();
             indicatorSlot = new IndicatorSlot[Slots];
@@ -373,8 +371,6 @@ namespace Forex_Strategy_Builder
         /// <returns>The number of new Close Filter Slot.</returns>
         public int AddCloseFilter()
         {
-            Data.Log("Adding a Close Filter");
-
             closeFilters++;
             IndicatorSlot[] aIndSlotOld = (IndicatorSlot[])indicatorSlot.Clone();
             indicatorSlot = new IndicatorSlot[Slots];
@@ -404,8 +400,6 @@ namespace Forex_Strategy_Builder
                 Slot[slotToRemove].SlotType != SlotTypes.CloseFilter)
                 return;
 
-            Data.Log("Remove a Filter");
-
             if (slotToRemove < CloseSlot)
                 OpenFilters--;
             else
@@ -433,8 +427,6 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public void RemoveAllCloseFilters()
         {
-            Data.Log("Removing All Closed Filters");
-
             CloseFilters = 0;
             IndicatorSlot[] indSlotOld = (IndicatorSlot[])indicatorSlot.Clone();
             indicatorSlot = new IndicatorSlot[Slots];
@@ -449,8 +441,6 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public void MoveFilterUpwards(int slotToMove)
         {
-            Data.Log("Move a Filter Upwards");
-
             if (slotToMove > 1 && Slot[slotToMove].SlotType == Slot[slotToMove - 1].SlotType)
             {
 
@@ -471,8 +461,6 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public void MoveFilterDownwards(int slotToMove)
         {
-            Data.Log("Move a Filter Downwards");
-
             if (slotToMove < Slots - 1 && Slot[slotToMove].SlotType == Slot[slotToMove + 1].SlotType)
             {
 
@@ -493,8 +481,6 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public void DuplicateFilter(int slotToDuplicate)
         {
-            Data.Log("Duplicate a Filter");
-
             if (Slot[slotToDuplicate].SlotType == SlotTypes.OpenFilter  && OpenFilters  < MaxOpenFilters ||
                 Slot[slotToDuplicate].SlotType == SlotTypes.CloseFilter && CloseFilters < MaxCloseFilters)
             {

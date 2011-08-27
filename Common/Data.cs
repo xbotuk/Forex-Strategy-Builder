@@ -68,11 +68,8 @@ namespace Forex_Strategy_Builder
         static bool   isResult              = false;
         static bool   isStrategyReady       = true;
         static bool   isStrategyChanged     = false;
-        static bool   toLog                 = false;
         static bool   isDebug               = false;
         static Icon   icon                  = Properties.Resources.Icon;
-
-        static StreamWriter swLogFile = StreamWriter.Null;
 
         // Scanner colors
         static Dictionary<DataPeriods, Color> periodColor = new Dictionary<DataPeriods, Color>();
@@ -297,7 +294,6 @@ namespace Forex_Strategy_Builder
         static int generatorStarts = 0;
         static int optimizerStarts = 0;
         static int savedStrategies = 0;
-        public static DateTime FsbStartTime { get { return fsbStartTime; } set { fsbStartTime = value; } }
         public static int GeneratorStarts { get { return generatorStarts; } set { generatorStarts = value; } }
         public static int OptimizerStarts { get { return optimizerStarts; } set { optimizerStarts = value; } }
         public static int SavedStrategies { get { return savedStrategies; } set { savedStrategies = value; } }
@@ -429,11 +425,6 @@ namespace Forex_Strategy_Builder
         public static Dictionary<DataPeriods, Color> PeriodColor { get { return periodColor; } }
 
         /// <summary>
-        /// Whether to log
-        /// </summary>
-        public static bool ToLog  { get { return toLog; } set { toLog = value; } }
-
-        /// <summary>
         /// Debug mode
         /// </summary>
         public static bool Debug { get { return isDebug; } set { isDebug = value; } }
@@ -561,10 +552,6 @@ namespace Forex_Strategy_Builder
             periodColor.Add(DataPeriods.hour4, Color.Peru);
             periodColor.Add(DataPeriods.day,   Color.Red);
             periodColor.Add(DataPeriods.week,  Color.DarkViolet);
-
-            // Create a new Log file
-            if (toLog == true)
-                swLogFile = new StreamWriter(logFileName, false);
         }
 
         // The names of the strategy indicators
@@ -598,34 +585,6 @@ namespace Forex_Strategy_Builder
             }
 
             return !isStrategyIndicatorsChanged;
-        }
-
-        /// <summary>
-        /// Saves a text line in the log file.
-        /// </summary>
-        public static void Log(string logLine)
-        {
-            if (toLog == true)
-            {
-                swLogFile.WriteLine(DateTime.Now.ToString() + "   " + logLine);
-                swLogFile.Flush();
-            }
-
-            return;
-        }
-
-        /// <summary>
-        /// Closes the log file.
-        /// </summary>
-        public static void CloseLogFile()
-        {
-            // Closes the log file
-            if (toLog == true)
-            {
-                swLogFile.Flush();
-                swLogFile.Close();
-                toLog = false;
-            }
         }
 
         /// <summary>
