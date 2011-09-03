@@ -15,10 +15,11 @@ namespace Forex_Strategy_Builder
         /// Tests general parameters of a custom indicator.
         /// </summary>
         /// <param name="indicator">The indicator.</param>
+        /// <param name="errorsList">List of the errors</param>
         /// <returns>True, if the test succeed.</returns>
-        public static bool CustomIndicatorFastTest(Indicator indicator, out string sErrorList)
+        public static bool CustomIndicatorFastTest(Indicator indicator, out string errorsList)
         {
-            bool bIsOk = true;
+            bool isOk = true;
 
             StringBuilder sb = new StringBuilder();
 
@@ -28,7 +29,7 @@ namespace Forex_Strategy_Builder
             if (string.IsNullOrEmpty(indicator.IndicatorName))
             {
                 sb.AppendLine("\tThe property 'IndicatorName' is not set.");
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the PossibleSlots property.
@@ -38,56 +39,56 @@ namespace Forex_Strategy_Builder
                 !indicator.TestPossibleSlot(SlotTypes.CloseFilter))
             {
                 sb.AppendLine("\tThe property 'PossibleSlots' is not set.");
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the CustomIndicator property.
             if (!indicator.CustomIndicator)
             {
                 sb.AppendLine("\tThe indicator '" + indicator.IndicatorName + "' is not marked as custom. Set CustomIndicator = true;");
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the SeparatedChartMaxValue properties.
             if (!indicator.SeparatedChart && indicator.SeparatedChartMaxValue != double.MinValue)
             {
                 sb.AppendLine("\tSet SeparatedChart = true; or remove the property: SeparatedChartMaxValue = " + indicator.SeparatedChartMaxValue.ToString());
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the SeparatedChartMinValue properties.
             if (!indicator.SeparatedChart && indicator.SeparatedChartMinValue != double.MaxValue)
             {
                 sb.AppendLine("\tSet SeparatedChart = true; or remove the property: SeparatedChartMinValue = " + indicator.SeparatedChartMinValue.ToString());
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the SpecialValues properties.
             if (!indicator.SeparatedChart && indicator.SpecialValues.Length > 0)
             {
                 sb.AppendLine("\tSet SeparatedChart = true; or remove the property SpecialValues");
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the IndParam properties.
             if (indicator.IndParam == null)
             {
                 sb.AppendLine("\tThe property IndParam is not set. Set IndParam = new IndicatorParam();");
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the IndParam.IndicatorName properties.
             if (indicator.IndParam.IndicatorName != indicator.IndicatorName)
             {
                 sb.AppendLine("\tThe property IndParam.IndicatorName is not set. Set IndParam.IndicatorName = IndicatorName;");
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the IndParam.SlotType properties.
             if (indicator.IndParam.SlotType != SlotTypes.NotDefined)
             {
                 sb.AppendLine("\tThe property IndParam.SlotType is not set. Set IndParam.SlotType = slotType;");
-                bIsOk = false;
+                isOk = false;
             }
 
             // Tests the IndParam.ListParam properties.
@@ -100,13 +101,13 @@ namespace Forex_Strategy_Builder
                 if (string.IsNullOrEmpty(listParam.Caption))
                 {
                     sb.AppendLine("\tThe property IndParam.ListParam[" + iParam + "].Caption is not set.");
-                    bIsOk = false;
+                    isOk = false;
                 }
 
                 if (listParam.ItemList.Length == 0)
                 {
                     sb.AppendLine("\tThe property IndParam.ListParam[" + iParam + "].ItemList is not set.");
-                    bIsOk = false;
+                    isOk = false;
                 }
 
                 if (listParam.ItemList[listParam.Index] != listParam.Text)
@@ -114,88 +115,88 @@ namespace Forex_Strategy_Builder
                     sb.AppendLine("\tThe property IndParam.ListParam[" + iParam + "].Text is wrong." +
                         " Set " + "IndParam.ListParam[" + iParam + "].Text = IndParam.ListParam[" + iParam +
                         "].ItemList[IndParam.ListParam[" + iParam + "].Index];");
-                    bIsOk = false;
+                    isOk = false;
                 }
 
                 if (string.IsNullOrEmpty(listParam.ToolTip))
                 {
                     sb.AppendLine("\tThe property IndParam.ListParam[" + iParam + "].ToolTip is not set.");
-                    bIsOk = false;
+                    isOk = false;
                 }
             }
 
             // Tests the IndParam.NumParam properties.
-            for (int iParam = 0; iParam < indicator.IndParam.NumParam.Length; iParam++)
+            for (int param = 0; param < indicator.IndParam.NumParam.Length; param++)
             {
-                NumericParam numParam = indicator.IndParam.NumParam[iParam];
+                NumericParam numParam = indicator.IndParam.NumParam[param];
                 if (!numParam.Enabled)
                     continue;
 
                 if (string.IsNullOrEmpty(numParam.Caption))
                 {
-                    sb.AppendLine("\tThe property IndParam.NumParam[" + iParam + "].Caption is not set.");
-                    bIsOk = false;
+                    sb.AppendLine("\tThe property IndParam.NumParam[" + param + "].Caption is not set.");
+                    isOk = false;
                 }
 
-                double dValue = numParam.Value;
-                double dMin   = numParam.Min;
-                double dMax   = numParam.Max;
-                double dPoint = numParam.Point;
+                double value = numParam.Value;
+                double min   = numParam.Min;
+                double max   = numParam.Max;
+                double point = numParam.Point;
 
-                if (dMin > dMax)
+                if (min > max)
                 {
-                    sb.AppendLine("\tIndParam.NumParam[" + iParam + "].Min > IndParam.NumParam[" + iParam + "].Max.");
-                    bIsOk = false;
+                    sb.AppendLine("\tIndParam.NumParam[" + param + "].Min > IndParam.NumParam[" + param + "].Max.");
+                    isOk = false;
                 }
 
-                if (dValue > dMax)
+                if (value > max)
                 {
-                    sb.AppendLine("\tIndParam.NumParam[" + iParam + "].Value > IndParam.NumParam[" + iParam + "].Max.");
-                    bIsOk = false;
+                    sb.AppendLine("\tIndParam.NumParam[" + param + "].Value > IndParam.NumParam[" + param + "].Max.");
+                    isOk = false;
                 }
 
-                if (dValue < dMin)
+                if (value < min)
                 {
-                    sb.AppendLine("\tIndParam.NumParam[" + iParam + "].Value < IndParam.NumParam[" + iParam + "].Min.");
-                    bIsOk = false;
+                    sb.AppendLine("\tIndParam.NumParam[" + param + "].Value < IndParam.NumParam[" + param + "].Min.");
+                    isOk = false;
                 }
 
-                if (dPoint < 0)
+                if (point < 0)
                 {
-                    sb.AppendLine("\tIndParam.NumParam[" + iParam + "].Point cannot be < 0");
-                    bIsOk = false;
+                    sb.AppendLine("\tIndParam.NumParam[" + param + "].Point cannot be < 0");
+                    isOk = false;
                 }
 
-                if (dPoint > 6)
+                if (point > 6)
                 {
-                    sb.AppendLine("\tIndParam.NumParam[" + iParam + "].Point cannot be > 6");
-                    bIsOk = false;
+                    sb.AppendLine("\tIndParam.NumParam[" + param + "].Point cannot be > 6");
+                    isOk = false;
                 }
 
                 if (string.IsNullOrEmpty(numParam.ToolTip))
                 {
-                    sb.AppendLine("\tThe property IndParam.NumParam[" + iParam + "].ToolTip is not set.");
-                    bIsOk = false;
+                    sb.AppendLine("\tThe property IndParam.NumParam[" + param + "].ToolTip is not set.");
+                    isOk = false;
                 }
             }
 
             // Tests the IndParam.CheckParam properties.
-            for (int iParam = 0; iParam < indicator.IndParam.CheckParam.Length; iParam++)
+            for (int param = 0; param < indicator.IndParam.CheckParam.Length; param++)
             {
-                CheckParam checkParam = indicator.IndParam.CheckParam[iParam];
+                CheckParam checkParam = indicator.IndParam.CheckParam[param];
                 if (!checkParam.Enabled)
                     continue;
 
                 if (string.IsNullOrEmpty(checkParam.Caption))
                 {
-                    sb.AppendLine("\tThe property IndParam.CheckParam[" + iParam + "].Caption is not set.");
-                    bIsOk = false;
+                    sb.AppendLine("\tThe property IndParam.CheckParam[" + param + "].Caption is not set.");
+                    isOk = false;
                 }
 
                 if (string.IsNullOrEmpty(checkParam.ToolTip))
                 {
-                    sb.AppendLine("\tThe property IndParam.CheckParam[" + iParam + "].ToolTip is not set.");
-                    bIsOk = false;
+                    sb.AppendLine("\tThe property IndParam.CheckParam[" + param + "].ToolTip is not set.");
+                    isOk = false;
                 }
             }
 
@@ -203,59 +204,59 @@ namespace Forex_Strategy_Builder
             {
                 indicator.Calculate(SlotTypes.NotDefined);
             }
-            catch (System.Exception exc)
+            catch (Exception exc)
             {
                 sb.AppendLine("\tError when executing Calculate(SlotTypes.NotDefined). " + exc.Message);
-                bIsOk = false;
+                isOk = false;
             }
 
             try
             {
                 indicator.SetDescription(SlotTypes.NotDefined);
             }
-            catch (System.Exception exc)
+            catch (Exception exc)
             {
                 sb.AppendLine("\tError when executing SetDescription(SlotTypes.NotDefined). " + exc.Message);
-                bIsOk = false;
+                isOk = false;
             }
 
             try
             {
                 indicator.ToString();
             }
-            catch (System.Exception exc)
+            catch (Exception exc)
             {
                 sb.AppendLine("\tError when executing ToString(). " + exc.Message);
-                bIsOk = false;
+                isOk = false;
             }
 
-            if (bIsOk)
-                sErrorList = string.Empty;
+            if (isOk)
+                errorsList = string.Empty;
             else
-                sErrorList = sb.ToString();
+                errorsList = sb.ToString();
 
-            return bIsOk;
+            return isOk;
         }
 
         /// <summary>
         /// Performs thorough indicator test.
         /// </summary>
-        /// <param name="sIndicatorName">The indicator name.</param>
+        /// <param name="indicatorName">The indicator name.</param>
         /// <returns>True, if the test succeed.</returns>
-        public static bool CustomIndicatorThoroughTest(string sIndicatorName, out string sErrorList)
+        public static bool CustomIndicatorThoroughTest(string indicatorName, out string errorsList)
         {
-            bool bIsOk = true;
+            bool isOk = true;
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine("ERROR: Indicator test failed for the '" + sIndicatorName + "' indicator.");
+            sb.AppendLine("ERROR: Indicator test failed for the '" + indicatorName + "' indicator.");
 
             foreach (SlotTypes slotType in  Enum.GetValues(typeof(SlotTypes)))
             {
                 if (slotType == SlotTypes.NotDefined)
                     continue;
 
-                Indicator indicator = Indicator_Store.ConstructIndicator(sIndicatorName, slotType);
+                Indicator indicator = Indicator_Store.ConstructIndicator(indicatorName, slotType);
 
                 if (!indicator.TestPossibleSlot(slotType))
                     continue;
@@ -271,7 +272,7 @@ namespace Forex_Strategy_Builder
                 catch (System.Exception exc)
                 {
                     sb.AppendLine("\tError when calculating with NumParams set to their minimal values. " + exc.Message);
-                    bIsOk = false;
+                    isOk = false;
                     break;
                 }
 
@@ -286,7 +287,7 @@ namespace Forex_Strategy_Builder
                 catch (System.Exception exc)
                 {
                     sb.AppendLine("\tError when calculating with NumParams set to their maximal values. " + exc.Message);
-                    bIsOk = false;
+                    isOk = false;
                     break;
                 }
 
@@ -308,7 +309,7 @@ namespace Forex_Strategy_Builder
                                     component.DataType == IndComponentType.NotDefined)
                                 {
                                     sb.AppendLine("\tProbably wrong component type when SlotType is 'SlotTypes.Open' - '" + component.CompName + "' of type '" + component.DataType + "'.");
-                                    bIsOk = false;
+                                    isOk = false;
                                 }
                                 break;
                             case SlotTypes.OpenFilter:
@@ -325,7 +326,7 @@ namespace Forex_Strategy_Builder
                                     component.DataType == IndComponentType.NotDefined)
                                 {
                                     sb.AppendLine("\tProbably wrong component type when SlotType is 'SlotTypes.OpenFilter' - '" + component.CompName + "' of type '" + component.DataType + "'.");
-                                    bIsOk = false;
+                                    isOk = false;
                                 }
                                 break;
                             case SlotTypes.Close:
@@ -340,7 +341,7 @@ namespace Forex_Strategy_Builder
                                     component.DataType == IndComponentType.NotDefined)
                                 {
                                     sb.AppendLine("\tProbably wrong component type when SlotType is 'SlotTypes.Close' - '" + component.CompName + "' of type '" + component.DataType + "'.");
-                                    bIsOk = false;
+                                    isOk = false;
                                 }
                                 break;
                             case SlotTypes.CloseFilter:
@@ -355,7 +356,7 @@ namespace Forex_Strategy_Builder
                                     component.DataType == IndComponentType.NotDefined)
                                 {
                                     sb.AppendLine("\tProbably wrong component type when SlotType is 'SlotTypes.CloseFilter' - '" + component.CompName + "' of type '" + component.DataType + "'.");
-                                    bIsOk = false;
+                                    isOk = false;
                                 }
                                 break;
                             default:
@@ -371,27 +372,24 @@ namespace Forex_Strategy_Builder
                                 if (value != 0 && value != 1)
                                 {
                                     sb.AppendLine("\tWrong component values. The values of '" + component.CompName + "' must be 0 or 1.");
-                                    bIsOk = false;
+                                    isOk = false;
                                     break;
                                 }
                         }
                     }
                 }
-                catch (System.Exception exc)
+                catch (Exception exc)
                 {
                     sb.AppendLine("\tError when checking the indicator's components. " + exc.Message);
-                    bIsOk = false;
+                    isOk = false;
                     break;
                 }
 
             }
 
-            if (bIsOk)
-                sErrorList = string.Empty;
-            else
-                sErrorList = sb.ToString();
+            errorsList = isOk ? string.Empty : sb.ToString();
 
-            return bIsOk;
+            return isOk;
         }
     }
 }

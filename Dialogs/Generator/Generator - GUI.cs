@@ -52,7 +52,6 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         Form   formFSB;
         public Form SetParrentForm { set { formFSB = value; } }
 
-        Font  font;
         Color colorText;
 
         CheckBox      chbGenerateNewStrategy;
@@ -121,7 +120,6 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             isStartegyChanged  = false;
             indicatorBlackList = new List<string>();
 
-            font      = this.Font;
             colorText = LayoutColors.ColorControlText;
 
             tsStrategy         = new ToolStrip();
@@ -847,7 +845,6 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             int btnVertSpace   = (int)(Data.VerticalDLU * 5.5);
             int btnHrzSpace    = (int)(Data.HorizontalDLU * 3);
             int border         = btnHrzSpace;
-            int textHeight     = Font.Height;
             int rightSideWidth = 3 * buttonWidth + 2 * btnHrzSpace;
             int rightSideLocation = ClientSize.Width - rightSideWidth - btnHrzSpace;
             int leftSideWidth  = ClientSize.Width - 3 * buttonWidth - 5 * btnHrzSpace;
@@ -1521,7 +1518,6 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         {
             if (generatedDescription != string.Empty)
                 Data.Strategy.Description = generatedDescription;
-            string sOldInfo = Data.Strategy.Description;
             Strategy_Description si = new Strategy_Description();
             si.ShowDialog();
             generatedDescription = Data.Strategy.Description;

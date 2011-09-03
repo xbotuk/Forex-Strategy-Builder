@@ -17,25 +17,24 @@ namespace Forex_Strategy_Builder
     /// </summary>
     public class Indicator_Compilation_Manager
     {
-        CSharp_Compiler compiler;
-
-        List<Indicator> listCustomIndicators = new List<Indicator>();
+        CSharp_Compiler _compiler;
+        List<Indicator> _customIndicatorsList = new List<Indicator>();
 
         /// <summary>
         /// Gets a list of the loaded custom indicators
         /// </summary>
-        public List<Indicator> CustomIndicatorsList { get { return listCustomIndicators; } }
+        public List<Indicator> CustomIndicatorsList { get { return _customIndicatorsList; } }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public Indicator_Compilation_Manager()
         {
-            compiler = new CSharp_Compiler();
+            _compiler = new CSharp_Compiler();
 
             foreach (Assembly assembly in GetReferencedAndInitialAssembly(Assembly.GetEntryAssembly()))
             {
-                compiler.AddReferencedAssembly(assembly);
+                _compiler.AddReferencedAssembly(assembly);
             }
         }
 
@@ -60,8 +59,8 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Load file, compile it and create/load the indicators into the CustomIndicatorsList.
         /// </summary>
-        /// <param name="sFilePath">Path to the source file</param>
-        /// <param name="sErrorMessages">Resulting error messages, if any.</param>
+        /// <param name="filePath">Path to the source file</param>
+        /// <param name="errorMessages">Resulting error messages, if any.</param>
         public void LoadCompileSourceFile(string filePath, out string errorMessages)
         {
             string errorLoadSourceFile;
@@ -74,7 +73,7 @@ namespace Forex_Strategy_Builder
             }
 
             Dictionary<string, int> dictCompilationErrors;
-            Assembly assembly = compiler.CompileSource(source, out dictCompilationErrors);
+            Assembly assembly = _compiler.CompileSource(source, out dictCompilationErrors);
 
             if (assembly == null)
             {   // Assembly compilation failed.
@@ -101,7 +100,7 @@ namespace Forex_Strategy_Builder
             }
 
             // Check for a repeated indicator name among the custom indicators
-            foreach(Indicator indicator in listCustomIndicators)
+            foreach(Indicator indicator in _customIndicatorsList)
                 if (indicator.IndicatorName == newIndicator.IndicatorName)
                 {
                     errorMessages = "The name '" + newIndicator.IndicatorName + "' found out in [" + Path.GetFileName(filePath) + "] is already in use.";
@@ -109,10 +108,10 @@ namespace Forex_Strategy_Builder
                 }
 
             // Check for a repeated indicator name among the original indicators
-            foreach (string sIndicatorName in Indicator_Store.OriginalIndicatorNames)
-                if (sIndicatorName == newIndicator.IndicatorName)
+            foreach (string indicatorName in Indicator_Store.OriginalIndicatorNames)
+                if (indicatorName == newIndicator.IndicatorName)
                 {
-                    errorMessages = "The name '" + sIndicatorName + "' found out in [" + Path.GetFileName(filePath) + "] is already in use.";
+                    errorMessages = "The name '" + indicatorName + "' found out in [" + Path.GetFileName(filePath) + "] is already in use.";
                     return;
                 }
 
@@ -125,7 +124,7 @@ namespace Forex_Strategy_Builder
             }
 
             // Adds the custom indicator to the list
-            listCustomIndicators.Add(newIndicator);
+            _customIndicatorsList.Add(newIndicator);
 
             errorMessages = string.Empty;
             return;
@@ -146,7 +145,7 @@ namespace Forex_Strategy_Builder
 
             try
             {
-                using (System.IO.StreamReader sr = new System.IO.StreamReader(pathToIndicator))
+                using (StreamReader sr = new StreamReader(pathToIndicator))
                 {
                     result = sr.ReadToEnd();
                     sr.Close();

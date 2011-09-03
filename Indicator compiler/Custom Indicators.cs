@@ -13,14 +13,14 @@ namespace Forex_Strategy_Builder
 {
     public static class Custom_Indicators
     {
-        static Indicator_Compilation_Manager indicatorManager;
+        static Indicator_Compilation_Manager _indicatorManager;
 
         /// <summary>
         /// Load Source Files
         /// </summary>
         public static void LoadCustomIndicators()
         {
-            indicatorManager = new Indicator_Compilation_Manager();
+            _indicatorManager = new Indicator_Compilation_Manager();
 
             if (!Directory.Exists(Data.SourceFolder))
             {
@@ -46,7 +46,7 @@ namespace Forex_Strategy_Builder
             foreach (string filePath in pathInputFiles)
             {
                 string errorMessages;
-                indicatorManager.LoadCompileSourceFile(filePath, out errorMessages);
+                _indicatorManager.LoadCompileSourceFile(filePath, out errorMessages);
 
                 if (!string.IsNullOrEmpty(errorMessages))
                 {
@@ -60,7 +60,7 @@ namespace Forex_Strategy_Builder
             }
 
             // Adds the custom indicators
-            Indicator_Store.ResetCustomIndicators(indicatorManager.CustomIndicatorsList);
+            Indicator_Store.ResetCustomIndicators(_indicatorManager.CustomIndicatorsList);
             Indicator_Store.CombineAllIndicators();
 
             if (isError)
@@ -165,13 +165,13 @@ namespace Forex_Strategy_Builder
         /// </summary>
         static void ShowLoadedCustomIndicators()
         {
-            if (indicatorManager.CustomIndicatorsList.Count == 0)
+            if (_indicatorManager.CustomIndicatorsList.Count == 0)
                 return;
 
             StringBuilder loadedIndicators = new StringBuilder();
             loadedIndicators.AppendLine("<h1>" + Language.T("Custom Indicators") + "</h1>");
             loadedIndicators.AppendLine("<p>");
-            foreach (Indicator indicator in indicatorManager.CustomIndicatorsList)
+            foreach (Indicator indicator in _indicatorManager.CustomIndicatorsList)
                 loadedIndicators.AppendLine(indicator.ToString() + "</br>");
             loadedIndicators.AppendLine("</p>");
 

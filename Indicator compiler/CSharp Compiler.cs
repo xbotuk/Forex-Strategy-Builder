@@ -19,7 +19,7 @@ namespace Forex_Strategy_Builder
     public class CSharp_Compiler
     {
         // Provides the actual compilation of source code.
-        volatile CSharpCodeProvider codeProvider;
+        volatile CSharpCodeProvider _codeProvider;
 
         // Represents the parameters used to invoke a compiler.
         CompilerParameters compilationParameters;
@@ -29,7 +29,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public CSharp_Compiler()
         {
-            codeProvider = new CSharpCodeProvider();
+            _codeProvider = new CSharpCodeProvider();
             compilationParameters = new CompilerParameters();
 
             // Make sure we conduct all the operations "in memory".
@@ -56,13 +56,14 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Compile a single source file to assembly.
         /// </summary>
+        /// <param name="source">Indicator source to compile.</param>
         /// <param name="compilerErrors">Compiler errors, if any.</param>
         /// <returns>Compiled assembly or null.</returns>
         public Assembly CompileSource(string source, out Dictionary<string, int> compilerErrors)
         {
             compilerErrors = new Dictionary<string, int>();
 
-            CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilationParameters, source);
+            CompilerResults compilerResults = _codeProvider.CompileAssemblyFromSource(compilationParameters, source);
 
             if (compilerResults.Errors.Count > 0)
             {   // Compilation failed.
