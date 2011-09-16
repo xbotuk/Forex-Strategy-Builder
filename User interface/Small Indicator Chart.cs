@@ -184,7 +184,7 @@ namespace Forex_Strategy_Builder
             yPrcBottom = yBottom;		// Price chart y
             inds       = 0; // Count of separated indicators
             indHeight  = 0; // Height of Ind charts
-            aiIndSlot  = new int[12];
+            aiIndSlot  = new int[Configs.MAX_ENTRY_FILTERS + Configs.MAX_EXIT_FILTERS + 2];
 
             penFore   = new Pen(LayoutColors.ColorChartFore);
             penVolume = new Pen(LayoutColors.ColorVolume);

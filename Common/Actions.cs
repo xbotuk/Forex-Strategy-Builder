@@ -720,6 +720,10 @@ namespace Forex_Strategy_Builder
                     Data.Strategy.StrategyName = Path.GetFileNameWithoutExtension(strategyFilePath);
                     Data.StrategyDir  = Path.GetDirectoryName(strategyFilePath);
                     Data.StrategyName = Path.GetFileName(strategyFilePath);
+                    if (Data.Strategy.OpenFilters > Configs.MAX_ENTRY_FILTERS)
+                        Configs.MAX_ENTRY_FILTERS = Data.Strategy.OpenFilters;
+                    if (Data.Strategy.CloseFilters > Configs.MAX_EXIT_FILTERS)
+                        Configs.MAX_EXIT_FILTERS = Data.Strategy.CloseFilters;
                 }
                 else
                 {
