@@ -5,315 +5,139 @@
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder
 {
+    /// <summary>
+    /// Provide methods of parsing data string.
+    /// </summary>
     public class Data_Parser
     {
-        int    bars;
-        Bar[]  aBar;
-        string input;
-        string parsingErrorMessage;
-        string generalDataRowMatchPattern;
-        string numberDecimalSeparator;
-        string columnDelimiter;
-        string timeMatchPattern;
-        string dateSeparator;
-        string dateMatchPattern;
-        string priceMatchPattern;
-        string dataRowMatchPattern;
-        bool isSeconds;
-        bool isVolumeColumn;
-        bool isFileMatchPattern;
-
-        /// <summary>
-        /// Gets the count of the data bars
-        /// </summary>
-        public int Bars
-        {
-            get { return bars; }
-        }
-
         /// <summary>
         /// Gets the the data array
         /// </summary>
-        public Bar[] Bar
-        {
-            get { return aBar; }
-        }
+        public Bar[] Bar { get; private set; }
 
         /// <summary>
-        /// Gets the parsing error message
+        /// Parses the input data string.
         /// </summary>
-        public string ParsingErrorMessage
+        /// <param name="dataString">The input data string.</param>
+        /// <returns>The number of parsed bars.</returns>
+        public int Parse(string dataString)
         {
-            get { return parsingErrorMessage; }
-        }
-
-        /// <summary>
-        /// Gets or sets the general data row match pattern
-        /// </summary>
-        string GeneralDataRowMatchPattern
-        {
-            get { return generalDataRowMatchPattern; }
-            set { generalDataRowMatchPattern = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the number decimal separator
-        /// </summary>
-        string NumberDecimalSeparator
-        {
-            get { return numberDecimalSeparator; }
-            set { numberDecimalSeparator = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the column delimiter
-        /// </summary>
-        string ColumnDelimiter
-        {
-            get { return columnDelimiter; }
-            set { columnDelimiter = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the time match pattern
-        /// </summary>
-        string TimeMatchPattern
-        {
-            get { return timeMatchPattern; }
-            set { timeMatchPattern = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the date separator
-        /// </summary>
-        string DateSeparator
-        {
-            get { return dateSeparator; }
-            set { dateSeparator = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the date match pattern
-        /// </summary>
-        string DateMatchPattern
-        {
-            get { return dateMatchPattern; }
-            set { dateMatchPattern = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the price match pattern
-        /// </summary>
-        string PriceMatchPattern
-        {
-            get { return priceMatchPattern; }
-            set { priceMatchPattern = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the data row match pattern
-        /// </summary>
-        string DataRowMatchPattern
-        {
-            get { return dataRowMatchPattern; }
-            set { dataRowMatchPattern = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets whether a seconds info present
-        /// </summary>
-        bool IsSeconds
-        {
-            get { return isSeconds; }
-            set { isSeconds = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets whether a volume column present
-        /// </summary>
-        bool IsVolumeColumn
-        {
-            get { return isVolumeColumn; }
-            set { isVolumeColumn = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets whether the file matches the pattern
-        /// </summary>
-        bool IsFileMatchPattern
-        {
-            get { return isFileMatchPattern; }
-            set { isFileMatchPattern = value; }
-        }
-
-        /// <summary>
-        /// Analyses and parses an input string
-        /// </summary>
-        /// <param name="sInput"></param>
-        public Data_Parser(string sInput)
-        {
-            this.input = sInput;
-        }
-
-        /// <summary>
-        /// Parses the input string
-        /// </summary>
-        public int Parse()
-        {
-            int respond = 0;
+            int bars = 0;
 
             try
             {
-                respond = AnaliseInput();
+                Regex regexDataString = AnalyseInput(dataString);
+                bars = CountDataBars(dataString, regexDataString);
+                Bar = ParseInput(dataString, regexDataString, bars);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                respond = -1;
-                System.Windows.Forms.MessageBox.Show(
-                    ParsingErrorMessage + Environment.NewLine + e.Message,
-                    Language.T("Data File Loading"),
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Error);
+                MessageBox.Show(exception.Message, Language.T("Data File Loading"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            if (respond != 0)
-            {
-                System.Windows.Forms.MessageBox.Show(
-                    ParsingErrorMessage,
-                    Language.T("Data File Loading"),
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Exclamation);
-                return respond;
-            }
-
-            try
-            {
-                respond = ParseInput();
-            }
-            catch (Exception e)
-            {
-                respond = -1;
-                System.Windows.Forms.MessageBox.Show(
-                    ParsingErrorMessage + Environment.NewLine + e.Message,
-                    Language.T("Data File Loading"),
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Error);
-                return respond;
-            }
-
-            if (respond != 0)
-            {
-                System.Windows.Forms.MessageBox.Show(
-                    ParsingErrorMessage,
-                    Language.T("Data File Loading"),
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Exclamation);
-                return respond;
-            }
-
-            return respond;
+            return bars;
         }
 
         /// <summary>
-        /// Analyses the input file
+        /// Gets a compiled general regex.
         /// </summary>
-        int AnaliseInput()
+        private static Regex GeneralDataFileRegex
         {
-            generalDataRowMatchPattern = @"^[\t ;,]*\d{1,4}[\./-]\d{1,4}[\./-]\d{1,4}[\t ;,]+\d{2}(:\d{2}){1,2}([\t ;,]+\d+([\.,]\d+)?){4}([\t ;,]+\d{1,10})?";
-            Regex regexGeneralDataRowMatchPattern = new Regex(generalDataRowMatchPattern, RegexOptions.Compiled);
-
-            // Takes a data line
-            string dataLine = null;
-            StringReader sr = new StringReader(input);
-            while ((dataLine = sr.ReadLine()) != null)
+            get
             {
-                if (regexGeneralDataRowMatchPattern.IsMatch(dataLine))
-                    break;
-            }
-            sr.Close();
+                const string spacePattern  = @"[\t ;,]";
+                const string datePattern   = @"\d{1,4}[\./-]\d{1,4}[\./-]\d{1,4}";
+                const string timePattern   = @"\d{2}(:\d{2}){1,2}";
+                const string pricePattern  = @"\d+([\.,]\d+)?";
+                const string volumePattern = @"\d{1,10}";
 
-            if (dataLine == null)
-            {
-                parsingErrorMessage = Language.T("Could not recognize the data file format!");
-                return -1;
-            }
+                // A data line has to start with date string followed by time string
+                var regex = new Regex("^" +  // Start of the string
+                    spacePattern + "*" +  // Zero or more white spaces
+                    datePattern +        // Valid date pattern
+                    spacePattern + "+" +  // One or more spaces
+                    timePattern +        // Valid time pattern
+                    spacePattern + "+" +  // One or more spaces
+                    pricePattern +        // Price
+                    spacePattern + "+" +  // One or more spaces
+                    pricePattern +        // Price
+                    spacePattern + "+" +  // One or more spaces
+                    pricePattern +        // Price
+                    spacePattern + "+" +  // One or more spaces
+                    pricePattern +        // Price
+                    spacePattern + "+" +  // One or more spaces
+                    volumePattern +        // Optional volume
+                    spacePattern + "*"    // Zero or more white spaces
+                    , RegexOptions.Compiled);
 
-            // Number decimal separator
-            if (Regex.IsMatch(dataLine, @"([\t, ;]+\d+\.\d+){4}"))
-                NumberDecimalSeparator = @"\.";
-            else if (Regex.IsMatch(dataLine, @"([\t ;]+\d+,\d+){4}"))
-                NumberDecimalSeparator = @",";
-            else
-            {
-                parsingErrorMessage = Language.T("Could not determine the number decimal separator!");
-                return -1;
+                return regex;
             }
+        }
 
-            // Column delimiter
-            if (NumberDecimalSeparator == @"\." || NumberDecimalSeparator == @"")
-                ColumnDelimiter = @"[\t, ;]";
-            else if (numberDecimalSeparator == @",")
-                ColumnDelimiter = @"[\t ;]";
+        /// <summary>
+        /// Analyses the input data string.
+        /// </summary>
+        /// <param name="dataString">The input data string.</param>
+        /// <returns>Matched regex for the data string.</returns>
+        private Regex AnalyseInput(string dataString)
+        {
+            string datePattern = GetDateMatchPattern(dataString);
+            string pricePattern = PriceMatchPattern(dataString);
 
-            // Time format
-            if (Regex.IsMatch(dataLine, ColumnDelimiter + @"\d{2}:\d{2}" + ColumnDelimiter))
-            {
-                TimeMatchPattern = @"(?<hour>\d{2}):(?<min>\d{2})";
-                IsSeconds = false;
-            }
-            else if (Regex.IsMatch(dataLine, ColumnDelimiter + @"\d{2}:\d{2}:\d{2}" + ColumnDelimiter))
-            {
-                TimeMatchPattern = @"(?<hour>\d{2}):(?<min>\d{2}):(?<sec>\d{2})";
-                IsSeconds = true;
-            }
-            else
-            {
-                parsingErrorMessage = Language.T("Could not determine the time format!");
-                return -1;
-            }
+            string dataMatchPattern = "^[\t ;,]*" +
+                datePattern + @"[\t ;,]+(?<hour>\d{2}):(?<min>\d{2})(:(?<sec>\d{2}))?[\t ;,]+" +
+                pricePattern + @"[\t ;,]+(?<volume>\d+)[\t ;,]*$";
 
-            // Date separator
-            if (Regex.IsMatch(dataLine, @"\d{1,4}\.\d{1,4}\.\d{1,4}" + ColumnDelimiter))
-                DateSeparator = @"\.";
-            else if (Regex.IsMatch(dataLine, @"\d{1,4}/\d{1,4}/\d{1,4}" + ColumnDelimiter))
-                DateSeparator = @"/";
-            else if (Regex.IsMatch(dataLine, @"\d{1,4}-\d{1,4}-\d{1,4}" + ColumnDelimiter))
-                DateSeparator = @"-";
-            else
-            {
-                parsingErrorMessage = Language.T("Could not determine the date separator!");
-                return -1;
-            }
+            return new Regex(dataMatchPattern, RegexOptions.Compiled);
+        }
 
-            // Date format
+        /// <summary>
+        /// Gets the date regex pattern that matches the data file.
+        /// </summary>
+        /// <param name="dataString">The data file content.</param>
+        /// <returns>Date regex pattern.</returns>
+        private string GetDateMatchPattern(string dataString)
+        {
             string line;
-            int yearPos  = 0;
+            int yearPos = 0;
             int monthPos = 0;
-            int dayPos   = 0;
-            Regex regexGeneralDataPattern = new Regex(@"(?<1>\d{1,4})" + DateSeparator + @"(?<2>\d{1,4})" + DateSeparator + @"(?<3>\d{1,4})", RegexOptions.Compiled);
-            sr = new StringReader(input);
-            while ((line = sr.ReadLine()) != null)
+            int dayPos = 0;
+            const string datePattern = @"(?<1>\d{1,4})[\./-](?<2>\d{1,4})[\./-](?<3>\d{1,4})";
+            var regexDate = new Regex(datePattern, RegexOptions.Compiled);
+
+            var stringReader = new StringReader(dataString);
+            while ((line = stringReader.ReadLine()) != null)
             {
-                Match matchDate = regexGeneralDataPattern.Match(line);
+                Match matchDate = regexDate.Match(line);
 
                 if (!matchDate.Success)
                     continue;
 
-                int date1 = int.Parse(matchDate.Result("$1"));
-                int date2 = int.Parse(matchDate.Result("$2"));
-                int date3 = int.Parse(matchDate.Result("$3"));
+                int pos1 = int.Parse(matchDate.Result("$1"));
+                int pos2 = int.Parse(matchDate.Result("$2"));
+                int pos3 = int.Parse(matchDate.Result("$3"));
 
                 // Determines the year index
                 if (yearPos == 0)
                 {
-                    if (date1 > 31) yearPos = 1;
-                    else if (date2 > 31) yearPos = 2;
-                    else if (date3 > 31) yearPos = 3;
+                    if (pos1 > 31)
+                    {
+                        yearPos = 1;
+                        monthPos = 2;
+                        dayPos = 3;
+                        break;
+                    }
+                    if (pos3 > 31)
+                    {
+                        yearPos = 3;
+                    }
                 }
 
                 // Determines the day index
@@ -321,18 +145,24 @@ namespace Forex_Strategy_Builder
                 {
                     if (yearPos == 1)
                     {
-                        if (date2 > 12) dayPos = 2;
-                        else if (date3 > 12) dayPos = 3;
+                        dayPos = 2;
+                        monthPos = 3;
+                        break;
                     }
-                    else if (yearPos == 2)
+                    if (yearPos == 3)
                     {
-                        if (date1 > 12) dayPos = 1;
-                        else if (date3 > 12) dayPos = 3;
-                    }
-                    else if (yearPos == 3)
-                    {
-                        if (date1 > 12) dayPos = 1;
-                        else if (date2 > 12) dayPos = 2;
+                        if (pos1 > 12)
+                        {
+                            dayPos = 1;
+                            monthPos = 2;
+                            break;
+                        }
+                        if (pos2 > 12)
+                        {
+                            monthPos = 1;
+                            dayPos = 2;
+                            break;
+                        }
                     }
                 }
 
@@ -350,294 +180,329 @@ namespace Forex_Strategy_Builder
                 if (yearPos > 0 && monthPos > 0 && dayPos > 0)
                     break;
             }
-            sr.Close();
+            stringReader.Close();
 
             // If the date format is not recognized we try to find the number of changes
             if (yearPos == 0 || monthPos == 0 || dayPos == 0)
             {
-                int dateOld1 = 0;
-                int dateOld2 = 0;
-                int dateOld3 = 0;
+                int old1 = 0;
+                int old2 = 0;
+                int old3 = 0;
 
-                int dateChanges1 = -1;
-                int dateChanges2 = -1;
-                int dateChanges3 = -1;
+                int changes1 = -1;
+                int changes2 = -1;
+                int changes3 = -1;
 
-                sr = new StringReader(input);
-                while ((line = sr.ReadLine()) != null)
+                stringReader = new StringReader(dataString);
+                while ((line = stringReader.ReadLine()) != null)
                 {
-                    Match matchDate = regexGeneralDataPattern.Match(line);
+                    Match matchDate = regexDate.Match(line);
 
                     if (!matchDate.Success)
                         continue;
 
-                    int date1 = int.Parse(matchDate.Result("$1"));
-                    int date2 = int.Parse(matchDate.Result("$2"));
-                    int date3 = int.Parse(matchDate.Result("$3"));
+                    int pos1 = int.Parse(matchDate.Result("$1"));
+                    int pos2 = int.Parse(matchDate.Result("$2"));
+                    int pos3 = int.Parse(matchDate.Result("$3"));
 
-                    if (date1 != dateOld1)
-                    {   // date1 has changed
-                        dateOld1 = date1;
-                        dateChanges1++;
+                    if (pos1 != old1)
+                    {
+                        // pos1 has changed
+                        old1 = pos1;
+                        changes1++;
+                    }
+                    if (pos2 != old2)
+                    {
+                        // pos2 has changed
+                        old2 = pos2;
+                        changes2++;
+                    }
+                    if (pos3 != old3)
+                    {
+                        // date2 has changed
+                        old3 = pos3;
+                        changes3++;
                     }
 
-                    if (date2 != dateOld2)
-                    {   // date2 has changed
-                        dateOld2 = date2;
-                        dateChanges2++;
-                    }
 
-                    if (date3 != dateOld3)
-                    {   // date2 has changed
-                        dateOld3 = date3;
-                        dateChanges3++;
+                    // Check number of changes
+                    if (changes1 > changes2 && changes1 > changes2)
+                    {
+                        dayPos = 1;
+                        monthPos = 2;
+                        yearPos = 3;
+                        break;
+                    }
+                    if (changes3 > changes1 && changes3 > changes2)
+                    {
+                        dayPos = 3;
+                        monthPos = 2;
+                        yearPos = 1;
+                        break;
+                    }
+                    if (changes2 > changes1 && changes2 > changes3)
+                    {
+                        yearPos = 3;
+                        monthPos = 1;
+                        dayPos = 2;
+                        break;
                     }
                 }
-                sr.Close();
+                stringReader.Close();
 
                 if (yearPos > 0)
-                {   // The year position is known
+                {
+                    // The year position is known
                     if (yearPos == 1)
                     {
-                        if (dateChanges3 > dateChanges2)
+                        if (changes3 > changes2)
                         {
                             monthPos = 2;
-                            dayPos   = 3;
+                            dayPos = 3;
                         }
-                        else if (dateChanges2 > dateChanges3)
+                        else if (changes2 > changes3)
                         {
                             monthPos = 3;
-                            dayPos   = 2;
-                        }
-                    }
-                    else if (yearPos == 2)
-                    {
-                        if (dateChanges3 > dateChanges1)
-                        {
-                            monthPos = 1;
-                            dayPos   = 3;
-                        }
-                        else if (dateChanges1 > dateChanges3)
-                        {
-                            monthPos = 3;
-                            dayPos   = 1;
+                            dayPos = 2;
                         }
                     }
                     else if (yearPos == 3)
                     {
-                        if (dateChanges2 > dateChanges1)
+                        if (changes2 > changes1)
                         {
                             monthPos = 1;
-                            dayPos   = 2;
+                            dayPos = 2;
                         }
-                        else if (dateChanges1 > dateChanges2)
+                        else if (changes1 > changes2)
                         {
                             monthPos = 2;
-                            dayPos   = 1;
+                            dayPos = 1;
                         }
                     }
                 }
-                else
-                {   // The year position is unknown
-                    if (dateChanges1 >= 0 && dateChanges2 > dateChanges1 && dateChanges3 > dateChanges2)
+
+                // If we don't know the year position but know that the day is somewhere in the end.
+                // The year must be on the other end of the pattern because the year doesn't stay in the middle.
+                if (yearPos == 0 && dayPos == 1)
+                {
+                    yearPos = 3;
+                    monthPos = 2;
+                }
+                if (yearPos == 0 && dayPos == 3)
+                {
+                    yearPos = 1;
+                    monthPos = 2;
+                }
+
+                if (yearPos == 0)
+                {
+                    // The year position is unknown
+                    if (changes1 >= 0 && changes2 > changes1 && changes3 > changes2)
                     {
-                        yearPos  = 1;
+                        yearPos = 1;
                         monthPos = 2;
-                        dayPos   = 3;
+                        dayPos = 3;
                     }
-                    else if (dateChanges1 >= 0 && dateChanges3 > dateChanges1 && dateChanges2 > dateChanges3)
+                    else if (changes1 >= 0 && changes3 > changes1 && changes2 > changes3)
                     {
-                        yearPos  = 1;
+                        yearPos = 1;
                         monthPos = 3;
-                        dayPos   = 2;
+                        dayPos = 2;
                     }
-                    else if (dateChanges2 >= 0 && dateChanges1 > dateChanges2 && dateChanges3 > dateChanges1)
+                    else if (changes2 >= 0 && changes1 > changes2 && changes3 > changes1)
                     {
-                        yearPos  = 2;
+                        yearPos = 2;
                         monthPos = 1;
-                        dayPos   = 3;
+                        dayPos = 3;
                     }
-                    else if (dateChanges2 >= 0 && dateChanges3 > dateChanges2 && dateChanges1 > dateChanges3)
+                    else if (changes2 >= 0 && changes3 > changes2 && changes1 > changes3)
                     {
-                        yearPos  = 2;
+                        yearPos = 2;
                         monthPos = 3;
-                        dayPos   = 1;
+                        dayPos = 1;
                     }
-                    else if (dateChanges3 >= 0 && dateChanges1 > dateChanges3 && dateChanges2 > dateChanges1)
+                    else if (changes3 >= 0 && changes1 > changes3 && changes2 > changes1)
                     {
-                        yearPos  = 3;
+                        yearPos = 3;
                         monthPos = 1;
-                        dayPos   = 2;
+                        dayPos = 2;
                     }
-                    else if (dateChanges3 >= 0 && dateChanges2 > dateChanges3 && dateChanges1 > dateChanges2)
+                    else if (changes3 >= 0 && changes2 > changes3 && changes1 > changes2)
                     {
-                        yearPos  = 3;
+                        yearPos = 3;
                         monthPos = 2;
-                        dayPos   = 1;
+                        dayPos = 1;
                     }
                 }
             }
 
+            string dateMatchPattern = "";
             if (yearPos * monthPos * dayPos > 0)
             {
                 if (yearPos == 1 && monthPos == 2 && dayPos == 3)
-                    DateMatchPattern = @"(?<year>\d{1,4})"  + DateSeparator + @"(?<month>\d{1,4})" + DateSeparator + @"(?<day>\d{1,4})";
-                else if (yearPos == 1 && monthPos == 3 && dayPos == 2)
-                    DateMatchPattern = @"(?<year>\d{1,4})"  + DateSeparator + @"(?<day>\d{1,4})"   + DateSeparator + @"(?<month>\d{1,4})";
-                else if (yearPos == 2 && monthPos == 1 && dayPos == 3)
-                    DateMatchPattern = @"(?<month>\d{1,4})" + DateSeparator + @"(?<year>\d{1,4})"  + DateSeparator + @"(?<day>\d{1,4})";
-                else if (yearPos == 2 && monthPos == 3 && dayPos == 1)
-                    DateMatchPattern = @"(?<day>\d{1,4})"   + DateSeparator + @"(?<year>\d{1,4})"  + DateSeparator + @"(?<month>\d{1,4})";
+                    dateMatchPattern = @"(?<year>\d{1,4})[\./-](?<month>\d{1,4})[\./-](?<day>\d{1,4})";
                 else if (yearPos == 3 && monthPos == 1 && dayPos == 2)
-                    DateMatchPattern = @"(?<month>\d{1,4})" + DateSeparator + @"(?<day>\d{1,4})"   + DateSeparator + @"(?<year>\d{1,4})";
+                    dateMatchPattern = @"(?<month>\d{1,4})[\./-](?<day>\d{1,4})[\./-](?<year>\d{1,4})";
                 else if (yearPos == 3 && monthPos == 2 && dayPos == 1)
-                    DateMatchPattern = @"(?<day>\d{1,4})"   + DateSeparator + @"(?<month>\d{1,4})" + DateSeparator + @"(?<year>\d{1,4})";
+                    dateMatchPattern = @"(?<day>\d{1,4})[\./-](?<month>\d{1,4})[\./-](?<year>\d{1,4})";
             }
             else
             {
-                parsingErrorMessage = Language.T("Could not determine the date format!");
-                return -1;
+                throw new Exception(Language.T("Could not determine the date format!"));
             }
 
-            // Price match pattern
-            PriceMatchPattern = "";
-            string sCurrentNumberDecimalSeparator = System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
-            char cCurrentNumberDecimalSeparator = sCurrentNumberDecimalSeparator.ToCharArray()[0];
-            char cNumberDecimalSeparator = numberDecimalSeparator.ToCharArray()[numberDecimalSeparator.ToCharArray().Length - 1];
-            sr = new StringReader(input);
-            while ((line = sr.ReadLine()) != null)
-            {
-                if (!regexGeneralDataRowMatchPattern.IsMatch(line))
-                    continue;
-
-                Match mPrice = Regex.Match(line,
-                    ColumnDelimiter + @"+(?<1>\d+" + NumberDecimalSeparator + @"\d+)" +
-                    ColumnDelimiter + @"+(?<2>\d+" + NumberDecimalSeparator + @"\d+)" +
-                    ColumnDelimiter + @"+(?<3>\d+" + NumberDecimalSeparator + @"\d+)" +
-                    ColumnDelimiter + @"+(?<4>\d+" + NumberDecimalSeparator + @"\d+)");
-
-                string sPrice1 = mPrice.Result("$1").Replace(cNumberDecimalSeparator, cCurrentNumberDecimalSeparator);
-                string sPrice2 = mPrice.Result("$2").Replace(cNumberDecimalSeparator, cCurrentNumberDecimalSeparator);
-                string sPrice3 = mPrice.Result("$3").Replace(cNumberDecimalSeparator, cCurrentNumberDecimalSeparator);
-                string sPrice4 = mPrice.Result("$4").Replace(cNumberDecimalSeparator, cCurrentNumberDecimalSeparator);
-
-                double dPrice1 = double.Parse(sPrice1);
-                double dPrice2 = double.Parse(sPrice2);
-                double dPrice3 = double.Parse(sPrice3);
-                double dPrice4 = double.Parse(sPrice4);
-
-                if (dPrice2 > dPrice1 + 0.00001 && dPrice2 > dPrice3 + 0.00001 && dPrice2 > dPrice4 + 0.00001 &&
-                    dPrice3 < dPrice1 - 0.00001 && dPrice3 < dPrice2 - 0.00001 && dPrice3 < dPrice4 - 0.00001)
-                {
-                    PriceMatchPattern = @"(?<open>\d+" + NumberDecimalSeparator + @"\d+)" +
-                        ColumnDelimiter + @"+(?<high>\d+"  + NumberDecimalSeparator + @"\d+)" +
-                        ColumnDelimiter + @"+(?<low>\d+"   + NumberDecimalSeparator + @"\d+)" +
-                        ColumnDelimiter + @"+(?<close>\d+" + NumberDecimalSeparator + @"\d+)";
-                    break;
-                }
-                if (dPrice3 > dPrice1 + 0.00001 && dPrice3 > dPrice2 + 0.00001 && dPrice3 > dPrice4 + 0.00001 &&
-                    dPrice2 < dPrice1 - 0.00001 && dPrice2 < dPrice3 - 0.00001 && dPrice2 < dPrice4 - 0.00001)
-                {
-                    PriceMatchPattern = @"(?<open>\d+" + NumberDecimalSeparator + @"\d+)" +
-                        ColumnDelimiter + @"+(?<low>\d+"   + NumberDecimalSeparator + @"\d+)" +
-                        ColumnDelimiter + @"+(?<high>\d+"  + NumberDecimalSeparator + @"\d+)" +
-                        ColumnDelimiter + @"+(?<close>\d+" + NumberDecimalSeparator + @"\d+)";
-                    break;
-                }
-            }
-            sr.Close();
-
-            if (PriceMatchPattern == "")
-            {
-                parsingErrorMessage = Language.T("Could not determine the price columns order!");
-                return -1;
-            }
-
-            // Check for a volume column
-            IsVolumeColumn = Regex.IsMatch(dataLine, PriceMatchPattern + ColumnDelimiter + @"+\d+" + ColumnDelimiter + "*$");
-
-            DataRowMatchPattern = "^" + ColumnDelimiter + "*" + DateMatchPattern + ColumnDelimiter + "*" +
-                TimeMatchPattern + ColumnDelimiter + "*" + PriceMatchPattern + ColumnDelimiter + "*" +
-                (IsVolumeColumn ? @"(?<volume>\d+)" : "") + ColumnDelimiter + "*$";
-
-            return 0;
+            return dateMatchPattern;
         }
 
         /// <summary>
-        /// Parses the input file
+        /// Determines the price pattern.
         /// </summary>
-        int ParseInput()
+        /// <param name="dataString">The data file content.</param>
+        /// <returns>Price match pattern.</returns>
+        private string PriceMatchPattern(string dataString)
         {
-            bars = 0;
-            StringReader sr;
+            var regexGeneral = GeneralDataFileRegex;
+            const string columnSeparator = @"[\t ;,]+";
+            string priceMatchPattern = "";
             string line;
-            Match  matchLine;
-            string sCurrentNumberDecimalSeparator = System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
-            char   cCurrentNumberDecimalSeparator = sCurrentNumberDecimalSeparator.ToCharArray()[0];
-            char   cNumberDecimalSeparator   = numberDecimalSeparator.ToCharArray()[numberDecimalSeparator.ToCharArray().Length - 1];
-            bool   isChangeDecSep = cNumberDecimalSeparator != cCurrentNumberDecimalSeparator;
-            Regex  rx = new Regex(DataRowMatchPattern, RegexOptions.Compiled);
+            var sr = new StringReader(dataString);
 
-            // Counts the data bars
-            bars = 0;
-            sr = new StringReader(input);
-            while ((line = sr.ReadLine()) != null)
-                if (rx.IsMatch(line))
-                    bars++;
-            sr.Close();
-
-            if (bars == 0)
-            {
-                parsingErrorMessage = Language.T("Could not count the data bars!");
-                return -1;
-            }
-
-            int bar = 0;
-            aBar = new Bar[bars];
-            sr   = new StringReader(input);
             while ((line = sr.ReadLine()) != null)
             {
-                matchLine = rx.Match(line);
-                if (matchLine.Success)
+                if (!regexGeneral.IsMatch(line))
+                    continue;
+
+                var matchPrice = Regex.Match(line, columnSeparator +
+                        @"(?<1>\d+([\.,]\d+)?)" + columnSeparator +
+                        @"(?<2>\d+([\.,]\d+)?)" + columnSeparator +
+                        @"(?<3>\d+([\.,]\d+)?)" + columnSeparator +
+                        @"(?<4>\d+([\.,]\d+)?)" + columnSeparator);
+
+                double price2 = ParseDouble(matchPrice.Result("$2"));
+                double price3 = ParseDouble(matchPrice.Result("$3"));
+
+                const double epsilon = 0.000001;
+                if (price2 > price3 + epsilon)
                 {
-                    int year  = int.Parse(matchLine.Groups["year"].Value);
-                    int month = int.Parse(matchLine.Groups["month"].Value);
-                    int day   = int.Parse(matchLine.Groups["day"].Value);
-                    int hour  = int.Parse(matchLine.Groups["hour"].Value);
-                    int min   = int.Parse(matchLine.Groups["min"].Value);
-                    int sec   = (IsSeconds ? int.Parse(matchLine.Groups["sec"].Value) : 0);
-
-                    if (year < 100)
-                        year += 2000;
-                    if (year > DateTime.Now.Year)
-                        year -= 100;
-
-                    if (isChangeDecSep)
-                    {
-                        aBar[bar].Time   = new DateTime(year, month, day, hour, min, sec);
-                        aBar[bar].Open   = double.Parse(matchLine.Groups["open"].Value.Replace(cNumberDecimalSeparator, cCurrentNumberDecimalSeparator));
-                        aBar[bar].High   = double.Parse(matchLine.Groups["high"].Value.Replace(cNumberDecimalSeparator, cCurrentNumberDecimalSeparator));
-                        aBar[bar].Low    = double.Parse(matchLine.Groups["low"].Value.Replace(cNumberDecimalSeparator, cCurrentNumberDecimalSeparator));
-                        aBar[bar].Close  = double.Parse(matchLine.Groups["close"].Value.Replace(cNumberDecimalSeparator, cCurrentNumberDecimalSeparator));
-                        aBar[bar].Volume = (IsVolumeColumn ? int.Parse(matchLine.Groups["volume"].Value) : 0);
-                    }
-                    else
-                    {
-                        aBar[bar].Time   = new DateTime(year, month, day, hour, min, sec);
-                        aBar[bar].Open   = double.Parse(matchLine.Groups["open"].Value);
-                        aBar[bar].High   = double.Parse(matchLine.Groups["high"].Value);
-                        aBar[bar].Low    = double.Parse(matchLine.Groups["low"].Value);
-                        aBar[bar].Close  = double.Parse(matchLine.Groups["close"].Value);
-                        aBar[bar].Volume = (IsVolumeColumn ? int.Parse(matchLine.Groups["volume"].Value) : 0);
-                    }
-
-                    bar++;
+                    priceMatchPattern =
+                        @"(?<open>\d+([\.,]\d+)?)" + columnSeparator +
+                        @"(?<high>\d+([\.,]\d+)?)" + columnSeparator +
+                        @"(?<low>\d+([\.,]\d+)?)"  + columnSeparator +
+                        @"(?<close>\d+([\.,]\d+)?)";
+                    break;
+                }
+                if (price3 > price2 + epsilon)
+                {
+                    priceMatchPattern =
+                        @"(?<open>\d+([\.,]\d+)?)" + columnSeparator +
+                        @"(?<low>\d+([\.,]\d+)?)"  + columnSeparator +
+                        @"(?<high>\d+([\.,]\d+)?)" + columnSeparator +
+                        @"(?<close>\d+([\.,]\d+)?)";
+                    break;
                 }
             }
-
             sr.Close();
 
-            return 0;
+            if (priceMatchPattern == "")
+                throw new Exception(Language.T("Could not determine the price columns order!"));
+
+            return priceMatchPattern;
+        }
+
+        /// <summary>
+        /// Counts the valid data lines.
+        /// </summary>
+        /// <param name="dataFile">The data file.</param>
+        /// <param name="regexDataFile">The data file regex.</param>
+        /// <returns>Count of matched lines as bars.</returns>
+        private static int CountDataBars(string dataFile, Regex regexDataFile)
+        {
+            string line;
+            var bars = 0;
+            var stringReader = new StringReader(dataFile);
+            while ((line = stringReader.ReadLine()) != null)
+                if (regexDataFile.IsMatch(line))
+                    bars++;
+            stringReader.Close();
+
+            if (bars == 0)
+                throw new Exception(Language.T("Could not count the data bars!"));
+
+            return bars;
+        }
+
+        /// <summary>
+        /// Parses the input data file.
+        /// </summary>
+        /// <param name="dataFile">The data file as string.</param>
+        /// <param name="regexDataFile">The compiled regex.</param>
+        /// <param name="barsCount">The count of bars of the data file.</param>
+        /// <returns>Returns a parsed bar array.</returns>
+        private Bar[] ParseInput(string dataFile, Regex regexDataFile, int barsCount)
+        {
+            var barList = new Bar[barsCount];
+
+            string line;
+            var bar = 0;
+            var stringReader = new StringReader(dataFile);
+
+            while ((line = stringReader.ReadLine()) != null)
+            {
+                var match = regexDataFile.Match(line);
+                if (!match.Success) continue;
+
+                var year = int.Parse(match.Groups["year"].Value);
+                year = CorrectProblemYear2000(year);
+                var month = int.Parse(match.Groups["month"].Value);
+                var day = int.Parse(match.Groups["day"].Value);
+                var hour = int.Parse(match.Groups["hour"].Value);
+                var min = int.Parse(match.Groups["min"].Value);
+                var seconds = match.Groups["sec"].Value;
+                var sec = (seconds == "" ? 0 : int.Parse(seconds));
+
+                barList[bar].Time   = new DateTime(year, month, day, hour, min, sec);
+                barList[bar].Open   = ParseDouble(match.Groups["open"].Value);
+                barList[bar].High   = ParseDouble(match.Groups["high"].Value);
+                barList[bar].Low    = ParseDouble(match.Groups["low"].Value);
+                barList[bar].Close  = ParseDouble(match.Groups["close"].Value);
+                barList[bar].Volume = int.Parse(match.Groups["volume"].Value);
+
+                bar++;
+            }
+
+            stringReader.Close();
+
+            return barList;
+        }
+
+        /// <summary>
+        /// Parses a value as double from a string.
+        /// </summary>
+        /// <param name="input">String to parse.</param>
+        /// <returns>A value as double.</returns>
+        private double ParseDouble(string input)
+        {
+            var separator = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
+
+            if (separator == "." && input.Contains(","))
+                input = input.Replace(",", separator);
+            else if (separator == "," && input.Contains("."))
+                input = input.Replace(".", separator);
+
+            return double.Parse(input);
+        }
+
+        /// <summary>
+        /// Fixes wrong year interpretation. 
+        /// For example 08 must be 2008 instead of 8.
+        /// </summary>
+        private int CorrectProblemYear2000(int year)
+        {
+            if (year < 100)
+                year += 2000;
+            if (year > DateTime.Now.Year)
+                year -= 100;
+            return year;
         }
     }
 }

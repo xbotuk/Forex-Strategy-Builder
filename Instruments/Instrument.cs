@@ -153,19 +153,21 @@ namespace Forex_Strategy_Builder
             string sData = sr.ReadToEnd();
             sr.Close();
 
-            Data_Parser dp = new Data_Parser(sData);
+            Data_Parser dp = new Data_Parser();
 
-            int respond = dp.Parse();
+            int respond = -1;
+            int parsedBars = dp.Parse(sData);
 
-            if (respond == 0)
+            if (parsedBars > 0)
             {
                 aBar = dp.Bar;
-                bars = dp.Bars;
+                bars = parsedBars;
                 RefineData();
                 DataHorizon();
                 CheckMarketData();
                 SetDataStats();
                 timeUpdate = aBar[bars - 1].Time;
+                respond = 0;
             }
 
             return respond;
@@ -177,18 +179,20 @@ namespace Forex_Strategy_Builder
         /// <returns>0 - success</returns>
         public int LoadResourceData()
         {
-            Data_Parser dataParser = new Data_Parser(Properties.Resources.EURUSD1440);
-            int respond = dataParser.Parse();
+            Data_Parser dataParser = new Data_Parser();
+            int respond = -1;
+            int parsedBars = dataParser.Parse(Properties.Resources.EURUSD1440);
 
-            if (respond == 0)
+            if (parsedBars > 0)
             {
                 aBar = dataParser.Bar;
-                bars = dataParser.Bars;
+                bars = parsedBars;
                 RefineData();
                 DataHorizon();
                 CheckMarketData();
                 SetDataStats();
                 timeUpdate = aBar[bars - 1].Time;
+                respond = 0;
             }
 
             return respond;
