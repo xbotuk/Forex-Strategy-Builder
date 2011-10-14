@@ -156,7 +156,7 @@ namespace Forex_Strategy_Builder
         {
             try
             {
-                System.Diagnostics.Process.Start("http://forexsb.com/");
+                System.Diagnostics.Process.Start("http://forexsb.com/download/");
                 HideMenuItemLiveContent();
             }
             catch { }
