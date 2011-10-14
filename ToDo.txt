@@ -2,7 +2,6 @@ General:
 - Repair back test of Trailing Stop - tick mode instead of bar mode;
 - Import MT5 data files;
 - Money Management - add / subtract after a certain number of pips profit or loss;
-- Fix loading data without a decimal separator in the data file.
 - User format of data file that can overwrite the default one.
 
 Generator:
