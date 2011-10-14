@@ -261,17 +261,32 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 if (strategyBest.Slot[slot].SlotStatus == StrategySlotStatus.Linked)
                 {
                     if (strategyBest.Slot[slot].SlotType == SlotTypes.Open)
-                        isEntryLocked = false;
+                        isEntryLocked = isEntryLocked ? !IsSlotHasParameters(strategyBest.Slot[slot]) : isEntryLocked;
                     else if (strategyBest.Slot[slot].SlotType == SlotTypes.OpenFilter)
-                        isEntryLocked = false;
+                        isEntryLocked = isEntryLocked ? !IsSlotHasParameters(strategyBest.Slot[slot]) : isEntryLocked;
                     else if (strategyBest.Slot[slot].SlotType == SlotTypes.Close)
-                        isExitLocked = false;
+                        isExitLocked = isExitLocked ? !IsSlotHasParameters(strategyBest.Slot[slot]) : isExitLocked;
                     else if (strategyBest.Slot[slot].SlotType == SlotTypes.CloseFilter)
-                        isExitLocked = false;
+                        isExitLocked = isExitLocked ? !IsSlotHasParameters(strategyBest.Slot[slot]) : isExitLocked;
                 }
             }
 
             return;
+        }
+
+        /// <summary>
+        /// Shows if the slot has any parameters to generate.
+        /// </summary>
+        bool IsSlotHasParameters(IndicatorSlot slot)
+        {
+            foreach (ListParam listParam in slot.IndParam.ListParam)
+                if (listParam.Enabled && listParam.ItemList.Length > 1)
+                    return true;
+            foreach (NumericParam numericParam in slot.IndParam.NumParam)
+                if (numericParam.Enabled)
+                    return true;
+
+            return false;
         }
 
         /// <summary>
