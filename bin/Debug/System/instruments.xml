@@ -14,7 +14,7 @@
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
     <commission>0</commission>
-    <slippage>0</slippage>
+    <slippage>20</slippage>
     <priceIn>USD</priceIn>
     <rateToUSD>1</rateToUSD>
     <rateToEUR>0</rateToEUR>
@@ -81,26 +81,6 @@
     <baseFileName>USDJPY</baseFileName>
   </instrument>
   <instrument>
-    <symbol>#IBM</symbol>
-    <instrumentType>CFD</instrumentType>
-    <comment>International Business Machines</comment>
-    <digits>2</digits>
-    <contractSize>100</contractSize>
-    <spread>20</spread>
-    <swapType>percents</swapType>
-    <swapLong>5</swapLong>
-    <swapShort>-1</swapShort>
-    <commissionType>percents</commissionType>
-    <commissionScope>deal</commissionScope>
-    <commissionTime>openclose</commissionTime>
-    <commission>0.25</commission>
-    <slippage>0</slippage>
-    <priceIn>USD</priceIn>
-    <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.29999995231628</rateToEUR>
-    <baseFileName>#IBM</baseFileName>
-  </instrument>
-  <instrument>
     <symbol>$INDU</symbol>
     <instrumentType>Index</instrumentType>
     <comment>Dow Jones Industrial Average</comment>
@@ -119,5 +99,25 @@
     <rateToUSD>1</rateToUSD>
     <rateToEUR>1.29999995231628</rateToEUR>
     <baseFileName>$INDU</baseFileName>
+  </instrument>
+  <instrument>
+    <symbol>#IBM</symbol>
+    <instrumentType>CFD</instrumentType>
+    <comment>International Business Machines</comment>
+    <digits>2</digits>
+    <contractSize>100</contractSize>
+    <spread>20</spread>
+    <swapType>percents</swapType>
+    <swapLong>5</swapLong>
+    <swapShort>-1</swapShort>
+    <commissionType>percents</commissionType>
+    <commissionScope>deal</commissionScope>
+    <commissionTime>openclose</commissionTime>
+    <commission>0.25</commission>
+    <slippage>0</slippage>
+    <priceIn>USD</priceIn>
+    <rateToUSD>1</rateToUSD>
+    <rateToEUR>1.29999995231628</rateToEUR>
+    <baseFileName>#IBM</baseFileName>
   </instrument>
 </fsb>

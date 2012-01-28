@@ -7,6 +7,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Forex_Strategy_Builder
 {
@@ -786,6 +788,27 @@ namespace Forex_Strategy_Builder
             miCommandConsole.Click += new EventHandler(MenuTools_OnClick);
             miAdditional.DropDownItems.Add(miCommandConsole);
 
+            if (Directory.Exists(Data.AdditionalFolder))
+            {
+                ToolStripMenuItem miAdditionalSubMenu;
+                List<string> files = new List<string>();
+                files.AddRange(Directory.GetFiles(Data.AdditionalFolder, "*.lnk"));
+                files.AddRange(Directory.GetFiles(Data.AdditionalFolder, "*.exe"));
+                if (files.Count > 0)
+                    miAdditional.DropDownItems.Add(new ToolStripSeparator());
+                foreach (string file in files)
+                {
+                    miAdditionalSubMenu = new ToolStripMenuItem();
+                    string name = Path.GetFileNameWithoutExtension(file);
+                    miAdditionalSubMenu.Name = "miAdditionalFile" + name;
+                    miAdditionalSubMenu.Text = Language.T(name) + "...";
+                    miAdditionalSubMenu.Image = Utility.GetIcon(file).ToBitmap();
+                    miAdditionalSubMenu.Tag = file;
+                    miAdditionalSubMenu.Click += new EventHandler(AdditionalSubMenu_OnClick);
+                    miAdditional.DropDownItems.Add(miAdditionalSubMenu);
+                }
+            }
+            
             miTools.DropDownItems.Add(new ToolStripSeparator());
 
             ToolStripMenuItem miResetConfigs = new ToolStripMenuItem();
@@ -1227,6 +1250,15 @@ namespace Forex_Strategy_Builder
         {
         }
 
+        /// <summary>
+        /// AdditionalSub menu
+        /// </summary>
+        protected virtual void AdditionalSubMenu_OnClick(object sender, EventArgs e)
+        {
+            ToolStripMenuItem Item = (ToolStripMenuItem)sender;
+            System.Diagnostics.Process.Start(Item.Tag.ToString());
+
+        }
         /// <summary>
         /// Show the full Price Chart
         /// </summary>

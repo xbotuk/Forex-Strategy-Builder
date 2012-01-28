@@ -87,6 +87,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Utility.cs" />
     <Compile Include="Dialogs\Analyzer\Analyzer.cs">
       <SubType>Form</SubType>
     </Compile>

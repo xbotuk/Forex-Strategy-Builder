@@ -1782,6 +1782,8 @@ namespace Forex_Strategy_Builder
                 Backtester.TotalChargedMoneyRollOver.ToString("F2")  + "," +
                 Backtester.WinLossRatio.ToString("F2")               + "," +
                 Backtester.MoneyEquityPercentDrawdown.ToString("F2") + ",");
+                //Backtester.br
+
 
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)

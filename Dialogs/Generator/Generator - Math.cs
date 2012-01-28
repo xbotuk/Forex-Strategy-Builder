@@ -87,7 +87,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 foreach (Control control in pnlSettings.Controls)
                     control.Enabled = false;
 
-                indicatorsLayout.BlockIndikatorChange();
+                indicatorsLayout.BlockIndicatorChange();
 
                 tsbtLockAll.Enabled      = false;
                 tsbtUnlockAll.Enabled    = false;
@@ -170,7 +170,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             foreach (Control control in pnlSettings.Controls)
                 control.Enabled = true;
 
-            indicatorsLayout.UnblockIndikatorChange();
+            indicatorsLayout.UnBlockIndicatorChange();
 
             tsbtLockAll.Enabled      = true;
             tsbtUnlockAll.Enabled    = true;
@@ -484,7 +484,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                             AddStrategyToGeneratorHistory(description);
                         else
                             UpdateStrategyInGeneratorHistory(description);
-                        SetSrategyDescriptionButton();
+                        SetStrategyDescriptionButton();
 
                         bestBalance = balance;
                         isBetter = true;

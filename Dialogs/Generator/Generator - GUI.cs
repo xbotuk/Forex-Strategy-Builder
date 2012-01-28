@@ -239,7 +239,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             SetPanelTop10();
             SetPanelIndicators();
             LoadOptions();
-            SetSrategyDescriptionButton();
+            SetStrategyDescriptionButton();
 
             chbHideFSB.CheckedChanged += new EventHandler(HideFSB_Click);
 
@@ -1526,7 +1526,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// <summary>
         /// Sets the strategy description button icon
         /// </summary>
-        void SetSrategyDescriptionButton()
+        void SetStrategyDescriptionButton()
         {
             if (generatedDescription != string.Empty)
                 Data.Strategy.Description = generatedDescription;
