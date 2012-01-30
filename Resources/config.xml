@@ -44,6 +44,8 @@
   <showPriceChartOnAccountChart>False</showPriceChartOnAccountChart>
   <analyzerHideFSB>True</analyzerHideFSB>
   <sendUsageStats>True</sendUsageStats>
+  <mainScreenWidth>790</mainScreenWidth>
+  <mainScreenHeight>590</mainScreenHeight>
   <dataHorizon>
     <maxBars>20000</maxBars>
     <useStartDate>False</useStartDate>

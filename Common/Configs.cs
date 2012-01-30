@@ -74,6 +74,8 @@ namespace Forex_Strategy_Builder
         static bool   showPriceChartOnAccountChartDefault = false;
         static bool   analyzerHideFSBDefault        = true;
         static bool   sendUsageStatsDefault         = true;
+        static int    mainScreenWidthDefault        = 790;
+        static int    mainScreenHeightDefault       = 590;
 
         // Indicator Chart
         static int  indicatorChartZoomDefault                     = 8;
@@ -936,6 +938,30 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        static int mainScreenWidth = mainScreenWidthDefault;
+        public static int MainScreenWidth
+        {
+            get { return mainScreenWidth; }
+            set
+            {
+                mainScreenWidth = value;
+                if (isConfigLoaded)
+                    xmlConfig.SelectNodes("config/mainScreenWidth").Item(0).InnerText = value.ToString();
+            }
+        }
+
+        static int mainScreenHeight = mainScreenHeightDefault;
+        public static int MainScreenHeight
+        {
+            get { return mainScreenHeight; }
+            set
+            {
+                mainScreenHeight = value;
+                if (isConfigLoaded)
+                    xmlConfig.SelectNodes("config/mainScreenHeight").Item(0).InnerText = value.ToString();
+            }
+        }
+
 
 // -------------------------------------------------------------
 
@@ -1374,6 +1400,8 @@ namespace Forex_Strategy_Builder
             BannedIndicators           = bannedIndicatorsDefault;
             ShowPriceChartOnAccountChart = showPriceChartOnAccountChartDefault;
             AnalyzerHideFSB            = analyzerHideFSBDefault;
+            MainScreenWidth            = mainScreenWidthDefault;
+            MainScreenHeight           = mainScreenHeightDefault;
 
             // Indicator Chart
             IndicatorChartZoom                   = indicatorChartZoomDefault;
@@ -1465,6 +1493,8 @@ namespace Forex_Strategy_Builder
             showPriceChartOnAccountChart = ParseNode("config/showPriceChartOnAccountChart", showPriceChartOnAccountChartDefault);
             analyzerHideFSB              = ParseNode("config/analyzerHideFSB", analyzerHideFSBDefault);
             sendUsageStats               = ParseNode("config/sendUsageStats", sendUsageStatsDefault);
+            mainScreenWidth              = ParseNode("config/mainScreenWidth", mainScreenWidthDefault);
+            mainScreenHeight             = ParseNode("config/mainScreenHeight", mainScreenHeightDefault);
 
             // Data Horizon
             maxBars                      = ParseNode("config/dataHorizon/maxBars", maxBarsDefault);
@@ -1521,7 +1551,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets params after loading config file.
+        /// Sets parameters after loading config file.
         /// </summary>
         static void ConfigAfterLoading()
         {

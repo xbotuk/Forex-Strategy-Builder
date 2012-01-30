@@ -50,7 +50,7 @@ namespace Forex_Strategy_Builder
         public Actions()
         {
             StartPosition     = FormStartPosition.CenterScreen;
-            Size              = new Size(790, 590);
+            Size              = GetFormSize();
             MinimumSize       = new Size(500, 375);
             Icon              = Data.Icon;
             Text              = Data.ProgramName;
@@ -112,6 +112,17 @@ namespace Forex_Strategy_Builder
             UpdateStatusLabel("Loading user interface...");
 
             return;
+        }
+
+        /// <summary>
+        /// Gets the starting size of the main screen.
+        /// </summary>
+        Size GetFormSize()
+        {
+            int width = Math.Min(Configs.MainScreenWidth, SystemInformation.MaxWindowTrackSize.Width);
+            int height = Math.Min(Configs.MainScreenHeight, SystemInformation.MaxWindowTrackSize.Height);
+            
+            return new Size(width,height);
         }
 
         /// <summary>
@@ -181,6 +192,10 @@ namespace Forex_Strategy_Builder
                     }
                     Configs.LastStrategy = Data.LoadedSavedStrategy;
                 }
+
+                WindowState = FormWindowState.Normal;
+                Configs.MainScreenWidth  = this.Width;
+                Configs.MainScreenHeight = this.Height;
 
                 Configs.SaveConfigs();
                 Instruments.SaveInstruments();
