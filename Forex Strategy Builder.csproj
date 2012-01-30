@@ -127,6 +127,9 @@
     <Compile Include="Dialogs\Generator\Generator - Top 10.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Dialogs\Optimizer\CoupleOfParams.cs" />
+    <Compile Include="Dialogs\Optimizer\OptimizerButtons.cs" />
+    <Compile Include="Dialogs\Optimizer\Parameter.cs" />
     <Compile Include="Indicators\N Bars Exit.cs" />
     <Compile Include="Tools\About Screen.cs">
       <SubType>Form</SubType>
@@ -339,7 +342,7 @@
     <Compile Include="Dialogs\Comparator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Optimizer.cs">
+    <Compile Include="Dialogs\Optimizer\Optimizer.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Backtester\Order.cs" />
@@ -590,4 +593,5 @@
     <None Include="Properties\app.manifest" />
     <Content Include="README.txt" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

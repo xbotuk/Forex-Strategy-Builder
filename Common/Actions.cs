@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Dialogs.Optimizer;
 
 namespace Forex_Strategy_Builder
 {

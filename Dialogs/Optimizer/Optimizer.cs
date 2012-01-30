@@ -11,128 +11,8 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace Forex_Strategy_Builder.Dialogs.Optimizer
 {
-    /// <summary>
-    /// Provide links to the Parameter's fields
-    /// </summary>
-    public class Parameter
-    {
-        int    slotNumber;
-        int    paramNumber;
-        double bestValue;
-
-        /// <summary>
-        /// The number of the indicator slot
-        /// </summary>
-        public int SlotNumber
-        {
-            get { return slotNumber; }
-            set { slotNumber = value; }
-        }
-
-        /// <summary>
-        /// The number of NumericParam
-        /// </summary>
-        public int NumParam
-        {
-            get { return paramNumber; }
-            set { paramNumber = value; }
-        }
-
-        /// <summary>
-        /// The IndicatorParameters
-        /// </summary>
-        public IndicatorParam IP
-        {
-            get { return Data.Strategy.Slot[slotNumber].IndParam; }
-        }
-
-        /// <summary>
-        /// The name of the parameter
-        /// </summary>
-        public string ParameterName
-        {
-            get { return Data.Strategy.Slot[slotNumber].IndParam.NumParam[paramNumber].Caption; }
-        }
-
-        /// <summary>
-        /// The current value of the parameter
-        /// </summary>
-        public double Value
-        {
-            get { return Data.Strategy.Slot[slotNumber].IndParam.NumParam[paramNumber].Value; }
-            set { Data.Strategy.Slot[slotNumber].IndParam.NumParam[paramNumber].Value = value; }
-        }
-
-        /// <summary>
-        /// The minimum value of the parameter
-        /// </summary>
-        public double Minimum
-        {
-            get { return Data.Strategy.Slot[slotNumber].IndParam.NumParam[paramNumber].Min; }
-        }
-
-        /// <summary>
-        /// The maximum value of the parameter
-        /// </summary>
-        public double Maximum
-        {
-            get { return Data.Strategy.Slot[slotNumber].IndParam.NumParam[paramNumber].Max; }
-        }
-
-        /// <summary>
-        /// The number of significant digits
-        /// </summary>
-        public int Point
-        {
-            get { return Data.Strategy.Slot[slotNumber].IndParam.NumParam[paramNumber].Point; }
-        }
-
-        /// <summary>
-        /// The best value of the parameter
-        /// </summary>
-        public double BestValue
-        {
-            get { return bestValue; }
-            set { bestValue = value; }
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Parameter(int slotNumber, int paramNumber)
-        {
-            this.slotNumber  = slotNumber;
-            this.paramNumber = paramNumber;
-            bestValue = Value;
-        }
-    }
-
-    /// <summary>
-    /// The numbers of the parameters into the couple
-    /// </summary>
-    public struct CoupleOfParams
-    {
-        int  param1;
-        int  param2;
-        bool isPassed;
-
-        public int Param1 { get { return param1; } set { param1 = value; } }
-        public int Param2 { get { return param2; } set { param2 = value; } }
-        public bool IsPassed { get { return isPassed; } set { isPassed = value; } }
-    }
-
-    /// <summary>
-    ///  Optimizer ToolStrip Buttons
-    /// </summary>
-    public enum OptimizerButtons
-    {
-        SelectAll, SelectNone, SelectRandom,
-        SetStep5, SetStep10, SetStep15,
-        ShowParams, ShowLimitations, ShowSettings,
-    }
-
     /// <summary>
     /// The Optimizer
     /// </summary>
@@ -462,7 +342,7 @@ namespace Forex_Strategy_Builder
             nudSmoothBalanceCheckPoints.Width    = nudWidth;
             nudSmoothBalanceCheckPoints.Location = new Point(nudSmoothBalancePercent.Left - nudWidth - border, chbSmoothBalanceLines.Top - 1);
 
-            ////// Panel Settings
+            // Panel Settings
             pnlSettings.Size     = pnlParamsBase.Size;
             pnlSettings.Location = pnlParamsBase.Location;
 
@@ -802,7 +682,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads and parses the generator's options.
+        /// Loads and parses the optimizer's options.
         /// </summary>
         void LoadOptions()
         {
