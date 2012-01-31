@@ -28,6 +28,8 @@ namespace Forex_Strategy_Builder
         NUD nudPermaSL, nudPermaTP, nudBreakEven;
         ComboBox cbxPermaSLType, cbxPermaTPType;
         NUD nudMaxOpenLots, nudEntryLots, nudAddingLots, nudReducingLots;
+        CheckBox cbxUseMartingale;
+        private NUD nudMartingaleMultiplier;
 
         Button btnDefault, btnAccept, btnCancel;
 
@@ -65,6 +67,8 @@ namespace Forex_Strategy_Builder
             lblEntryLots     = new Label();
             lblAddingLots    = new Label();
             lblReducingLots  = new Label();
+            cbxUseMartingale = new CheckBox();
+            nudMartingaleMultiplier = new NUD();
 
             chbPermaSL = new CheckBox();
             cbxPermaSLType = new ComboBox();
@@ -238,6 +242,29 @@ namespace Forex_Strategy_Builder
             nudReducingLots.TextAlign = HorizontalAlignment.Center;
             nudReducingLots.EndInit();
 
+            // CheckBox Use Martingale
+            cbxUseMartingale.Name      = "cbxUseMartingale";
+            cbxUseMartingale.Parent    = pnlAmounts;
+            cbxUseMartingale.ForeColor = colorText;
+            cbxUseMartingale.BackColor = Color.Transparent;
+            cbxUseMartingale.AutoCheck = true;
+            cbxUseMartingale.AutoSize  = true;
+            cbxUseMartingale.Checked   = false;
+            cbxUseMartingale.Text      = Language.T("Martingale money management multiplier");
+
+            // NumericUpDown Martingale Multiplier
+            nudMartingaleMultiplier.Parent        = pnlAmounts;
+            nudMartingaleMultiplier.Name          = "nudMartingaleMultiplier";
+            nudMartingaleMultiplier.BeginInit();
+            nudMartingaleMultiplier.Minimum       = 0.01M;
+            nudMartingaleMultiplier.Maximum       = 10;
+            nudMartingaleMultiplier.Increment     = 0.01m;
+            nudMartingaleMultiplier.DecimalPlaces = 2;
+            nudMartingaleMultiplier.Value         = 2;
+            nudMartingaleMultiplier.TextAlign     = HorizontalAlignment.Center;
+            nudMartingaleMultiplier.EndInit();
+
+
             // Label Reducing Lots %
             lblPercent3.Parent    = pnlAmounts;
             lblPercent3.ForeColor = colorText;
@@ -405,7 +432,7 @@ namespace Forex_Strategy_Builder
             if (rightPanelsWidth < requiredRightPanelWidth)
                 rightPanelsWidth = requiredRightPanelWidth;
 
-            ClientSize = new Size(space + leftPanelsWidth + space + rightPanelsWidth + space, 360);
+            ClientSize = new Size(space + leftPanelsWidth + space + rightPanelsWidth + space, 390);
         }
 
         protected override void OnResize(EventArgs e)
@@ -429,7 +456,7 @@ namespace Forex_Strategy_Builder
             pnlAveraging.Location = new Point(space, space);
 
             // pnlAmounts
-            pnlAmounts.Size = new Size(leftPanelsWidth, 222);
+            pnlAmounts.Size = new Size(leftPanelsWidth, 252);
             pnlAmounts.Location = new Point(space, pnlAveraging.Bottom + space);
 
             // pnlProtection
@@ -475,6 +502,10 @@ namespace Forex_Strategy_Builder
             nudReducingLots.Location = new Point(nudLeft, 193);
             lblPercent3.Width = lblPercentWidth;
             lblPercent3.Location = new Point(nudReducingLots.Left - lblPercentWidth, lblReducingLots.Top);
+
+            cbxUseMartingale.Location = new Point(btnHrzSpace + 2, 223);
+            nudMartingaleMultiplier.Size = new Size(nudWidth, buttonHeight);
+            nudMartingaleMultiplier.Location = new Point(nudLeft, 221);
 
             nudLeft = rightPanelsWidth - nudWidth - btnHrzSpace - border;
             comboBxLeft = nudLeft - space - rightComboBxWith;
@@ -541,6 +572,8 @@ namespace Forex_Strategy_Builder
             Data.Strategy.EntryLots       = 1;
             Data.Strategy.AddingLots      = 1;
             Data.Strategy.ReducingLots    = 1;
+            Data.Strategy.UseMartingale = false;
+            Data.Strategy.MartingaleMultiplier = 2;
 
             SetParams();
             CalculateStrategy();
@@ -556,6 +589,7 @@ namespace Forex_Strategy_Builder
             nudBreakEven.Enabled = chbBreakEven.Checked;
             cbxPermaSLType.Enabled = chbPermaSL.Checked;
             cbxPermaTPType.Enabled = chbPermaTP.Checked;
+            nudMartingaleMultiplier.Enabled = cbxUseMartingale.Checked;
 
             if (!rbVariableUnits.Checked)
                 nudEntryLots.Value = Math.Min(nudEntryLots.Value, nudMaxOpenLots.Value);
@@ -575,6 +609,8 @@ namespace Forex_Strategy_Builder
             Data.Strategy.PermanentSL      = (int)nudPermaSL.Value;
             Data.Strategy.PermanentTP      = (int)nudPermaTP.Value;
             Data.Strategy.BreakEven        = (int)nudBreakEven.Value;
+            Data.Strategy.UseMartingale    = cbxUseMartingale.Checked;
+            Data.Strategy.MartingaleMultiplier = (double) nudMartingaleMultiplier.Value;
 
             SetLabelPercent();
             CalculateStrategy();
@@ -603,6 +639,10 @@ namespace Forex_Strategy_Builder
 
             nudAddingLots.Value = (decimal)Data.Strategy.AddingLots;
             nudReducingLots.Value = (decimal)Data.Strategy.ReducingLots;
+
+            cbxUseMartingale.Checked = Data.Strategy.UseMartingale;
+            nudMartingaleMultiplier.Value = (decimal)Data.Strategy.MartingaleMultiplier;
+            nudMartingaleMultiplier.Enabled = cbxUseMartingale.Checked;
 
             chbPermaSL.Checked = Data.Strategy.UsePermanentSL;
             nudPermaSL.Value   = Data.Strategy.PermanentSL;
@@ -644,6 +684,8 @@ namespace Forex_Strategy_Builder
             nudPermaTP.ValueChanged               += new EventHandler(Param_Changed);
             nudBreakEven.ValueChanged             += new EventHandler(Param_Changed);
             chbBreakEven.CheckedChanged           += new EventHandler(Param_Changed);
+            cbxUseMartingale.CheckedChanged       += new EventHandler(Param_Changed);
+            nudMartingaleMultiplier.ValueChanged  += new EventHandler(Param_Changed);
         }
 
         void RemoveParamEventHandlers()
@@ -664,6 +706,8 @@ namespace Forex_Strategy_Builder
             nudPermaTP.ValueChanged               -= new EventHandler(Param_Changed);
             nudBreakEven.ValueChanged             -= new EventHandler(Param_Changed);
             chbBreakEven.CheckedChanged           -= new EventHandler(Param_Changed);
+            cbxUseMartingale.CheckedChanged       -= new EventHandler(Param_Changed);
+            nudMartingaleMultiplier.ValueChanged  -= new EventHandler(Param_Changed);
         }
 
         void SetLabelPercent()

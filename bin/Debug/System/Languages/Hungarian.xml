@@ -1275,6 +1275,10 @@
     <alt>Mindig változatlan számú egységeket nyit.</alt>
   </str>
   <str>
+    <main>Apply Martingale money management system with multiplier of</main>
+    <alt>Apply Martingale money management system with multiplier of</alt>
+  </str>
+  <str>
     <main>Opening of a new position</main>
     <alt>Új pozíció nyitása</alt>
   </str>
@@ -2893,6 +2897,10 @@
   <str>
     <main>In case of reduction - number of lots to close</main>
     <alt>Csökkenés esetén - egységek számának csökkentése</alt>
+  </str>
+  <str>
+    <main>Martingale money management multiplier</main>
+    <alt>Martingale money management multiplier</alt>
   </str>
   <str>
     <main>Permanent Protection</main>

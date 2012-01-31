@@ -113,6 +113,16 @@ namespace Forex_Strategy_Builder
             newElem.InnerText = strategy.ReducingLots.ToString();
             xmlDocStrategy.DocumentElement.AppendChild(newElem);
 
+            // Add Use Martingale MM
+            newElem = xmlDocStrategy.CreateElement("useMartingale");
+            newElem.InnerText = strategy.UseMartingale.ToString();
+            xmlDocStrategy.DocumentElement.AppendChild(newElem);
+
+            // Add the Martingale Multiplier
+            newElem = xmlDocStrategy.CreateElement("martingaleMultiplier");
+            newElem.InnerText = strategy.MartingaleMultiplier.ToString();
+            xmlDocStrategy.DocumentElement.AppendChild(newElem);
+
             // Description
             newElem = xmlDocStrategy.CreateElement("description");
             newElem.InnerText = strategy.Description;
@@ -291,6 +301,16 @@ namespace Forex_Strategy_Builder
             tempStrategy.EntryLots    = StringToDouble(xmlDocStrategy.GetElementsByTagName("entryLots")[0].InnerText);
             tempStrategy.AddingLots   = StringToDouble(xmlDocStrategy.GetElementsByTagName("addingLots")[0].InnerText);
             tempStrategy.ReducingLots = StringToDouble(xmlDocStrategy.GetElementsByTagName("reducingLots")[0].InnerText);
+            try
+            {
+                tempStrategy.UseMartingale = bool.Parse(xmlDocStrategy.GetElementsByTagName("useMartingale")[0].InnerText);
+                tempStrategy.MartingaleMultiplier = StringToDouble(xmlDocStrategy.GetElementsByTagName("martingaleMultiplier")[0].InnerText);
+            }
+            catch
+            {
+                tempStrategy.UseMartingale = false;
+                tempStrategy.MartingaleMultiplier = 2.0;
+            }
 
             // Description
             tempStrategy.Description = xmlDocStrategy.GetElementsByTagName("description")[0].InnerText;
