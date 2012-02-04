@@ -33,7 +33,6 @@ namespace Forex_Strategy_Builder
             string[] pathInputFiles = Directory.GetFiles(Data.SourceFolder, "*.cs");
             if (pathInputFiles.Length == 0)
             {
-                System.Windows.Forms.MessageBox.Show("No custom indicator files found out!", Language.T("Custom Indicators"));
                 Indicator_Store.ResetCustomIndicators(null);
                 Indicator_Store.CombineAllIndicators();
                 return;

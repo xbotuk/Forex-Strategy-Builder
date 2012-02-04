@@ -58,6 +58,10 @@ namespace Forex_Strategy_Builder
             {
                 xmlInstruments.Load(pathToInstrumentsFile);
             }
+            catch (FileNotFoundException)
+            {
+                xmlInstruments.LoadXml(Properties.Resources.instruments);
+            }
             catch (Exception e)
             {
                 System.Windows.Forms.MessageBox.Show(e.Message, "Load Instruments");

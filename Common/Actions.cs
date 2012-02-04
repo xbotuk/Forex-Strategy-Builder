@@ -106,7 +106,8 @@ namespace Forex_Strategy_Builder
             if (Configs.ShowStartingTip)
             {
                 Starting_Tips startingTips = new Starting_Tips();
-                startingTips.Show();
+                if (startingTips.TipsCount > 0)
+                    startingTips.Show();
             }
 
             UpdateStatusLabel("Loading user interface...");
@@ -744,8 +745,6 @@ namespace Forex_Strategy_Builder
                 else
                 {
                     Strategy.GenerateNew();
-                    string sMessageText = Language.T("The strategy could not be loaded correctly!");
-                    MessageBox.Show(sMessageText, Language.T("Strategy Loading"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Data.LoadedSavedStrategy = "";
                     this.Text = Data.ProgramName;
                 }
