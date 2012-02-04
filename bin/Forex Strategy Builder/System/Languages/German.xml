@@ -1274,6 +1274,10 @@
     <alt>Immer konstante Anzahl von Lots handeln.</alt>
   </str>
   <str>
+    <main>Apply Martingale money management system with multiplier of</main>
+    <alt>Apply Martingale money management system with multiplier of</alt>
+  </str>
+  <str>
     <main>Opening of a new position</main>
     <alt>Eröffnung einer neuen Position</alt>
   </str>
@@ -2892,6 +2896,10 @@
   <str>
     <main>In case of reduction - number of lots to close</main>
     <alt>Im Falle einer Reduktion - Anzahl von zu schließenden Lots</alt>
+  </str>
+  <str>
+    <main>Martingale money management multiplier</main>
+    <alt>Martingale money management multiplier</alt>
   </str>
   <str>
     <main>Permanent Protection</main>

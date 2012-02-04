@@ -1274,6 +1274,10 @@
     <alt>Всегда торгуйте постоянным количеством лотов.</alt>
   </str>
   <str>
+    <main>Apply Martingale money management system with multiplier of</main>
+    <alt>Приминять систему Мартингейла с множителем</alt>
+  </str>
+  <str>
     <main>Opening of a new position</main>
     <alt>Открыть новую позицию</alt>
   </str>
@@ -2892,6 +2896,10 @@
   <str>
     <main>In case of reduction - number of lots to close</main>
     <alt>В случае сокращения - количество лотов для закрытия</alt>
+  </str>
+  <str>
+    <main>Martingale money management multiplier</main>
+    <alt>Система Мартингейла - множитель </alt>
   </str>
   <str>
     <main>Permanent Protection</main>
