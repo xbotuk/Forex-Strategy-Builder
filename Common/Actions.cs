@@ -100,7 +100,7 @@ namespace Forex_Strategy_Builder
 
             Calculate(false);
 
-            Check_Update liveContent = new Check_Update(Data.SystemDir, miLiveContent, miForex);
+            Check_Update.CheckForUpdate(Data.SystemDir, miLiveContent, miForex);
 
             // Starting tips
             if (Configs.ShowStartingTip)
@@ -120,7 +120,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         Size GetFormSize()
         {
-            int width = Math.Min(Configs.MainScreenWidth, SystemInformation.MaxWindowTrackSize.Width);
+            int width  = Math.Min(Configs.MainScreenWidth,  SystemInformation.MaxWindowTrackSize.Width);
             int height = Math.Min(Configs.MainScreenHeight, SystemInformation.MaxWindowTrackSize.Height);
             
             return new Size(width,height);
@@ -1163,7 +1163,7 @@ namespace Forex_Strategy_Builder
 
             string sOrginalDescription = Data.Strategy.Description;
 
-            Forex_Strategy_Builder.Dialogs.Generator.Generator generator = new Forex_Strategy_Builder.Dialogs.Generator.Generator();
+            Dialogs.Generator.Generator generator = new Dialogs.Generator.Generator();
             generator.SetParrentForm = this;
             generator.ShowDialog();
 
@@ -1231,13 +1231,14 @@ namespace Forex_Strategy_Builder
                 Calculate(true);
             }
             else
-            {   // When we cancel the optimizing, we return the original strategy.
+            {   // If we cancel the optimizing, we return the original strategy.
                 UndoStrategy();
             }
 
             Data.IsStrategyReady = true;
             Data.OptimizerStarts++;
 
+            return;
         }
 
         /// <summary>

@@ -14,43 +14,43 @@ using System.Xml;
 
 namespace Forex_Strategy_Builder
 {
-    public class Check_Update
+    public static class Check_Update
     {
-        string updateFileURL = "http://forexsb.com/products/fsb-update.xml";
-        string pathUpdateFile;
-        Dictionary<string, string> dictBrokers;
-        ToolStripMenuItem miLiveContent;
-        ToolStripMenuItem miForex;
-        BackgroundWorker  bgWorker;
+        private const string UpdateFileUrl = "http://forexsb.com/products/fsb-update.xml";
+        static string _pathUpdateFile;
+        static Dictionary<string, string> _brokersDictionary;
+        static ToolStripMenuItem _miLiveContent;
+        static ToolStripMenuItem _miForex;
+        static BackgroundWorker  _bgWorker;
 
-        XmlDocument xmlUpdateFile;
+        static XmlDocument _xmlUpdateFile;
 
         /// <summary>
-        /// Public constructor.
+        /// Checks online for update.
         /// </summary>
-        public Check_Update(string pathSystem, ToolStripMenuItem miLiveContent, ToolStripMenuItem miForex)
+        public static void CheckForUpdate(string pathSystem, ToolStripMenuItem miLiveContent, ToolStripMenuItem miForex)
         {
-            this.miLiveContent = miLiveContent;
-            this.miForex       = miForex;
-            pathUpdateFile     = Path.Combine(pathSystem, "fsb-update.xml");
+            _miLiveContent  = miLiveContent;
+            _miForex        = miForex;
+            _pathUpdateFile = Path.Combine(pathSystem, "fsb-update.xml");
 
-            dictBrokers = new Dictionary<string, string>();
-            xmlUpdateFile = new XmlDocument();
+            _brokersDictionary = new Dictionary<string, string>();
+            _xmlUpdateFile     = new XmlDocument();
 
             LoadUpdateFile();
             ReadBrokers();
             SetBrokers();
 
             // BackGroundWorker
-            bgWorker = new BackgroundWorker();
-            bgWorker.DoWork += new DoWorkEventHandler(DoWork);
-            bgWorker.RunWorkerAsync();
+            _bgWorker = new BackgroundWorker();
+            _bgWorker.DoWork += new DoWorkEventHandler(DoWork);
+            _bgWorker.RunWorkerAsync();
         }
 
         /// <summary>
         /// Does the job
         /// </summary>
-        void DoWork(object sender, DoWorkEventArgs e)
+        static void DoWork(object sender, DoWorkEventArgs e)
         {
             UpdateTheUpdateFile();
             CheckProgramsVersionNumber();
@@ -59,13 +59,13 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Update the config file if it is necessary
         /// </summary>
-        void UpdateTheUpdateFile()
+        static void UpdateTheUpdateFile()
         {
-            Uri url = new Uri(updateFileURL);
+            Uri url = new Uri(UpdateFileUrl);
             WebClient webClient = new WebClient();
             try
             {
-                xmlUpdateFile.LoadXml(webClient.DownloadString(url));
+                _xmlUpdateFile.LoadXml(webClient.DownloadString(url));
                 SaveUpdateFile();
             }
             catch { }
@@ -74,18 +74,18 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Load config file
         /// </summary>
-        void LoadUpdateFile()
+        static void LoadUpdateFile()
         {
             try
             {
-                if (!File.Exists(pathUpdateFile))
+                if (!File.Exists(_pathUpdateFile))
                 {
-                    xmlUpdateFile = new XmlDocument();
-                    xmlUpdateFile.InnerXml = Properties.Resources.fsb_update;
+                    _xmlUpdateFile = new XmlDocument();
+                    _xmlUpdateFile.InnerXml = Properties.Resources.fsb_update;
                 }
                 else
                 {
-                    xmlUpdateFile.Load(pathUpdateFile);
+                    _xmlUpdateFile.Load(_pathUpdateFile);
                 }
             }
             catch (Exception e)
@@ -99,11 +99,11 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Save config file
         /// </summary>
-        void SaveUpdateFile()
+        static void SaveUpdateFile()
         {
             try
             {
-                xmlUpdateFile.Save(pathUpdateFile);
+                _xmlUpdateFile.Save(_pathUpdateFile);
             }
             catch (Exception e)
             {
@@ -116,19 +116,19 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Checks the program version
         /// </summary>
-        void CheckProgramsVersionNumber()
+        static void CheckProgramsVersionNumber()
         {
             string text = "";
             try
             {
-                int iProgramVersion = int.Parse(xmlUpdateFile.SelectSingleNode("update/versions/release").InnerText);
+                int iProgramVersion = int.Parse(_xmlUpdateFile.SelectSingleNode("update/versions/release").InnerText);
                 if (Configs.CheckForUpdates && iProgramVersion > Data.ProgramID)
                 {   // A newer release version was published
                     text = Language.T("New Version");
                 }
                 else
                 {
-                    int iBetaVersion = int.Parse(xmlUpdateFile.SelectSingleNode("update/versions/beta").InnerText);
+                    int iBetaVersion = int.Parse(_xmlUpdateFile.SelectSingleNode("update/versions/beta").InnerText);
                     if (Configs.CheckForNewBeta && iBetaVersion > Data.ProgramID)
                     {   // A newer beta version was published
                         text = Language.T("New Beta");
@@ -137,9 +137,9 @@ namespace Forex_Strategy_Builder
 
                 if (text != "")
                 {
-                    miLiveContent.Text    = text;
-                    miLiveContent.Visible = true;
-                    miLiveContent.Click  += new EventHandler(MenuLiveContentOnClick);
+                    _miLiveContent.Text    = text;
+                    _miLiveContent.Visible = true;
+                    _miLiveContent.Click  += new EventHandler(MenuLiveContentOnClick);
                 }
             }
             catch (Exception e)
@@ -152,7 +152,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Opens the Live Content browser
         /// </summary>
-        protected void MenuLiveContentOnClick(object sender, EventArgs e)
+        static void MenuLiveContentOnClick(object sender, EventArgs e)
         {
             try
             {
@@ -165,27 +165,27 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Hides the menu news
         /// </summary>
-        void HideMenuItemLiveContent()
+        static void HideMenuItemLiveContent()
         {
-            miLiveContent.Visible = false;
-            miLiveContent.Click  -= new EventHandler(MenuLiveContentOnClick);
+            _miLiveContent.Visible = false;
+            _miLiveContent.Click  -= new EventHandler(MenuLiveContentOnClick);
         }
 
         /// <summary>
         /// Reads the brokers
         /// </summary>
-        void ReadBrokers()
+        static void ReadBrokers()
         {
             try
             {
-                XmlNodeList xmlListBrokers = xmlUpdateFile.GetElementsByTagName("broker");
+                XmlNodeList xmlListBrokers = _xmlUpdateFile.GetElementsByTagName("broker");
 
                 foreach (XmlNode nodeBroker in xmlListBrokers)
                 {
                     string title = nodeBroker.SelectSingleNode("title").InnerText;
-                    string link = nodeBroker.SelectSingleNode("link").InnerText;
+                    string link  = nodeBroker.SelectSingleNode("link").InnerText;
 
-                    dictBrokers.Add(title, link);
+                    _brokersDictionary.Add(title, link);
                 }
             }
             catch (Exception e)
@@ -199,9 +199,9 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Sets the brokers in the menu
         /// </summary>
-        void SetBrokers()
+        static void SetBrokers()
         {
-            foreach (KeyValuePair<string, string> kvpBroker in dictBrokers)
+            foreach (KeyValuePair<string, string> kvpBroker in _brokersDictionary)
             {
                 ToolStripMenuItem miBroker = new ToolStripMenuItem();
                 miBroker.Text   = kvpBroker.Key + "...";
@@ -209,7 +209,7 @@ namespace Forex_Strategy_Builder
                 miBroker.Tag    = kvpBroker.Value;
                 miBroker.Click += new EventHandler(MenuForexContentsOnClick);
 
-                miForex.DropDownItems.Add(miBroker);
+                _miForex.DropDownItems.Add(miBroker);
             }
 
             return;
@@ -218,7 +218,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Opens the forex news
         /// </summary>
-        void MenuForexContentsOnClick(object sender, EventArgs e)
+        static void MenuForexContentsOnClick(object sender, EventArgs e)
         {
             ToolStripMenuItem mi = (ToolStripMenuItem)sender;
 
