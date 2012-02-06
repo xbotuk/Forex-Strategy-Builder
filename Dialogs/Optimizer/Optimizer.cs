@@ -1315,7 +1315,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                     aOptimizerButtons[i].Enabled = true;
 
             for (int i = 0; i < parameters; i++)
-                alblParameterValue[i].Text = Math.Round(aParameter[i].BestValue, aParameter[i].Point).ToString();
+                alblParameterValue[i].Text = GetParameterText(i);
 
             foreach (Control control in pnlParams.Controls)
                 control.Enabled = true;
@@ -1792,11 +1792,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             }
             else
             {
-                string newText = Math.Round(aParameter[param].BestValue, aParameter[param].Point).ToString();
-                if (alblParameterValue[param].Text == newText)
-                    return;
 
-                alblParameterValue[param].Text = newText;
+                alblParameterValue[param].Text = GetParameterText(param);
                 alblParameterValue[param].Font = fontParamValueBold;
                 if (aParameter[param].OldBestValue < aParameter[param].BestValue)
                     alblParameterValue[param].ForeColor = LayoutColors.ColorTradeLong;
@@ -1809,6 +1806,25 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 timer.Tick    += new EventHandler(Timer_Tick);
                 timer.Start();
             }
+        }
+
+        /// <summary>
+        /// Generates the parameter text.
+        /// </summary>
+        string GetParameterText(int param)
+        {
+            string stringFormat = "{0:F" + aParameter[param].Point.ToString() + "}";
+            string newText = string.Format(stringFormat, aParameter[param].BestValue); //Math.Round(aParameter[param].BestValue, aParameter[param].Point).ToString();
+
+            if (alblParameterValue[param].Text == newText)
+                return newText;
+
+            if (Math.Abs(aParameter[param].BestValue - (double)anudParameterMin[param].Value) < 0.000001)
+                newText = "[" + newText;
+            if (Math.Abs(aParameter[param].BestValue - (double)anudParameterMax[param].Value) < 0.000001)
+                newText = newText + "]";
+
+            return newText;
         }
 
         /// <summary>
