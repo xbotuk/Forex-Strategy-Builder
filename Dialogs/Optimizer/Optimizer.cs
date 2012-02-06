@@ -1798,6 +1798,10 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
                 alblParameterValue[param].Text = newText;
                 alblParameterValue[param].Font = fontParamValueBold;
+                if (aParameter[param].OldBestValue < aParameter[param].BestValue)
+                    alblParameterValue[param].ForeColor = LayoutColors.ColorTradeLong;
+                if (aParameter[param].OldBestValue > aParameter[param].BestValue)
+                    alblParameterValue[param].ForeColor = LayoutColors.ColorTradeShort;
 
                 Timer timer = new Timer();
                 timer.Interval = 1500;
@@ -1815,6 +1819,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             Timer timer = (Timer)sender;
             int parameter = (int)timer.Tag;
 
+            alblParameterValue[parameter].ForeColor = LayoutColors.ColorControlText;
             alblParameterValue[parameter].Font = fontParamValueRegular;
 
             timer.Stop();
