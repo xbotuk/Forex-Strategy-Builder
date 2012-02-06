@@ -129,6 +129,7 @@
     </Compile>
     <Compile Include="Dialogs\Optimizer\CoupleOfParams.cs" />
     <Compile Include="Dialogs\Optimizer\OptimizerButtons.cs" />
+    <Compile Include="Dialogs\Optimizer\OptimizerParameterType.cs" />
     <Compile Include="Dialogs\Optimizer\Parameter.cs" />
     <Compile Include="Indicators\N Bars Exit.cs" />
     <Compile Include="Tools\About Screen.cs">
