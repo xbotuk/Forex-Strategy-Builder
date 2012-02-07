@@ -474,6 +474,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lots * (price - priceOld) * InstrProperties.LotSize / AccountExchangeRate(price) - position.MoneySlippage;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance + position.MoneyFloatingPL;
+
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -502,6 +504,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lots * (priceOld - price) * InstrProperties.LotSize / AccountExchangeRate(price) - position.MoneySlippage;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance + position.MoneyFloatingPL;
+
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -532,6 +536,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lotsOld * (price - priceOld) * InstrProperties.LotSize / AccountExchangeRate(price) - lotsOld * InstrProperties.Slippage * pipsToMoneyRate;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance + position.MoneyFloatingPL;
+
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -562,6 +568,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lotsOld * (priceOld - price) * InstrProperties.LotSize / AccountExchangeRate(price) - lotsOld * InstrProperties.Slippage * pipsToMoneyRate;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance + position.MoneyFloatingPL;
+
+                consecutiveLosses = 0;
                 return;
             }
 

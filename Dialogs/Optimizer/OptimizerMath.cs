@@ -130,17 +130,17 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             int par = 0;
             if (Data.Strategy.UsePermanentSL)
             {
-                aParameter[par] = new Parameter(OptimizerParameterType.PermanentSL, 0, 0);
+                aParameter[par] = new Parameter(OptimizerParameterType.PermanentSL, -1, 0);
                 par++;
             }
             if (Data.Strategy.UsePermanentTP)
             {
-                aParameter[par] = new Parameter(OptimizerParameterType.PermanentTP, 0, 0);
+                aParameter[par] = new Parameter(OptimizerParameterType.PermanentTP, -1, 0);
                 par++;
             }
             if (Data.Strategy.UseBreakEven)
             {
-                aParameter[par] = new Parameter(OptimizerParameterType.BreakEven, 0, 0);
+                aParameter[par] = new Parameter(OptimizerParameterType.BreakEven, -1, 0);
             }
         }
 
@@ -229,7 +229,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             int vertPosition = vertMargin - scrollBar.Value;
             int totalHeight  = vertMargin;
 
-            int slotNumber = -1;
+            int slotNumber = int.MinValue;
             for (int param = 0; param < parameters; param++)
             {
                 if (aParameter[param].SlotNumber != slotNumber)

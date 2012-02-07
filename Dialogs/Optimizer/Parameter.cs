@@ -1,3 +1,9 @@
+// Parameter class
+// Part of Forex Strategy Builder
+// Website http://forexsb.com/
+// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// This code or any part of it cannot be used in other applications without a permission.
+
 using System;
 
 namespace Forex_Strategy_Builder.Dialogs.Optimizer
@@ -7,11 +13,23 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
     /// </summary>
     public class Parameter
     {
-        private readonly OptimizerParameterType _type;
-        private readonly int _slotNumber;
         private readonly int _paramNumber;
+        private readonly int _slotNumber;
+        private readonly OptimizerParameterType _type;
         private double _bestValue;
         private double _oldBestValue;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Parameter(OptimizerParameterType type, int slotNumber, int paramNumber)
+        {
+            _type = type;
+            _slotNumber = slotNumber;
+            _paramNumber = paramNumber;
+            _bestValue = Value;
+            _oldBestValue = Value;
+        }
 
         /// <summary>
         /// Type of the parameter
@@ -42,7 +60,12 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         /// </summary>
         public IndicatorParam IndParam
         {
-            get { return Data.Strategy.Slot[_slotNumber].IndParam; }
+            get
+            {
+                return Type == OptimizerParameterType.Indicator
+                           ? Data.Strategy.Slot[_slotNumber].IndParam
+                           : null;
+            }
         }
 
 
@@ -53,16 +76,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             get
             {
-                string name;
-                if (Type == OptimizerParameterType.Indicator)
-                {
-                    name = Data.Strategy.Slot[_slotNumber].IndicatorName;
-                }
-                else
-                {
-                    name = Language.T("Permanent Protection");
-                }
-                return name;
+                return Type == OptimizerParameterType.Indicator
+                           ? Data.Strategy.Slot[_slotNumber].IndicatorName
+                           : Language.T("Permanent Protection");
             }
         }
 
@@ -151,17 +167,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             get
             {
-                double min;
-                if (Type == OptimizerParameterType.Indicator)
-                {
-                    min = Data.Strategy.Slot[_slotNumber].IndParam.NumParam[_paramNumber].Min;
-                }
-                else
-                {
-                    int fiveDigits = Data.InstrProperties.IsFiveDigits ? 10 : 1;
-                    min = 5 * fiveDigits;
-                }
-                return min;
+                return Type == OptimizerParameterType.Indicator
+                           ? Data.Strategy.Slot[_slotNumber].IndParam.NumParam[_paramNumber].Min
+                           : 5;
             }
         }
 
@@ -172,17 +180,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             get
             {
-                double max;
-                if (Type == OptimizerParameterType.Indicator)
-                {
-                    max = Data.Strategy.Slot[_slotNumber].IndParam.NumParam[_paramNumber].Max;
-                }
-                else
-                {
-                    int fiveDigits = Data.InstrProperties.IsFiveDigits ? 10 : 1;
-                    max = 500 * fiveDigits;
-                }
-                return max;
+                return Type == OptimizerParameterType.Indicator
+                           ? Data.Strategy.Slot[_slotNumber].IndParam.NumParam[_paramNumber].Max
+                           : 5000;
             }
         }
 
@@ -193,16 +193,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             get
             {
-                int point;
-                if (Type == OptimizerParameterType.Indicator)
-                {
-                    point = Data.Strategy.Slot[_slotNumber].IndParam.NumParam[_paramNumber].Point;
-                }
-                else
-                {
-                    point = 0;
-                }
-                return point;
+                return Type == OptimizerParameterType.Indicator
+                           ? Data.Strategy.Slot[_slotNumber].IndParam.NumParam[_paramNumber].Point
+                           : 0;
             }
         }
 
@@ -213,17 +206,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             get
             {
-                double step;
-                if (Type == OptimizerParameterType.Indicator)
-                {
-                    step = Math.Round(Math.Pow(10, -Point), Point);
-                }
-                else
-                {
-                    int fiveDigits = Data.InstrProperties.IsFiveDigits ? 10 : 1;
-                    step = 1 * fiveDigits;
-                }
-                return step;
+                return Type == OptimizerParameterType.Indicator
+                           ? Math.Round(Math.Pow(10, -Point), Point)
+                           : (Data.InstrProperties.IsFiveDigits ? 10 : 1);
             }
         }
 
@@ -246,18 +231,6 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         public double OldBestValue
         {
             get { return _oldBestValue; }
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Parameter(OptimizerParameterType type, int slotNumber, int paramNumber)
-        {
-            _type = type;
-            _slotNumber  = slotNumber;
-            _paramNumber = paramNumber;
-            _bestValue = Value;
-            _oldBestValue = Value;
         }
     }
 }

@@ -16,8 +16,8 @@
     <commission>0</commission>
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
-    <rateToUSD>1</rateToUSD>
-    <rateToEUR>0</rateToEUR>
+    <rateToUSD>1.0000</rateToUSD>
+    <rateToEUR>0.0000</rateToEUR>
     <baseFileName>EURUSD</baseFileName>
   </instrument>
   <instrument>
@@ -36,8 +36,8 @@
     <commission>0</commission>
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
-    <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.42365002632141</rateToEUR>
+    <rateToUSD>1.0000</rateToUSD>
+    <rateToEUR>1.4237</rateToEUR>
     <baseFileName>GBPUSD</baseFileName>
   </instrument>
   <instrument>
@@ -56,8 +56,8 @@
     <commission>0</commission>
     <slippage>0</slippage>
     <priceIn>CHF</priceIn>
-    <rateToUSD>0</rateToUSD>
-    <rateToEUR>1.33689999580383</rateToEUR>
+    <rateToUSD>0.0000</rateToUSD>
+    <rateToEUR>1.3369</rateToEUR>
     <baseFileName>USDCHF</baseFileName>
   </instrument>
   <instrument>
@@ -76,8 +76,8 @@
     <commission>0</commission>
     <slippage>0</slippage>
     <priceIn>JPY</priceIn>
-    <rateToUSD>0</rateToUSD>
-    <rateToEUR>130</rateToEUR>
+    <rateToUSD>0.0000</rateToUSD>
+    <rateToEUR>130.0000</rateToEUR>
     <baseFileName>USDJPY</baseFileName>
   </instrument>
   <instrument>
@@ -96,8 +96,8 @@
     <commission>0.25</commission>
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
-    <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.29999995231628</rateToEUR>
+    <rateToUSD>1.0000</rateToUSD>
+    <rateToEUR>1.3000</rateToEUR>
     <baseFileName>#IBM</baseFileName>
   </instrument>
   <instrument>
@@ -116,8 +116,8 @@
     <commission>0.25</commission>
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
-    <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.29999995231628</rateToEUR>
+    <rateToUSD>1.0000</rateToUSD>
+    <rateToEUR>1.3000</rateToEUR>
     <baseFileName>$INDU</baseFileName>
   </instrument>
 </fsb>
