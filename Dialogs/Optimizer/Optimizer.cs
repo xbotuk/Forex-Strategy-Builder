@@ -85,7 +85,6 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         CheckBox      chbOutOfSample;
         NumericUpDown nudOutOfSample;
 
-        Font font;
         Font fontIndicator;
         Font fontParamValueBold;
         Font fontParamValueRegular;
@@ -119,18 +118,15 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
             lblNoParams = new Label();
 
-            font          = this.Font;
             fontIndicator = new Font(Font.FontFamily, 11);
             colorText     = LayoutColors.ColorControlText;
 
-            MaximizeBox     = false;
-            Icon            = Data.Icon;
-            BackColor       = LayoutColors.ColorFormBack;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            AcceptButton    = btnAccept;
-            CancelButton    = btnCancel;
-            Text            = Language.T("Optimizer");
-            FormClosing    += new FormClosingEventHandler(Optimizer_FormClosing);
+            Icon         = Data.Icon;
+            BackColor    = LayoutColors.ColorFormBack;
+            AcceptButton = btnAccept;
+            CancelButton = btnCancel;
+            Text         = Language.T("Optimizer");
+            FormClosing += new FormClosingEventHandler(Optimizer_FormClosing);
 
             // pnlParamsBase
             pnlParamsBase.Parent    = this;
@@ -239,8 +235,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             SetIndicatorParams();
             SelectRandomParameters();
 
-            Width  = 463;
+            Width  = 475;
             Height = 570;
+            MinimumSize = new Size(475, 570);
 
             return;
         }
@@ -797,7 +794,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Sets the parameters
+        /// Sets the parameters.
         /// </summary>
         void SetIndicatorParams()
         {
@@ -811,7 +808,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
             for (int prot = 0; prot < protections; prot++)
             {
-                SetParametersValues(prot, 0, 0);
+                SetParametersValues(prot);
             }
 
             int param = protections;
@@ -819,12 +816,10 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             {
                 for (int numParam = 0; numParam < 6; numParam++)
                 {
-                    if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled)
-                    {
-                        aParameter[param] = new Parameter(OptimizerParameterType.Indicator, slot, numParam);
-                        SetParametersValues(param, slot, numParam);
-                        param++;
-                    }
+                    if (!Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled) continue;
+                    aParameter[param] = new Parameter(OptimizerParameterType.Indicator, slot, numParam);
+                    SetParametersValues(param);
+                    param++;
                 }
             }
 
@@ -845,6 +840,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             return;
         }
 
+        /// <summary>
+        /// Creates control arrays.
+        /// </summary>
         private void CreateControls()
         {
             aParameter         = new Parameter[parameters];
@@ -866,6 +864,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             }
         }
 
+        /// <summary>
+        /// Initializes protection parameter.
+        /// </summary>
         private void CreateProtectionParameters()
         {
             int par = 0;
@@ -885,7 +886,10 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             }
         }
 
-        private void SetParametersValues(int param, int slot, int numParam)
+        /// <summary>
+        /// Sets values of optimizer controls.
+        /// </summary>
+        private void SetParametersValues(int param)
         {
             alblIndicatorName[param].Parent    = pnlParams;
             alblIndicatorName[param].Text      = aParameter[param].GroupName;
@@ -1044,7 +1048,6 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
                 achbxParameterName[param].Checked = false;
 
-                // Auto checked
                 if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Caption == "Level")
                 {
                     if (Data.Strategy.Slot[slot].IndParam.ListParam[0].Text.Contains("Level"))
@@ -1142,8 +1145,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Invalidate the Panel Params
-        /// <summary>
+        /// Invalidate the Panel Parameters
+        /// </summary>
         void ScrollBar_ValueChanged(object sender, EventArgs e)
         {
             pnlParams.Location = new Point(0, -scrollBar.Value);
@@ -1151,19 +1154,19 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
         /// <summary>
         /// Shift the pnlParams viewpoint
-        /// <summary>
+        /// </summary>
         void ScrollBar_MouseWheel(object sender, MouseEventArgs e)
         {
             if (scrollBar.Visible)
             {
-                int iNewValue = scrollBar.Value - e.Delta / 120;
+                int newValue = scrollBar.Value - e.Delta / 120;
 
-                if (iNewValue < scrollBar.Minimum)
+                if (newValue < scrollBar.Minimum)
                     scrollBar.Value = scrollBar.Minimum;
-                else if (iNewValue > scrollBar.Maximum)
+                else if (newValue > scrollBar.Maximum)
                     scrollBar.Value = scrollBar.Maximum;
                 else
-                    scrollBar.Value = iNewValue;
+                    scrollBar.Value = newValue;
             }
         }
 
@@ -1203,14 +1206,14 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
             SetNecessaryCycles();
 
-            Cursor                 = Cursors.WaitCursor;
-            progressBar.Value      = 1;
-            progressPercent        = 0;
-            computedCycles         = 0;
-            isOptimizing           = true;
-            btnCancel.Enabled      = false;
-            btnAccept.Enabled      = false;
-            btnOptimize.Text       = Language.T("Stop");
+            Cursor            = Cursors.WaitCursor;
+            progressBar.Value = 1;
+            progressPercent   = 0;
+            computedCycles    = 0;
+            isOptimizing      = true;
+            btnCancel.Enabled = false;
+            btnAccept.Enabled = false;
+            btnOptimize.Text  = Language.T("Stop");
 
             for (int i = 0; i <= (int)OptimizerButtons.SetStep15; i++)
                 aOptimizerButtons[i].Enabled = false;
@@ -1310,7 +1313,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             btnOptimize.Text       = Language.T("Optimize");
             progressBar.Value      = 1;
 
-            if(pnlParams.Visible == true)
+            if (pnlParams.Visible)
                 for (int i = 0; i <= (int)OptimizerButtons.SetStep15; i++)
                     aOptimizerButtons[i].Enabled = true;
 
@@ -1457,7 +1460,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
                 int  param1 = aCP[round].Param1;
                 int  param2 = aCP[round].Param2;
-                bool isOneIndicator = (aParameter[param1].IndParam.IndicatorName == aParameter[param2].IndParam.IndicatorName);
+                bool isOneIndicator = (aParameter[param1].Type == OptimizerParameterType.Indicator &&
+                                       aParameter[param2].Type == OptimizerParameterType.Indicator &&
+                                       aParameter[param1].IndParam.IndicatorName == aParameter[param2].IndParam.IndicatorName);
 
                 double min1  = (double)anudParameterMin[param1].Value;
                 double max1  = (double)anudParameterMax[param1].Value;
@@ -1492,7 +1497,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                         else
                         {
                             aParameter[param2].Value = value2;
-                            if (aParameter[param1].Type == OptimizerParameterType.Indicator)
+                            if (aParameter[param2].Type == OptimizerParameterType.Indicator)
                                 CalculateIndicator(aParameter[param2].SlotNumber);
                         }
 
@@ -1717,6 +1722,13 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 "Win / Loss Ratio"        + "," +
                 "Equity Percent Drawdown" + ",");
 
+            if (Data.Strategy.UsePermanentSL)
+                sbReport.Append("Permanent SL" + ",");
+            if (Data.Strategy.UsePermanentTP)
+                sbReport.Append("Permanent TP" + ",");
+            if (Data.Strategy.UseBreakEven)
+                sbReport.Append("Break Even" + ",");
+
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)
                     if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled)
@@ -1743,6 +1755,13 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 Backtester.TotalChargedMoneyRollOver.ToString("F2")  + "," +
                 Backtester.WinLossRatio.ToString("F2")               + "," +
                 Backtester.MoneyEquityPercentDrawdown.ToString("F2") + ",");
+
+            if (Data.Strategy.UsePermanentSL)
+                sbReport.Append(Data.Strategy.PermanentSL.ToString() + ",");
+            if (Data.Strategy.UsePermanentTP)
+                sbReport.Append(Data.Strategy.PermanentTP.ToString() + ",");
+            if (Data.Strategy.UseBreakEven)
+                sbReport.Append(Data.Strategy.BreakEven.ToString() + ",");
 
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)
@@ -1814,7 +1833,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         string GetParameterText(int param)
         {
             string stringFormat = "{0:F" + aParameter[param].Point.ToString() + "}";
-            string newText = string.Format(stringFormat, aParameter[param].BestValue); //Math.Round(aParameter[param].BestValue, aParameter[param].Point).ToString();
+            string newText = string.Format(stringFormat, aParameter[param].BestValue);
 
             if (alblParameterValue[param].Text == newText)
                 return newText;
