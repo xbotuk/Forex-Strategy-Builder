@@ -29,7 +29,7 @@ Type: files; Name: "{app}\System\lcconfig.xml";
 Type: files; Name: "{app}\System\fsb-update.xml";
 
 [Files]
-Source: Forex Strategy Builder.exe; DestDir: "{app}";                      Components: main;
+Source: Forex Strategy Builder.exe; DestDir: "{app}";                      Components: main;    Flags: replacesameversion;
 Source: FSB Starter.exe;            DestDir: "{app}";                      Components: main;
 Source: SplashConfig.cfg;           DestDir: "{app}";                      Components: main;
 Source: ConnectWait.ico;            DestDir: "{app}";                      Components: main;
