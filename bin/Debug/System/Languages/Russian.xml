@@ -306,6 +306,10 @@
     <alt>Гамма цветов</alt>
   </str>
   <str>
+    <main>Show Status Bar</main>
+    <alt>Статусная строка</alt>
+  </str>
+  <str>
     <main>Account</main>
     <alt>Аккаунт</alt>
   </str>

@@ -89,6 +89,7 @@
   <str><main>Full Screen</main><alt>Пълен екран</alt></str>
   <str><main>Gradient View</main><alt>Изглед с преливка</alt></str>
   <str><main>Color Scheme</main><alt>Цветова схема</alt></str>
+  <str><main>Show Status Bar</main><alt>Статус бар</alt></str>
 
   <str><main>Account</main><alt>Акаунт</alt></str>
   <str><main>Information in Currency</main><alt>Информация в пари</alt></str>

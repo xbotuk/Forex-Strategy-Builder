@@ -306,6 +306,10 @@
     <alt>Farbschema</alt>
   </str>
   <str>
+    <main>Show Status Bar</main>
+    <alt>Show Status Bar</alt>
+  </str>
+  <str>
     <main>Account</main>
     <alt>Konto</alt>
   </str>

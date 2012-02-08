@@ -76,6 +76,7 @@ namespace Forex_Strategy_Builder
         static bool   sendUsageStatsDefault         = true;
         static int    mainScreenWidthDefault        = 790;
         static int    mainScreenHeightDefault       = 590;
+        static bool   showStatusBarDefault          = true;
 
         // Indicator Chart
         static int  indicatorChartZoomDefault                     = 8;
@@ -962,6 +963,18 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        static bool showStatusBar = showStatusBarDefault;
+        public static bool ShowStatusBar
+        {
+            get { return showStatusBar; }
+            set
+            {
+                showStatusBar = value;
+                if (isConfigLoaded)
+                    xmlConfig.SelectNodes("config/showStatusBar").Item(0).InnerText = value.ToString();
+            }
+        }
+
 
 // -------------------------------------------------------------
 
@@ -1402,6 +1415,7 @@ namespace Forex_Strategy_Builder
             AnalyzerHideFSB            = analyzerHideFSBDefault;
             MainScreenWidth            = mainScreenWidthDefault;
             MainScreenHeight           = mainScreenHeightDefault;
+            ShowStatusBar              = showStatusBarDefault;
 
             // Indicator Chart
             IndicatorChartZoom                   = indicatorChartZoomDefault;
@@ -1495,6 +1509,7 @@ namespace Forex_Strategy_Builder
             sendUsageStats               = ParseNode("config/sendUsageStats", sendUsageStatsDefault);
             mainScreenWidth              = ParseNode("config/mainScreenWidth", mainScreenWidthDefault);
             mainScreenHeight             = ParseNode("config/mainScreenHeight", mainScreenHeightDefault);
+            showStatusBar                = ParseNode("config/showStatusBar", showStatusBarDefault);
 
             // Data Horizon
             maxBars                      = ParseNode("config/dataHorizon/maxBars", maxBarsDefault);
