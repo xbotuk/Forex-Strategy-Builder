@@ -162,7 +162,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             achbxParameterName[param].Text      = aParameter[param].ParameterName;
             achbxParameterName[param].CheckedChanged += new EventHandler(Optimizer_CheckedChanged);
             achbxParameterName[param].Parent    = pnlParams;
-            achbxParameterName[param].Width     = 140;
+            achbxParameterName[param].Width     = 155;
             achbxParameterName[param].TextAlign = ContentAlignment.MiddleLeft;
 
             int    point = aParameter[param].Point;

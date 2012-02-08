@@ -412,6 +412,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             int i = 0;
 
             try {
+                if (int.Parse(options[i++]) < OptionsVersion) return;
                 chbOutOfSample.Checked            = bool.Parse(options[i++]);
                 nudOutOfSample.Value              = int.Parse(options[i++]);
                 chbAmbiguousBars.Checked          = bool.Parse(options[i++]);
@@ -433,6 +434,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
                 chbOptimizerWritesReport.Checked  = bool.Parse(options[i++]);
                 chbHideFSB.Checked                = bool.Parse(options[i++]);
+                formHeight                        = int.Parse(options[i++]);
             }
             catch
             {
@@ -447,6 +449,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         void SaveOptions()
         {
             string options =
+            OptionsVersion.ToString()                        + ";" +
             chbOutOfSample.Checked.ToString()                + ";" +
             nudOutOfSample.Value.ToString()                  + ";" +
             chbAmbiguousBars.Checked.ToString()              + ";" +
@@ -467,7 +470,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             nudSmoothBalancePercent.Value.ToString()         + ";" +
             nudSmoothBalanceCheckPoints.Value.ToString()     + ";" +
             chbOptimizerWritesReport.Checked.ToString()      + ";" +
-            chbHideFSB.Checked.ToString();
+            chbHideFSB.Checked.ToString()                    + ";" +
+            Height.ToString();
 
             Configs.OptimizerOptions = options;
 
@@ -489,11 +493,11 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             StringFormat stringFormat = new StringFormat();
             stringFormat.Alignment = StringAlignment.Center;
 
-            g.DrawString(Language.T("Parameter"), Font, brush, 22,  3);
-            g.DrawString(Language.T("Value"),     Font, brush, 175, 3, stringFormat);
-            g.DrawString(Language.T("Minimum"),   Font, brush, 215, 3);
-            g.DrawString(Language.T("Maximum"),   Font, brush, 288, 3);
-            g.DrawString(Language.T("Step"),      Font, brush, 375, 3);
+            g.DrawString(Language.T("Parameter"), Font, brush, 25,  3);
+            g.DrawString(Language.T("Value"),     Font, brush, 190, 3, stringFormat);
+            g.DrawString(Language.T("Minimum"),   Font, brush, 230, 3);
+            g.DrawString(Language.T("Maximum"),   Font, brush, 303, 3);
+            g.DrawString(Language.T("Step"),      Font, brush, 390, 3);
 
             return;
         }

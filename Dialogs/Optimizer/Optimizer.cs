@@ -96,6 +96,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         public Form SetParrentForm { set { formFSB = value; } }
 
         bool isReset = false;
+        const int OptionsVersion = 1;
+        private int formHeight;
 
         /// <summary>
         /// Constructor
@@ -131,9 +133,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             SetIndicatorParams();
             SelectRandomParameters();
 
-            Width  = 480;
-            Height = 570;
-            MinimumSize = new Size(480, 570);
+            Width  = 495;
+            Height = Math.Max(formHeight, 570);
+            MinimumSize = new Size(495, 570);
 
             return;
         }
