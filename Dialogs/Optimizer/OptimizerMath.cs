@@ -50,8 +50,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
             if (parameters == 0)
             {
+                pnlParams.Height = 50;
                 lblNoParams.Visible = true;
-                pnlParams.Height = lblNoParams.Bottom;
             }
             else
             {
