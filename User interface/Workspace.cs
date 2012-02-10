@@ -164,6 +164,8 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
+            statusStrip.Visible = Configs.ShowStatusBar;
+
             base.OnResize(e);
 
             pnlJournalBase.Visible = Configs.ShowJournal;

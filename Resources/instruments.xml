@@ -4,12 +4,12 @@
     <symbol>EURUSD</symbol>
     <instrumentType>Forex</instrumentType>
     <comment>Euro vs US Dollar</comment>
-    <digits>4</digits>
-    <contractSize>10000</contractSize>
-    <spread>4</spread>
+    <digits>5</digits>
+    <contractSize>100000</contractSize>
+    <spread>20</spread>
     <swapType>pips</swapType>
-    <swapLong>1</swapLong>
-    <swapShort>-1</swapShort>
+    <swapLong>2</swapLong>
+    <swapShort>-2</swapShort>
     <commissionType>pips</commissionType>
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
@@ -24,12 +24,12 @@
     <symbol>GBPUSD</symbol>
     <instrumentType>Forex</instrumentType>
     <comment>British Pound vs US Dollar</comment>
-    <digits>4</digits>
-    <contractSize>10000</contractSize>
-    <spread>4</spread>
+    <digits>5</digits>
+    <contractSize>100000</contractSize>
+    <spread>20</spread>
     <swapType>pips</swapType>
-    <swapLong>1</swapLong>
-    <swapShort>-1</swapShort>
+    <swapLong>2</swapLong>
+    <swapShort>-2</swapShort>
     <commissionType>pips</commissionType>
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
@@ -37,19 +37,19 @@
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
     <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.40</rateToEUR>
+    <rateToEUR>1.42</rateToEUR>
     <baseFileName>GBPUSD</baseFileName>
   </instrument>
   <instrument>
     <symbol>USDCHF</symbol>
     <instrumentType>Forex</instrumentType>
     <comment>US Dollar vs Swiss Franc</comment>
-    <digits>4</digits>
-    <contractSize>10000</contractSize>
-    <spread>4</spread>
+    <digits>5</digits>
+    <contractSize>100000</contractSize>
+    <spread>20</spread>
     <swapType>pips</swapType>
-    <swapLong>1</swapLong>
-    <swapShort>-1</swapShort>
+    <swapLong>2</swapLong>
+    <swapShort>-2</swapShort>
     <commissionType>pips</commissionType>
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
@@ -57,19 +57,19 @@
     <slippage>0</slippage>
     <priceIn>CHF</priceIn>
     <rateToUSD>0</rateToUSD>
-    <rateToEUR>1.50</rateToEUR>
+    <rateToEUR>1.34</rateToEUR>
     <baseFileName>USDCHF</baseFileName>
   </instrument>
   <instrument>
     <symbol>USDJPY</symbol>
     <instrumentType>Forex</instrumentType>
     <comment>US Dollar vs Japanese Yen</comment>
-    <digits>2</digits>
-    <contractSize>10000</contractSize>
-    <spread>4</spread>
+    <digits>3</digits>
+    <contractSize>100000</contractSize>
+    <spread>20</spread>
     <swapType>pips</swapType>
-    <swapLong>1</swapLong>
-    <swapShort>-1</swapShort>
+    <swapLong>2</swapLong>
+    <swapShort>-2</swapShort>
     <commissionType>pips</commissionType>
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
@@ -77,7 +77,7 @@
     <slippage>0</slippage>
     <priceIn>JPY</priceIn>
     <rateToUSD>0</rateToUSD>
-    <rateToEUR>130.0</rateToEUR>
+    <rateToEUR>130</rateToEUR>
     <baseFileName>USDJPY</baseFileName>
   </instrument>
   <instrument>
@@ -97,7 +97,7 @@
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
     <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.40</rateToEUR>
+    <rateToEUR>1.30</rateToEUR>
     <baseFileName>#IBM</baseFileName>
   </instrument>
   <instrument>
@@ -117,7 +117,7 @@
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
     <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.40</rateToEUR>
+    <rateToEUR>1.30</rateToEUR>
     <baseFileName>$INDU</baseFileName>
   </instrument>
 </fsb>

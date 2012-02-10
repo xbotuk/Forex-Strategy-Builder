@@ -37,6 +37,9 @@ namespace Forex_Strategy_Builder
         double addingLots   = 1;
         double reducingLots = 1;
 
+        bool useMartingale = true;
+        double martingaleMultiplier = 2.0;
+
         bool usePermanentSL = false;
         PermanentProtectionType permanentSLType = PermanentProtectionType.Relative;
         int permanentSL = 1000;
@@ -156,6 +159,16 @@ namespace Forex_Strategy_Builder
         /// Gets or sets the Number of lots to reduce the position
         /// </summary>
         public double ReducingLots { get { return reducingLots; } set { reducingLots = value; } }
+
+        /// <summary>
+        /// Gets or sets if the strategy uses Martingale Money Management.
+        /// </summary>
+        public bool UseMartingale { get { return useMartingale; } set { useMartingale = value; } }
+
+        /// <summary>
+        /// Gets or sets the Martingale multiplier
+        /// </summary>
+        public double MartingaleMultiplier { get { return martingaleMultiplier; } set { martingaleMultiplier = value; } }
 
         /// <summary>
         /// Gets or sets the Strategy description
@@ -725,10 +738,12 @@ namespace Forex_Strategy_Builder
 
             // Money Management
             tempStrategy.useAccountPercentEntry = useAccountPercentEntry;
-            tempStrategy.maxOpenLots  = maxOpenLots;
-            tempStrategy.entryLots    = entryLots;
-            tempStrategy.addingLots   = addingLots;
-            tempStrategy.reducingLots = reducingLots;
+            tempStrategy.maxOpenLots            = maxOpenLots;
+            tempStrategy.entryLots              = entryLots;
+            tempStrategy.addingLots             = addingLots;
+            tempStrategy.reducingLots           = reducingLots;
+            tempStrategy.useMartingale          = useMartingale;
+            tempStrategy.martingaleMultiplier   = martingaleMultiplier;
 
             // Permanent Stop Loss
             tempStrategy.usePermanentSL  = usePermanentSL;

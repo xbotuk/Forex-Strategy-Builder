@@ -89,6 +89,7 @@
   <str><main>Full Screen</main><alt>Пълен екран</alt></str>
   <str><main>Gradient View</main><alt>Изглед с преливка</alt></str>
   <str><main>Color Scheme</main><alt>Цветова схема</alt></str>
+  <str><main>Show Status Bar</main><alt>Статус бар</alt></str>
 
   <str><main>Account</main><alt>Акаунт</alt></str>
   <str><main>Information in Currency</main><alt>Информация в пари</alt></str>
@@ -354,6 +355,7 @@
   <str><main>The slots show the logic for the long positions only.</main><alt>Полетата показват само логиката на дългите позиции.</alt></str>
   <str><main>Forex Strategy Builder automatically computes the proper logic for the short positions.</main><alt>Forex Strategy Builder изчислява автоматично подходяща логика за късите позиции.</alt></str>
   <str><main>Always trade a constant number of lots.</main><alt>Търгувайте винаги постоянен брой лотове.</alt></str>
+  <str><main>Apply Martingale money management system with multiplier of</main><alt>Приложете системата Мартингейл с множител</alt></str>
   <str><main>Opening of a new position</main><alt>Отваряне на нова позиция</alt></str>
   <str><main>Adding to a winning position</main><alt>Добавяне към печеливша позиция</alt></str>
   <str><main>Adding to a position</main><alt>Добавяне към позиция</alt></str>
@@ -794,6 +796,7 @@
   <str><main>Number of entry lots for a new position</main><alt>Брой входящи лотове за нова позиция</alt></str>
   <str><main>In case of addition - number of lots to add</main><alt>В случай на добавяне - брой лотове да се добавят</alt></str>
   <str><main>In case of reduction - number of lots to close</main><alt>В случай на отнемане - брой лотове да се затворят</alt></str>
+  <str><main>Martingale money management multiplier</main><alt>Мартингейл система - множител</alt></str>
   <str><main>Permanent Protection</main><alt>Постоянна защита</alt></str>
   <str><main>Absolute</main><alt>Абсолютен</alt></str>
   <str><main>Relative</main><alt>Относителен</alt></str>

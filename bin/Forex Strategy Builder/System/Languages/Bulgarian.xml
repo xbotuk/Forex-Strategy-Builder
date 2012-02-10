@@ -306,6 +306,10 @@
     <alt>Цветова схема</alt>
   </str>
   <str>
+    <main>Show Status Bar</main>
+    <alt>Статус бар</alt>
+  </str>
+  <str>
     <main>Account</main>
     <alt>Акаунт</alt>
   </str>
@@ -1272,6 +1276,10 @@
   <str>
     <main>Always trade a constant number of lots.</main>
     <alt>Търгувайте винаги постоянен брой лотове.</alt>
+  </str>
+  <str>
+    <main>Apply Martingale money management system with multiplier of</main>
+    <alt>Приложете системата Мартингейл с множител</alt>
   </str>
   <str>
     <main>Opening of a new position</main>
@@ -2892,6 +2900,10 @@
   <str>
     <main>In case of reduction - number of lots to close</main>
     <alt>В случай на отнемане - брой лотове да се затворят</alt>
+  </str>
+  <str>
+    <main>Martingale money management multiplier</main>
+    <alt>Мартингейл система - множител</alt>
   </str>
   <str>
     <main>Permanent Protection</main>

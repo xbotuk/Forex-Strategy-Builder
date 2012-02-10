@@ -288,6 +288,14 @@ namespace Forex_Strategy_Builder
             miGradientView.Click       += new EventHandler(MenuGradientView_OnClick);
             miView.DropDownItems.Add(miGradientView);
 
+            ToolStripMenuItem miShowStatusBar = new ToolStripMenuItem();
+            miShowStatusBar.Text         = Language.T("Show Status Bar");
+            miShowStatusBar.Name         = "miShowStatusBar";
+            miShowStatusBar.Checked      = Configs.ShowStatusBar;
+            miShowStatusBar.CheckOnClick = true;
+            miShowStatusBar.Click       += new EventHandler(ShowStatusBar_OnClick);
+            miView.DropDownItems.Add(miShowStatusBar);
+
             // Account
             ToolStripMenuItem miAccount = new ToolStripMenuItem(Language.T("Account"));
 
@@ -1526,6 +1534,20 @@ namespace Forex_Strategy_Builder
         {
             ToolStripMenuItem mi = (ToolStripMenuItem)sender;
             Configs.ShowCustomIndicators = mi.Checked;
+
+            return;
+        }
+
+        /// <summary>
+        /// Menu Shows or hides the status bar.
+        /// </summary>
+        private void ShowStatusBar_OnClick(object sender, EventArgs e)
+        {
+            var mi = (ToolStripMenuItem)sender;
+            Configs.ShowStatusBar = mi.Checked;
+
+            statusStrip.Visible = Configs.ShowStatusBar;
+            OnResize(new EventArgs());
 
             return;
         }

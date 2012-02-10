@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Dialogs.Optimizer;
 
 namespace Forex_Strategy_Builder
 {
@@ -49,7 +50,7 @@ namespace Forex_Strategy_Builder
         public Actions()
         {
             StartPosition     = FormStartPosition.CenterScreen;
-            Size              = new Size(790, 590);
+            Size              = GetFormSize();
             MinimumSize       = new Size(500, 375);
             Icon              = Data.Icon;
             Text              = Data.ProgramName;
@@ -99,18 +100,30 @@ namespace Forex_Strategy_Builder
 
             Calculate(false);
 
-            Check_Update liveContent = new Check_Update(Data.SystemDir, miLiveContent, miForex);
+            Check_Update.CheckForUpdate(Data.SystemDir, miLiveContent, miForex);
 
             // Starting tips
             if (Configs.ShowStartingTip)
             {
                 Starting_Tips startingTips = new Starting_Tips();
-                startingTips.Show();
+                if (startingTips.TipsCount > 0)
+                    startingTips.Show();
             }
 
             UpdateStatusLabel("Loading user interface...");
 
             return;
+        }
+
+        /// <summary>
+        /// Gets the starting size of the main screen.
+        /// </summary>
+        Size GetFormSize()
+        {
+            int width  = Math.Min(Configs.MainScreenWidth,  SystemInformation.MaxWindowTrackSize.Width);
+            int height = Math.Min(Configs.MainScreenHeight, SystemInformation.MaxWindowTrackSize.Height);
+            
+            return new Size(width,height);
         }
 
         /// <summary>
@@ -180,6 +193,10 @@ namespace Forex_Strategy_Builder
                     }
                     Configs.LastStrategy = Data.LoadedSavedStrategy;
                 }
+
+                WindowState = FormWindowState.Normal;
+                Configs.MainScreenWidth  = this.Width;
+                Configs.MainScreenHeight = this.Height;
 
                 Configs.SaveConfigs();
                 Instruments.SaveInstruments();
@@ -728,8 +745,6 @@ namespace Forex_Strategy_Builder
                 else
                 {
                     Strategy.GenerateNew();
-                    string sMessageText = Language.T("The strategy could not be loaded correctly!");
-                    MessageBox.Show(sMessageText, Language.T("Strategy Loading"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Data.LoadedSavedStrategy = "";
                     this.Text = Data.ProgramName;
                 }
@@ -1148,7 +1163,7 @@ namespace Forex_Strategy_Builder
 
             string sOrginalDescription = Data.Strategy.Description;
 
-            Forex_Strategy_Builder.Dialogs.Generator.Generator generator = new Forex_Strategy_Builder.Dialogs.Generator.Generator();
+            Dialogs.Generator.Generator generator = new Dialogs.Generator.Generator();
             generator.SetParrentForm = this;
             generator.ShowDialog();
 
@@ -1216,13 +1231,14 @@ namespace Forex_Strategy_Builder
                 Calculate(true);
             }
             else
-            {   // When we cancel the optimizing, we return the original strategy.
+            {   // If we cancel the optimizing, we return the original strategy.
                 UndoStrategy();
             }
 
             Data.IsStrategyReady = true;
             Data.OptimizerStarts++;
 
+            return;
         }
 
         /// <summary>

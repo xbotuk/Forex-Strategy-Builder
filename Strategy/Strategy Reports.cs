@@ -63,9 +63,14 @@ namespace Forex_Strategy_Builder
             strBBCode += UseAccountPercentEntry ? "Use account % for margin round to whole lots" + nl : "";
             string tradingUnit = UseAccountPercentEntry ? "% of the account for margin" : "";
             strBBCode += "Maximum open lots: " + MaxOpenLots.ToString("F2") + nl;
-            strBBCode += "Entry lots: "    + EntryLots.ToString("F2")    + tradingUnit + nl;
-            strBBCode += "Adding lots: "   + AddingLots.ToString("F2")   + tradingUnit + nl;
-            strBBCode += "Reducing lots: " + ReducingLots.ToString("F2") + tradingUnit + nl;
+            strBBCode += "Entry lots: "    + EntryLots.ToString("F2") + tradingUnit + nl;
+            if (SameSignalAction == SameDirSignalAction.Add || SameSignalAction == SameDirSignalAction.Winner)
+                strBBCode += "Adding lots: " + AddingLots.ToString("F2") + tradingUnit + nl;
+            if (OppSignalAction == OppositeDirSignalAction.Reduce)
+                strBBCode += "Reducing lots: " + ReducingLots.ToString("F2") + tradingUnit + nl;
+            if (UseMartingale)
+                strBBCode += "Martingale money management multiplier: " + MartingaleMultiplier.ToString("F2") + nl;
+
             strBBCode += nl;
             strBBCode += "Intrabar scanning: "    + (Backtester.IsScanPerformed ? "Accomplished" : "Not accomplished") + nl;
             strBBCode += "Interpolation method: " + Backtester.InterpolationMethodToString() + nl;
@@ -780,6 +785,11 @@ namespace Forex_Strategy_Builder
                 sb.AppendLine("</ul>");
             }
 
+            if (UseMartingale)
+            {
+                sb.AppendLine("<p>" + Language.T("Apply Martingale money management system with multiplier of") + " " + MartingaleMultiplier.ToString("F2") + "." + "</p>");
+            }
+
             return sb;
         }
 
@@ -858,10 +868,14 @@ namespace Forex_Strategy_Builder
 
             sb.AppendLine("<table cellspacing=\"0\">");
             string sTradingUnit = UseAccountPercentEntry ? Language.T("% of the account equity") : "";
-            sb.AppendLine("<tr><td>" + Language.T("Maximum number of open lots")                    + "</td><td> - " + MaxOpenLots  + "</td></tr>");
+            sb.AppendLine("<tr><td>" + Language.T("Maximum number of open lots")                    + "</td><td> - " + MaxOpenLots  +  "</td></tr>");
             sb.AppendLine("<tr><td>" + Language.T("Number of entry lots for a new position")        + "</td><td> - " + EntryLots    + sTradingUnit + "</td></tr>");
-            sb.AppendLine("<tr><td>" + Language.T("In case of addition - number of lots to add")    + "</td><td> - " + AddingLots   + sTradingUnit + "</td></tr>");
-            sb.AppendLine("<tr><td>" + Language.T("In case of reduction - number of lots to close") + "</td><td> - " + ReducingLots + sTradingUnit + "</td></tr>");
+            if (UseMartingale)
+                sb.AppendLine("<tr><td>" + Language.T("Martingale money management multiplier") + "</td><td> - " + MartingaleMultiplier.ToString("F2") + "</td></tr>");
+            if (SameSignalAction== SameDirSignalAction.Add || SameSignalAction == SameDirSignalAction.Winner)
+                sb.AppendLine("<tr><td>" + Language.T("In case of addition - number of lots to add")    + "</td><td> - " + AddingLots   + sTradingUnit + "</td></tr>");
+            if (OppSignalAction == OppositeDirSignalAction.Reduce)
+                sb.AppendLine("<tr><td>" + Language.T("In case of reduction - number of lots to close") + "</td><td> - " + ReducingLots + sTradingUnit + "</td></tr>");
             sb.AppendLine("</table>");
 
             sb.AppendLine("<h3>" + Language.T("Permanent Protection") + "</h3>");
@@ -1040,7 +1054,9 @@ namespace Forex_Strategy_Builder
             str += "Entry lots - "          + EntryLots       + nl;
             str += "Adding lots - "         + AddingLots      + nl;
             str += "Reducing lots - "       + ReducingLots    + nl;
-            str += "Use Permanent S/L - "   + usePermanentSL  + nl;
+            str += "Use Martingale MM - "   + useMartingale + nl;
+            str += "Martingale multiplier - " + martingaleMultiplier + nl;
+            str += "Use Permanent S/L - "   + usePermanentSL + nl;
             str += "Permanent S/L - "       + permanentSLType + " " + permanentSL + nl;
             str += "Use Permanent T/P - "   + usePermanentTP  + nl;
             str += "Permanent T/P - "       + permanentTPType + " " + permanentTP + nl;

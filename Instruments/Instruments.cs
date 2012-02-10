@@ -58,6 +58,10 @@ namespace Forex_Strategy_Builder
             {
                 xmlInstruments.Load(pathToInstrumentsFile);
             }
+            catch (FileNotFoundException)
+            {
+                xmlInstruments.LoadXml(Properties.Resources.instruments);
+            }
             catch (Exception e)
             {
                 System.Windows.Forms.MessageBox.Show(e.Message, "Load Instruments");
@@ -231,11 +235,11 @@ namespace Forex_Strategy_Builder
                 instrument.AppendChild(element);
 
                 element = xmlDoc.CreateElement("rateToUSD");
-                element.InnerText = instrProp.RateToUSD.ToString();
+                element.InnerText = instrProp.RateToUSD.ToString("F4");
                 instrument.AppendChild(element);
 
                 element = xmlDoc.CreateElement("rateToEUR");
-                element.InnerText = instrProp.RateToEUR.ToString();
+                element.InnerText = instrProp.RateToEUR.ToString("F4");
                 instrument.AppendChild(element);
 
                 element = xmlDoc.CreateElement("baseFileName");

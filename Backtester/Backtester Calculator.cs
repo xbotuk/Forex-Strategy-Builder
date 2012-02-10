@@ -49,6 +49,9 @@ namespace Forex_Strategy_Builder
         static bool hasEnterOnce;
         static int slotEnterOnce;
 
+        // Martingale
+        static int consecutiveLosses = 0;
+
         /// <summary>
         /// Gets the maximum number of orders.
         /// </summary>
@@ -183,6 +186,9 @@ namespace Forex_Strategy_Builder
                     slotEnterOnce = slot.SlotNumber;
                     break;
                 }
+
+            // Martingale
+            consecutiveLosses = 0;
 
             return;
         }
@@ -348,6 +354,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lots * (price - priceOld) * InstrProperties.LotSize / AccountExchangeRate(price) - position.MoneySlippage;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance;
+
+                consecutiveLosses = position.ProfitLoss < 0 ? consecutiveLosses + 1 : 0;
                 return;
             }
 
@@ -376,6 +384,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lots * (priceOld - price) * InstrProperties.LotSize / AccountExchangeRate(price) - position.MoneySlippage;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance;
+
+                consecutiveLosses = position.ProfitLoss < 0 ? consecutiveLosses + 1 : 0;
                 return;
             }
 
@@ -464,6 +474,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lots * (price - priceOld) * InstrProperties.LotSize / AccountExchangeRate(price) - position.MoneySlippage;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance + position.MoneyFloatingPL;
+
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -492,6 +504,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lots * (priceOld - price) * InstrProperties.LotSize / AccountExchangeRate(price) - position.MoneySlippage;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance + position.MoneyFloatingPL;
+
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -522,6 +536,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lotsOld * (price - priceOld) * InstrProperties.LotSize / AccountExchangeRate(price) - lotsOld * InstrProperties.Slippage * pipsToMoneyRate;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance + position.MoneyFloatingPL;
+
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -552,6 +568,8 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = lotsOld * (priceOld - price) * InstrProperties.LotSize / AccountExchangeRate(price) - lotsOld * InstrProperties.Slippage * pipsToMoneyRate;
                 position.MoneyBalance   += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity     = position.MoneyBalance + position.MoneyFloatingPL;
+
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -838,7 +856,13 @@ namespace Forex_Strategy_Builder
             {   // We are out of the market
                 if (order.OrdSender == OrderSender.Open)
                 {   // Open a new position
-                    order.OrdLots = Math.Min(TradingSize(Strategy.EntryLots, bar), maximumLots);
+                    double entryAmount = TradingSize(Strategy.EntryLots, bar);
+                    if (Strategy.UseMartingale && consecutiveLosses > 0)
+                    {
+                        entryAmount = entryAmount * Math.Pow(Strategy.MartingaleMultiplier, consecutiveLosses);
+                        entryAmount = NormalizeEntryLots(entryAmount);
+                    }
+                    order.OrdLots = Math.Min(entryAmount, maximumLots);
                     wayPointType  = WayPointType.Entry;
                 }
                 else// if (order.OrdSender == OrderSender.Close)
@@ -1015,7 +1039,7 @@ namespace Forex_Strategy_Builder
 
         /// <summary>
         /// Transfers the orders and positions from the previous bar.
-        /// <summary>
+        /// </summary>
         static void TransferFromPreviousBar(int bar)
         {
             // Check the previous bar for an open position

@@ -306,6 +306,10 @@
     <alt>Esquema de Colores</alt>
   </str>
   <str>
+    <main>Show Status Bar</main>
+    <alt>Show Status Bar</alt>
+  </str>
+  <str>
     <main>Account</main>
     <alt>Cuenta</alt>
   </str>
@@ -1272,6 +1276,10 @@
   <str>
     <main>Always trade a constant number of lots.</main>
     <alt>Siempre comercializar un numero constante de lotes.</alt>
+  </str>
+  <str>
+    <main>Apply Martingale money management system with multiplier of</main>
+    <alt>Apply Martingale money management system with multiplier of</alt>
   </str>
   <str>
     <main>Opening of a new position</main>
@@ -2892,6 +2900,10 @@
   <str>
     <main>In case of reduction - number of lots to close</main>
     <alt>En caso de reduccion – numero de lotes por cerrar</alt>
+  </str>
+  <str>
+    <main>Martingale money management multiplier</main>
+    <alt>Martingale money management multiplier</alt>
   </str>
   <str>
     <main>Permanent Protection</main>

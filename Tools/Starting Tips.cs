@@ -45,6 +45,11 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        public int TipsCount
+        {
+            get { return tipsCount; }
+        }
+
         /// <summary>
         /// Public Constructor
         /// </summary>
@@ -219,12 +224,12 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void ShowTip(bool bNextTip)
         {
-            if (tipsCount == 0)
+            if (TipsCount == 0)
                 return;
 
             if (bNextTip)
             {
-                if (indexTip < tipsCount - 1)
+                if (indexTip < TipsCount - 1)
                     indexTip++;
                 else
                     indexTip = 0;
@@ -234,12 +239,12 @@ namespace Forex_Strategy_Builder
                 if (indexTip > 0)
                     indexTip--;
                 else
-                    indexTip = tipsCount - 1;
+                    indexTip = TipsCount - 1;
             }
 
             if (showAllTips)
             {
-                StringBuilder sbTips = new StringBuilder(tipsCount);
+                StringBuilder sbTips = new StringBuilder(TipsCount);
 
                 foreach (XmlNode node in xmlTips.SelectNodes("tips/tip"))
                     sbTips.AppendLine(node.InnerXml);
@@ -323,7 +328,7 @@ namespace Forex_Strategy_Builder
                 }
             }
 
-            if (Configs.Language != "English" && tipsCount == 0)
+            if (Configs.Language != "English" && TipsCount == 0)
             {
                 try
                 {   // The tips file
