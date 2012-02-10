@@ -531,21 +531,20 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
             if (Data.IsIntrabarData ||
                 Configs.UseTickData && Data.IsTickData ||
                 Data.Period == DataPeriods.min1)
                 Backtester.Scan();
 
-            ShowScanningResult();
+            if (!isCompactMode)
+                ShowScanningResult();
+            CompleteScanning();
 
             if (warningMessage != string.Empty && Configs.CheckData)
                 MessageBox.Show(warningMessage + Environment.NewLine + Environment.NewLine +
                     Language.T("The data is probably incomplete and the scanning may not be reliable!") + Environment.NewLine +
                     Language.T("You can try also \"Cut Off Bad Data\"."),
                     Language.T("Scanner"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-            progressBar.Style = ProgressBarStyle.Blocks;
 
             if (isCompactMode)
                 Close();
@@ -554,7 +553,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Updates the Generator interface.
+        /// Updates the chart and info panel.
         /// </summary>
         void ShowScanningResult()
         {
@@ -563,10 +562,19 @@ namespace Forex_Strategy_Builder
             smallBalanceChart.Invalidate();
             pnlInfo.Invalidate();
 
-            lblProgress.Text    = string.Empty;
-            lblProgress.Visible = false;
             chbAutoscan.Visible = true;
             chbTickScan.Visible = Configs.UseTickData || isTickDataFile;
+        }
+
+        /// <summary>
+        /// Resets controls after loading data.
+        /// </summary>
+        void CompleteScanning()
+        {
+            progressBar.Style = ProgressBarStyle.Blocks;
+
+            lblProgress.Text    = string.Empty;
+            lblProgress.Visible = false;
 
             btnClose.Text = Language.T("Close");
             Cursor        = Cursors.Default;
