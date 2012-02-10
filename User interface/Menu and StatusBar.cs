@@ -793,9 +793,12 @@ namespace Forex_Strategy_Builder
                 ToolStripMenuItem miAdditionalSubMenu;
                 List<string> files = new List<string>();
                 files.AddRange(Directory.GetFiles(Data.AdditionalFolder, "*.lnk"));
-                files.AddRange(Directory.GetFiles(Data.AdditionalFolder, "*.exe"));
                 if (files.Count > 0)
+                {
+                    files.Sort();
                     miAdditional.DropDownItems.Add(new ToolStripSeparator());
+                }
+                Keys key = Keys.F1;
                 foreach (string file in files)
                 {
                     miAdditionalSubMenu = new ToolStripMenuItem();
@@ -806,6 +809,47 @@ namespace Forex_Strategy_Builder
                     miAdditionalSubMenu.Tag = file;
                     miAdditionalSubMenu.Click += new EventHandler(AdditionalSubMenu_OnClick);
                     miAdditional.DropDownItems.Add(miAdditionalSubMenu);
+                    if (key != Keys.None)
+                        miAdditionalSubMenu.ShortcutKeys = Keys.Control | Keys.Shift | key;
+                    switch (key)
+                    {
+                        case Keys.F1:
+                            key = Keys.F2;
+                            break;
+                        case Keys.F2:
+                            key = Keys.F3;
+                            break;
+                        case Keys.F3:
+                            key = Keys.F4;
+                            break;
+                        case Keys.F4:
+                            key = Keys.F5;
+                            break;
+                        case Keys.F5:
+                            key = Keys.F6;
+                            break;
+                        case Keys.F6:
+                            key = Keys.F7;
+                            break;
+                        case Keys.F7:
+                            key = Keys.F8;
+                            break;
+                        case Keys.F8:
+                            key = Keys.F9;
+                            break;
+                        case Keys.F9:
+                            key = Keys.F10;
+                            break;
+                        case Keys.F10:
+                            key = Keys.F11;
+                            break;
+                        case Keys.F11:
+                            key = Keys.F12;
+                            break;
+                        case Keys.F12:
+                            key = Keys.None;
+                            break;
+                    }
                 }
             }
             
