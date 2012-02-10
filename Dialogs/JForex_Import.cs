@@ -415,9 +415,9 @@ namespace Forex_Strategy_Builder
                     }
                 }
             }
-            catch (Exception excaption)
+            catch (Exception exception)
             {
-                MessageBox.Show(excaption.Message);
+                MessageBox.Show(exception.Message);
             }
 
             streamWriter.Close();
@@ -489,9 +489,9 @@ namespace Forex_Strategy_Builder
                     count1MinBars++;
                 }
             }
-            catch (Exception excaption)
+            catch (Exception exception)
             {
-                MessageBox.Show(excaption.Message);
+                MessageBox.Show(exception.Message);
             }
 
             streamReader.Close();

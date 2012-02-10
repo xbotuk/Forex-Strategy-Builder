@@ -899,7 +899,7 @@ namespace Forex_Strategy_Builder
 
                 okStatus = true;
             }
-            catch (Exception excaption)
+            catch (Exception exception)
             {
                 string request = "Please report this error in the support forum!";
                 if (indicator.CustomIndicator)
@@ -907,7 +907,7 @@ namespace Forex_Strategy_Builder
                         "You may remove this indicator from the Custom Indicators folder.";
 
                 string text =
-                    "<h1>Error: " + excaption.Message + "</h1>" +
+                    "<h1>Error: " + exception.Message + "</h1>" +
                     "<p>Slot type: <strong>" + slotType.ToString() + "</strong><br />" +
                     "Indicator: <strong>" + indicator.ToString() + "</strong></p>" +
                     "<p>" + request + "</p>";

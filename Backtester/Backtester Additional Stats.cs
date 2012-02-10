@@ -531,7 +531,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Sets the additional stats in pips.
         /// </summary>
-        static void SetAdditioanlStats()
+        static void SetAdditionalStats()
         {
             string unit = " " + Language.T("pips");
 
@@ -667,7 +667,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Sets the additional stats in Money.
         /// </summary>
-        static void SetAdditioanlMoneyStats()
+        static void SetAdditionalMoneyStats()
         {
             string unit = " " + Configs.AccountCurrency;
 

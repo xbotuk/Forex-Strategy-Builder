@@ -187,7 +187,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             return bann;
         }
 
-        public void BlockIndikatorChange()
+        public void BlockIndicatorChange()
         {
             isBlocked = true;
             tsbtnSelectAll.Enabled  = false;
@@ -195,7 +195,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             ArrangeIndicatorsSlots();
         }
 
-        public void UnblockIndikatorChange()
+        public void UnBlockIndicatorChange()
         {
             isBlocked = false;
             tsbtnSelectAll.Enabled  = true;

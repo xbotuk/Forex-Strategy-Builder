@@ -226,7 +226,7 @@ namespace Forex_Strategy_Builder
                     strategyLayout.abtnRemoveSlot[iSlot].Click += new EventHandler(BtnRemoveSlot_Click);
             }
 
-            SetSrategyDescriptionButton();
+            SetStrategyDescriptionButton();
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace Forex_Strategy_Builder
             if (oldInfo != Data.Strategy.Description)
             {
                 Data.SetStrategyIndicators();
-                SetSrategyDescriptionButton();
+                SetStrategyDescriptionButton();
                 this.Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + "* - " + Data.ProgramName;
                 Data.IsStrategyChanged = true;
             }
@@ -358,7 +358,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Sets the strategy description button icon
         /// </summary>
-        void SetSrategyDescriptionButton()
+        void SetStrategyDescriptionButton()
         {
             if (Data.Strategy.Description == "")
                 tsbtStrategyInfo.Image = Properties.Resources.str_info_noinfo;

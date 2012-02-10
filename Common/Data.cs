@@ -55,6 +55,7 @@ namespace Forex_Strategy_Builder
         static string strategyDir           = "Strategies"        + Path.DirectorySeparatorChar;
         static string defaultStrategyDir    = "Strategies"        + Path.DirectorySeparatorChar;
         static string sourceFolder          = "Custom Indicators" + Path.DirectorySeparatorChar;
+        static string additionalFolder      = "Additional"        + Path.DirectorySeparatorChar;  
         static string programDir            = "";
         static string strategyName          = "New.xml";
         static string loadedSavedStrategy   = "";
@@ -389,6 +390,10 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public static string SourceFolder { get { return sourceFolder; } }
 
+        /// <summary>
+        /// Gets or sets the Additional  folder
+        /// </summary>
+        public static string AdditionalFolder { get { return additionalFolder; } }
         /// <summary>
         /// Gets or sets the strategy name for Configs.LastStrategy
         /// </summary>

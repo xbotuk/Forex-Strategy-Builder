@@ -533,9 +533,9 @@ namespace Forex_Strategy_Builder
                 CalculateAdditionalStats();
 
                 if (Configs.AccountInMoney)
-                    SetAdditioanlMoneyStats();
+                    SetAdditionalMoneyStats();
                 else
-                    SetAdditioanlStats();
+                    SetAdditionalStats();
             }
 
             return;

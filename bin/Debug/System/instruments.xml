@@ -37,7 +37,7 @@
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
     <rateToUSD>1.0000</rateToUSD>
-    <rateToEUR>1.4237</rateToEUR>
+    <rateToEUR>1.4200</rateToEUR>
     <baseFileName>GBPUSD</baseFileName>
   </instrument>
   <instrument>
@@ -57,7 +57,7 @@
     <slippage>0</slippage>
     <priceIn>CHF</priceIn>
     <rateToUSD>0.0000</rateToUSD>
-    <rateToEUR>1.3369</rateToEUR>
+    <rateToEUR>1.3400</rateToEUR>
     <baseFileName>USDCHF</baseFileName>
   </instrument>
   <instrument>
