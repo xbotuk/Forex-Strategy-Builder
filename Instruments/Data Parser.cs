@@ -54,7 +54,7 @@ namespace Forex_Strategy_Builder
             {
                 const string spacePattern  = @"[\t ;,]";
                 const string datePattern   = @"\d{1,4}[\./-]\d{1,4}[\./-]\d{1,4}";
-                const string timePattern   = @"\d{2}(:\d{2}){1,2}";
+                const string timePattern   = @"|[\d{2}({:}\d{2}){1,2}]";
                 const string pricePattern  = @"\d+([\.,]\d+)?";
                 const string volumePattern = @"\d{1,10}";
 
@@ -92,7 +92,7 @@ namespace Forex_Strategy_Builder
             string pricePattern = PriceMatchPattern(dataString);
 
             string dataMatchPattern = "^[\t ;,]*" +
-                datePattern + @"[\t ;,]+(?<hour>\d{2}):(?<min>\d{2})(:(?<sec>\d{2}))?[\t ;,]+" +
+                datePattern + @"[\t ;,]+[(?<hour>\d{2}):(?<min>\d{2})(:(?<sec>\d{2}))]*[\t ;,]*" +
                 pricePattern + @"[\t ;,]+(?<volume>\d+)[\t ;,]*$";
 
             return new Regex(dataMatchPattern, RegexOptions.Compiled);
@@ -445,7 +445,7 @@ namespace Forex_Strategy_Builder
             string line;
             var bar = 0;
             var stringReader = new StringReader(dataFile);
-
+            int result;
             while ((line = stringReader.ReadLine()) != null)
             {
                 var match = regexDataFile.Match(line);
@@ -455,9 +455,9 @@ namespace Forex_Strategy_Builder
                 year = CorrectProblemYear2000(year);
                 var month = int.Parse(match.Groups["month"].Value);
                 var day = int.Parse(match.Groups["day"].Value);
-                var hour = int.Parse(match.Groups["hour"].Value);
-                var min = int.Parse(match.Groups["min"].Value);
-                var seconds = match.Groups["sec"].Value;
+                var hour = int.TryParse(match.Groups["hour"].Value, out result) ? int.Parse(match.Groups["hour"].Value) : 0;
+                var min = int.TryParse(match.Groups["min"].Value, out result) ? int.Parse(match.Groups["min"].Value) : 0;
+                var seconds = string.IsNullOrEmpty(match.Groups["sec"].Value) ? match.Groups["sec"].Value : "";
                 var sec = (seconds == "" ? 0 : int.Parse(seconds));
 
                 barList[bar].Time   = new DateTime(year, month, day, hour, min, sec);

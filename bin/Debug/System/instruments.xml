@@ -14,7 +14,7 @@
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
     <commission>0</commission>
-    <slippage>20</slippage>
+    <slippage>0</slippage>
     <priceIn>USD</priceIn>
     <rateToUSD>1.0000</rateToUSD>
     <rateToEUR>0.0000</rateToEUR>
@@ -37,7 +37,7 @@
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
     <rateToUSD>1.0000</rateToUSD>
-    <rateToEUR>1.4237</rateToEUR>
+    <rateToEUR>1.4200</rateToEUR>
     <baseFileName>GBPUSD</baseFileName>
   </instrument>
   <instrument>
@@ -57,7 +57,7 @@
     <slippage>0</slippage>
     <priceIn>CHF</priceIn>
     <rateToUSD>0.0000</rateToUSD>
-    <rateToEUR>1.3369</rateToEUR>
+    <rateToEUR>1.3400</rateToEUR>
     <baseFileName>USDCHF</baseFileName>
   </instrument>
   <instrument>
@@ -81,32 +81,6 @@
     <baseFileName>USDJPY</baseFileName>
   </instrument>
   <instrument>
-    <symbol>$INDU</symbol>
-    <instrumentType>Index</instrumentType>
-    <comment>Dow Jones Industrial Average</comment>
-    <digits>0</digits>
-    <contractSize>1</contractSize>
-    <spread>5</spread>
-    <swapType>percents</swapType>
-    <swapLong>5</swapLong>
-    <swapShort>-1</swapShort>
-    <commissionType>percents</commissionType>
-    <commissionScope>deal</commissionScope>
-    <commissionTime>openclose</commissionTime>
-    <commission>0.25</commission>
-    <slippage>0</slippage>
-    <priceIn>USD</priceIn>
-<<<<<<< HEAD
-    <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.29999995231628</rateToEUR>
-    <baseFileName>$INDU</baseFileName>
-=======
-    <rateToUSD>1.0000</rateToUSD>
-    <rateToEUR>1.3000</rateToEUR>
-    <baseFileName>#IBM</baseFileName>
->>>>>>> 570981ac011d46b6ab605f63638db8fb0a0bcd93
-  </instrument>
-  <instrument>
     <symbol>#IBM</symbol>
     <instrumentType>CFD</instrumentType>
     <comment>International Business Machines</comment>
@@ -122,14 +96,28 @@
     <commission>0.25</commission>
     <slippage>0</slippage>
     <priceIn>USD</priceIn>
-<<<<<<< HEAD
-    <rateToUSD>1</rateToUSD>
-    <rateToEUR>1.29999995231628</rateToEUR>
+    <rateToUSD>1.0000</rateToUSD>
+    <rateToEUR>1.3000</rateToEUR>
     <baseFileName>#IBM</baseFileName>
-=======
+  </instrument>
+  <instrument>
+    <symbol>$INDU</symbol>
+    <instrumentType>Index</instrumentType>
+    <comment>Dow Jones Industrial Average</comment>
+    <digits>0</digits>
+    <contractSize>1</contractSize>
+    <spread>5</spread>
+    <swapType>percents</swapType>
+    <swapLong>5</swapLong>
+    <swapShort>-1</swapShort>
+    <commissionType>percents</commissionType>
+    <commissionScope>deal</commissionScope>
+    <commissionTime>openclose</commissionTime>
+    <commission>0.25</commission>
+    <slippage>0</slippage>
+    <priceIn>USD</priceIn>
     <rateToUSD>1.0000</rateToUSD>
     <rateToEUR>1.3000</rateToEUR>
     <baseFileName>$INDU</baseFileName>
->>>>>>> 570981ac011d46b6ab605f63638db8fb0a0bcd93
   </instrument>
 </fsb>
