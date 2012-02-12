@@ -6,7 +6,9 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Common;
 
 namespace Forex_Strategy_Builder
 {
@@ -15,114 +17,103 @@ namespace Forex_Strategy_Builder
     /// </summary>
     public class Small_Indicator_Chart : Panel
     {
-        HScrollBar scrollBar;
-        bool isValueChangedAktive = false;
+        private const int Space = 5;
+        private const int Border = 2;
+        private readonly Pen _penDarkGray = new Pen(Color.DarkGray);
+        private readonly Pen _penGreen = new Pen(Color.Green);
+        private readonly Pen _penRed = new Pen(Color.Red);
+        private readonly HScrollBar _scrollBar;
+        private Brush[] _brushPosition;
+        private Brush _captionBrush;
 
-        string       stringCaptionText;
-        Font         fontCaptionText;
-        float        captionHeight;
-        float        captionWidth;
-        Brush        brushCaptionText;
-        RectangleF   rectfCaption;
-        StringFormat stringFormatCaption;
+        private Font _captionFont;
+        private float _captionHeight;
+        private RectangleF _captionRectangle;
+        private StringFormat _captionStringFormat;
+        private string _captionText;
+        private float _captionWidth;
 
-        int space  = 5;
-        int border = 2;
-        string statusBarText;
-        bool isShowDynamicInfo = false;
-        int barPixels;  // Bar's width in pixels
-        int chartBars;  // Count of bars in the chart
-        int chartWidth; // Chart's width in pixels
-        int firstBar;   // Number of the first drown bar
-        int lastBar;    // Number of the last drown bar
-        int clSzWidth;
-        int clSzHeight;
-        int xLeft;
-        int xRight;
-        int yTop;
-        int yBottom;
-        int yPrcBottom;	// Price chart y
-        int inds;       // Count of separated indicators
-        int indHeight;  // Height of Ind charts
-        int[] aiIndSlot;
-        Pen penFore;
-        Pen penVolume;
+        private int _chartBarWidth;
+        private int _chartBars;
+        private Brush[][] _chartBrush;
+        private Rectangle[][][] _chartDot;
+        private int _chartFirstBar;
+        private int _chartLastBar;
+        private Rectangle[][][] _chartLevel;
+        private Point[][][] _chartLine;
+        private Pen[][][] _chartPen;
+        private IndChartType[][] _chartType;
+        private double[][][] _chartValue;
+        private int _chartWidth;
+        private int[] _componentLenght;
+        private int[] _indicatorSlots;
+        private bool[] _isSeparatedChart;
+        private bool _isShowDynamicInfo;
+        private bool _isValueChangedAktive;
 
-        double maxPrice;
-        double minPrice;
-        int    maxVolume;
-        double scaleY;
-        double scaleYVol;
+        private double _maxPrice;
+        private double[] _maxValue;
+        private int _maxVolume;
+        private double _minPrice;
+        private double[] _minValue;
+        private Pen _penBorder;
+        private Pen _penFore;
+        private Pen _penVolume;
+        private Rectangle[] _rectPosition;
+        private double[] _scale;
+        private double _scaleY;
+        private double _scaleYVol;
+        private int _separateIndicatorsChartHeight;
+        private int _separateIndicatorsCount;
 
-        int[] x;
-        int[] yOpen;
-        int[] yHigh;
-        int[] yLow;
-        int[] yClose;
-        int[] yVolume;
-
-        Pen penBorder;
-
-        Rectangle[] rectPosition;
-        Brush[]     brushPosition;
-        int slots;
-        bool[] bIsSeparatedChart;
-        int[]  iComponentLenght;
-        IndChartType[][] chartType;
-        Point[][][]      chartLine;
-        Rectangle[][][]  chartDot;
-        Rectangle[][][]  chartLevel;
-        double[][][]     chartValue;
-        Pen[][][]        chartPen;
-        Brush[][]        chartBrush;
-
-        // Histogram
-        Pen penGreen    = new Pen(Color.Green);
-        Pen penRed      = new Pen(Color.Red);
-        Pen penDarkGray = new Pen(Color.DarkGray);
-
-        // Separate indicators
-        int[] yIndTop;
-        int[] yIndBottom;
-        double[] dMaxValue;
-        double[] dMinValue;
-        double[] dScale;
-
-        /// <summary>
-        /// Gets or sets whether to show dynamic info or not
-        /// </summary>
-        public bool ShowDynamicInfo
-        {
-            get { return isShowDynamicInfo; }
-            set { isShowDynamicInfo = value; }
-        }
-
-        /// <summary>
-        /// Returns dynamic info
-        /// </summary>
-        public string CurrentBarInfo
-        {
-            get { return statusBarText; }
-        }
+        private int[] _x;
+        private int _xLeft;
+        private int _xRight;
+        private int _yBottom;
+        private int[] _yClose;
+        private int[] _yHigh;
+        private int[] _yIndBottom;
+        private int[] _yIndTop;
+        private int[] _yLow;
+        private int[] _yOpen;
+        private int _yPriceBottom;
+        private int _yTop;
+        private int[] _yVolume;
 
         /// <summary>
         /// Public constructor
         /// </summary>
         public Small_Indicator_Chart()
         {
-            Padding = new Padding(border, 0, border, border);
+            Padding = new Padding(Border, 0, Border, Border);
 
             // Horizontal scroll bar
-            scrollBar = new HScrollBar();
-            scrollBar.Parent        = this;
-            scrollBar.Dock          = DockStyle.Bottom;
-            scrollBar.SmallChange   = 1;
-            scrollBar.LargeChange   = 50;
-            scrollBar.Minimum       = 0;
-            scrollBar.Maximum       = 1000;
-            scrollBar.Visible       = true;
-            scrollBar.ValueChanged += new EventHandler(HscrllbInstrChart_ValueChanged);
+            _scrollBar = new HScrollBar
+                             {
+                                 Parent = this,
+                                 Dock = DockStyle.Bottom,
+                                 SmallChange = 1,
+                                 LargeChange = 50,
+                                 Minimum = 0,
+                                 Maximum = 1000,
+                                 Visible = true
+                             };
+            _scrollBar.ValueChanged += ScrollBarValueChanged;
         }
+
+        /// <summary>
+        /// Gets or sets whether to show dynamic info or not
+        /// </summary>
+        public bool ShowDynamicInfo
+        {
+            set { _isShowDynamicInfo = value; }
+        }
+
+        /// <summary>
+        /// Returns dynamic info
+        /// </summary>
+        public string CurrentBarInfo { get; private set; }
+
 
         /// <summary>
         /// Sets the parameters of the Indicators Chart
@@ -130,285 +121,297 @@ namespace Forex_Strategy_Builder
         public void InitChart()
         {
             if (!Data.IsData || !Data.IsResult) return;
-            barPixels = 2;
-            xLeft = space;
-            clSzWidth = this.ClientSize.Width;
-            xRight = clSzWidth - space;
-            chartWidth = xRight - xLeft;
 
-            chartBars = chartWidth / barPixels;
-            chartBars = Math.Min(chartBars, Data.Bars - Data.FirstBar);
+            _chartBarWidth = 2;
+            _xLeft = Space;
+            _xRight = ClientSize.Width - Space;
+            _chartWidth = _xRight - _xLeft;
 
-            isValueChangedAktive = false;
-            scrollBar.Minimum = Math.Max(Data.FirstBar, 0);
-            scrollBar.Maximum = Math.Max(Data.Bars - 1, 1);
-            scrollBar.LargeChange = Math.Max(chartBars, 1);
+            _chartBars = _chartWidth/_chartBarWidth;
+            _chartBars = Math.Min(_chartBars, Data.Bars - StatsBuffer.FirstBar);
 
-            firstBar = Math.Max(Data.FirstBar, Data.Bars - chartBars);
-            firstBar = Math.Min(firstBar, Data.Bars - 1);
-            firstBar = Math.Max(firstBar, 1);
-            lastBar  = Math.Max(firstBar + chartBars - 1, firstBar);
+            _isValueChangedAktive = false;
+            _scrollBar.Minimum = Math.Max(StatsBuffer.FirstBar, 0);
+            _scrollBar.Maximum = Math.Max(Data.Bars - 1, 1);
+            _scrollBar.LargeChange = Math.Max(_chartBars, 1);
 
-            scrollBar.Value = firstBar;
-            isValueChangedAktive = true;
+            _chartFirstBar = Math.Max(StatsBuffer.FirstBar, Data.Bars - _chartBars);
+            _chartFirstBar = Math.Min(_chartFirstBar, Data.Bars - 1);
+            _chartFirstBar = Math.Max(_chartFirstBar, 1);
+            _chartLastBar = Math.Max(_chartFirstBar + _chartBars - 1, _chartFirstBar);
 
-            SetUpChart();
+            _scrollBar.Value = _chartFirstBar;
+            _isValueChangedAktive = true;
+
+            SetUpPaintData();
         }
+
 
         /// <summary>
         /// Prepare the parameters
         /// </summary>
-        public void SetUpChart()
+        private void SetUpPaintData()
         {
             // Panel caption
-            stringCaptionText = Language.T("Indicator Chart");
-            fontCaptionText   = new Font(Font.FontFamily, 9);
-            captionHeight     = Math.Max(fontCaptionText.Height, 18);
-            captionWidth      = this.ClientSize.Width;
-            brushCaptionText  = new SolidBrush(LayoutColors.ColorCaptionText);
-            rectfCaption      = new RectangleF(0, 0, captionWidth, captionHeight);
-            stringFormatCaption                = new StringFormat();
-            stringFormatCaption.Alignment     |= StringAlignment.Center;
-            stringFormatCaption.LineAlignment |= StringAlignment.Center;
-            stringFormatCaption.Trimming      |= StringTrimming.EllipsisCharacter;
-            stringFormatCaption.FormatFlags   |= StringFormatFlags.NoWrap;
+            _captionText = Language.T("Indicator Chart");
+            _captionFont = new Font(Font.FontFamily, 9);
+            _captionHeight = Math.Max(_captionFont.Height, 18);
+            _captionWidth = ClientSize.Width;
+            _captionBrush = new SolidBrush(LayoutColors.ColorCaptionText);
+            _captionRectangle = new RectangleF(0, 0, _captionWidth, _captionHeight);
+            _captionStringFormat = new StringFormat();
+            _captionStringFormat.Alignment |= StringAlignment.Center;
+            _captionStringFormat.LineAlignment |= StringAlignment.Center;
+            _captionStringFormat.Trimming |= StringTrimming.EllipsisCharacter;
+            _captionStringFormat.FormatFlags |= StringFormatFlags.NoWrap;
 
-            if (!Data.IsData || !Data.IsResult || Data.Bars <= Data.FirstBar) return;
+            if (!Data.IsData || !Data.IsResult || Data.Bars <= StatsBuffer.FirstBar) return;
 
-            clSzWidth  = this.ClientSize.Width;
-            clSzHeight = this.ClientSize.Height;
-            xLeft      = space;
-            xRight     = clSzWidth - space;
-            yTop       = (int)captionHeight + space;
-            yBottom    = clSzHeight - scrollBar.Height - space;
-            yPrcBottom = yBottom;		// Price chart y
-            inds       = 0; // Count of separated indicators
-            indHeight  = 0; // Height of Ind charts
-            aiIndSlot  = new int[Configs.MAX_ENTRY_FILTERS + Configs.MAX_EXIT_FILTERS + 2];
+            _xLeft = Space;
+            _xRight = ClientSize.Width - Space;
+            _yTop = (int) _captionHeight + Space;
+            _yBottom = ClientSize.Height - _scrollBar.Height - Space;
+            _yPriceBottom = _yBottom;
+            _separateIndicatorsCount = 0;
+            _separateIndicatorsChartHeight = 0;
+            _indicatorSlots = new int[Configs.MAX_ENTRY_FILTERS + Configs.MAX_EXIT_FILTERS + 2];
 
-            penFore   = new Pen(LayoutColors.ColorChartFore);
-            penVolume = new Pen(LayoutColors.ColorVolume);
-            penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), border);
+            _penFore = new Pen(LayoutColors.ColorChartFore);
+            _penVolume = new Pen(LayoutColors.ColorVolume);
+            _penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
+                                 Border);
 
-            for (int slot = Data.Strategy.Slots - 1; slot >= 0; slot--)
-                if (Data.Strategy.Slot[slot].SeparatedChart)
-                    aiIndSlot[inds++] = slot;
+            for (int slot = StatsBuffer.Strategy.Slots - 1; slot >= 0; slot--)
+                if (StatsBuffer.Strategy.Slot[slot].SeparatedChart)
+                    _indicatorSlots[_separateIndicatorsCount++] = slot;
 
-            if (inds > 0)
+            if (_separateIndicatorsCount > 0)
             {
-                indHeight = (yBottom - yTop) / (2 + inds);
-                yPrcBottom = yBottom - inds * indHeight;
+                _separateIndicatorsChartHeight = (_yBottom - _yTop)/(2 + _separateIndicatorsCount);
+                _yPriceBottom = _yBottom - _separateIndicatorsCount*_separateIndicatorsChartHeight;
             }
 
-            maxPrice  = double.MinValue;
-            minPrice  = double.MaxValue;
-            maxVolume = int.MinValue;
+            _maxPrice = double.MinValue;
+            _minPrice = double.MaxValue;
+            _maxVolume = int.MinValue;
 
-            for (int bar = firstBar; bar <= lastBar; bar++)
+            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
             {
-                if (Data.High[bar]   > maxPrice ) maxPrice  = Data.High[bar];
-                if (Data.Low[bar]    < minPrice ) minPrice  = Data.Low[bar];
-                if (Data.Volume[bar] > maxVolume) maxVolume = Data.Volume[bar];
+                if (Data.High[bar] > _maxPrice) _maxPrice = Data.High[bar];
+                if (Data.Low[bar] < _minPrice) _minPrice = Data.Low[bar];
+                if (Data.Volume[bar] > _maxVolume) _maxVolume = Data.Volume[bar];
             }
-            minPrice  = Math.Round(minPrice, Data.InstrProperties.Point < 0.001 ? 3 : 1) - Data.InstrProperties.Point * 10;
-            maxPrice  = Math.Round(maxPrice, Data.InstrProperties.Point < 0.001 ? 3 : 1) + Data.InstrProperties.Point * 10;
-            scaleY    = (yPrcBottom - yTop) / (maxPrice - minPrice);
-            scaleYVol = maxVolume > 0 ? ((yPrcBottom - yTop) / 8d) / maxVolume : 0d;
+            _minPrice = Math.Round(_minPrice, Data.InstrProperties.Point < 0.001 ? 3 : 1) -
+                        Data.InstrProperties.Point*10;
+            _maxPrice = Math.Round(_maxPrice, Data.InstrProperties.Point < 0.001 ? 3 : 1) +
+                        Data.InstrProperties.Point*10;
+            _scaleY = (_yPriceBottom - _yTop)/(_maxPrice - _minPrice);
+            _scaleYVol = _maxVolume > 0 ? ((_yPriceBottom - _yTop)/8d)/_maxVolume : 0d;
 
             // Volume, Lots and Price
-            x       = new int[chartBars];
-            yOpen   = new int[chartBars];
-            yHigh   = new int[chartBars];
-            yLow    = new int[chartBars];
-            yClose  = new int[chartBars];
-            yVolume = new int[chartBars];
-            rectPosition  = new Rectangle[chartBars];
-            brushPosition = new Brush[chartBars];
+            _x = new int[_chartBars];
+            _yOpen = new int[_chartBars];
+            _yHigh = new int[_chartBars];
+            _yLow = new int[_chartBars];
+            _yClose = new int[_chartBars];
+            _yVolume = new int[_chartBars];
+            _rectPosition = new Rectangle[_chartBars];
+            _brushPosition = new Brush[_chartBars];
 
             int index = 0;
-            for (int bar = firstBar; bar <= lastBar; bar++)
+            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
             {
-                x[index]       = (bar - firstBar) * barPixels + xLeft;
-                yOpen[index]   = (int)(yPrcBottom - (Data.Open[bar]   - minPrice) * scaleY);
-                yHigh[index]   = (int)(yPrcBottom - (Data.High[bar]   - minPrice) * scaleY);
-                yLow[index]    = (int)(yPrcBottom - (Data.Low[bar]    - minPrice) * scaleY);
-                yClose[index]  = (int)(yPrcBottom - (Data.Close[bar]  - minPrice) * scaleY);
-                yVolume[index] = (int)(yPrcBottom -  Data.Volume[bar] * scaleYVol);
+                _x[index] = (bar - _chartFirstBar)*_chartBarWidth + _xLeft;
+                _yOpen[index] = (int) (_yPriceBottom - (Data.Open[bar] - _minPrice)*_scaleY);
+                _yHigh[index] = (int) (_yPriceBottom - (Data.High[bar] - _minPrice)*_scaleY);
+                _yLow[index] = (int) (_yPriceBottom - (Data.Low[bar] - _minPrice)*_scaleY);
+                _yClose[index] = (int) (_yPriceBottom - (Data.Close[bar] - _minPrice)*_scaleY);
+                _yVolume[index] = (int) (_yPriceBottom - Data.Volume[bar]*_scaleYVol);
 
                 // Draw position lots
-                if (Backtester.IsPos(bar))
+                if (StatsBuffer.IsPosition[bar])
                 {
-                    int iPosHight = (int)(Math.Max(Backtester.SummaryLots(bar) * 2, 2));
+                    var posHight = (int) (Math.Max(StatsBuffer.PositionLotsCount[bar]*2, 2));
+                    int yPos = _yPriceBottom - posHight;
 
-                    int iPosY = yPrcBottom - iPosHight;
-
-                    if (Backtester.SummaryDir(bar) == PosDirection.Long)
-                    {   // Long
-                        rectPosition[index]  = new Rectangle(x[index], iPosY, 1, iPosHight);
-                        brushPosition[index] = new SolidBrush(LayoutColors.ColorTradeLong);
-                    }
-                    else if (Backtester.SummaryDir(bar) == PosDirection.Short)
-                    {   // Short
-                        rectPosition[index]  = new Rectangle(x[index], iPosY, 1, iPosHight);
-                        brushPosition[index] = new SolidBrush(LayoutColors.ColorTradeShort);
-                    }
-                    else
-                    {   // Close position
-                        rectPosition[index]  = new Rectangle(x[index], iPosY - 2, 1, 2);
-                        brushPosition[index] = new SolidBrush(LayoutColors.ColorTradeClose);
+                    switch (StatsBuffer.PositionDirection[bar])
+                    {
+                        case PosDirection.Long:
+                            _rectPosition[index] = new Rectangle(_x[index], yPos, 1, posHight);
+                            _brushPosition[index] = new SolidBrush(LayoutColors.ColorTradeLong);
+                            break;
+                        case PosDirection.Short:
+                            _rectPosition[index] = new Rectangle(_x[index], yPos, 1, posHight);
+                            _brushPosition[index] = new SolidBrush(LayoutColors.ColorTradeShort);
+                            break;
+                        case PosDirection.Closed:
+                            _rectPosition[index] = new Rectangle(_x[index], yPos - 2, 1, 2);
+                            _brushPosition[index] = new SolidBrush(LayoutColors.ColorTradeClose);
+                            break;
                     }
                 }
                 else
-                {   // There is no position
-                    rectPosition[index]  = Rectangle.Empty;
-                    brushPosition[index] = new SolidBrush(LayoutColors.ColorChartBack);
+                {
+                    // There is no position
+                    _rectPosition[index] = Rectangle.Empty;
+                    _brushPosition[index] = new SolidBrush(LayoutColors.ColorChartBack);
                 }
                 index++;
             }
 
             // Indicators in the chart
-            slots = Data.Strategy.Slots;
-            bIsSeparatedChart = new bool[slots];
-            iComponentLenght  = new int[slots];
-            chartType         = new IndChartType[slots][];
-            chartLine         = new Point[slots][][];
-            chartDot          = new Rectangle[slots][][];
-            chartLevel        = new Rectangle[slots][][];
-            chartValue        = new double[slots][][];
-            chartPen          = new Pen[slots][][];
-            chartBrush        = new Brush[slots][];
-            for (int iSlot = 0; iSlot < slots; iSlot++)
+            int slots = StatsBuffer.Strategy.Slots;
+            _isSeparatedChart = new bool[slots];
+            _componentLenght = new int[slots];
+            _chartType = new IndChartType[slots][];
+            _chartLine = new Point[slots][][];
+            _chartDot = new Rectangle[slots][][];
+            _chartLevel = new Rectangle[slots][][];
+            _chartValue = new double[slots][][];
+            _chartPen = new Pen[slots][][];
+            _chartBrush = new Brush[slots][];
+
+            for (int slot = 0; slot < slots; slot++)
             {
-                bIsSeparatedChart[iSlot] = Data.Strategy.Slot[iSlot].SeparatedChart;
-                int iLenght = Data.Strategy.Slot[iSlot].Component.Length;
-                iComponentLenght[iSlot] = iLenght;
-                chartType[iSlot]  = new IndChartType[iLenght];
-                chartLine[iSlot]  = new Point[iLenght][];
-                chartDot[iSlot]   = new Rectangle[iLenght][];
-                chartLevel[iSlot] = new Rectangle[iLenght][];
-                chartValue[iSlot] = new double[iLenght][];
-                chartPen[iSlot]   = new Pen[iLenght][];
-                chartBrush[iSlot] = new Brush[iLenght];
+                _isSeparatedChart[slot] = StatsBuffer.Strategy.Slot[slot].SeparatedChart;
+                int count = StatsBuffer.Strategy.Slot[slot].Component.Length;
+                _componentLenght[slot] = count;
+                _chartType[slot] = new IndChartType[count];
+                _chartLine[slot] = new Point[count][];
+                _chartDot[slot] = new Rectangle[count][];
+                _chartLevel[slot] = new Rectangle[count][];
+                _chartValue[slot] = new double[count][];
+                _chartPen[slot] = new Pen[count][];
+                _chartBrush[slot] = new Brush[count];
             }
 
             for (int slot = 0; slot < slots; slot++)
             {
-                if (bIsSeparatedChart[slot]) continue;
+                if (_isSeparatedChart[slot]) continue;
 
-                for (int comp = 0; comp < iComponentLenght[slot]; comp++)
+                for (int comp = 0; comp < _componentLenght[slot]; comp++)
                 {
-                    chartType[slot][comp] = Data.Strategy.Slot[slot].Component[comp].ChartType;
-                    if (Data.Strategy.Slot[slot].Component[comp].ChartType == IndChartType.Line    ||
-                        Data.Strategy.Slot[slot].Component[comp].ChartType == IndChartType.CloudUp ||
-                        Data.Strategy.Slot[slot].Component[comp].ChartType == IndChartType.CloudDown )
-                    {   // Line
-                        chartBrush[slot][comp] = new SolidBrush(Data.Strategy.Slot[slot].Component[comp].ChartColor);
-                        chartLine[slot][comp]  = new Point[lastBar - firstBar + 1];
-                        for (int bar = firstBar; bar <= lastBar; bar++)
-                        {
-                            double dValue = Data.Strategy.Slot[slot].Component[comp].Value[bar];
-                            int ix = (bar - firstBar) * barPixels + xLeft;
-                            int iy = (int)(yPrcBottom - (dValue - minPrice) * scaleY);
+                    _chartType[slot][comp] = StatsBuffer.Strategy.Slot[slot].Component[comp].ChartType;
+                    switch (StatsBuffer.Strategy.Slot[slot].Component[comp].ChartType)
+                    {
+                        case IndChartType.Line:
+                        case IndChartType.CloudUp:
+                        case IndChartType.CloudDown:
+                            _chartBrush[slot][comp] =
+                                new SolidBrush(StatsBuffer.Strategy.Slot[slot].Component[comp].ChartColor);
+                            _chartLine[slot][comp] = new Point[_chartLastBar - _chartFirstBar + 1];
+                            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
+                            {
+                                double value = StatsBuffer.Strategy.Slot[slot].Component[comp].Value[bar];
+                                int x = (bar - _chartFirstBar)*_chartBarWidth + _xLeft;
+                                var y = (int) (_yPriceBottom - (value - _minPrice)*_scaleY);
 
-                            if(dValue == 0)
-                                chartLine[slot][comp][bar - firstBar] = chartLine[slot][comp][Math.Max(bar - firstBar - 1, 0)];
-                            else
-                                chartLine[slot][comp][bar - firstBar] = new Point(ix, iy);
-
-                        }
-                    }
-                    else if (Data.Strategy.Slot[slot].Component[comp].ChartType == IndChartType.Dot)
-                    {   // Dots
-                        chartBrush[slot][comp] = new SolidBrush(Data.Strategy.Slot[slot].Component[comp].ChartColor);
-                        chartDot[slot][comp]   = new Rectangle[lastBar - firstBar + 1];
-                        for (int bar = firstBar; bar <= lastBar; bar++)
-                        {
-                            double dValue = Data.Strategy.Slot[slot].Component[comp].Value[bar];
-                            int ix = (bar - firstBar) * barPixels + xLeft;
-                            int iy = (int)(yPrcBottom - (dValue - minPrice) * scaleY);
-                            chartDot[slot][comp][bar-firstBar] = new Rectangle(ix, iy, 1, 1);
-                        }
-                    }
-                    else if (Data.Strategy.Slot[slot].Component[comp].ChartType == IndChartType.Level)
-                    {   // Level
-                        chartBrush[slot][comp] = new SolidBrush(Data.Strategy.Slot[slot].Component[comp].ChartColor);
-                        chartLevel[slot][comp] = new Rectangle[lastBar - firstBar + 1];
-                        for (int bar = firstBar; bar <= lastBar; bar++)
-                        {
-                            double dValue = Data.Strategy.Slot[slot].Component[comp].Value[bar];
-                            int ix = (bar - firstBar) * barPixels + xLeft;
-                            int iy = (int)(yPrcBottom - (dValue - minPrice) * scaleY);
-                            chartLevel[slot][comp][bar - firstBar] = new Rectangle(ix, iy, barPixels, 1);
-                        }
+                                if (Math.Abs(value - 0) < 0.0001)
+                                    _chartLine[slot][comp][bar - _chartFirstBar] =
+                                        _chartLine[slot][comp][Math.Max(bar - _chartFirstBar - 1, 0)];
+                                else
+                                    _chartLine[slot][comp][bar - _chartFirstBar] = new Point(x, y);
+                            }
+                            break;
+                        case IndChartType.Dot:
+                            _chartBrush[slot][comp] =
+                                new SolidBrush(StatsBuffer.Strategy.Slot[slot].Component[comp].ChartColor);
+                            _chartDot[slot][comp] = new Rectangle[_chartLastBar - _chartFirstBar + 1];
+                            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
+                            {
+                                double value = StatsBuffer.Strategy.Slot[slot].Component[comp].Value[bar];
+                                int x = (bar - _chartFirstBar)*_chartBarWidth + _xLeft;
+                                var y = (int) (_yPriceBottom - (value - _minPrice)*_scaleY);
+                                _chartDot[slot][comp][bar - _chartFirstBar] = new Rectangle(x, y, 1, 1);
+                            }
+                            break;
+                        case IndChartType.Level:
+                            _chartBrush[slot][comp] =
+                                new SolidBrush(StatsBuffer.Strategy.Slot[slot].Component[comp].ChartColor);
+                            _chartLevel[slot][comp] = new Rectangle[_chartLastBar - _chartFirstBar + 1];
+                            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
+                            {
+                                double value = StatsBuffer.Strategy.Slot[slot].Component[comp].Value[bar];
+                                int x = (bar - _chartFirstBar)*_chartBarWidth + _xLeft;
+                                var y = (int) (_yPriceBottom - (value - _minPrice)*_scaleY);
+                                _chartLevel[slot][comp][bar - _chartFirstBar] = new Rectangle(x, y, _chartBarWidth, 1);
+                            }
+                            break;
                     }
                 }
             }
 
             // Separate indicators
-            yIndTop    = new int[inds];
-            yIndBottom = new int[inds];
-            dMaxValue  = new double[inds];
-            dMinValue  = new double[inds];
-            dScale     = new double[inds];
-            for (int ind = 0; ind < inds; ind++)
-            {
-                yIndTop[ind]    = yBottom - (ind + 1) * indHeight + 1;
-                yIndBottom[ind] = yBottom - ind * indHeight - 1;
-                dMaxValue[ind]  = double.MinValue;
-                dMinValue[ind]  = double.MaxValue;
-                int    iSlot = aiIndSlot[ind];
-                double dValue;
+            _yIndTop = new int[_separateIndicatorsCount];
+            _yIndBottom = new int[_separateIndicatorsCount];
+            _maxValue = new double[_separateIndicatorsCount];
+            _minValue = new double[_separateIndicatorsCount];
+            _scale = new double[_separateIndicatorsCount];
 
-                for (int iComp = 0; iComp < iComponentLenght[iSlot]; iComp++)
-                    if (Data.Strategy.Slot[iSlot].Component[iComp].ChartType != IndChartType.NoChart)
-                        for (int bar = Math.Max(firstBar, Data.Strategy.Slot[iSlot].Component[iComp].FirstBar); bar <= lastBar; bar++)
+            for (int ind = 0; ind < _separateIndicatorsCount; ind++)
+            {
+                _yIndTop[ind] = _yBottom - (ind + 1)*_separateIndicatorsChartHeight + 1;
+                _yIndBottom[ind] = _yBottom - ind*_separateIndicatorsChartHeight - 1;
+                _maxValue[ind] = double.MinValue;
+                _minValue[ind] = double.MaxValue;
+                int slot = _indicatorSlots[ind];
+
+                for (int comp = 0; comp < _componentLenght[slot]; comp++)
+                    if (StatsBuffer.Strategy.Slot[slot].Component[comp].ChartType != IndChartType.NoChart)
+                        for (
+                            int bar = Math.Max(_chartFirstBar, StatsBuffer.Strategy.Slot[slot].Component[comp].FirstBar);
+                            bar <= _chartLastBar;
+                            bar++)
                         {
-                            dValue = Data.Strategy.Slot[iSlot].Component[iComp].Value[bar];
-                            if (dValue > dMaxValue[ind]) dMaxValue[ind] = dValue;
-                            if (dValue < dMinValue[ind]) dMinValue[ind] = dValue;
+                            double value = StatsBuffer.Strategy.Slot[slot].Component[comp].Value[bar];
+                            if (value > _maxValue[ind]) _maxValue[ind] = value;
+                            if (value < _minValue[ind]) _minValue[ind] = value;
                         }
 
-                dMaxValue[ind] = Math.Max(dMaxValue[ind], Data.Strategy.Slot[iSlot].MaxValue);
-                dMinValue[ind] = Math.Min(dMinValue[ind], Data.Strategy.Slot[iSlot].MinValue);
+                _maxValue[ind] = Math.Max(_maxValue[ind], StatsBuffer.Strategy.Slot[slot].MaxValue);
+                _minValue[ind] = Math.Min(_minValue[ind], StatsBuffer.Strategy.Slot[slot].MinValue);
 
-                foreach (double dSpecVal in Data.Strategy.Slot[iSlot].SpecValue)
-                    if (dSpecVal == 0)
+                foreach (double specialValue in StatsBuffer.Strategy.Slot[slot].SpecValue)
+                    if (Math.Abs(specialValue - 0) < 0.0001)
                     {
-                        dMaxValue[ind] = Math.Max(dMaxValue[ind], 0);
-                        dMinValue[ind] = Math.Min(dMinValue[ind], 0);
+                        _maxValue[ind] = Math.Max(_maxValue[ind], 0);
+                        _minValue[ind] = Math.Min(_minValue[ind], 0);
                     }
 
-                dScale[ind] = (yIndBottom[ind] - yIndTop[ind] - 2) / (Math.Max(dMaxValue[ind] - dMinValue[ind], 0.0001f));
+                _scale[ind] = (_yIndBottom[ind] - _yIndTop[ind] - 2)/
+                              (Math.Max(_maxValue[ind] - _minValue[ind], 0.0001f));
 
                 // Indicator chart
-                for (int iComp = 0; iComp < Data.Strategy.Slot[iSlot].Component.Length; iComp++)
+                for (int comp = 0; comp < StatsBuffer.Strategy.Slot[slot].Component.Length; comp++)
                 {
-                    chartType[iSlot][iComp] = Data.Strategy.Slot[iSlot].Component[iComp].ChartType;
-                    if (Data.Strategy.Slot[iSlot].Component[iComp].ChartType == IndChartType.Line)
-                    {   // Line
-                        chartBrush[iSlot][iComp] = new SolidBrush(Data.Strategy.Slot[iSlot].Component[iComp].ChartColor);
-                        chartLine[iSlot][iComp]  = new Point[lastBar - firstBar + 1];
-                        for (int bar = firstBar; bar <= lastBar; bar++)
-                        {
-                            dValue = Data.Strategy.Slot[iSlot].Component[iComp].Value[bar];
-                            int ix = (bar - firstBar) * barPixels + xLeft;
-                            int iy = (int)(yIndBottom[ind] - 1 - (dValue - dMinValue[ind]) * dScale[ind]);
-                            chartLine[iSlot][iComp][bar - firstBar] = new Point(ix, iy);
-                        }
-                    }
-                    else if (Data.Strategy.Slot[iSlot].Component[iComp].ChartType == IndChartType.Histogram)
-                    {   // Histogram
-                        chartValue[iSlot][iComp] = new double[lastBar - firstBar + 1];
-                        chartPen[iSlot][iComp]   = new Pen[lastBar - firstBar + 1];
-                        for (int bar = firstBar; bar <= lastBar; bar++)
-                        {
-                            dValue = Data.Strategy.Slot[iSlot].Component[iComp].Value[bar];
-                            chartValue[iSlot][iComp][bar - firstBar] = dValue;
-                            if (dValue > Data.Strategy.Slot[iSlot].Component[iComp].Value[bar - 1])
-                                chartPen[iSlot][iComp][bar - firstBar] = penGreen;
-                            else
-                                chartPen[iSlot][iComp][bar - firstBar] = penRed;
-                        }
+                    _chartType[slot][comp] = StatsBuffer.Strategy.Slot[slot].Component[comp].ChartType;
+                    switch (_chartType[slot][comp])
+                    {
+                        case IndChartType.Line:
+                            _chartBrush[slot][comp] =
+                                new SolidBrush(StatsBuffer.Strategy.Slot[slot].Component[comp].ChartColor);
+                            _chartLine[slot][comp] = new Point[_chartLastBar - _chartFirstBar + 1];
+                            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
+                            {
+                                double value = StatsBuffer.Strategy.Slot[slot].Component[comp].Value[bar];
+                                int x = (bar - _chartFirstBar)*_chartBarWidth + _xLeft;
+                                var y = (int) (_yIndBottom[ind] - 1 - (value - _minValue[ind])*_scale[ind]);
+                                _chartLine[slot][comp][bar - _chartFirstBar] = new Point(x, y);
+                            }
+                            break;
+                        case IndChartType.Histogram:
+                            _chartValue[slot][comp] = new double[_chartLastBar - _chartFirstBar + 1];
+                            _chartPen[slot][comp] = new Pen[_chartLastBar - _chartFirstBar + 1];
+                            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
+                            {
+                                double value = StatsBuffer.Strategy.Slot[slot].Component[comp].Value[bar];
+                                _chartValue[slot][comp][bar - _chartFirstBar] = value;
+                                if (value > StatsBuffer.Strategy.Slot[slot].Component[comp].Value[bar - 1])
+                                    _chartPen[slot][comp][bar - _chartFirstBar] = _penGreen;
+                                else
+                                    _chartPen[slot][comp][bar - _chartFirstBar] = _penRed;
+                            }
+                            break;
                     }
                 }
             }
@@ -420,157 +423,164 @@ namespace Forex_Strategy_Builder
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            Data.GradientPaint(g, new Rectangle(border, (int)captionHeight, ClientSize.Width - 2 * border, ClientSize.Height - (int)captionHeight - border),
-                LayoutColors.ColorChartBack, LayoutColors.DepthControl);
+            Data.GradientPaint(g,
+                               new Rectangle(Border, (int) _captionHeight, ClientSize.Width - 2*Border,
+                                             ClientSize.Height - (int) _captionHeight - Border),
+                               LayoutColors.ColorChartBack, LayoutColors.DepthControl);
 
             // Panel caption
-            Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
-            g.DrawString(stringCaptionText, fontCaptionText, brushCaptionText, rectfCaption, stringFormatCaption);
+            Data.GradientPaint(g, _captionRectangle, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
+            g.DrawString(_captionText, _captionFont, _captionBrush, _captionRectangle, _captionStringFormat);
 
             // Border
-            g.DrawLine(penBorder, 1, captionHeight, 1, ClientSize.Height);
-            g.DrawLine(penBorder, ClientSize.Width - border + 1, captionHeight, ClientSize.Width - border + 1, ClientSize.Height);
-            g.DrawLine(penBorder, 0, ClientSize.Height - border + 1, ClientSize.Width, ClientSize.Height - border + 1);
+            g.DrawLine(_penBorder, 1, _captionHeight, 1, ClientSize.Height);
+            g.DrawLine(_penBorder, ClientSize.Width - Border + 1, _captionHeight, ClientSize.Width - Border + 1,
+                       ClientSize.Height);
+            g.DrawLine(_penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
 
-            if (!Data.IsData || !Data.IsResult || Data.Bars <= Data.FirstBar) return;
+            if (!Data.IsData || !Data.IsResult || Data.Bars <= StatsBuffer.FirstBar) return;
 
             // Limits the drawing into the chart area only
-            g.SetClip(new Rectangle(xLeft, yTop, xRight - xLeft, yPrcBottom - yTop));
+            g.SetClip(new Rectangle(_xLeft, _yTop, _xRight - _xLeft, _yPriceBottom - _yTop));
 
             // Draws Volume, Lots and Price
             int index = 0;
-            Pen penBar = new Pen(LayoutColors.ColorBarBorder);
-            for (int bar = firstBar; bar <= lastBar; bar++)
+            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
             {
                 // Draw the volume
-                if (yVolume[index] != yPrcBottom)
-                    g.DrawLine(penVolume, x[index], yVolume[index], x[index], yPrcBottom - 1);
+                if (_yVolume[index] != _yPriceBottom)
+                    g.DrawLine(_penVolume, _x[index], _yVolume[index], _x[index], _yPriceBottom - 1);
 
                 // Draw position lots
-                if (rectPosition[index] != Rectangle.Empty)
-                    g.FillRectangle(brushPosition[index], rectPosition[index]);
+                if (_rectPosition[index] != Rectangle.Empty)
+                    g.FillRectangle(_brushPosition[index], _rectPosition[index]);
 
                 // Draw the bar
-                g.DrawLine(penBar, x[index], yLow[index], x[index], yHigh[index]);
-                g.DrawLine(penBar, x[index], yClose[index], x[index] + 1, yClose[index]);
+                var penBar = new Pen(LayoutColors.ColorBarBorder);
+                g.DrawLine(penBar, _x[index], _yLow[index], _x[index], _yHigh[index]);
+                g.DrawLine(penBar, _x[index], _yClose[index], _x[index] + 1, _yClose[index]);
                 index++;
             }
 
             // Drawing the indicators in the chart
+            int slots = StatsBuffer.Strategy.Slots;
             for (int slot = 0; slot < slots; slot++)
             {
-                if (bIsSeparatedChart[slot]) continue;
-                for (int iComp = 0; iComp < iComponentLenght[slot]; iComp++)
+                if (_isSeparatedChart[slot]) continue;
+                for (int comp = 0; comp < _componentLenght[slot]; comp++)
                 {
-                    if (chartType[slot][iComp] == IndChartType.Line)
-                    {   // Line
-                        g.DrawLines(new Pen(chartBrush[slot][iComp]), chartLine[slot][iComp]);
+                    if (_chartType[slot][comp] == IndChartType.Line)
+                    {
+                        // Line
+                        g.DrawLines(new Pen(_chartBrush[slot][comp]), _chartLine[slot][comp]);
                     }
-                    else if (chartType[slot][iComp] == IndChartType.Dot)
-                    {   // Dots
-                        for (int bar = firstBar; bar <= lastBar; bar++)
-                            g.FillRectangle(chartBrush[slot][iComp], chartDot[slot][iComp][bar - firstBar]);
+                    else if (_chartType[slot][comp] == IndChartType.Dot)
+                    {
+                        // Dots
+                        for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
+                            g.FillRectangle(_chartBrush[slot][comp], _chartDot[slot][comp][bar - _chartFirstBar]);
                     }
-                    else if (chartType[slot][iComp] == IndChartType.Level)
-                    {   // Level
-                        for (int bar = firstBar; bar <= lastBar; bar++)
-                            g.FillRectangle(chartBrush[slot][iComp], chartLevel[slot][iComp][bar - firstBar]);
+                    else if (_chartType[slot][comp] == IndChartType.Level)
+                    {
+                        // Level
+                        for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
+                            g.FillRectangle(_chartBrush[slot][comp], _chartLevel[slot][comp][bar - _chartFirstBar]);
                     }
-                    else if (chartType[slot][iComp] == IndChartType.CloudUp)
-                    {   // CloudUp
-                        Pen pen = new Pen(chartBrush[slot][iComp]);
-                        pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-                        g.DrawLines(pen, chartLine[slot][iComp]);
+                    else if (_chartType[slot][comp] == IndChartType.CloudUp)
+                    {
+                        // CloudUp
+                        var pen = new Pen(_chartBrush[slot][comp]) {DashStyle = DashStyle.Dash};
+                        g.DrawLines(pen, _chartLine[slot][comp]);
                     }
-                    else if (chartType[slot][iComp] == IndChartType.CloudDown)
-                    {   // CloudDown
-                        Pen pen = new Pen(chartBrush[slot][iComp]);
-                        pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-                        g.DrawLines(pen, chartLine[slot][iComp]);
+                    else if (_chartType[slot][comp] == IndChartType.CloudDown)
+                    {
+                        // CloudDown
+                        var pen = new Pen(_chartBrush[slot][comp]) {DashStyle = DashStyle.Dash};
+                        g.DrawLines(pen, _chartLine[slot][comp]);
                     }
                 }
             }
             g.ResetClip();
 
             // Separate indicators
-            for (int ind = 0; ind < inds; ind++)
+            for (int ind = 0; ind < _separateIndicatorsCount; ind++)
             {
-                int slot = aiIndSlot[ind];
+                int slot = _indicatorSlots[ind];
 
-                for (int comp = 0; comp < iComponentLenght[slot]; comp++)
+                for (int comp = 0; comp < _componentLenght[slot]; comp++)
                 {
-                    if (chartType[slot][comp] == IndChartType.Line)
-                    {   // Line
-                        g.DrawLines(new Pen(chartBrush[slot][comp]), chartLine[slot][comp]);
-                    }
-                    else if (chartType[slot][comp] == IndChartType.Histogram)
-                    {   // Histogram
-                        double zero = 0;
-                        if (zero < dMinValue[ind]) zero = dMinValue[ind];
-                        if (zero > dMaxValue[ind]) zero = dMaxValue[ind];
-                        int y0 = (int)(yIndBottom[ind] - (zero - dMinValue[ind]) * dScale[ind]);
-                        g.DrawLine(penDarkGray, xLeft, y0, xRight, y0);
-                        for (int bar = firstBar; bar <= lastBar; bar++)
-                        {
-                            double val = chartValue[slot][comp][bar - firstBar];
-                            int x = (bar - firstBar) * barPixels + xLeft;
-                            int y = (int)(yIndBottom[ind] - (val - dMinValue[ind]) * dScale[ind]);
-                            g.DrawLine(chartPen[slot][comp][bar - firstBar], x, y0, x, y);
-                        }
+                    switch (_chartType[slot][comp])
+                    {
+                        case IndChartType.Line:
+                            g.DrawLines(new Pen(_chartBrush[slot][comp]), _chartLine[slot][comp]);
+                            break;
+                        case IndChartType.Histogram:
+                            double zero = 0;
+                            if (zero < _minValue[ind]) zero = _minValue[ind];
+                            if (zero > _maxValue[ind]) zero = _maxValue[ind];
+                            var y0 = (int) (_yIndBottom[ind] - (zero - _minValue[ind])*_scale[ind]);
+                            g.DrawLine(_penDarkGray, _xLeft, y0, _xRight, y0);
+                            for (int bar = _chartFirstBar; bar <= _chartLastBar; bar++)
+                            {
+                                double val = _chartValue[slot][comp][bar - _chartFirstBar];
+                                int x = (bar - _chartFirstBar)*_chartBarWidth + _xLeft;
+                                var y = (int) (_yIndBottom[ind] - (val - _minValue[ind])*_scale[ind]);
+                                g.DrawLine(_chartPen[slot][comp][bar - _chartFirstBar], x, y0, x, y);
+                            }
+                            break;
                     }
                 }
             }
 
             // Lines
-            for (int ind = 0; ind < inds; ind++)
+            for (int ind = 0; ind < _separateIndicatorsCount; ind++)
             {
-                int y = yBottom - (ind + 1) * indHeight;
-                g.DrawLine(penFore, xLeft, y, xRight, y);
+                int y = _yBottom - (ind + 1)*_separateIndicatorsChartHeight;
+                g.DrawLine(_penFore, _xLeft, y, _xRight, y);
             }
-            g.DrawLine(penFore, xLeft, yBottom, xRight, yBottom);
-            g.DrawLine(penFore, xLeft, yTop, xLeft, yBottom);
+            g.DrawLine(_penFore, _xLeft, _yBottom, _xRight, _yBottom);
+            g.DrawLine(_penFore, _xLeft, _yTop, _xLeft, _yBottom);
         }
 
         /// <summary>
         /// Generates dynamic info on the status bar
-        /// when we are Moving the mouse over the SmallIndicatorsChart.
+        /// when we are Moving the mouse over the Indicator Chart.
         /// </summary>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
 
-            if (!isShowDynamicInfo || !Data.IsData || !Data.IsResult || Data.Bars < Data.FirstBar) return;
+            if (!_isShowDynamicInfo || !Data.IsData || !Data.IsResult || Data.Bars < StatsBuffer.FirstBar) return;
 
-            int barNumb;
-            barNumb = (e.X - space) / barPixels;
-            barNumb = Math.Max(0, barNumb);
-            barNumb = Math.Min(chartBars - 1, barNumb);
+            int currentBar = (e.X - Space)/_chartBarWidth;
+            currentBar = Math.Max(0, currentBar);
+            currentBar = Math.Min(_chartBars - 1, currentBar);
 
-            int bar = Math.Min(Data.Bars - 1, firstBar + barNumb);
+            int bar = Math.Min(Data.Bars - 1, _chartFirstBar + currentBar);
 
-            statusBarText =
-                    Data.Time[bar].ToString(Data.DF)  + " "   +
-                    Data.Time[bar].ToString("HH:mm")  + " O:" +
-                    Data.Open[bar].ToString(Data.FF)  + " H:" +
-                    Data.High[bar].ToString(Data.FF)  + " L:" +
-                    Data.Low[bar].ToString(Data.FF)   + " C:" +
-                    Data.Close[bar].ToString(Data.FF) + " V:" +
-                    Data.Volume[bar].ToString();
+            CurrentBarInfo = string.Format("{0} {1} O:{2} H:{3} L:{4} C:{5} V:{6}",
+                                           Data.Time[bar].ToString(Data.DF),
+                                           Data.Time[bar].ToString("HH:mm"),
+                                           Data.Open[bar].ToString(Data.FF),
+                                           Data.High[bar].ToString(Data.FF),
+                                           Data.Low[bar].ToString(Data.FF),
+                                           Data.Close[bar].ToString(Data.FF),
+                                           Data.Volume[bar]);
         }
 
         /// <summary>
         /// Sets the parameters after the horizontal scrollbar position has been changed.
         /// </summary>
-        void HscrllbInstrChart_ValueChanged(object sender, EventArgs e)
+        private void ScrollBarValueChanged(object sender, EventArgs e)
         {
-            if (!isValueChangedAktive) return;
+            if (!_isValueChangedAktive) return;
 
-            firstBar = scrollBar.Value;
-            lastBar  = Math.Max(firstBar + chartBars - 1, firstBar);
+            _chartFirstBar = _scrollBar.Value;
+            _chartLastBar = Math.Max(_chartFirstBar + _chartBars - 1, _chartFirstBar);
 
-            this.SetUpChart();
-            Rectangle rect = new Rectangle(xLeft + 1, yTop, xRight - xLeft, yBottom - yTop);
-            this.Invalidate(rect);
+            SetUpPaintData();
+            var chartArea = new Rectangle(_xLeft + 1, _yTop, _xRight - _xLeft, _yBottom - _yTop);
+            Invalidate(chartArea);
         }
 
         /// <summary>
@@ -579,8 +589,8 @@ namespace Forex_Strategy_Builder
         protected override void OnResize(EventArgs eventargs)
         {
             base.OnResize(eventargs);
-            this.InitChart();
-            this.Invalidate();
+            InitChart();
+            Invalidate();
         }
     }
 }

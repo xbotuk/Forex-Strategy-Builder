@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Common;
 using Forex_Strategy_Builder.Dialogs.Optimizer;
 
 namespace Forex_Strategy_Builder
@@ -224,6 +225,8 @@ namespace Forex_Strategy_Builder
 
             if (strategyProperties.DialogResult == DialogResult.OK)
             {
+                StatsBuffer.UpdateStatsBuffer();
+
                 this.Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + "* - " + Data.ProgramName;
                 Data.IsStrategyChanged = true;
                 RebuildStrategyLayout();
@@ -261,6 +264,8 @@ namespace Forex_Strategy_Builder
 
             if (indicatorDialog.DialogResult == DialogResult.OK)
             {
+                StatsBuffer.UpdateStatsBuffer();
+
                 this.Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + "* - " + Data.ProgramName;
                 Data.IsStrategyChanged = true;
                 smallIndicatorChart.InitChart();
@@ -875,6 +880,8 @@ namespace Forex_Strategy_Builder
             Backtester.CalculateAccountStats();
 
             Data.IsResult = true;
+            StatsBuffer.UpdateStatsBuffer();
+
             if (isUPBVChanged) RebuildStrategyLayout();
             smallIndicatorChart.InitChart();
             smallIndicatorChart.Invalidate();
@@ -1124,6 +1131,8 @@ namespace Forex_Strategy_Builder
             Scanner scanner = new Scanner();
             scanner.ShowDialog();
 
+            StatsBuffer.UpdateStatsBuffer();
+
             miStrategyAutoscan.Checked = Configs.Autoscan;
 
             infpnlAccountStatistics.Update(Backtester.AccountStatsParam, Backtester.AccountStatsValue,
@@ -1143,6 +1152,8 @@ namespace Forex_Strategy_Builder
                 ShowScanner();
             else
                 Backtester.Scan();
+
+            StatsBuffer.UpdateStatsBuffer();
 
             infpnlAccountStatistics.Update(Backtester.AccountStatsParam, Backtester.AccountStatsValue,
                                            Backtester.AccountStatsFlags, Language.T("Account Statistics"));
