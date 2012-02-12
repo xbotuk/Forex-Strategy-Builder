@@ -718,6 +718,8 @@ namespace Forex_Strategy_Builder
             // Creates a new strategy.
             Strategy tempStrategy = new Strategy(openFilters, closeFilters);
 
+            tempStrategy.firstBar = firstBar;
+
             // Number of slots
             tempStrategy.openFilters  = openFilters;
             tempStrategy.closeFilters = closeFilters;
