@@ -54,27 +54,27 @@ namespace Forex_Strategy_Builder
             {
                 const string spacePattern  = @"[\t ;,]";
                 const string datePattern   = @"\d{1,4}[\./-]\d{1,4}[\./-]\d{1,4}";
-                const string timePattern   = @"|[\d{2}({:}\d{2}){1,2}]";
+                const string timePattern   = @"\d{2}(:\d{2}){1,2}";
                 const string pricePattern  = @"\d+([\.,]\d+)?";
                 const string volumePattern = @"\d{1,10}";
 
                 // A data line has to start with date string followed by time string
                 var regex = new Regex("^" +  // Start of the string
-                    spacePattern + "*" +  // Zero or more white spaces
-                    datePattern +        // Valid date pattern
-                    spacePattern + "+" +  // One or more spaces
-                    timePattern +        // Valid time pattern
-                    spacePattern + "+" +  // One or more spaces
-                    pricePattern +        // Price
-                    spacePattern + "+" +  // One or more spaces
-                    pricePattern +        // Price
-                    spacePattern + "+" +  // One or more spaces
-                    pricePattern +        // Price
-                    spacePattern + "+" +  // One or more spaces
-                    pricePattern +        // Price
-                    spacePattern + "+" +  // One or more spaces
+                    spacePattern  + "*" +  // Zero or more white spaces
+                    datePattern   +        // Valid date pattern
+                    spacePattern  + "+" +  // One or more spaces
+                    timePattern   +        // Valid time pattern
+                    spacePattern  + "+" +  // One or more spaces
+                    pricePattern  +        // Price
+                    spacePattern  + "+" +  // One or more spaces
+                    pricePattern  +        // Price
+                    spacePattern  + "+" +  // One or more spaces
+                    pricePattern  +        // Price
+                    spacePattern  + "+" +  // One or more spaces
+                    pricePattern  +        // Price
+                    spacePattern  + "+" +  // One or more spaces
                     volumePattern +        // Optional volume
-                    spacePattern + "*"    // Zero or more white spaces
+                    spacePattern  + "*"    // Zero or more white spaces
                     , RegexOptions.Compiled);
 
                 return regex;
@@ -88,11 +88,11 @@ namespace Forex_Strategy_Builder
         /// <returns>Matched regex for the data string.</returns>
         private Regex AnalyseInput(string dataString)
         {
-            string datePattern = GetDateMatchPattern(dataString);
+            string datePattern  = GetDateMatchPattern(dataString);
             string pricePattern = PriceMatchPattern(dataString);
 
             string dataMatchPattern = "^[\t ;,]*" +
-                datePattern + @"[\t ;,]+[(?<hour>\d{2}):(?<min>\d{2})(:(?<sec>\d{2}))]*[\t ;,]*" +
+                datePattern  + @"[\t ;,]+(?<hour>\d{2}):(?<min>\d{2})(:(?<sec>\d{2}))*[\t ;,]*" +
                 pricePattern + @"[\t ;,]+(?<volume>\d+)[\t ;,]*$";
 
             return new Regex(dataMatchPattern, RegexOptions.Compiled);
@@ -445,7 +445,6 @@ namespace Forex_Strategy_Builder
             string line;
             var bar = 0;
             var stringReader = new StringReader(dataFile);
-            int result;
             while ((line = stringReader.ReadLine()) != null)
             {
                 var match = regexDataFile.Match(line);
@@ -453,12 +452,12 @@ namespace Forex_Strategy_Builder
 
                 var year = int.Parse(match.Groups["year"].Value);
                 year = CorrectProblemYear2000(year);
-                var month = int.Parse(match.Groups["month"].Value);
-                var day = int.Parse(match.Groups["day"].Value);
-                var hour = int.TryParse(match.Groups["hour"].Value, out result) ? int.Parse(match.Groups["hour"].Value) : 0;
-                var min = int.TryParse(match.Groups["min"].Value, out result) ? int.Parse(match.Groups["min"].Value) : 0;
-                var seconds = string.IsNullOrEmpty(match.Groups["sec"].Value) ? match.Groups["sec"].Value : "";
-                var sec = (seconds == "" ? 0 : int.Parse(seconds));
+                var month   = int.Parse(match.Groups["month"].Value);
+                var day     = int.Parse(match.Groups["day"].Value);
+                var hour    = int.Parse(match.Groups["hour"].Value);
+                var min     = int.Parse(match.Groups["min"].Value);
+                var seconds = match.Groups["sec"].Value;
+                var sec     = (seconds == "" ? 0 : int.Parse(seconds));
 
                 barList[bar].Time   = new DateTime(year, month, day, hour, min, sec);
                 barList[bar].Open   = ParseDouble(match.Groups["open"].Value);
