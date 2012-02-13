@@ -269,7 +269,6 @@ namespace Forex_Strategy_Builder
             delta       = (float)Math.Max(Math.Round((maximum - minimum) / (float)countLabels), 10);
             step        = (int)Math.Ceiling(delta / 10) * 10;
             countLabels = (int)Math.Ceiling((maximum - minimum) / (float)step);
-            maximum     = minimum + countLabels * step;
             YScale      = (YBottom - YTop) / (countLabels * (float)step);
 
             apntBalance = new PointF[chartBars];
@@ -368,10 +367,10 @@ namespace Forex_Strategy_Builder
             if (isNotPaint) return;
 
             // Grid and Price labels
-            for (int label = minimum; label <= maximum; label += step)
+            for (int labelPrice = minimum; labelPrice <= minimum + countLabels * step; labelPrice += step)
             {
-                int labelY = (int)(YBottom - (label - minimum) * YScale);
-                g.DrawString(label.ToString(), Font, brushFore, XRight, labelY - Font.Height / 2 - 1);
+                int labelY = (int)(YBottom - (labelPrice - minimum) * YScale);
+                g.DrawString(labelPrice.ToString(), Font, brushFore, XRight, labelY - Font.Height / 2 - 1);
                 g.DrawLine(penGrid, XLeft, labelY, XRight, labelY);
             }
 
