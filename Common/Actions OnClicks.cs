@@ -640,6 +640,9 @@ namespace Forex_Strategy_Builder
                 case "CommandConsole":
                     ShowCommandConsole();
                     break;
+                case "miMetaTrader4Import":
+                    MetaTrader4Import();
+                    break;
                 case "miJForexImport":
                     JForexImport();
                     break;
@@ -862,6 +865,17 @@ namespace Forex_Strategy_Builder
         {
             Edit_Translation et = new Edit_Translation();
             et.Show();
+
+            return;
+        }
+
+        /// <summary>
+        /// Starts MetaTrader4Import.
+        /// </summary>
+        void MetaTrader4Import()
+        {
+            MetaTrader4_Import mt4 = new MetaTrader4_Import();
+            mt4.ShowDialog();
 
             return;
         }

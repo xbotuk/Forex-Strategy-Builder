@@ -129,6 +129,9 @@
     <Compile Include="Dialogs\Generator\Generator - Top 10.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Dialogs\MetaTrader4_Import.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Dialogs\Optimizer\CoupleOfParams.cs" />
     <Compile Include="Dialogs\Optimizer\OptimizerButtons.cs" />
     <Compile Include="Dialogs\Optimizer\OptimizerGui.cs">
@@ -463,6 +466,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\chart_protection.png" />
+    <Content Include="Images\metatrader4.png" />
     <Content Include="Resources\config.xml" />
     <Content Include="Resources\fsb-update.xml" />
     <EmbeddedResource Include="Properties\Resources.resx">

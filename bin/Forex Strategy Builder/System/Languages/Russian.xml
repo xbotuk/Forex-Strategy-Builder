@@ -2917,6 +2917,27 @@
     <main>Relative</main>
     <alt>Относительный</alt>
   </str>
+  <!-- MT4 Import -->
+  <str>
+    <main>Import MetaTrader 4 HST Files</main>
+    <alt>Импортировать файлы с данными из MetaTrader 4</alt>
+  </str>
+  <str>
+    <main>MetaTrader 4 Import</main>
+    <alt>MetaTrader 4 Импорт</alt>
+  </str>
+  <str>
+    <main>Directory containing MetaTrader 4 HST files:</main>
+    <alt>Директория HST файлов MetaTrader 4:</alt>
+  </str>
+  <str>
+    <main>Starting Date:</main>
+    <alt>Началная дата:</alt>
+  </str>
+  <str>
+    <main>Ending Date:</main>
+    <alt>Крайная дата:</alt>
+  </str>
   <!-- JForex Import -->
   <str>
     <main>Imported Files</main>

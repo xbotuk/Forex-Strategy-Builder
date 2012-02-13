@@ -68,8 +68,11 @@ namespace Forex_Strategy_Builder
         static string decimalSeparatorDefault       = ".";
         static bool   useTickDataDefault            = false;
         static string jforexDataPathDefault         = "";
+        static string metatrader4DataPathDefault    = "";
         static int    marketClosingHourDefault      = 21;
         static int    marketOpeningHourDefault      = 21;
+        static string importStartingDateDefault     = "";
+        static string importEndingDateDefault       = "";
         static string bannedIndicatorsDefault       = "";
         static bool   showPriceChartOnAccountChartDefault = false;
         static bool   analyzerHideFSBDefault        = true;
@@ -867,6 +870,18 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        static string metatrader4DataPath = metatrader4DataPathDefault;
+        public static string MetaTrader4DataPath
+        {
+            get { return metatrader4DataPath; }
+            set
+            {
+                metatrader4DataPath = value;
+                if (isConfigLoaded)
+                    xmlConfig.SelectNodes("config/metatrader4DataPath").Item(0).InnerText = value.ToString();
+            }
+        }
+
         static int marketClosingHour = marketClosingHourDefault;
         public static int MarketClosingHour
         {
@@ -888,6 +903,30 @@ namespace Forex_Strategy_Builder
                 marketOpeningHour = value;
                 if (isConfigLoaded)
                     xmlConfig.SelectNodes("config/marketOpeningHour").Item(0).InnerText = value.ToString();
+            }
+        }
+
+        static string importStartingDate = importStartingDateDefault;
+        public static string ImportStartingDate
+        {
+            get { return importStartingDate; }
+            set
+            {
+                importStartingDate = value;
+                if (isConfigLoaded)
+                    xmlConfig.SelectNodes("config/importStartingDate").Item(0).InnerText = value.ToString();
+            }
+        }
+
+        static string importEndingDate = importEndingDateDefault;
+        public static string ImportEndingDate
+        {
+            get { return importEndingDate; }
+            set
+            {
+                importEndingDate = value;
+                if (isConfigLoaded)
+                    xmlConfig.SelectNodes("config/importEndingDate").Item(0).InnerText = value.ToString();
             }
         }
 
@@ -1408,8 +1447,11 @@ namespace Forex_Strategy_Builder
             DecimalSeparator           = decimalSeparatorDefault;
             UseTickData                = useTickDataDefault;
             JForexDataPath             = jforexDataPathDefault;
+            MetaTrader4DataPath        = metatrader4DataPathDefault;
             MarketClosingHour          = marketClosingHourDefault;
             MarketOpeningHour          = marketOpeningHourDefault;
+            ImportStartingDate         = importStartingDateDefault;
+            ImportEndingDate           = importEndingDateDefault;
             BannedIndicators           = bannedIndicatorsDefault;
             ShowPriceChartOnAccountChart = showPriceChartOnAccountChartDefault;
             AnalyzerHideFSB            = analyzerHideFSBDefault;
@@ -1501,8 +1543,11 @@ namespace Forex_Strategy_Builder
             decimalSeparator             = ParseNode("config/decimalSeparator", decimalSeparatorDefault);
             useTickData                  = ParseNode("config/useTickData",  useTickDataDefault);
             jforexDataPath               = ParseNode("config/jforexDataPath",  jforexDataPathDefault);
+            metatrader4DataPath          = ParseNode("config/metatrader4DataPath", metatrader4DataPathDefault);
             marketClosingHour            = ParseNode("config/marketClosingHour", marketClosingHourDefault);
             marketOpeningHour            = ParseNode("config/marketOpeningHour", marketOpeningHourDefault);
+            importStartingDate           = ParseNode("config/importStartingDate", importStartingDateDefault);
+            importEndingDate             = ParseNode("config/importEndingDate", importEndingDateDefault); 
             bannedIndicators             = ParseNode("config/bannedIndicators", bannedIndicatorsDefault);
             showPriceChartOnAccountChart = ParseNode("config/showPriceChartOnAccountChart", showPriceChartOnAccountChartDefault);
             analyzerHideFSB              = ParseNode("config/analyzerHideFSB", analyzerHideFSBDefault);

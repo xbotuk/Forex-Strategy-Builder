@@ -2918,6 +2918,27 @@
     <main>Relative</main>
     <alt>Relative</alt>
   </str>
+  <!-- MT4 Import -->
+  <str>
+    <main>Import MetaTrader 4 HST Files</main>
+    <alt>Import MetaTrader 4 HST Files</alt>
+  </str>
+  <str>
+    <main>MetaTrader 4 Import</main>
+    <alt>MetaTrader 4 Import</alt>
+  </str>
+  <str>
+    <main>Directory containing MetaTrader 4 HST files:</main>
+    <alt>Directory containing MetaTrader 4 HST files:</alt>
+  </str>
+  <str>
+    <main>Starting Date:</main>
+    <alt>Starting Date:</alt>
+  </str>
+  <str>
+    <main>Ending Date:</main>
+    <alt>Ending Date:</alt>
+  </str>
   <!-- JForex Import -->
   <str>
     <main>Imported Files</main>

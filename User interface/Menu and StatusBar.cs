@@ -405,6 +405,13 @@ namespace Forex_Strategy_Builder
 
             miMarket.DropDownItems.Add(new ToolStripSeparator());
 
+            ToolStripMenuItem miMetaTrader4Import = new ToolStripMenuItem();
+            miMetaTrader4Import.Name   = "miMetaTrader4Import";
+            miMetaTrader4Import.Text   = Language.T("Import MetaTrader 4 HST Files") + "...";
+            miMetaTrader4Import.Image  = Properties.Resources.metatrader4;
+            miMetaTrader4Import.Click += new EventHandler(MenuTools_OnClick);
+            miMarket.DropDownItems.Add(miMetaTrader4Import);
+
             ToolStripMenuItem miJForexImport = new ToolStripMenuItem();
             miJForexImport.Name   = "miJForexImport";
             miJForexImport.Text   = Language.T("Import JForex Data Files") + "...";

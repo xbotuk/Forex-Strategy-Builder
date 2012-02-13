@@ -801,6 +801,13 @@
   <str><main>Absolute</main><alt>Абсолютен</alt></str>
   <str><main>Relative</main><alt>Относителен</alt></str>
 
+  <!-- MT4 Import -->
+  <str><main>Import MetaTrader 4 HST Files</main><alt>Вмъкване на MetaTrader 4 HST файлове</alt></str>
+  <str><main>MetaTrader 4 Import</main><alt>Вмъкване на MetaTrader 4 файлове</alt></str>
+  <str><main>Directory containing MetaTrader 4 HST files:</main><alt>Директория на HST файловете на MetaTrader:</alt></str>
+  <str><main>Starting Date:</main><alt>Начална дата:</alt></str>
+  <str><main>Ending Date:</main><alt>Крайна дата:</alt></str>
+
   <!-- JForex Import -->
   <str><main>Imported Files</main><alt>Вмъкнати файлове</alt></str>
   <str><main>Import JForex Data Files</main><alt>Вмъкване на данни от JForex файлове</alt></str>

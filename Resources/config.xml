@@ -36,6 +36,9 @@
   <optimizerOptions></optimizerOptions>
   <columnSeparator>,</columnSeparator>
   <decimalSeparator>.</decimalSeparator>
+  <metatrader4DataPath></metatrader4DataPath>
+  <importStartingDate></importStartingDate>
+  <importEndingDate></importEndingDate>
   <useTickData>False</useTickData>
   <jforexDataPath></jforexDataPath>
   <marketClosingHour>21</marketClosingHour>
@@ -46,6 +49,7 @@
   <sendUsageStats>True</sendUsageStats>
   <mainScreenWidth>790</mainScreenWidth>
   <mainScreenHeight>590</mainScreenHeight>
+  <showStatusBar>True</showStatusBar>
   <dataHorizon>
     <maxBars>20000</maxBars>
     <useStartDate>False</useStartDate>
