@@ -1,4 +1,4 @@
-﻿// Small Histogram Chart
+// Small Histogram Chart
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
 // Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
@@ -423,13 +423,14 @@ namespace Forex_Strategy_Builder {
             }
             else {
                 if (bar > 0 && bar <= tradeIndexes.Length) {
-                    strStatusBarText = Language.T("Result: ") + tradeIndexes[bar - 1].ToString() +
-                                       Language.T("  Count: ") + tradeCounts[bar - 1].ToString() +
-                                       Language.T("  Total: ") + tradeCumulatives[bar - 1].ToString();
+                    strStatusBarText = Language.T("Result") + ": " + tradeIndexes[bar - 1].ToString() +
+                                       "  " + Language.T("Count") + ": " + tradeCounts[bar - 1].ToString() +
+                                       "  " + Language.T("Total") + ": " + tradeCumulatives[bar - 1].ToString();
                 }
                 else {
-                    strStatusBarText = Language.T("Result: ") + (bar + tradeIndexes[0] - 1).ToString() +
-                                       Language.T("  Count: 0  Total: 0");
+                    strStatusBarText = Language.T("Result") + ": " + (bar + tradeIndexes[0] - 1).ToString() +
+                                       "  " + Language.T("Count") + ": 0" +
+                                       "  " + Language.T("Total") + ": 0";
                 }
             }
         }
