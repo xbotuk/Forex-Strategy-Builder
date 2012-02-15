@@ -382,6 +382,35 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
+        /// Exports histogram data as CSV file
+        /// </summary>
+        /// <param name="s">string</param>
+        public void ExportHistogramData(string s) {
+            string stage = String.Empty;
+            if (Data.IsProgramBeta)
+                stage = " " + Language.T("Beta");
+            else if (Data.IsProgramRC)
+                stage = " " + "RC";
+
+            sb.Append("Forex Strategy Builder v" + Data.ProgramVersion + stage + Environment.NewLine);
+            sb.Append("Strategy name: " + Data.Strategy.StrategyName + Environment.NewLine);
+            sb.Append("Exported on " + DateTime.Now.ToString() + Environment.NewLine);
+            sb.Append(Data.Symbol + " " + Data.PeriodString + Environment.NewLine);
+            sb.Append("Histogram Data");
+            sb.Append(Environment.NewLine);
+
+            sb.Append("Result" + "\t");
+            sb.Append("Count" + "\t");
+            sb.Append("Total" + Environment.NewLine);
+
+            sb.Append(s);
+
+            string fileName = Data.Strategy.StrategyName + "_HistogramData";
+            SaveData(fileName);
+            return;
+        }
+
+        /// <summary>
         /// Saves the data file
         /// </summary>
         void SaveData(string fileName)
