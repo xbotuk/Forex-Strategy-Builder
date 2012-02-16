@@ -365,7 +365,9 @@
     <Compile Include="User interface\NUD.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="User interface\Small Histogram Chart.cs" />
+    <Compile Include="User interface\Small Histogram Chart.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="User interface\Small Indicator Chart.cs">
       <SubType>Component</SubType>
     </Compile>

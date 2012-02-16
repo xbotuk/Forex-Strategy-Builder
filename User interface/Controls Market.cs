@@ -174,7 +174,7 @@ namespace Forex_Strategy_Builder
         void pnlMarket_Resize(object sender, EventArgs e)
         {
             smallIndicatorChart.Height = 2 * pnlMarket.ClientSize.Height / (Configs.ShowJournal ? 3 : 4);
-            smallIndicatorChart.Height = 2 * pnlMarket.ClientSize.Height / (Configs.ShowJournal ? 3 : 4);
+            smallHistogramChart.Height = 2 * pnlMarket.ClientSize.Height / (Configs.ShowJournal ? 3 : 4);
         }
 
         /// <summary>
