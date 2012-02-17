@@ -330,7 +330,7 @@ namespace Forex_Strategy_Builder
             totalPositions++;
 
             // Closing of a long position
-            if (posDirOld == PosDirection.Long && ordDir == OrderDirection.Sell && lotsOld == lots)
+            if (posDirOld == PosDirection.Long && ordDir == OrderDirection.Sell && Math.Abs(lotsOld - lots) < 0.001)
             {
                 position.Transaction     = Transaction.Close;
                 position.OpeningBar      = openingBarOld;  // KROG -- for N Bars Exit
@@ -360,7 +360,7 @@ namespace Forex_Strategy_Builder
             }
 
             // Closing of a short position
-            if (posDirOld == PosDirection.Short && ordDir == OrderDirection.Buy && lotsOld == lots)
+            if (posDirOld == PosDirection.Short && ordDir == OrderDirection.Buy && Math.Abs(lotsOld - lots) < 0.001)
             {
                 position.Transaction     = Transaction.Close;
                 position.OpeningBar      = openingBarOld;
@@ -395,7 +395,7 @@ namespace Forex_Strategy_Builder
                 position.Transaction     = Transaction.Add;
                 position.OpeningBar      = openingBarOld;
                 position.PosDir          = PosDirection.Long;
-                position.PosLots         = lotsOld + lots;
+                position.PosLots         = NormalizeEntryLots(lotsOld + lots);
                 position.AbsoluteSL      = absoluteSL;
                 position.AbsoluteTP      = absoluteTP;
                 position.RequiredMargin  = RequiredMargin(position.PosLots, bar);
@@ -425,7 +425,7 @@ namespace Forex_Strategy_Builder
                 position.Transaction     = Transaction.Add;
                 position.OpeningBar      = openingBarOld;
                 position.PosDir          = PosDirection.Short;
-                position.PosLots         = lotsOld + lots;
+                position.PosLots         = NormalizeEntryLots(lotsOld + lots);
                 position.AbsoluteSL      = absoluteSL;
                 position.AbsoluteTP      = absoluteTP;
                 position.RequiredMargin  = RequiredMargin(position.PosLots, bar);
@@ -455,7 +455,7 @@ namespace Forex_Strategy_Builder
                 position.Transaction     = Transaction.Reduce;
                 position.OpeningBar      = openingBarOld;
                 position.PosDir          = PosDirection.Long;
-                position.PosLots         = lotsOld - lots;
+                position.PosLots         = NormalizeEntryLots(lotsOld - lots);
                 position.AbsoluteSL      = absoluteSL;
                 position.AbsoluteTP      = absoluteTP;
                 position.RequiredMargin  = RequiredMargin(position.PosLots, bar);
@@ -485,7 +485,7 @@ namespace Forex_Strategy_Builder
                 position.Transaction     = Transaction.Reduce;
                 position.OpeningBar      = openingBarOld;
                 position.PosDir          = PosDirection.Short;
-                position.PosLots         = lotsOld - lots;
+                position.PosLots         = NormalizeEntryLots(lotsOld - lots);
                 position.AbsoluteSL      = absoluteSL;
                 position.AbsoluteTP      = absoluteTP;
                 position.RequiredMargin  = RequiredMargin(position.PosLots, bar);
@@ -514,7 +514,7 @@ namespace Forex_Strategy_Builder
             {
                 position.Transaction     = Transaction.Reverse;
                 position.PosDir          = PosDirection.Short;
-                position.PosLots         = lots - lotsOld;
+                position.PosLots         = NormalizeEntryLots(lots - lotsOld);
                 position.OpeningBar      = bar;
                 position.AbsoluteSL      = isAbsoluteSL ? price + Strategy.PermanentSL * InstrProperties.Point : 0;
                 position.AbsoluteTP      = isAbsoluteTP ? price - Strategy.PermanentTP * InstrProperties.Point : 0;
@@ -546,7 +546,7 @@ namespace Forex_Strategy_Builder
             {
                 position.Transaction     = Transaction.Reverse;
                 position.PosDir          = PosDirection.Long;
-                position.PosLots         = lots - lotsOld;
+                position.PosLots         = NormalizeEntryLots(lots - lotsOld);
                 position.OpeningBar      = bar;
                 position.AbsoluteSL      = Strategy.UsePermanentSL ? price - Strategy.PermanentSL * InstrProperties.Point : 0;
                 position.AbsoluteTP      = Strategy.UsePermanentTP ? price + Strategy.PermanentTP * InstrProperties.Point : 0;
