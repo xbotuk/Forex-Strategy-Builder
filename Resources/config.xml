@@ -36,13 +36,13 @@
   <optimizerOptions></optimizerOptions>
   <columnSeparator>,</columnSeparator>
   <decimalSeparator>.</decimalSeparator>
-  <metatrader4DataPath></metatrader4DataPath>
-  <importStartingDate></importStartingDate>
-  <importEndingDate></importEndingDate>
   <useTickData>False</useTickData>
   <jforexDataPath></jforexDataPath>
   <marketClosingHour>21</marketClosingHour>
   <marketOpeningHour>21</marketOpeningHour>
+  <metatrader4DataPath></metatrader4DataPath>
+  <importStartingDate></importStartingDate>
+  <importEndingDate></importEndingDate>
   <bannedIndicators></bannedIndicators>
   <showPriceChartOnAccountChart>False</showPriceChartOnAccountChart>
   <analyzerHideFSB>True</analyzerHideFSB>
@@ -50,17 +50,11 @@
   <mainScreenWidth>790</mainScreenWidth>
   <mainScreenHeight>590</mainScreenHeight>
   <showStatusBar>True</showStatusBar>
-  <dataHorizon>
-    <maxBars>20000</maxBars>
-    <useStartDate>False</useStartDate>
-    <startYear>1990</startYear>
-    <startMonth>1</startMonth>
-    <startDay>1</startDay>
-    <useEndDate>False</useEndDate>
-    <endYear>2010</endYear>
-    <endMonth>1</endMonth>
-    <endDay>1</endDay>
-  </dataHorizon>
+  <dataMaxBars>20000</dataMaxBars>
+  <dataStartTime>1990-01-01 00:00:00</dataStartTime>
+  <dataEndTime>2020-01-01 00:00:00</dataEndTime>
+  <dataUseStartTime>False</dataUseStartTime>
+  <dataUseEndTime>False</dataUseEndTime>
   <account>
     <accountInMoney>True</accountInMoney>
     <accountCurrency>USD</accountCurrency>

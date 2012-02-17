@@ -465,19 +465,14 @@ namespace Forex_Strategy_Builder
             Instrument_Properties instrProperties = Instruments.InstrumentList[symbol].Clone();
 
             //  Makes an instance of class Instrument
-            Instrument instrument = new Instrument(instrProperties, (int)dataPeriod);
-
+            var instrument = new Instrument(instrProperties, (int)dataPeriod);
             instrument.DataDir      = Data.OfflineDataDir;
             instrument.FormatDate   = DateFormat.Unknown;
             instrument.MaxBars      = Configs.MaxBars;
-            instrument.StartYear    = Configs.StartYear;
-            instrument.StartMonth   = Configs.StartMonth;
-            instrument.StartDay     = Configs.StartDay;
-            instrument.EndYear      = Configs.EndYear;
-            instrument.EndMonth     = Configs.EndMonth;
-            instrument.EndDay       = Configs.EndDay;
-            instrument.UseStartDate = Configs.UseStartDate;
-            instrument.UseEndDate   = Configs.UseEndDate;
+            instrument.StartTime    = Configs.DataStartTime;
+            instrument.EndTime      = Configs.DataEndTime;
+            instrument.UseStartTime = Configs.UseStartTime;
+            instrument.UseEndTime   = Configs.UseEndTime;
 
             // Loads the data
             int iLoadDataResult = 0;
@@ -1286,32 +1281,19 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void DataHorizon()
         {
-            DateTime dtStart = new DateTime(Configs.StartYear, Configs.StartMonth, Configs.StartDay);
-            DateTime dtEnd   = new DateTime(Configs.EndYear,   Configs.EndMonth,   Configs.EndDay);
-
-            Data_Horizon horizon = new Data_Horizon(Configs.MaxBars, dtStart, dtEnd, Configs.UseStartDate, Configs.UseEndDate);
+            var horizon = new Data_Horizon(Configs.MaxBars, Configs.DataStartTime, Configs.DataEndTime, Configs.UseStartTime, Configs.UseEndTime);
             horizon.ShowDialog();
 
-            if (horizon.DialogResult == DialogResult.OK)
-            {   // Applying the new settings
-                Configs.MaxBars      = horizon.MaxBars;
-                Configs.StartYear    = horizon.StartDate.Year;
-                Configs.StartMonth   = horizon.StartDate.Month;
-                Configs.StartDay     = horizon.StartDate.Day;
-                Configs.EndYear      = horizon.EndDate.Year;
-                Configs.EndMonth     = horizon.EndDate.Month;
-                Configs.EndDay       = horizon.EndDate.Day;
-                Configs.UseStartDate = horizon.UseStartDate;
-                Configs.UseEndDate   = horizon.UseEndDate;
+            if (horizon.DialogResult != DialogResult.OK) return;
+            Configs.MaxBars       = horizon.MaxBars;
+            Configs.DataStartTime = horizon.StartTime;
+            Configs.DataEndTime   = horizon.EndTime;
+            Configs.UseStartTime  = horizon.UseStartTime;
+            Configs.UseEndTime    = horizon.UseEndTime;
 
-                if (LoadInstrument(false) == 0)
-                {
-                    Calculate(true);
-                    PrepareScannerCompactMode();
-                }
-            }
-
-            return;
+            if (LoadInstrument(false) != 0) return;
+            Calculate(true);
+            PrepareScannerCompactMode();
         }
 
         /// <summary>

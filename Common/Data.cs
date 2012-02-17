@@ -262,12 +262,8 @@ namespace Forex_Strategy_Builder
                 marketStatsValue[14] = Data.MaxCloseOpen.ToString()     + " " + Language.T("pips");
                 marketStatsValue[15] = Data.DaysOff.ToString();
                 marketStatsValue[16] = Configs.MaxBars.ToString();
-                marketStatsValue[17] = Configs.UseStartDate ?
-                    (new DateTime(Configs.StartYear, Configs.StartMonth, Configs.StartDay)).ToShortDateString() :
-                    Language.T("No limits");
-                marketStatsValue[18] = Configs.UseEndDate ?
-                    (new DateTime(Configs.EndYear, Configs.EndMonth, Configs.EndDay)).ToShortDateString() :
-                    Language.T("No limits");
+                marketStatsValue[17] = Configs.UseStartTime ? Configs.DataStartTime.ToShortDateString() : Language.T("No limits");
+                marketStatsValue[18] = Configs.UseEndTime   ? Configs.DataEndTime.ToShortDateString()   : Language.T("No limits");
                 marketStatsValue[19] = Configs.FillInDataGaps ? Language.T("Accomplished") : Language.T("Switched off");
                 marketStatsValue[20] = Configs.CutBadData     ? Language.T("Accomplished") : Language.T("Switched off");
             return;

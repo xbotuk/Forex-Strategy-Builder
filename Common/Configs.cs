@@ -5,6 +5,7 @@
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Xml;
 using Microsoft.Win32;
@@ -17,6 +18,7 @@ namespace Forex_Strategy_Builder
         static string pathToConfigFile;
         static bool   isConfigLoaded   = false;
         static bool   isResetActivated = false;
+        static string dateStringFormat = "yyyy-MM-dd HH:mm:ss";
 
         static int    MIN_BARSDefault                   = 300;
         static int    MAX_BARSDefault                   = 50000;
@@ -42,14 +44,10 @@ namespace Forex_Strategy_Builder
         static bool   isLoadCustIndDefault          = true;
         static bool   isShowCustIndDefault          = false;
         static int    maxBarsDefault                = 20000;
-        static int    startYearDefault              = 1990;
-        static int    startMonthDefault             = 1;
-        static int    startDayDefault               = 1;
-        static int    endYearDefault                = 2020;
-        static int    endMonthDefault               = 1;
-        static int    endDayDefault                 = 1;
-        static bool   isUseEndDateDefault           = false;
-        static bool   isUseStartDateDefault         = false;
+        static DateTime dataStartTimeDefault        = new DateTime(1990,1,1,0,0,0);
+        static DateTime dataEndTimeDefault          = new DateTime(2020,1,1,0,0,0);
+        static bool   isUseEndTimeDefault           = false;
+        static bool   isUseStartTimeDefault         = false;
         static bool   isAccountInMoneyDefault       = true;
         static string accountCurrencyDefault        = "USD";
         static int    initialAccountDefault         = 10000;
@@ -487,127 +485,68 @@ namespace Forex_Strategy_Builder
             {
                 maxBars = value;
                 if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/maxBars").Item(0).InnerText = value.ToString();
+                    xmlConfig.SelectNodes("config/dataMaxBars").Item(0).InnerText = value.ToString();
             }
         }
 
-        static int startYear = startYearDefault;
+        static DateTime dataStartTime = dataStartTimeDefault;
         /// <summary>
-        /// Starting year
+        /// Start time of market data.
         /// </summary>
-        public static int StartYear
+        public static DateTime DataStartTime
         {
-            get { return startYear; }
+            get { return dataStartTime; }
             set
             {
-                startYear = value;
+                dataStartTime = value;
                 if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/startYear").Item(0).InnerText = value.ToString();
+                    xmlConfig.SelectNodes("config/dataStartTime").Item(0).InnerText = dataStartTime.ToString(dateStringFormat);
             }
         }
 
-        static int startMonth = startMonthDefault;
+        static DateTime dataEndTime = dataEndTimeDefault;
         /// <summary>
-        /// Starting month
+        /// End time of market data.
         /// </summary>
-        public static int StartMonth
+        public static DateTime DataEndTime
         {
-            get { return startMonth; }
+            get { return dataEndTime; }
             set
             {
-                startMonth = value;
+                dataEndTime = value;
                 if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/startMonth").Item(0).InnerText = value.ToString();
+                    xmlConfig.SelectNodes("config/dataEndTime").Item(0).InnerText = dataEndTime.ToString(dateStringFormat);
             }
         }
 
-        static int startDay = startDayDefault;
+
+        static bool isUseStartTime = isUseStartTimeDefault;
         /// <summary>
-        /// Starting day
+        /// Use start time
         /// </summary>
-        public static int StartDay
+        public static bool UseStartTime
         {
-            get { return startDay; }
+            get { return isUseStartTime; }
             set
             {
-                startDay = value;
+                isUseStartTime = value;
                 if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/startDay").Item(0).InnerText = value.ToString();
+                    xmlConfig.SelectNodes("config/dataUseStartTime").Item(0).InnerText = value.ToString();
             }
         }
 
-        static int endYear = endYearDefault;
+        static bool isUseEndTime = isUseEndTimeDefault;
         /// <summary>
-        /// Ending year
+        /// Use ending time
         /// </summary>
-        public static int EndYear
+        public static bool UseEndTime
         {
-            get { return endYear; }
+            get { return isUseEndTime; }
             set
             {
-                endYear = value;
+                isUseEndTime = value;
                 if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/endYear").Item(0).InnerText = value.ToString();
-            }
-        }
-
-        static int endMonth = endMonthDefault;
-        /// <summary>
-        /// Ending month
-        /// </summary>
-        public static int EndMonth
-        {
-            get { return endMonth; }
-            set
-            {
-                endMonth = value;
-                if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/endMonth").Item(0).InnerText = value.ToString();
-            }
-        }
-
-        static int endDay = endDayDefault;
-        /// <summary>
-        /// Ending day
-        /// </summary>
-        public static int EndDay
-        {
-            get { return endDay; }
-            set
-            {
-                endDay = value;
-                if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/endDay").Item(0).InnerText = value.ToString();
-            }
-        }
-
-        static bool isUseEndDate = isUseEndDateDefault;
-        /// <summary>
-        /// Use ending date
-        /// </summary>
-        public static bool UseEndDate
-        {
-            get { return isUseEndDate; }
-            set
-            {
-                isUseEndDate = value;
-                if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/useEndDate").Item(0).InnerText = value.ToString();
-            }
-        }
-
-        static bool isUseStartDate = isUseStartDateDefault;
-        /// <summary>
-        /// Use start date
-        /// </summary>
-        public static bool UseStartDate
-        {
-            get { return isUseStartDate; }
-            set
-            {
-                isUseStartDate = value;
-                if (isConfigLoaded)
-                    xmlConfig.SelectNodes("config/dataHorizon/useStartDate").Item(0).InnerText = value.ToString();
+                    xmlConfig.SelectNodes("config/dataUseEndTime").Item(0).InnerText = value.ToString();
             }
         }
 
@@ -1423,13 +1362,10 @@ namespace Forex_Strategy_Builder
             LoadCustomIndicators       = isLoadCustIndDefault;
             ShowCustomIndicators       = isShowCustIndDefault;
             MaxBars                    = maxBarsDefault;
-            StartYear                  = startYearDefault;
-            StartMonth                 = startMonthDefault;
-            StartDay                   = startDayDefault;
-            EndMonth                   = endMonthDefault;
-            EndDay                     = endDayDefault;
-            UseEndDate                 = isUseEndDateDefault;
-            UseStartDate               = isUseStartDateDefault;
+            DataStartTime              = dataStartTimeDefault;
+            DataEndTime                = dataEndTimeDefault;
+            UseEndTime                 = isUseEndTimeDefault;
+            UseStartTime               = isUseStartTimeDefault;
             AccountInMoney             = isAccountInMoneyDefault;
             AccountCurrency            = accountCurrencyDefault;
             InitialAccount             = initialAccountDefault;
@@ -1557,15 +1493,11 @@ namespace Forex_Strategy_Builder
             showStatusBar                = ParseNode("config/showStatusBar", showStatusBarDefault);
 
             // Data Horizon
-            maxBars                      = ParseNode("config/dataHorizon/maxBars", maxBarsDefault);
-            isUseStartDate               = ParseNode("config/dataHorizon/useStartDate", isUseStartDateDefault);
-            startYear                    = ParseNode("config/dataHorizon/startYear", startYearDefault);
-            startMonth                   = ParseNode("config/dataHorizon/startMonth", startMonthDefault);
-            startDay                     = ParseNode("config/dataHorizon/startDay", startDayDefault);
-            isUseEndDate                 = ParseNode("config/dataHorizon/useEndDate", isUseEndDateDefault);
-            endYear                      = ParseNode("config/dataHorizon/endYear", endYearDefault);
-            endMonth                     = ParseNode("config/dataHorizon/endMonth", endMonthDefault);
-            endDay                       = ParseNode("config/dataHorizon/endDay", endDayDefault);
+            maxBars                      = ParseNode("config/dataMaxBars", maxBarsDefault);
+            dataStartTime                = ParseNode("config/dataStartTime", dataStartTimeDefault);
+            dataEndTime                  = ParseNode("config/dataEndTime", dataEndTimeDefault);
+            isUseStartTime               = ParseNode("config/dataUseStartTime", isUseStartTimeDefault);
+            isUseEndTime                 = ParseNode("config/dataUseEndTime", isUseEndTimeDefault);
 
             // Account
             isAccountInMoney             = ParseNode("config/account/accountInMoney", isAccountInMoneyDefault);
@@ -1692,6 +1624,29 @@ namespace Forex_Strategy_Builder
                     value = bool.Parse(list.Item(0).InnerText);
                 else
                     CreateElement(node, defaultValue.ToString());
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error in the configuration file");
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Parses a DateTime parameter.
+        /// </summary>
+        static DateTime ParseNode(string node, DateTime defaultValue)
+        {
+            DateTime value = defaultValue;
+
+            try
+            {
+                XmlNodeList list = xmlConfig.SelectNodes(node);
+                if (list != null && list.Count > 0)
+                    value = DateTime.ParseExact(list.Item(0).InnerText, dateStringFormat, new DateTimeFormatInfo());
+                else
+                    CreateElement(node, defaultValue.ToString(dateStringFormat));
             }
             catch (System.Exception ex)
             {

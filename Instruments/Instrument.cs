@@ -61,52 +61,17 @@ namespace Forex_Strategy_Builder
         public DateTime Update { get { return timeUpdate; } }
 
         // -------------------------------------------------------------
-        int  maxBars    = 20000;
-        int  startYear  = 1990;
-        int  startMonth = 1;
-        int  startDay   = 1;
-        int  endYear    = 2020;
-        int  endMonth   = 1;
-        int  endDay     = 1;
-        bool useStartDate = false;
-        bool useEndDate   = false;
+        int  maxBars       = 20000;
+        DateTime startTime = new DateTime(1990, 1, 1, 0, 0, 0);
+        DateTime endTime   = new DateTime(2020, 1, 1, 0, 0, 0);
+        bool useStartTime  = false;
+        bool useEndTime    = false;
 
-        /// <summary>
-        /// Maximum data bars
-        /// </summary>
         public int MaxBars { set { maxBars = value; } }
-        /// <summary>
-        /// Starting year
-        /// </summary>
-        public int StartYear { set { startYear = value; } }
-        /// <summary>
-        /// Starting month
-        /// </summary>
-        public int StartMonth { set { startMonth = value; } }
-        /// <summary>
-        /// Starting day
-        /// </summary>
-        public int StartDay { set { startDay = value; } }
-        /// <summary>
-        /// Ending year
-        /// </summary>
-        public int EndYear { set { endYear = value; } }
-        /// <summary>
-        /// Ending month
-        /// </summary>
-        public int EndMonth { set { endMonth = value; } }
-        /// <summary>
-        /// Ending day
-        /// </summary>
-        public int EndDay { set { endDay = value; } }
-        /// <summary>
-        /// Use end date
-        /// </summary>
-        public bool UseEndDate { get { return useEndDate; } set { useEndDate = value; } }
-        /// <summary>
-        /// Use start date
-        /// </summary>
-        public bool UseStartDate { get { return useStartDate; } set { useStartDate = value; } }
+        public DateTime StartTime { set { startTime = value; } }
+        public DateTime EndTime { set { endTime = value; } }
+        public bool UseEndTime { get { return useEndTime; } set { useEndTime = value; } }
+        public bool UseStartTime { get { return useStartTime; } set { useStartTime = value; } }
         // -------------------------------------------------------------
 
         // Bar info
@@ -283,15 +248,13 @@ namespace Forex_Strategy_Builder
 
             int startBar = 0;
             int endBar   = bars - 1;
-            DateTime startDate = new DateTime(startYear, startMonth, startDay);
-            DateTime endDate   = new DateTime(endYear,   endMonth,   endDay);
 
             // Set the starting date
-            if (useStartDate && aBar[0].Time < startDate)
+            if (useStartTime && aBar[0].Time < startTime)
             {
                 for (int bar = 0; bar < bars; bar++)
                 {
-                    if (aBar[bar].Time >= startDate)
+                    if (aBar[bar].Time >= startTime)
                     {
                         startBar  = bar;
                         break;
@@ -300,11 +263,11 @@ namespace Forex_Strategy_Builder
             }
 
             // Set the end date
-            if (useEndDate && aBar[bars - 1].Time > endDate)
+            if (useEndTime && aBar[bars - 1].Time > endTime)
             {   // We need to cut out the newest bars
                 for (int bar = 0; bar < bars; bar++)
                 {
-                    if (aBar[bar].Time >= endDate)
+                    if (aBar[bar].Time >= endTime)
                     {
                         endBar  = bar - 1;
                         break;
