@@ -3,6 +3,8 @@
 // Website http://forexsb.com/
 // Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
+//
+// Contributed by Krog.
 
 using System;
 using System.Drawing;
@@ -133,26 +135,38 @@ namespace Forex_Strategy_Builder {
             // crummy way to get number of trades for init array
             // TBD -- find better property
             int ctr = 0;
-            int min = 0;
-            int max = 0;
-            for (int iPos = 0; iPos < Backtester.PositionsTotal; iPos++) {
-                Position position = Backtester.PosFromNumb(iPos);
-                if (position.Transaction == Transaction.Close) {
-                    ctr++;
+            for (int bar = 0; bar < Data.Bars; bar++)
+            {
+                for (int pos = 0; pos < Backtester.Positions(bar); pos++)
+                {
+                    Transaction transaction = Backtester.PosTransaction(bar, pos);
+                    if (transaction == Transaction.Close  ||
+                        transaction == Transaction.Reduce ||
+                        transaction == Transaction.Reverse)
+                        ctr++;
                 }
             }
 
             results = new int[ctr];
             ctr = 0;
-            for (int iPos = 0; iPos < Backtester.PositionsTotal; iPos++) {
-                Position position = Backtester.PosFromNumb(iPos);
-                if (position.Transaction == Transaction.Close) {
-                    results[ctr] = (int)(position.ProfitLoss);
-                    ctr++;
+            for (int bar = 0; bar < Data.Bars; bar++)
+            {
+                for (int pos = 0; pos < Backtester.Positions(bar); pos++)
+                {
+                    Transaction transaction = Backtester.PosTransaction(bar, pos);
+                    if (transaction == Transaction.Close  ||
+                        transaction == Transaction.Reduce ||
+                        transaction == Transaction.Reverse)
+                    {
+                        results[ctr] = (int)Backtester.PosProfitLoss(bar, pos);
+                        ctr++;
+                    }
                 }
             }
 
             Array.Sort(results);
+            int min = 0;
+            int max = 0;
             if (results.Length > 0) {
                 min = results[0];
                 max = results[results.Length - 1];
