@@ -19,7 +19,7 @@ namespace Forex_Strategy_Builder
     {
         private const string SpacePattern  = @"[\t ;,]";
         private const string DatePattern   = @"\d{1,4}[\./-]\d{1,4}[\./-]\d{1,4}";
-        private const string TimePattern   = @"\d{2}(:\d{2}){1,2}";
+        private const string TimePattern   = @"\d{1,2}(:\d{1,2}){1,2}";
         private const string PricePattern  = @"\d+([\.,]\d+)?";
         private const string VolumePattern = @"\d{1,10}";
 
@@ -403,7 +403,7 @@ namespace Forex_Strategy_Builder
         {
             Regex regexGeneral = GeneralDataFileRegex;
             Regex regexOptional = OptionalDataFileRegex;
-            string dateMatchPattern = "";
+            string timeMatchPattern = "";
             string line;
             var sr = new StringReader(dataString);
 
@@ -411,20 +411,20 @@ namespace Forex_Strategy_Builder
             {
                 if (regexGeneral.IsMatch(line))
                 {
-                    dateMatchPattern = @"(?<hour>\d{2}):(?<min>\d{2})(:(?<sec>\d{2}))?";
+                    timeMatchPattern = @"(?<hour>\d{1,2}):(?<min>\d{1,2})(:(?<sec>\d{1,2}))?";
                     _isOptionalDataFile = false;
                 }
 
                 else if (regexOptional.IsMatch(line))
                 {
-                    dateMatchPattern = "";
+                    timeMatchPattern = "";
                     _isOptionalDataFile = true;
                 }
                 else
                     throw new Exception(Language.T("Could not determine the time field format!"));
             }
 
-            return dateMatchPattern;
+            return timeMatchPattern;
         }
 
         /// <summary>
