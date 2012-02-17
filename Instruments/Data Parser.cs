@@ -401,28 +401,33 @@ namespace Forex_Strategy_Builder
         /// <returns>Time regex pattern.</returns>
         private string GetTimeMatchPattern(string dataString)
         {
-            Regex regexGeneral = GeneralDataFileRegex;
+            Regex regexGeneral  = GeneralDataFileRegex;
             Regex regexOptional = OptionalDataFileRegex;
-            string timeMatchPattern = "";
+            string timeMatchPattern = null;
             string line;
-            var sr = new StringReader(dataString);
+            var stringReader = new StringReader(dataString);
 
-            while ((line = sr.ReadLine()) != null)
+            while ((line = stringReader.ReadLine()) != null)
             {
                 if (regexGeneral.IsMatch(line))
                 {
                     timeMatchPattern = @"(?<hour>\d{1,2}):(?<min>\d{1,2})(:(?<sec>\d{1,2}))?";
                     _isOptionalDataFile = false;
+                    break;
                 }
 
-                else if (regexOptional.IsMatch(line))
+                if (regexOptional.IsMatch(line))
                 {
                     timeMatchPattern = "";
                     _isOptionalDataFile = true;
+                    break;
                 }
-                else
-                    throw new Exception(Language.T("Could not determine the time field format!"));
             }
+
+            stringReader.Close();
+
+            if (timeMatchPattern == null)
+                throw new Exception(Language.T("Could not determine the time field format!"));
 
             return timeMatchPattern;
         }
@@ -434,15 +439,13 @@ namespace Forex_Strategy_Builder
         /// <returns>Price match pattern.</returns>
         private string PriceMatchPattern(string dataString)
         {
-            Regex regexGeneral = GeneralDataFileRegex;
-            if (_isOptionalDataFile)
-                regexGeneral = OptionalDataFileRegex;
+            Regex regexGeneral = _isOptionalDataFile ? OptionalDataFileRegex : GeneralDataFileRegex;
             const string columnSeparator = @"[\t ;,]+";
             string priceMatchPattern = "";
             string line;
-            var sr = new StringReader(dataString);
+            var stringReader = new StringReader(dataString);
 
-            while ((line = sr.ReadLine()) != null)
+            while ((line = stringReader.ReadLine()) != null)
             {
                 if (!regexGeneral.IsMatch(line))
                     continue;
@@ -476,7 +479,7 @@ namespace Forex_Strategy_Builder
                     break;
                 }
             }
-            sr.Close();
+            stringReader.Close();
 
             if (priceMatchPattern == "")
                 throw new Exception(Language.T("Could not determine the price columns order!"));
