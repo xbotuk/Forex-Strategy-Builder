@@ -6,61 +6,52 @@
 
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder
 {
     public class Journal_Bars : Panel
     {
-        VScrollBar vScrollBar;
-        HScrollBar hScrollBar;
-        ToolTip    toolTip;
+        VScrollBar _vScrollBar;
+        HScrollBar _hScrollBar;
 
-        Image[]   aiPositionIcons; // Shows the position's type and transaction
-        string[]  asTitlesPips;    // Journal title second row
-        string[]  asTitlesMoney;   // Journal title second row
-        string[,] asJournalData;   // The text journal data
+        Image[]   _positionIcons; // Shows the position's type and transaction
+        string[]  _titlesInPips;  // Journal title second row
+        string[]  _titlesInMoney; // Journal title second row
+        string[,] _journalData;   // The text journal data
 
-        int[] aiColumnX;  // The horizontal position of the column
-        int[] aiX;        // The scaled horizontal position of the column
-        int   columns;    // The number of the columns
-        int   rowHeight;  // The journal row height
-        int   border = 2; // The width of outside border of the panel
+        int[] _xPositions; // The horizontal position of the column
+        int[] _xScaled;    // The scaled horizontal position of the column
+        int   _columns;    // The number of the columns
+        int   _rowHeight;  // The journal row height
+        private const int Border = 2; // The width of outside border of the panel
 
-        int rows;           // The number of bars can be shown (without the caption bar)
-        int bars;           // The total number of the bars
-        int firstBar;       // The number of the first shown bar
-        int lastBar;        // The number of the last shown bar
-        int shownBars;      // How many bars are shown
-        int selectedRow;    // The number of the selected row
-        int selectedBarOld; // The old selected bar
+        int _rows;           // The number of bars can be shown (without the caption bar)
+        int _bars;           // The total number of the bars
+        int _firstBar;       // The number of the first shown bar
+        int _lastBar;        // The number of the last shown bar
+        int _shownBars;      // How many bars are shown
+        int _selectedRow;    // The number of the selected row
+        int _selectedBarOld; // The old selected bar
 
-        Font  font;
-        Color colorBack;
-        Color colorCaptionBack;
-        Brush brushCaptionText;
-        Brush brushEvenRowBack;
-        Brush brushWarningBack;
-        Brush brushWarningText;
-        Brush brushSelectedRowBack;
-        Brush brushSelectedRowText;
-        Brush brushRowText;
-        Pen   penLines;
-        Pen   penBorder;
-        Pen   penSeparator;
-
-        public event EventHandler SelectedBarChange;
+        Font  _font;
+        Color _colorBack;
+        Brush _brushCaptionText;
+        Brush _brushEvenRowBack;
+        Brush _brushWarningBack;
+        Brush _brushWarningText;
+        Brush _brushSelectedRowBack;
+        Brush _brushSelectedRowText;
+        Brush _brushRowText;
+        Pen   _penLines;
+        Pen   _penBorder;
 
         /// <summary>
-        /// Gets the selected bar
+        /// Gets the selected bar.
         /// </summary>
-        public int SelectedBar
-        {
-            get
-            {
-                return firstBar + selectedRow;
-            }
-        }
+        public int SelectedBar { get { return _firstBar + _selectedRow; } }
+        public event EventHandler SelectedBarChange;
 
         /// <summary>
         /// Constructor
@@ -70,128 +61,43 @@ namespace Forex_Strategy_Builder
             InitializeJournal();
             SetUpJournal();
             SetJournalColors();
-
-            return;
         }
 
         /// <summary>
-        /// Sets the journal's current data
-        /// </summary>
-        public void SetUpJournal()
-        {
-            bars = Data.Bars;
-
-            if (bars == 0)
-            {
-                firstBar  = 0;
-                lastBar   = 0;
-                shownBars = 0;
-
-                vScrollBar.Enabled = false;
-            }
-            else if (bars < rows)
-            {
-                firstBar  = 0;
-                lastBar   = rows;
-                shownBars = bars;
-
-                vScrollBar.Enabled = false;
-            }
-            else
-            {
-                vScrollBar.Enabled = true;
-                vScrollBar.Maximum = bars - 1;
-
-                firstBar = vScrollBar.Value;
-                if (firstBar + rows > bars)
-                {
-                    lastBar   = bars - 1;
-                    shownBars = lastBar - firstBar + 1;
-                }
-                else
-                {
-                    shownBars = rows;
-                    lastBar   = firstBar + shownBars - 1;
-                }
-            }
-
-            selectedRow = Math.Min(selectedRow, shownBars - 1);
-            selectedRow = Math.Max(selectedRow, 0);
-
-            UpdateJournalData();
-            SetJournalColors();
-
-            return;
-        }
-
-        /// <summary>
-        /// Sets the journal colors
-        /// </summary>
-        void SetJournalColors()
-        {
-            colorBack            = LayoutColors.ColorControlBack;
-            colorCaptionBack     = LayoutColors.ColorCaptionBack;
-            brushCaptionText     = new SolidBrush(LayoutColors.ColorCaptionText);
-            brushEvenRowBack     = new SolidBrush(LayoutColors.ColorEvenRowBack);
-            brushSelectedRowBack = new SolidBrush(LayoutColors.ColorSelectedRowBack);
-            brushSelectedRowText = new SolidBrush(LayoutColors.ColorSelectedRowText);
-            brushRowText         = new SolidBrush(LayoutColors.ColorControlText);
-            brushWarningBack     = new SolidBrush(LayoutColors.ColorWarningRowBack);
-            brushWarningText     = new SolidBrush(LayoutColors.ColorWarningRowText);
-            penLines     = new Pen(LayoutColors.ColorJournalLines);
-            penBorder    = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), border);
-            penSeparator = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -2 * LayoutColors.DepthCaption));
-
-            return;
-        }
-
-        /// <summary>
-        /// Inits the Journal
+        /// Initializes the Journal
         /// </summary>
         void InitializeJournal()
         {
-            // Tool Tips
-            toolTip = new ToolTip();
-
             // Horizontal ScrollBar
-            hScrollBar = new HScrollBar();
-            hScrollBar.Parent        = this;
-            hScrollBar.Dock          = DockStyle.Bottom;
-            hScrollBar.SmallChange   = 100;
-            hScrollBar.LargeChange   = 300;
-            hScrollBar.ValueChanged += new EventHandler(HScrollBar_ValueChanged);
+            _hScrollBar = new HScrollBar {Parent = this, Dock = DockStyle.Bottom, SmallChange = 100, LargeChange = 300};
+            _hScrollBar.ValueChanged += HScrollBarValueChanged;
 
             // Vertical ScrollBar
-            vScrollBar = new VScrollBar();
-            vScrollBar.Parent        = this;
-            vScrollBar.Dock          = DockStyle.Right;
-            vScrollBar.TabStop       = true;
-            vScrollBar.SmallChange   = 1;
-            vScrollBar.LargeChange   = 4;
-            vScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
+            _vScrollBar = new VScrollBar {Parent = this, Dock = DockStyle.Right, TabStop = true, SmallChange = 1, LargeChange = 4};
+            _vScrollBar.ValueChanged += VScrollBarValueChanged;
 
             Graphics g = CreateGraphics();
-            font = new Font(Font.FontFamily, 9);
+            _font = new Font(Font.FontFamily, 9);
 
             string longestDirection = "";
             foreach (PosDirection posDir in Enum.GetValues(typeof(PosDirection)))
-                if (g.MeasureString(Language.T(posDir.ToString()), font).Width >
-                    g.MeasureString(longestDirection, font).Width)
+                if (g.MeasureString(Language.T(posDir.ToString()), _font).Width >
+                    g.MeasureString(longestDirection, _font).Width)
                     longestDirection = Language.T(posDir.ToString());
 
             string longestTransaction = "";
             foreach (Transaction transaction in Enum.GetValues(typeof(Transaction)))
-                if (g.MeasureString(Language.T(transaction.ToString()), font).Width >
-                    g.MeasureString(longestTransaction, font).Width)
+                if (g.MeasureString(Language.T(transaction.ToString()), _font).Width >
+                    g.MeasureString(longestTransaction, _font).Width)
                     longestTransaction = Language.T(transaction.ToString());
 
             string longestBacktestEval = "";
             foreach (BacktestEval eval in Enum.GetValues(typeof(BacktestEval)))
-                if (g.MeasureString(Language.T(eval.ToString()), font).Width >
-                    g.MeasureString(longestBacktestEval, font).Width)
+                if (g.MeasureString(Language.T(eval.ToString()), _font).Width >
+                    g.MeasureString(longestBacktestEval, _font).Width)
                     longestBacktestEval = Language.T(eval.ToString());
 
-            asTitlesPips = new string[19]
+            _titlesInPips = new[]
             {
                Language.T("Bar"),
                Language.T("Date"),
@@ -214,7 +120,7 @@ namespace Forex_Strategy_Builder
                Language.T("Interpolation")
             };
 
-            asTitlesMoney = new string[19]
+            _titlesInMoney = new[]
             {
                Language.T("Bar"),
                Language.T("Date"),
@@ -237,7 +143,7 @@ namespace Forex_Strategy_Builder
                Language.T("Interpolation")
             };
 
-            string[] asColumContent = new string[19]
+            var asColumContent = new[]
             {
                 "99999",
                 "99/99/99",
@@ -260,20 +166,85 @@ namespace Forex_Strategy_Builder
                 longestBacktestEval
             };
 
-            rowHeight = (int)Math.Max(font.Height, 18);
-            Padding = new Padding(border, 2 * rowHeight, border, border);
+            _rowHeight = Math.Max(_font.Height, 18);
+            Padding = new Padding(Border, 2 * _rowHeight, Border, Border);
 
-            columns  = 19;
-            aiColumnX = new int[20];
-            aiX       = new int[20];
+            _columns   = 19;
+            _xPositions = new int[20];
+            _xScaled       = new int[20];
 
-            aiColumnX[0] = border;
-            aiColumnX[1] = aiColumnX[0] + (int)Math.Max(g.MeasureString(asColumContent[0], font).Width + 16, g.MeasureString(asTitlesMoney[0], font).Width) + 4;
-            for (int i = 1; i < columns; i++)
-                aiColumnX[i + 1] = aiColumnX[i] + (int)Math.Max(g.MeasureString(asColumContent[i], font).Width, g.MeasureString(asTitlesMoney[i], font).Width) + 4;
+            _xPositions[0] = Border;
+            _xPositions[1] = _xPositions[0] + (int)Math.Max(g.MeasureString(asColumContent[0], _font).Width + 16, g.MeasureString(_titlesInMoney[0], _font).Width) + 4;
+            for (int i = 1; i < _columns; i++)
+                _xPositions[i + 1] = _xPositions[i] + (int)Math.Max(g.MeasureString(asColumContent[i], _font).Width, g.MeasureString(_titlesInMoney[i], _font).Width) + 4;
             g.Dispose();
+        }
 
-            return;
+        /// <summary>
+        /// Sets the journal's current data
+        /// </summary>
+        public void SetUpJournal()
+        {
+            _bars = Data.Bars;
+
+            if (_bars == 0)
+            {
+                _firstBar  = 0;
+                _lastBar   = 0;
+                _shownBars = 0;
+
+                _vScrollBar.Enabled = false;
+            }
+            else if (_bars < _rows)
+            {
+                _firstBar  = 0;
+                _lastBar   = _rows;
+                _shownBars = _bars;
+
+                _vScrollBar.Enabled = false;
+            }
+            else
+            {
+                _vScrollBar.Enabled = true;
+                _vScrollBar.Maximum = _bars - 1;
+
+                _firstBar = _vScrollBar.Value;
+                if (_firstBar + _rows > _bars)
+                {
+                    _lastBar   = _bars - 1;
+                    _shownBars = _lastBar - _firstBar + 1;
+                }
+                else
+                {
+                    _shownBars = _rows;
+                    _lastBar   = _firstBar + _shownBars - 1;
+                }
+            }
+
+            _selectedRow = Math.Min(_selectedRow, _shownBars - 1);
+            _selectedRow = Math.Max(_selectedRow, 0);
+
+            UpdateJournalData();
+            SetJournalColors();
+        }
+
+        /// <summary>
+        /// Sets the journal colors
+        /// </summary>
+        void SetJournalColors()
+        {
+            _colorBack        = LayoutColors.ColorControlBack;
+
+            _brushCaptionText     = new SolidBrush(LayoutColors.ColorCaptionText);
+            _brushEvenRowBack     = new SolidBrush(LayoutColors.ColorEvenRowBack);
+            _brushSelectedRowBack = new SolidBrush(LayoutColors.ColorSelectedRowBack);
+            _brushSelectedRowText = new SolidBrush(LayoutColors.ColorSelectedRowText);
+            _brushRowText         = new SolidBrush(LayoutColors.ColorControlText);
+            _brushWarningBack     = new SolidBrush(LayoutColors.ColorWarningRowBack);
+            _brushWarningText     = new SolidBrush(LayoutColors.ColorWarningRowText);
+
+            _penLines     = new Pen(LayoutColors.ColorJournalLines);
+            _penBorder    = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
         }
 
         /// <summary>
@@ -281,153 +252,100 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void UpdateJournalData()
         {
-            asJournalData = new string[shownBars, columns];
-            aiPositionIcons = new Image[shownBars];
+            _journalData = new string[_shownBars, _columns];
+            _positionIcons = new Image[_shownBars];
 
-            for (int bar = firstBar; bar < firstBar + shownBars; bar++)
+            for (int bar = _firstBar; bar < _firstBar + _shownBars; bar++)
             {
-                int row = bar - firstBar;
+                int row = bar - _firstBar;
+                var isPos = Backtester.IsPos(bar);
+                var inMoney = Configs.AccountInMoney;
+                var sign = Backtester.SummaryDir(bar) == PosDirection.Short ? "-" : "";
 
-                asJournalData[row, 0] = (bar + 1).ToString();
-                asJournalData[row, 1] = Data.Time[bar].ToString(Data.DF);
-                asJournalData[row, 2] = Data.Time[bar].ToString("HH:mm");
-                asJournalData[row, 3] = Data.Open[bar].ToString(Data.FF);
-                asJournalData[row, 4] = Data.High[bar].ToString(Data.FF);
-                asJournalData[row, 5] = Data.Low[bar].ToString(Data.FF);
-                asJournalData[row, 6] = Data.Close[bar].ToString(Data.FF);
-                asJournalData[row, 7] = Data.Volume[bar].ToString();
-                if (Backtester.IsPos(bar))
+                _positionIcons[row] = isPos ? Backtester.SummaryPositionIcon(bar) : Properties.Resources.pos_square;
+
+                _journalData[row, 0] = (bar + 1).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, 1] = Data.Time[bar].ToString(Data.DF);
+                _journalData[row, 2] = Data.Time[bar].ToString("HH:mm");
+                _journalData[row, 3] = Data.Open[bar].ToString(Data.FF);
+                _journalData[row, 4] = Data.High[bar].ToString(Data.FF);
+                _journalData[row, 5] = Data.Low[bar].ToString(Data.FF);
+                _journalData[row, 6] = Data.Close[bar].ToString(Data.FF);
+                _journalData[row, 7] = Data.Volume[bar].ToString(CultureInfo.InvariantCulture);
+                _journalData[row, 8] = isPos ? Language.T(Backtester.SummaryTrans(bar).ToString()) : "";
+                _journalData[row, 9] = isPos ? Language.T(Backtester.SummaryDir(bar).ToString()) : "";
+
+                if (isPos)
                 {
-                    asJournalData[row, 8] = Language.T(Backtester.SummaryTrans(bar).ToString());
-                    asJournalData[row, 9] = Language.T(Backtester.SummaryDir(bar).ToString());
-                    if (Configs.AccountInMoney)
-                    {
-                        string sign = Backtester.SummaryDir(bar) == PosDirection.Short ? "-" : "";
-                        asJournalData[row, 10] = sign + Backtester.SummaryAmount(bar).ToString();
-                    }
-                    else
-                        asJournalData[row, 10] = Backtester.SummaryLots(bar).ToString();
-                    asJournalData[row, 11] = Backtester.SummaryPrice(bar).ToString(Data.FF);
-                    if (Configs.AccountInMoney)
-                    {
-                        // Profit Loss
-                        if (Backtester.SummaryTrans(bar) == Transaction.Close ||
-                            Backtester.SummaryTrans(bar) == Transaction.Reduce ||
-                            Backtester.SummaryTrans(bar) == Transaction.Reverse)
-                        {
-                            asJournalData[row, 12] = Backtester.MoneyProfitLoss(bar).ToString("F2");
-                        }
-                        else
-                        {
-                            asJournalData[row, 12] = "-";
-                        }
+                    _journalData[row, 10] = inMoney
+                                                ? sign + Backtester.SummaryAmount(bar).ToString(CultureInfo.InvariantCulture)
+                                                : Backtester.SummaryLots(bar).ToString(CultureInfo.InvariantCulture);
 
-                        // Floating Profit Loss
-                        if (Backtester.SummaryTrans(bar) != Transaction.Close)
-                        {
-                            asJournalData[row, 13] = Backtester.MoneyFloatingPL(bar).ToString("F2");
-                        }
-                        else
-                        {
-                            asJournalData[row, 13] = "-";
-                        }
-                    }
-                    else
-                    {
-                        // Profit Loss
-                        if (Backtester.SummaryTrans(bar) == Transaction.Close ||
-                            Backtester.SummaryTrans(bar) == Transaction.Reduce ||
-                            Backtester.SummaryTrans(bar) == Transaction.Reverse)
-                        {
-                            asJournalData[row, 12] = Backtester.ProfitLoss(bar).ToString();
-                        }
-                        else
-                        {
-                            asJournalData[row, 12] = "-";
-                        }
+                    _journalData[row, 11] = Backtester.SummaryPrice(bar).ToString(Data.FF);
 
-                        // Floating Profit Loss
-                        if (Backtester.SummaryTrans(bar) != Transaction.Close)
-                        {
-                            asJournalData[row, 13] = Backtester.FloatingPL(bar).ToString();
-                        }
-                        else
-                        {
-                            asJournalData[row, 13] = "-";
-                        }
-                    }
-
-                    // Icons
-                    aiPositionIcons[row] = Backtester.SummaryPositionIcon(bar);
-                }
-                else
-                {
-                    // Icons
-                    aiPositionIcons[row] = Properties.Resources.pos_square;
+                    _journalData[row, 12] = Backtester.SummaryTrans(bar) == Transaction.Close  ||
+                                            Backtester.SummaryTrans(bar) == Transaction.Reduce ||
+                                            Backtester.SummaryTrans(bar) == Transaction.Reverse
+                                                ? inMoney 
+                                                    ? Backtester.MoneyProfitLoss(bar).ToString("F2") 
+                                                    : Backtester.ProfitLoss(bar).ToString(CultureInfo.InvariantCulture)
+                                                : "-";
+                    _journalData[row, 13] = Backtester.SummaryTrans(bar) != Transaction.Close
+                                                ? inMoney
+                                                    ? Backtester.MoneyFloatingPL(bar).ToString("F2")
+                                                    : Backtester.FloatingPL(bar).ToString(CultureInfo.InvariantCulture)
+                                                : "-";
                 }
 
-
-                if (Configs.AccountInMoney)
-                {
-                    asJournalData[row, 14] = Backtester.MoneyBalance(bar).ToString("F2");
-                    asJournalData[row, 15] = Backtester.MoneyEquity(bar).ToString("F2");
-                }
-                else
-                {
-                    asJournalData[row, 14] = Backtester.Balance(bar).ToString();
-                    asJournalData[row, 15] = Backtester.Equity(bar).ToString();
-                }
-                asJournalData[row, 16] = Backtester.SummaryRequiredMargin(bar).ToString("F2");
-                asJournalData[row, 17] = Backtester.SummaryFreeMargin(bar).ToString("F2");
-                asJournalData[row, 18] = Language.T(Backtester.BackTestEval(bar));
+                _journalData[row, 14] = inMoney ? Backtester.MoneyBalance(bar).ToString("F2") : Backtester.Balance(bar).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, 15] = inMoney ? Backtester.MoneyEquity(bar).ToString("F2") : Backtester.Equity(bar).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, 16] = Backtester.SummaryRequiredMargin(bar).ToString("F2");
+                _journalData[row, 17] = Backtester.SummaryFreeMargin(bar).ToString("F2");
+                _journalData[row, 18] = Language.T(Backtester.BackTestEval(bar));
             }
-
-            return;
         }
 
         /// <summary>
-        /// Set params on resize
+        /// Set parameters on resize
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
             base.OnResize(eventargs);
 
-            if (ClientSize.Height > 2 * rowHeight)
+            if (ClientSize.Height > 2 * _rowHeight)
             {
-                rows = (ClientSize.Height - 2 * rowHeight) / rowHeight;
+                _rows = (ClientSize.Height - 2 * _rowHeight) / _rowHeight;
             }
             else
             {
-                rows = 0;
+                _rows = 0;
             }
 
-            if (ClientSize.Width - vScrollBar.Width - 2 * border <= aiColumnX[columns])
-                aiColumnX.CopyTo(aiX, 0);
+            if (ClientSize.Width - _vScrollBar.Width - 2 * Border <= _xPositions[_columns])
+                _xPositions.CopyTo(_xScaled, 0);
             else
             {   // Scales the columns position
-                float scale = (float)(ClientSize.Width - vScrollBar.Width - 2 * border) / aiColumnX[columns];
-                for (int i = 0; i <= columns; i++)
-                    aiX[i] = (int)(aiColumnX[i] * scale);
+                float scale = (float)(ClientSize.Width - _vScrollBar.Width - 2 * Border) / _xPositions[_columns];
+                for (int i = 0; i <= _columns; i++)
+                    _xScaled[i] = (int)(_xPositions[i] * scale);
             }
 
-            if (ClientSize.Width - vScrollBar.Width - 2 * border < aiColumnX[columns])
+            if (ClientSize.Width - _vScrollBar.Width - 2 * Border < _xPositions[_columns])
             {
-                hScrollBar.Visible = true;
-                int poinShort = aiColumnX[columns] - ClientSize.Width + vScrollBar.Width + 2 * border;
-                if (hScrollBar.Value > poinShort)
-                    hScrollBar.Value = poinShort;
-                hScrollBar.Maximum = poinShort + hScrollBar.LargeChange - 2;
+                _hScrollBar.Visible = true;
+                int poinShort = _xPositions[_columns] - ClientSize.Width + _vScrollBar.Width + 2 * Border;
+                if (_hScrollBar.Value > poinShort)
+                    _hScrollBar.Value = poinShort;
+                _hScrollBar.Maximum = poinShort + _hScrollBar.LargeChange - 2;
             }
             else
             {
-                hScrollBar.Value = 0;
-                hScrollBar.Visible = false;
+                _hScrollBar.Value = 0;
+                _hScrollBar.Visible = false;
             }
 
             SetUpJournal();
             Invalidate();
-
-            return;
         }
 
         /// <summary>
@@ -436,111 +354,101 @@ namespace Forex_Strategy_Builder
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-
-            int   iHScrll  = -hScrollBar.Value;
-            bool  bWarning = false;
-            Brush brush    = Brushes.Red;
-            Size  size     = new Size(ClientSize.Width - vScrollBar.Width, rowHeight);
-
-            StringFormat sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
+            int iHScrll = -_hScrollBar.Value;
+            var sf = new StringFormat {Alignment = StringAlignment.Center};
 
             // Caption background
-            RectangleF rectfCaption = new RectangleF(0, 0, ClientSize.Width, 2 * rowHeight);
+            var rectfCaption = new RectangleF(0, 0, ClientSize.Width, 2 * _rowHeight);
             Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
 
             // Print the journal caption
             string unit = Configs.AccountInMoney ? " [" + Configs.AccountCurrency + "]" : " [" + Language.T("pips") + "]";
             string accUnit = " [" + Configs.AccountCurrency + "]";
-            g.SetClip(new RectangleF(border, 0, ClientSize.Width - 2 * border, 2 * rowHeight));
-            g.DrawString(Language.T("Market Data"), font, brushCaptionText, iHScrll + (aiX[8] + aiX[0]) / 2, 0, sf);
-            g.DrawString(Language.T("Summary") + unit, font, brushCaptionText, iHScrll + (aiX[14] + aiX[8]) / 2, 0, sf);
-            g.DrawString(Language.T("Account") + unit, font, brushCaptionText, iHScrll + (aiX[16] + aiX[14]) / 2, 0, sf);
-            g.DrawString(Language.T("Margin")  + accUnit, font, brushCaptionText, iHScrll + (aiX[18] + aiX[16]) / 2, 0, sf);
-            g.DrawString(Language.T("Backtest"), font, brushCaptionText, iHScrll + (aiX[19] + aiX[18]) / 2, 0, sf);
+            g.SetClip(new RectangleF(Border, 0, ClientSize.Width - 2 * Border, 2 * _rowHeight));
+            g.DrawString(Language.T("Market Data"), _font, _brushCaptionText, iHScrll + (_xScaled[8] + _xScaled[0]) / 2, 0, sf);
+            g.DrawString(Language.T("Summary") + unit, _font, _brushCaptionText, iHScrll + (_xScaled[14] + _xScaled[8]) / 2, 0, sf);
+            g.DrawString(Language.T("Account") + unit, _font, _brushCaptionText, iHScrll + (_xScaled[16] + _xScaled[14]) / 2, 0, sf);
+            g.DrawString(Language.T("Margin")  + accUnit, _font, _brushCaptionText, iHScrll + (_xScaled[18] + _xScaled[16]) / 2, 0, sf);
+            g.DrawString(Language.T("Backtest"), _font, _brushCaptionText, iHScrll + (_xScaled[19] + _xScaled[18]) / 2, 0, sf);
             if (Configs.AccountInMoney)
             {
-                for (int i = 0; i < columns; i++)
-                    g.DrawString(asTitlesMoney[i], font, brushCaptionText, iHScrll + (aiX[i] + aiX[i + 1]) / 2, rowHeight, sf);
+                for (int i = 0; i < _columns; i++)
+                    g.DrawString(_titlesInMoney[i], _font, _brushCaptionText, iHScrll + (_xScaled[i] + _xScaled[i + 1]) / 2, _rowHeight, sf);
             }
             else
             {
-                for (int i = 0; i < columns; i++)
-                    g.DrawString(asTitlesPips[i], font, brushCaptionText, iHScrll + (aiX[i] + aiX[i + 1]) / 2, rowHeight, sf);
+                for (int i = 0; i < _columns; i++)
+                    g.DrawString(_titlesInPips[i], _font, _brushCaptionText, iHScrll + (_xScaled[i] + _xScaled[i + 1]) / 2, _rowHeight, sf);
             }
             g.ResetClip();
 
-            RectangleF rectField = new RectangleF(border, 2 * rowHeight, ClientSize.Width - 2 * border, ClientSize.Height - 2 * rowHeight - border);
-            g.FillRectangle(new SolidBrush(colorBack), rectField);
+            var rectField = new RectangleF(Border, 2 * _rowHeight, ClientSize.Width - 2 * Border, ClientSize.Height - 2 * _rowHeight - Border);
+            g.FillRectangle(new SolidBrush(_colorBack), rectField);
 
-            size = new Size(ClientSize.Width - vScrollBar.Width - 2 * border, rowHeight);
+            var size = new Size(ClientSize.Width - _vScrollBar.Width - 2 * Border, _rowHeight);
 
             // Prints the journal data
-            for (int bar = firstBar; bar < firstBar + shownBars; bar++)
+            for (int bar = _firstBar; bar < _firstBar + _shownBars; bar++)
             {
-                int y = (bar - firstBar + 2) * rowHeight;
-                Point point = new Point(border, y);
+                int y = (bar - _firstBar + 2) * _rowHeight;
+                var point = new Point(Border, y);
 
                 // Even row
-                if ((bar - firstBar) % 2f != 0)
-                    g.FillRectangle(brushEvenRowBack, new Rectangle(point, size));
+                if (Math.Abs((bar - _firstBar) % 2f - 0) > 0.0001)
+                    g.FillRectangle(_brushEvenRowBack, new Rectangle(point, size));
 
                 // Warning row
-                if (asJournalData[bar - firstBar, columns - 1] == Language.T("Ambiguous"))
+                bool isWarningRow = false;
+                if (_journalData[bar - _firstBar, _columns - 1] == Language.T("Ambiguous"))
                 {
-                    g.FillRectangle(brushWarningBack, new Rectangle(point, size));
-                    bWarning = true;
-                }
-                else
-                {
-                    bWarning = false;
+                    g.FillRectangle(_brushWarningBack, new Rectangle(point, size));
+                    isWarningRow = true;
                 }
 
                 // Selected row
-                if (bar - firstBar == selectedRow)
+                Brush brush;
+                if (bar - _firstBar == _selectedRow)
                 {
-                    g.FillRectangle(brushSelectedRowBack, new Rectangle(point, size));
-                    brush = brushSelectedRowText;
+                    g.FillRectangle(_brushSelectedRowBack, new Rectangle(point, size));
+                    brush = _brushSelectedRowText;
                 }
                 else
                 {
-                    brush = bWarning ? brushWarningText : brushRowText;
+                    brush = isWarningRow ? _brushWarningText : _brushRowText;
                 }
 
                 // Draw the position icon
-                int imgY = y + (int)Math.Floor((rowHeight - 16) / 2.0);
-                g.DrawImage(aiPositionIcons[bar - firstBar], iHScrll + 2, imgY, 16, 16);
+                int imgY = y + (int)Math.Floor((_rowHeight - 16) / 2.0);
+                g.DrawImage(_positionIcons[bar - _firstBar], iHScrll + 2, imgY, 16, 16);
 
                 // Prints the data
-                g.DrawString(asJournalData[bar - firstBar, 0], font, brush, iHScrll + (16 + aiX[1]) / 2, (bar - firstBar + 2) * rowHeight, sf);
-                for (int i = 1; i < columns; i++)
-                    g.DrawString(asJournalData[bar - firstBar, i], font, brush, iHScrll + (aiX[i] + aiX[i + 1]) / 2, (bar - firstBar + 2) * rowHeight, sf);
+                g.DrawString(_journalData[bar - _firstBar, 0], _font, brush, iHScrll + (16 + _xScaled[1]) / 2, (bar - _firstBar + 2) * _rowHeight, sf);
+                for (int i = 1; i < _columns; i++)
+                    g.DrawString(_journalData[bar - _firstBar, i], _font, brush, iHScrll + (_xScaled[i] + _xScaled[i + 1]) / 2, (bar - _firstBar + 2) * _rowHeight, sf);
             }
 
             // Horizontal line in the title
             //g.DrawLine(penLines, 0, iRowHeight, ClientSize.Width, iRowHeight);
 
             // Vertical lines
-            for (int i = 1; i < columns; i++)
+            for (int i = 1; i < _columns; i++)
             {
                 if (i == 8 || i == 14 || i == 16 || i == 18)
                 {
-                    RectangleF rectfSeparator = new RectangleF(aiX[i] + iHScrll, rowHeight / 2, 1, 3 * rowHeight / 2);
+                    var rectfSeparator = new RectangleF(_xScaled[i] + iHScrll, _rowHeight / 2, 1, 3 * _rowHeight / 2);
                     Data.GradientPaint(g, rectfSeparator, LayoutColors.ColorCaptionBack, -2 * LayoutColors.DepthCaption);
-                    g.DrawLine(penLines, aiX[i] + iHScrll, 2 * rowHeight, aiX[i] + iHScrll, ClientSize.Height);
+                    g.DrawLine(_penLines, _xScaled[i] + iHScrll, 2 * _rowHeight, _xScaled[i] + iHScrll, ClientSize.Height);
                 }
                 else
-                    g.DrawLine(penLines, aiX[i] + iHScrll, 2 * rowHeight, aiX[i] + iHScrll, ClientSize.Height);
+                    g.DrawLine(_penLines, _xScaled[i] + iHScrll, 2 * _rowHeight, _xScaled[i] + iHScrll, ClientSize.Height);
             }
 
             // Border
-            g.DrawLine(penBorder, 1, 2 * rowHeight, 1, ClientSize.Height);
-            g.DrawLine(penBorder, ClientSize.Width - border + 1, 2 * rowHeight, ClientSize.Width - border + 1, ClientSize.Height);
-            g.DrawLine(penBorder, 0, ClientSize.Height - border + 1, ClientSize.Width, ClientSize.Height - border + 1);
+            g.DrawLine(_penBorder, 1, 2 * _rowHeight, 1, ClientSize.Height);
+            g.DrawLine(_penBorder, ClientSize.Width - Border + 1, 2 * _rowHeight, ClientSize.Width - Border + 1, ClientSize.Height);
+            g.DrawLine(_penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
 
             OnSelectedBarChange(new EventArgs());
-
-            return;
         }
 
         /// <summary>
@@ -548,16 +456,16 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            selectedRow = e.Y / rowHeight - 2;
+            _selectedRow = e.Y / _rowHeight - 2;
 
-            if (selectedRow < 0)
-                selectedRow = 0;
-            else if(selectedRow > shownBars - 1)
-                selectedRow = shownBars - 1;
+            if (_selectedRow < 0)
+                _selectedRow = 0;
+            else if(_selectedRow > _shownBars - 1)
+                _selectedRow = _shownBars - 1;
 
-            Rectangle rect = new Rectangle(0, 2 * rowHeight, ClientSize.Width, ClientSize.Height - 2 * rowHeight);
+            var rect = new Rectangle(0, 2 * _rowHeight, ClientSize.Width, ClientSize.Height - 2 * _rowHeight);
             Invalidate(rect);
-            vScrollBar.Select();
+            _vScrollBar.Select();
         }
 
         /// <summary>
@@ -566,38 +474,32 @@ namespace Forex_Strategy_Builder
         protected virtual void OnSelectedBarChange(EventArgs e)
         {
             // Invokes the delegate
-            if (SelectedBarChange != null && selectedBarOld != SelectedBar)
+            if (SelectedBarChange != null && _selectedBarOld != SelectedBar)
             {
                 SelectedBarChange(this, e);
-                selectedBarOld = SelectedBar;
+                _selectedBarOld = SelectedBar;
             }
-
-            return;
         }
 
         /// <summary>
         /// Invalidates the sender after scrolling
         /// </summary>
-        void HScrollBar_ValueChanged(object sender, EventArgs e)
+        void HScrollBarValueChanged(object sender, EventArgs e)
         {
-            int iScrallBarSize = hScrollBar.Visible ? hScrollBar.Height : 0;
-            Rectangle rect = new Rectangle(border, 1, ClientSize.Width - 2 * border, ClientSize.Height - iScrallBarSize - border - 1);
+            int scrallBarSize = _hScrollBar.Visible ? _hScrollBar.Height : 0;
+            var rect = new Rectangle(Border, 1, ClientSize.Width - 2 * Border, ClientSize.Height - scrallBarSize - Border - 1);
             Invalidate(rect);
-
-            return;
         }
 
         /// <summary>
         /// Invalidates the sender after scrolling
         /// </summary>
-        void VScrollBar_ValueChanged(object sender, EventArgs e)
+        void VScrollBarValueChanged(object sender, EventArgs e)
         {
             SetUpJournal();
-            int iScrallBarSize = hScrollBar.Visible ? hScrollBar.Height : 0;
-            Rectangle rect = new Rectangle(border, 2 * rowHeight, ClientSize.Width - 2 * border, ClientSize.Height - 2 * rowHeight - iScrallBarSize - border);
+            int scrallBarSize = _hScrollBar.Visible ? _hScrollBar.Height : 0;
+            var rect = new Rectangle(Border, 2 * _rowHeight, ClientSize.Width - 2 * Border, ClientSize.Height - 2 * _rowHeight - scrallBarSize - Border);
             Invalidate(rect);
-
-            return;
         }
     }
 }
