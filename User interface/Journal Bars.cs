@@ -169,9 +169,9 @@ namespace Forex_Strategy_Builder
             _rowHeight = Math.Max(_font.Height, 18);
             Padding = new Padding(Border, 2 * _rowHeight, Border, Border);
 
-            _columns   = 19;
+            _columns    = 19;
             _xPositions = new int[20];
-            _xScaled       = new int[20];
+            _xScaled    = new int[20];
 
             _xPositions[0] = Border;
             _xPositions[1] = _xPositions[0] + (int)Math.Max(g.MeasureString(asColumContent[0], _font).Width + 16, g.MeasureString(_titlesInMoney[0], _font).Width) + 4;
@@ -257,52 +257,65 @@ namespace Forex_Strategy_Builder
 
             for (int bar = _firstBar; bar < _firstBar + _shownBars; bar++)
             {
-                int row = bar - _firstBar;
+                var row = bar - _firstBar;
+                var col = 0;
                 var isPos = Backtester.IsPos(bar);
                 var inMoney = Configs.AccountInMoney;
-                var sign = Backtester.SummaryDir(bar) == PosDirection.Short ? "-" : "";
+
+                _journalData[row, col++] = (bar + 1).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, col++] = Data.Time[bar].ToString(Data.DF);
+                _journalData[row, col++] = Data.Time[bar].ToString("HH:mm");
+                _journalData[row, col++] = Data.Open[bar].ToString(Data.FF);
+                _journalData[row, col++] = Data.High[bar].ToString(Data.FF);
+                _journalData[row, col++] = Data.Low[bar].ToString(Data.FF);
+                _journalData[row, col++] = Data.Close[bar].ToString(Data.FF);
+                _journalData[row, col++] = Data.Volume[bar].ToString(CultureInfo.InvariantCulture);
+                _journalData[row, col++] = isPos ? Language.T(Backtester.SummaryTrans(bar).ToString()) : "";
+                _journalData[row, col++] = isPos ? Language.T(Backtester.SummaryDir(bar).ToString()) : "";
+                _journalData[row, col++] = isPos ? GetPositionAmmountString(bar) : "";
+                _journalData[row, col++] = isPos ? Backtester.SummaryPrice(bar).ToString(Data.FF) : "";
+                _journalData[row, col++] = isPos ? GetPositionProfitString(bar) : "";
+                _journalData[row, col++] = isPos ? GetPositionFloatingPLString(bar) : "";
+                _journalData[row, col++] = inMoney ? Backtester.MoneyBalance(bar).ToString("F2") : Backtester.Balance(bar).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, col++] = inMoney ? Backtester.MoneyEquity(bar).ToString("F2") : Backtester.Equity(bar).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, col++] = Backtester.SummaryRequiredMargin(bar).ToString("F2");
+                _journalData[row, col++] = Backtester.SummaryFreeMargin(bar).ToString("F2");
+                _journalData[row, col++] = Language.T(Backtester.BackTestEval(bar));
 
                 _positionIcons[row] = isPos ? Backtester.SummaryPositionIcon(bar) : Properties.Resources.pos_square;
-
-                _journalData[row, 0] = (bar + 1).ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 1] = Data.Time[bar].ToString(Data.DF);
-                _journalData[row, 2] = Data.Time[bar].ToString("HH:mm");
-                _journalData[row, 3] = Data.Open[bar].ToString(Data.FF);
-                _journalData[row, 4] = Data.High[bar].ToString(Data.FF);
-                _journalData[row, 5] = Data.Low[bar].ToString(Data.FF);
-                _journalData[row, 6] = Data.Close[bar].ToString(Data.FF);
-                _journalData[row, 7] = Data.Volume[bar].ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 8] = isPos ? Language.T(Backtester.SummaryTrans(bar).ToString()) : "";
-                _journalData[row, 9] = isPos ? Language.T(Backtester.SummaryDir(bar).ToString()) : "";
-
-                if (isPos)
-                {
-                    _journalData[row, 10] = inMoney
-                                                ? sign + Backtester.SummaryAmount(bar).ToString(CultureInfo.InvariantCulture)
-                                                : Backtester.SummaryLots(bar).ToString(CultureInfo.InvariantCulture);
-
-                    _journalData[row, 11] = Backtester.SummaryPrice(bar).ToString(Data.FF);
-
-                    _journalData[row, 12] = Backtester.SummaryTrans(bar) == Transaction.Close  ||
-                                            Backtester.SummaryTrans(bar) == Transaction.Reduce ||
-                                            Backtester.SummaryTrans(bar) == Transaction.Reverse
-                                                ? inMoney 
-                                                    ? Backtester.MoneyProfitLoss(bar).ToString("F2") 
-                                                    : Backtester.ProfitLoss(bar).ToString(CultureInfo.InvariantCulture)
-                                                : "-";
-                    _journalData[row, 13] = Backtester.SummaryTrans(bar) != Transaction.Close
-                                                ? inMoney
-                                                    ? Backtester.MoneyFloatingPL(bar).ToString("F2")
-                                                    : Backtester.FloatingPL(bar).ToString(CultureInfo.InvariantCulture)
-                                                : "-";
-                }
-
-                _journalData[row, 14] = inMoney ? Backtester.MoneyBalance(bar).ToString("F2") : Backtester.Balance(bar).ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 15] = inMoney ? Backtester.MoneyEquity(bar).ToString("F2") : Backtester.Equity(bar).ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 16] = Backtester.SummaryRequiredMargin(bar).ToString("F2");
-                _journalData[row, 17] = Backtester.SummaryFreeMargin(bar).ToString("F2");
-                _journalData[row, 18] = Language.T(Backtester.BackTestEval(bar));
             }
+        }
+
+        private string GetPositionAmmountString(int bar)
+        {
+            var sign = Backtester.SummaryDir(bar) == PosDirection.Short ? "-" : "";
+            if (Configs.AccountInMoney)
+                return sign + Backtester.SummaryAmount(bar).ToString(CultureInfo.InvariantCulture);
+            return Backtester.SummaryLots(bar).ToString(CultureInfo.InvariantCulture);
+        }
+
+        private string GetPositionProfitString(int bar)
+        {
+            if (Backtester.SummaryTrans(bar) == Transaction.Close ||
+                Backtester.SummaryTrans(bar) == Transaction.Reduce ||
+                Backtester.SummaryTrans(bar) == Transaction.Reverse)
+            {
+                return Configs.AccountInMoney
+                           ? Backtester.MoneyProfitLoss(bar).ToString("F2")
+                           : Backtester.ProfitLoss(bar).ToString(CultureInfo.InvariantCulture);
+            }
+
+            return "-";
+        }
+
+        private string GetPositionFloatingPLString(int bar)
+        {
+            if (Backtester.SummaryTrans(bar) == Transaction.Close)
+                return "-";
+
+            return Configs.AccountInMoney
+                       ? Backtester.MoneyFloatingPL(bar).ToString("F2")
+                       : Backtester.FloatingPL(bar).ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -427,23 +440,18 @@ namespace Forex_Strategy_Builder
                     g.DrawString(_journalData[bar - _firstBar, i], _font, brush, iHScrll + (_xScaled[i] + _xScaled[i + 1]) / 2, (bar - _firstBar + 2) * _rowHeight, sf);
             }
 
-            // Horizontal line in the title
-            //g.DrawLine(penLines, 0, iRowHeight, ClientSize.Width, iRowHeight);
-
-            // Vertical lines
-            for (int i = 1; i < _columns; i++)
+            // Vertical grid lines
+            for (var i = 1; i < _columns; i++)
             {
                 if (i == 8 || i == 14 || i == 16 || i == 18)
                 {
                     var rectfSeparator = new RectangleF(_xScaled[i] + iHScrll, _rowHeight / 2, 1, 3 * _rowHeight / 2);
                     Data.GradientPaint(g, rectfSeparator, LayoutColors.ColorCaptionBack, -2 * LayoutColors.DepthCaption);
-                    g.DrawLine(_penLines, _xScaled[i] + iHScrll, 2 * _rowHeight, _xScaled[i] + iHScrll, ClientSize.Height);
                 }
-                else
-                    g.DrawLine(_penLines, _xScaled[i] + iHScrll, 2 * _rowHeight, _xScaled[i] + iHScrll, ClientSize.Height);
+                g.DrawLine(_penLines, _xScaled[i] + iHScrll, 2 * _rowHeight, _xScaled[i] + iHScrll, ClientSize.Height);
             }
 
-            // Border
+            // Borders
             g.DrawLine(_penBorder, 1, 2 * _rowHeight, 1, ClientSize.Height);
             g.DrawLine(_penBorder, ClientSize.Width - Border + 1, 2 * _rowHeight, ClientSize.Width - Border + 1, ClientSize.Height);
             g.DrawLine(_penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
@@ -473,12 +481,9 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected virtual void OnSelectedBarChange(EventArgs e)
         {
-            // Invokes the delegate
-            if (SelectedBarChange != null && _selectedBarOld != SelectedBar)
-            {
-                SelectedBarChange(this, e);
-                _selectedBarOld = SelectedBar;
-            }
+            if (SelectedBarChange == null || _selectedBarOld == SelectedBar) return;
+            SelectedBarChange(this, e);
+            _selectedBarOld = SelectedBar;
         }
 
         /// <summary>
