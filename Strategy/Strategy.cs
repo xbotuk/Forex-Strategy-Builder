@@ -37,7 +37,7 @@ namespace Forex_Strategy_Builder
         double addingLots   = 1;
         double reducingLots = 1;
 
-        bool useMartingale = true;
+        bool useMartingale = false;
         double martingaleMultiplier = 2.0;
 
         bool usePermanentSL = false;
