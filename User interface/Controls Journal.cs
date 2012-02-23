@@ -12,83 +12,113 @@ namespace Forex_Strategy_Builder
     /// <summary>
     /// Class Controls Journal: Menu_and_StatusBar
     /// </summary>
-    public partial class Controls : Menu_and_StatusBar
+    public partial class Controls
     {
-        protected Panel pnlJournalRight; // Parent panel for Order and Position panels
-        protected Journal_Positions pnlJournalByPositions;
-        protected Journal_Bars pnlJournalByBars;
-        protected Journal_Ord  pnlJournalOrder;
-        protected Journal_Pos  pnlJournalPosition;
-        protected Splitter splJournal;
-        protected int selectedBar; // The bar number represented by the selected row
-        int pnlJournalOldWidth;
+        private Panel _journalRight; // Parent panel for Order and Position panels
+        private Journal_Positions _journalByPositions;
+        private Journal_Bars _journalByBars;
+        private Journal_Ord  _journalOrder;
+        private Journal_Pos  _journalPosition;
+        private Splitter _splitter;
+        private int _selectedBarNumber;
+        int _widthJournalOld;
 
         /// <summary>
         /// Initializes the controls in panel pnlJournal.
         /// </summary>
         void InitializeJournal()
         {
-            // pnlJournalRight
-            pnlJournalRight = new Panel();
-            pnlJournalRight.Parent = pnlJournal;
-            pnlJournalRight.Dock   = DockStyle.Fill;
+            // Journal Right
+            _journalRight = new Panel {Parent = pnlJournal, Dock = DockStyle.Fill};
 
-            // pnlJournalOrder
-            pnlJournalOrder = new Journal_Ord();
-            pnlJournalOrder.Parent = pnlJournalRight;
-            pnlJournalOrder.Dock   = DockStyle.Fill;
-            pnlJournalOrder.Cursor = Cursors.Hand;
-            pnlJournalOrder.Click += new EventHandler(PnlJournal_Click);
-            pnlJournalOrder.BtnRemoveJournal.Click += new EventHandler(BtnRemoveJournal_Click);
-            pnlJournalOrder.BtnToggleJournal.Click += new EventHandler(BtnToggleJournal_Click);
-            toolTip.SetToolTip(pnlJournalOrder, Language.T("Click to view Bar Explorer."));
+            // Journal Orders
+            _journalOrder = new Journal_Ord {Parent = _journalRight, Dock = DockStyle.Fill, Cursor = Cursors.Hand};
+            _journalOrder.Click += PnlJournalMouseClick;
+            _journalOrder.PopUpContextMenu.Items.AddRange(GetJournalContextMenuItems());
+            _journalOrder.IsContextButtonVisible = true;
+            toolTip.SetToolTip(_journalOrder, Language.T("Click to view Bar Explorer."));
 
-            Splitter splitter1 = new Splitter();
-            splitter1.Parent   = pnlJournalRight;
-            splitter1.Dock     = DockStyle.Bottom;
-            splitter1.Height   = space;
+            new Splitter {Parent = _journalRight, Dock = DockStyle.Bottom, Height = space};
 
-            // pnlJournalPosition
-            pnlJournalPosition = new Journal_Pos();
-            pnlJournalPosition.Parent = pnlJournalRight;
-            pnlJournalPosition.Dock   = DockStyle.Bottom;
-            pnlJournalPosition.Cursor = Cursors.Hand;
-            pnlJournalPosition.Click += new EventHandler(PnlJournal_Click);
-            toolTip.SetToolTip(pnlJournalPosition, Language.T("Click to view Bar Explorer."));
+            // Journal Position
+            _journalPosition = new Journal_Pos {Parent = _journalRight, Dock = DockStyle.Bottom, Cursor = Cursors.Hand};
+            _journalPosition.Click += PnlJournalMouseClick;
+            toolTip.SetToolTip(_journalPosition, Language.T("Click to view Bar Explorer."));
 
-            splJournal        = new Splitter();
-            splJournal.Parent = pnlJournal;
-            splJournal.Dock   = DockStyle.Left;
-            splJournal.Width  = space;
+            _splitter = new Splitter {Parent = pnlJournal, Dock = DockStyle.Left, Width = space};
 
-            // pnlJournalData
-            pnlJournalByBars = new Journal_Bars();
-            pnlJournalByBars.Name   = "pnlJournalData";
-            pnlJournalByBars.Parent = pnlJournal;
-            pnlJournalByBars.Dock   = DockStyle.Left;
-            pnlJournalByBars.SelectedBarChange += new EventHandler(PnlJournal_SelectedBarChange);
-            pnlJournalByBars.MouseDoubleClick  += new MouseEventHandler(PnlJournal_MouseDoubleClick);
-            toolTip.SetToolTip(pnlJournalByBars, Language.T("Click to select a bar.") + Environment.NewLine + Language.T("Double click to view Bar Explorer."));
+            // Journal by Bars
+            _journalByBars = new Journal_Bars { Name = "JournalByBars", Parent = pnlJournal, Dock = DockStyle.Left };
+            _journalByBars.SelectedBarChange += PnlJournalSelectedBarChange;
+            _journalByBars.MouseDoubleClick  += PnlJournalMouseDoubleClick;
+            toolTip.SetToolTip(_journalByBars, Language.T("Click to select a bar.") + Environment.NewLine + Language.T("Double click to view Bar Explorer."));
 
-            // pnlJournalByPositions
-            pnlJournalByPositions = new Journal_Positions();
-            pnlJournalByPositions.Name   = "pnlJournalByPositions";
-            pnlJournalByPositions.Parent = pnlJournal;
-            pnlJournalByPositions.Dock   = DockStyle.Fill;
-            pnlJournalByPositions.SelectedBarChange += new EventHandler(PnlJournal_SelectedBarChange);
-            pnlJournalByPositions.MouseDoubleClick  += new MouseEventHandler(PnlJournal_MouseDoubleClick);
-            pnlJournalByPositions.BtnRemoveJournal.Click += new EventHandler(BtnRemoveJournal_Click);
-            pnlJournalByPositions.BtnToggleJournal.Click += new EventHandler(BtnToggleJournal_Click);
-            toolTip.SetToolTip(pnlJournalByPositions, Language.T("Click to select a bar.") + Environment.NewLine + Language.T("Double click to view Bar Explorer."));
+            // Journal by Positions
+            _journalByPositions = new Journal_Positions {Name = "JournalByPositions", Parent = pnlJournal, Dock = DockStyle.Fill};
+            _journalByPositions.PopUpContextMenu.Items.AddRange(GetJournalContextMenuItems());
+            _journalByPositions.IsContextButtonVisible = true;
+            _journalByPositions.SelectedBarChange += PnlJournalSelectedBarChange;
+            _journalByPositions.MouseDoubleClick  += PnlJournalMouseDoubleClick;
+            toolTip.SetToolTip(_journalByPositions, Language.T("Click to select a bar.") + Environment.NewLine + Language.T("Double click to view Bar Explorer."));
 
-            pnlJournal.Resize        += new EventHandler(PnlJournal_Resize);
-            pnlJournalRight.Visible   = Configs.JournalByBars;
-            pnlJournalByBars.Visible  = Configs.JournalByBars;
-            splJournal.Visible        = Configs.JournalByBars;
-            pnlJournalByPositions.Visible = !Configs.JournalByBars;
-            pnlJournalByPositions.ShowTransfers = Configs.JournalShowTransfers;
+            pnlJournal.Resize += PnlJournalResize;
 
-            return;
+            _journalRight.Visible  = Configs.JournalByBars;
+            _journalByBars.Visible = Configs.JournalByBars;
+            _splitter.Visible      = Configs.JournalByBars;
+            _journalByPositions.Visible = !Configs.JournalByBars;
+            _journalByPositions.ShowTransfers = Configs.JournalShowTransfers;
+        }
+
+        private ToolStripItem[] GetJournalContextMenuItems()
+        {
+            var menuStripJournalByPosWithoutTransfers = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.pos_buy,
+                Text = Language.T("Journal by Positions") + " " + Language.T("without Transfers")
+            };
+            menuStripJournalByPosWithoutTransfers.Click += ContextMenuJournalByPosWithoutTransfersClick;
+
+            var menuStripJournalByPositions = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.pos_transfer_long,
+                Text = Language.T("Journal by Positions")
+            };
+            menuStripJournalByPositions.Click += ContextMenuJournalByPositionsClick;
+
+            var menuStripJournalByBars = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.pos_square,
+                Text = Language.T("Journal by Bars")
+            };
+            menuStripJournalByBars.Click += ContextMenuJournalByBarsClick;
+
+            var menuStripBarExplorer = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.bar_explorer,
+                Text = Language.T("Show Bar Explorer")
+            };
+            menuStripBarExplorer.Click += ContextMenuBarExplorerClick;
+
+            var menuStripCloseJournal = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.close_button,
+                Text = Language.T("Close Journal")
+            };
+            menuStripCloseJournal.Click += ContextMenuCloseJournalClick;
+
+            var itemCollection = new ToolStripItem[]
+            {
+                menuStripJournalByPosWithoutTransfers,
+                menuStripJournalByPositions,
+                menuStripJournalByBars,
+                new ToolStripSeparator(),
+                menuStripBarExplorer,
+                new ToolStripSeparator(),
+                menuStripCloseJournal
+            };
+
+            return itemCollection;
         }
 
         /// <summary>
@@ -96,162 +126,146 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected void SetupJournal()
         {
-            if (Configs.ShowJournal)
+            if (!Configs.ShowJournal) return;
+            if (Configs.JournalByBars)
             {
-                if (Configs.JournalByBars)
-                {
-                    pnlJournalByBars.SetUpJournal();
-                    pnlJournalByBars.Invalidate();
-                    selectedBar = pnlJournalByBars.SelectedBar;
-                    pnlJournalOrder.SelectedBar = selectedBar;
-                    pnlJournalOrder.SetUpJournal();
-                    pnlJournalOrder.Invalidate();
-                    pnlJournalPosition.SelectedBar = selectedBar;
-                    pnlJournalPosition.SetUpJournal();
-                    pnlJournalPosition.Invalidate();
-                }
-                else
-                {
-                    pnlJournalByPositions.ShowTransfers = Configs.JournalShowTransfers;
-                    pnlJournalByPositions.SetUpJournal();
-                    pnlJournalByPositions.Invalidate();
-                    selectedBar = pnlJournalByBars.SelectedBar;
-                }
+                _journalByBars.SetUpJournal();
+                _journalByBars.Invalidate();
+                _selectedBarNumber = _journalByBars.SelectedBar;
+                _journalOrder.SelectedBar = _selectedBarNumber;
+                _journalOrder.SetUpJournal();
+                _journalOrder.Invalidate();
+                _journalPosition.SelectedBar = _selectedBarNumber;
+                _journalPosition.SetUpJournal();
+                _journalPosition.Invalidate();
             }
-
-            return;
+            else
+            {
+                _journalByPositions.ShowTransfers = Configs.JournalShowTransfers;
+                _journalByPositions.SetUpJournal();
+                _journalByPositions.Invalidate();
+                _selectedBarNumber = _journalByBars.SelectedBar;
+            }
         }
 
         /// <summary>
         /// Arranges the controls after resizing
         /// </summary>
-        void PnlJournal_Resize(object sender, EventArgs e)
+        void PnlJournalResize(object sender, EventArgs e)
         {
             if (Configs.ShowJournal && Configs.JournalByBars)
             {
-                if(pnlJournalOldWidth != pnlJournal.Width)
-                    pnlJournalByBars.Width = 2 * this.ClientSize.Width / 3;
-                pnlJournalPosition.Height = (pnlJournal.ClientSize.Height - space) / 2;
+                if(_widthJournalOld != pnlJournal.Width)
+                    _journalByBars.Width = 2 * ClientSize.Width / 3;
+                _journalPosition.Height = (pnlJournal.ClientSize.Height - space) / 2;
             }
-            pnlJournalOldWidth = pnlJournal.Width;
-
-            return;
+            _widthJournalOld = pnlJournal.Width;
         }
 
         /// <summary>
         /// Sets the selected bar number
         /// </summary>
-        void PnlJournal_SelectedBarChange(object sender, EventArgs e)
+        void PnlJournalSelectedBarChange(object sender, EventArgs e)
         {
-            Panel pnl = (Panel)sender;
-            if (pnl.Name == "pnlJournalData")
-            {
-                selectedBar = pnlJournalByBars.SelectedBar;
-                pnlJournalOrder.SelectedBar = selectedBar;
-                pnlJournalOrder.SetUpJournal();
-                pnlJournalOrder.Invalidate();
-                pnlJournalPosition.SelectedBar = selectedBar;
-                pnlJournalPosition.SetUpJournal();
-                pnlJournalPosition.Invalidate();
-            }
-            else if (pnl.Name == "pnlJournalByPositions")
-            {
-                selectedBar = pnlJournalByPositions.SelectedBar;
-            }
+            var panel = sender as Panel;
+            if (panel == null) return;
 
-            return;
+            if (panel.Name == "JournalByBars")
+            {
+                _selectedBarNumber = _journalByBars.SelectedBar;
+                _journalOrder.SelectedBar = _selectedBarNumber;
+                _journalOrder.SetUpJournal();
+                _journalOrder.Invalidate();
+                _journalPosition.SelectedBar = _selectedBarNumber;
+                _journalPosition.SetUpJournal();
+                _journalPosition.Invalidate();
+            }
+            else if (panel.Name == "JournalByPositions")
+            {
+                _selectedBarNumber = _journalByPositions.SelectedBar;
+            }
+        }
+
+        void PnlJournalMouseClick(object sender, EventArgs e)
+        {
+            ShowBarExplorer();
+        }
+
+        void PnlJournalMouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ShowBarExplorer();
+        }
+
+        void ContextMenuBarExplorerClick(object sender, EventArgs e)
+        {
+            ShowBarExplorer();
         }
 
         /// <summary>
         /// Shows the Bar Explorer
         /// </summary>
-        void PnlJournal_Click(object sender, EventArgs e)
+        private void ShowBarExplorer()
         {
-            Bar_Explorer barExplorer = new Bar_Explorer(selectedBar);
+            var barExplorer = new Bar_Explorer(_selectedBarNumber);
             barExplorer.ShowDialog();
-
-            return;
         }
 
-        /// <summary>
-        /// Shows the Bar Explorer
-        /// </summary>
-        void PnlJournal_MouseDoubleClick(object sender, MouseEventArgs e)
+        void ContextMenuJournalByPosWithoutTransfersClick(object sender, EventArgs e)
         {
-            Bar_Explorer barExplorer = new Bar_Explorer(selectedBar);
-            barExplorer.ShowDialog();
-
-            return;
+            Configs.JournalByBars = false;
+            Configs.JournalShowTransfers = false;
+            miJournalByPosWithoutTransfers.Checked = true;
+            miJournalByPos.Checked = false;
+            miJournalByBars.Checked = false;
+            ResetJournal();
         }
 
-        /// <summary>
-        /// Removes the journal
-        /// </summary>
-        void BtnRemoveJournal_Click(object sender, EventArgs e)
+        void ContextMenuJournalByPositionsClick(object sender, EventArgs e)
+        {
+            Configs.JournalByBars = false;
+            Configs.JournalShowTransfers = true;
+            miJournalByPosWithoutTransfers.Checked = false;
+            miJournalByPos.Checked = true;
+            miJournalByBars.Checked = false;
+            ResetJournal();
+        }
+
+        void ContextMenuJournalByBarsClick(object sender, EventArgs e)
+        {
+            Configs.JournalByBars = true;
+            miJournalByPosWithoutTransfers.Checked = false;
+            miJournalByPos.Checked = false;
+            miJournalByBars.Checked = true;
+            ResetJournal();
+        }
+
+        void ContextMenuCloseJournalClick(object sender, EventArgs e)
         {
             miJournalByPosWithoutTransfers.Checked = false;
-            miJournalByPos.Checked  = false;
+            miJournalByPos.Checked = false;
             miJournalByBars.Checked = false;
             Configs.ShowJournal = false;
             OnResize(EventArgs.Empty);
-
-            return;
         }
 
         /// <summary>
-        /// Toggles the journal view
-        /// </summary>
-        void BtnToggleJournal_Click(object sender, EventArgs e)
-        {
-            if (Configs.JournalByBars)
-            {
-                Configs.JournalByBars = false;
-                if (Configs.JournalShowTransfers)
-                {
-                    miJournalByPosWithoutTransfers.Checked = false;
-                    miJournalByPos.Checked  = true;
-                    miJournalByBars.Checked = false;
-                }
-                else
-                {
-                    miJournalByPosWithoutTransfers.Checked = true;
-                    miJournalByPos.Checked  = false;
-                    miJournalByBars.Checked = false;
-                }
-            }
-            else
-            {
-                Configs.JournalByBars = true;
-                miJournalByPosWithoutTransfers.Checked = false;
-                miJournalByPos.Checked  = false;
-                miJournalByBars.Checked = true;
-            }
-
-            ResetJournal();
-
-            return;
-        }
-
-        /// <summary>
-        /// Reset the journal layout
+        /// Resets the journal layout.
         /// </summary>
         protected void ResetJournal()
         {
             SetupJournal();
 
-            pnlJournalRight.Visible  = Configs.JournalByBars;
-            splJournal.Visible       = Configs.JournalByBars;
-            pnlJournalByBars.Visible = Configs.JournalByBars;
-            pnlJournalByPositions.Visible = !Configs.JournalByBars;
+            _journalRight.Visible  = Configs.JournalByBars;
+            _splitter.Visible      = Configs.JournalByBars;
+            _journalByBars.Visible = Configs.JournalByBars;
+            _journalByPositions.Visible = !Configs.JournalByBars;
             if (Configs.ShowJournal && Configs.JournalByBars)
             {
-                pnlJournalByBars.Width    = 2 * ClientSize.Width / 3;
-                pnlJournalPosition.Height = pnlJournal.ClientSize.Height / 2;
+                _journalByBars.Width    = 2 * ClientSize.Width / 3;
+                _journalPosition.Height = pnlJournal.ClientSize.Height / 2;
             }
 
             OnResize(EventArgs.Empty);
-
-            return;
         }
     }
 }

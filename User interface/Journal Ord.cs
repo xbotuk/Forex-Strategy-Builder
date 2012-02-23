@@ -6,14 +6,14 @@
 
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.User_interface;
 
 namespace Forex_Strategy_Builder
 {
-    public class Journal_Ord : Panel
+    public class Journal_Ord : ContextPanel
     {
-        protected Button btnRemoveJournal;
-        protected Button btnToggleJournal;
         VScrollBar vScrollBar;
         HScrollBar hScrollBar;
         ToolTip    toolTip;
@@ -28,7 +28,7 @@ namespace Forex_Strategy_Builder
         int   columns;      // The number of the columns
         int   rowHeight;    // The journal row height
         int   visibalWidth; // The width of the panel visible part
-        int   border = 2;   // The width of outside border of the panel
+        private const int Border = 2; // The width of outside border of the panel
 
         int rows;           // The number of rows can be shown (without the caption bar)
         int orders;         // The total number of the orders during the bar
@@ -40,7 +40,6 @@ namespace Forex_Strategy_Builder
 
         Font  font;
         Color colorBack;
-        Color colorCaptionBack;
         Brush brushCaptionText;
         Brush brushEvenRowBack;
         Brush brushRowText;
@@ -53,24 +52,13 @@ namespace Forex_Strategy_Builder
         public int SelectedBar { set { selectedBar = value; } }
 
         /// <summary>
-        /// Gets the Button Remove Journal
-        /// </summary>
-        public Button BtnRemoveJournal { get { return btnRemoveJournal; } }
-
-        /// <summary>
-        /// Gets the Button Toggle Journal
-        /// </summary>
-        public Button BtnToggleJournal { get { return btnToggleJournal; } }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public Journal_Ord()
         {
+            IsContextButtonVisible = true;
             InitializeJournal();
             SetUpJournal();
-
-            return;
         }
 
         /// <summary>
@@ -84,8 +72,6 @@ namespace Forex_Strategy_Builder
             SetSizes();
             SetJournalColors();
             UpdateJournalData();
-
-            return;
         }
 
         /// <summary>
@@ -94,18 +80,20 @@ namespace Forex_Strategy_Builder
         void SetJournalColors()
         {
             colorBack        = LayoutColors.ColorControlBack;
-            colorCaptionBack = LayoutColors.ColorCaptionBack;
             brushCaptionText = new SolidBrush(LayoutColors.ColorCaptionText);
             brushEvenRowBack = new SolidBrush(LayoutColors.ColorEvenRowBack);
             brushRowText     = new SolidBrush(LayoutColors.ColorControlText);
             penLines         = new Pen(LayoutColors.ColorJournalLines);
-            penBorder        = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), border);
+            penBorder        = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
 
-            return;
+            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
+            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ContextMenuColorBack = LayoutColors.ColorControlBack;
+            ContextMenuColorFore = LayoutColors.ColorControlText;
         }
 
         /// <summary>
-        /// Inits the Journal
+        /// Initializes the Journal
         /// </summary>
         void InitializeJournal()
         {
@@ -113,50 +101,21 @@ namespace Forex_Strategy_Builder
             aiColumnX  = new int[9];
             aiX        = new int[9];
             font       = new Font(Font.FontFamily, 9);
-            rowHeight  = (int)Math.Max(font.Height, 18);
-            Padding    = new Padding(border, 2 * rowHeight, border, border);
+            rowHeight  = Math.Max(font.Height, 18);
+            Padding    = new Padding(Border, 2 * rowHeight, Border, Border);
 
             // Tool Tips
             toolTip = new ToolTip();
 
             // Horizontal ScrollBar
-            hScrollBar = new HScrollBar();
-            hScrollBar.Parent        = this;
-            hScrollBar.Dock          = DockStyle.Bottom;
-            hScrollBar.SmallChange   = 50;
-            hScrollBar.LargeChange   = 200;
-            hScrollBar.ValueChanged += new EventHandler(HScrollBar_ValueChanged);
+            hScrollBar = new HScrollBar {Parent = this, Dock = DockStyle.Bottom, SmallChange = 50, LargeChange = 200};
+            hScrollBar.ValueChanged += HScrollBarValueChanged;
 
             // Vertical ScrollBar
-            vScrollBar = new VScrollBar();
-            vScrollBar.Parent        = this;
-            vScrollBar.Dock          = DockStyle.Right;
-            vScrollBar.TabStop       = true;
-            vScrollBar.SmallChange   = 1;
-            vScrollBar.LargeChange   = 2;
-            vScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
+            vScrollBar = new VScrollBar {Parent = this, Dock = DockStyle.Right, TabStop = true, SmallChange = 1, LargeChange = 2};
+            vScrollBar.ValueChanged += VScrollBarValueChanged;
 
-            // Button Remove Journal
-            btnRemoveJournal = new Button();
-            btnRemoveJournal.Parent                  = this;
-            btnRemoveJournal.BackgroundImage         = Properties.Resources.close_blue;
-            btnRemoveJournal.BackgroundImageLayout   = ImageLayout.Center;
-            btnRemoveJournal.Cursor                  = Cursors.Arrow;
-            btnRemoveJournal.Size                    = new Size(rowHeight - 2, rowHeight - 2);
-            btnRemoveJournal.UseVisualStyleBackColor = true;
-            toolTip.SetToolTip(btnRemoveJournal, Language.T("Hide the journal tables."));
-
-            // Button Toggle Journal
-            btnToggleJournal = new Button();
-            btnToggleJournal.Parent                  = this;
-            btnToggleJournal.BackgroundImage         = Properties.Resources.toggle_journal;
-            btnToggleJournal.BackgroundImageLayout   = ImageLayout.Center;
-            btnToggleJournal.Cursor                  = Cursors.Arrow;
-            btnToggleJournal.Size                    = new Size(20, rowHeight - 2);
-            btnToggleJournal.UseVisualStyleBackColor = true;
-            toolTip.SetToolTip(btnToggleJournal, Language.T("Toggle the journal type."));
-
-            string[] asComments = new string[] {
+            var asComments = new[] {
                 "Exit Order to position",
                 "Exit Order to order",
                 "Take Profit to position",
@@ -191,7 +150,7 @@ namespace Forex_Strategy_Builder
                 if (g.MeasureString(Language.T(ordComment) + " 99999", font).Width > g.MeasureString(longestComment, font).Width)
                     longestComment = Language.T(ordComment) + " 99999";
 
-            asTitlesPips = new string[8]
+            asTitlesPips = new[]
             {
                 Language.T("Order"),
                 Language.T("Direction"),
@@ -203,7 +162,7 @@ namespace Forex_Strategy_Builder
                 Language.T("Comment")
             };
 
-            asTitlesMoney = new string[8]
+            asTitlesMoney = new[]
             {
                 Language.T("Order"),
                 Language.T("Direction"),
@@ -215,7 +174,7 @@ namespace Forex_Strategy_Builder
                 Language.T("Comment")
             };
 
-            string[] asColumContent = new string[8]
+            var asColumContent = new[]
             {
                 "99999",
                 longestDirection,
@@ -227,13 +186,11 @@ namespace Forex_Strategy_Builder
                 longestComment
             };
 
-            aiColumnX[0] = border;
+            aiColumnX[0] = Border;
             aiColumnX[1] = aiColumnX[0] + (int)Math.Max(g.MeasureString(asColumContent[0], font).Width + 16, g.MeasureString(asTitlesMoney[0], font).Width) + 4;
             for (int i = 1; i < columns; i++)
                 aiColumnX[i + 1] = aiColumnX[i] + (int)Math.Max(g.MeasureString(asColumContent[i], font).Width, g.MeasureString(asTitlesMoney[i],  font).Width) + 4;
             g.Dispose();
-
-            return;
         }
 
         /// <summary>
@@ -244,7 +201,7 @@ namespace Forex_Strategy_Builder
             if (!Data.IsResult)
                 return;
 
-            Order[] aOrders = new Order[orders];
+            var aOrders = new Order[orders];
             aiOrderIcons = new Image[orders];
 
             int ordIndex = 0;
@@ -290,20 +247,22 @@ namespace Forex_Strategy_Builder
             {
                 int row = ord - firstOrd;
 
-                string ordIF     = (aOrders[ord].OrdIF     > 0 ? (aOrders[ord].OrdIF + 1).ToString() : "-");
+                //string ordIf = (aOrders[ord].OrdIF > 0
+                //                    ? (aOrders[ord].OrdIF + 1).ToString(CultureInfo.InvariantCulture)
+                //                    : "-");
                 string ordPrice2 = (aOrders[ord].OrdPrice2 > 0 ? aOrders[ord].OrdPrice2.ToString(Data.FF) : "-");
 
-                asJournalData[row, 0] = (aOrders[ord].OrdNumb + 1).ToString();
+                asJournalData[row, 0] = (aOrders[ord].OrdNumb + 1).ToString(CultureInfo.InvariantCulture);
                 asJournalData[row, 1] = Language.T(aOrders[ord].OrdDir.ToString());
                 asJournalData[row, 2] = Language.T(aOrders[ord].OrdType.ToString());
                 if (Configs.AccountInMoney)
                 {
                     string sOrdAmount = (aOrders[ord].OrdDir == OrderDirection.Sell ? "-" : "") +
-                                        (aOrders[ord].OrdLots * Data.InstrProperties.LotSize).ToString();
+                                        (aOrders[ord].OrdLots * Data.InstrProperties.LotSize).ToString(CultureInfo.InvariantCulture);
                     asJournalData[row, 3] = sOrdAmount;
                 }
                 else
-                    asJournalData[row, 3] = aOrders[ord].OrdLots.ToString();
+                    asJournalData[row, 3] = aOrders[ord].OrdLots.ToString(CultureInfo.InvariantCulture);
                 asJournalData[row, 4] = aOrders[ord].OrdPrice.ToString(Data.FF);
                 asJournalData[row, 5] = ordPrice2;
                 asJournalData[row, 6] = Language.T(aOrders[ord].OrdStatus.ToString());
@@ -312,8 +271,6 @@ namespace Forex_Strategy_Builder
                 // Icons
                 aiOrderIcons[row] = aOrders[ord].OrderIcon;
             }
-
-            return;
         }
 
         /// <summary>
@@ -384,28 +341,22 @@ namespace Forex_Strategy_Builder
             }
 
             selectedBarOld = selectedBar;
-            btnRemoveJournal.Location = new Point(ClientSize.Width - btnRemoveJournal.Width - 1, 1);
-            btnToggleJournal.Location = new Point(btnRemoveJournal.Left - btnToggleJournal.Width - 1, 1);
-
-            return;
         }
 
         /// <summary>
-        /// Set params on resize
+        /// Set parameters on resize.
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
             base.OnResize(eventargs);
 
-            if (ClientSize.Height > 2 * rowHeight + border)
-                rows = (ClientSize.Height - 2 * rowHeight - border) / rowHeight;
+            if (ClientSize.Height > 2 * rowHeight + Border)
+                rows = (ClientSize.Height - 2 * rowHeight - Border) / rowHeight;
             else
                 rows = 0;
 
             SetUpJournal();
             Invalidate();
-
-            return;
         }
 
         /// <summary>
@@ -416,18 +367,17 @@ namespace Forex_Strategy_Builder
             Graphics g = e.Graphics;
 
             // Caption background
-            RectangleF rectfCaption = new RectangleF(0, 0, ClientSize.Width, 2 * rowHeight);
+            var rectfCaption = new RectangleF(0, 0, ClientSize.Width, 2 * rowHeight);
             Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
 
-            StringFormat sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
+            var sf = new StringFormat {Alignment = StringAlignment.Center};
             int  iHScrll = -hScrollBar.Value;
-            Size size    = new Size(btnToggleJournal.Left, rowHeight);
+            var size = new Size(ContextButtonLocation.X, rowHeight);
 
             // Print the journal caption
             string stringCaptionText = Language.T("Orders During the Bar") + (Configs.AccountInMoney ? " [" + Configs.AccountCurrency + "]" : " [" + Language.T("pips") + "]");
             g.DrawString(stringCaptionText, font, brushCaptionText, new RectangleF(Point.Empty, size), sf);
-            g.SetClip(new RectangleF(border, rowHeight, ClientSize.Width - 2 * border, rowHeight));
+            g.SetClip(new RectangleF(Border, rowHeight, ClientSize.Width - 2 * Border, rowHeight));
             if (Configs.AccountInMoney)
                 for (int i = 0; i < columns; i++)
                     g.DrawString(asTitlesMoney[i], font, brushCaptionText, iHScrll + (aiX[i] + aiX[i + 1]) / 2, rowHeight, sf);
@@ -437,20 +387,20 @@ namespace Forex_Strategy_Builder
             g.ResetClip();
 
             // Paints the journal's data field
-            RectangleF rectField = new RectangleF(border, 2 * rowHeight, ClientSize.Width - 2 * border, ClientSize.Height - 2 * rowHeight - border);
+            var rectField = new RectangleF(Border, 2 * rowHeight, ClientSize.Width - 2 * Border, ClientSize.Height - 2 * rowHeight - Border);
             g.FillRectangle(new SolidBrush(colorBack), rectField);
 
-            size = new Size(ClientSize.Width - vScrollBar.Width - 2 * border, rowHeight);
+            size = new Size(ClientSize.Width - vScrollBar.Width - 2 * Border, rowHeight);
 
             // Prints the journal data
             for (int ord = firstOrd; ord < firstOrd + shownOrd; ord++)
             {
                 int row = ord - firstOrd;
                 int y = (row + 2) * rowHeight;
-                Point point = new Point(border, y);
+                var point = new Point(Border, y);
 
                 // Even row
-                if (row % 2f != 0)
+                if (Math.Abs(row % 2f - 0) > 0.0001)
                     g.FillRectangle(brushEvenRowBack, new Rectangle(point, size));
 
                 // Draw the position icon
@@ -474,35 +424,29 @@ namespace Forex_Strategy_Builder
 
             // Border
             g.DrawLine(penBorder, 1, 2 * rowHeight, 1, ClientSize.Height);
-            g.DrawLine(penBorder, ClientSize.Width - border + 1, 2 * rowHeight, ClientSize.Width - border + 1, ClientSize.Height);
-            g.DrawLine(penBorder, 0, ClientSize.Height - border + 1, ClientSize.Width, ClientSize.Height - border + 1);
-
-            return;
+            g.DrawLine(penBorder, ClientSize.Width - Border + 1, 2 * rowHeight, ClientSize.Width - Border + 1, ClientSize.Height);
+            g.DrawLine(penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
         }
 
         /// <summary>
         /// Invalidates the sender after scrolling
         /// </summary>
-        void HScrollBar_ValueChanged(object sender, EventArgs e)
+        void HScrollBarValueChanged(object sender, EventArgs e)
         {
             int scrallBarWidth = hScrollBar.Visible ? hScrollBar.Height : 0;
-            Rectangle rect = new Rectangle(border, rowHeight + 1, ClientSize.Width - 2 * border, ClientSize.Height - rowHeight - scrallBarWidth - border - 1);
+            var rect = new Rectangle(Border, rowHeight + 1, ClientSize.Width - 2 * Border, ClientSize.Height - rowHeight - scrallBarWidth - Border - 1);
             Invalidate(rect);
-
-            return;
         }
 
         /// <summary>
         /// Invalidates the sender after scrolling
         /// </summary>
-        void VScrollBar_ValueChanged(object sender, EventArgs e)
+        void VScrollBarValueChanged(object sender, EventArgs e)
         {
             SetUpJournal();
             int scrallBarWidth = hScrollBar.Visible ? hScrollBar.Height : 0;
-            Rectangle rect = new Rectangle(border, 2 * rowHeight, ClientSize.Width - 2 * border, ClientSize.Height - 2 * rowHeight - scrallBarWidth - border);
+            var rect = new Rectangle(Border, 2 * rowHeight, ClientSize.Width - 2 * Border, ClientSize.Height - 2 * rowHeight - scrallBarWidth - Border);
             Invalidate(rect);
-
-            return;
         }
     }
 }

@@ -9,13 +9,14 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.User_interface;
 
 namespace Forex_Strategy_Builder
 {
     /// <summary>
     /// Draws a small balance chart
     /// </summary>
-    public class Small_Balance_Chart : Panel
+    public class Small_Balance_Chart : ContextPanel
     {
         private const int Space = 5;
         private const int Border = 2;
@@ -256,7 +257,7 @@ namespace Forex_Strategy_Builder
             XRight = ClientSize.Width - Border - Space - labelWidth;
             XScale = (XRight - 2 * Space - Border) / (float)chartBars;
 
-            countLabels = (int)Math.Max((YBottom - YTop) / 20, 1);
+            countLabels = Math.Max((YBottom - YTop) / 20, 1);
             delta       = (float)Math.Max(Math.Round((maximum - minimum) / (float)countLabels), 10);
             step        = (int)Math.Ceiling(delta / 10) * 10;
             countLabels = (int)Math.Ceiling((maximum - minimum) / (float)step);
@@ -332,6 +333,11 @@ namespace Forex_Strategy_Builder
 
             isHideScanningLine = false;
             modellingQuolity = " MQ " + Data.ModellingQuality.ToString("N2") + "%";
+
+            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
+            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ContextMenuColorBack = LayoutColors.ColorControlBack;
+            ContextMenuColorFore = LayoutColors.ColorControlText;
         }
 
         /// <summary>
@@ -555,6 +561,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
+            base.OnResize(eventargs);
             InitChart();
             Invalidate();
         }

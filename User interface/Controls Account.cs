@@ -7,183 +7,219 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Dialogs;
 
 namespace Forex_Strategy_Builder
 {
     /// <summary>
     /// Class Controls Account: Menu_and_StatusBar
     /// </summary>
-    public partial class Controls : Menu_and_StatusBar
+    public partial class Controls
     {
-        protected ToolStripComboBox   tscbInterpolationMethod; // Interpolation methods
-        protected ToolStripButton     tsbtComparator;          // Opens the Comparator
-        protected ToolStripButton     tsbtScanner;             // Opens the Scanner
-        protected ToolStripButton     tsbtAnalyzer;            // Opens the Analyzer
-        protected Info_Panel          infpnlAccountStatistics; // Account Statistics
-        protected Small_Balance_Chart smallBalanceChart;       // Small Balance Chart
+        protected Small_Balance_Chart BalanceChart;
+        protected ToolStripComboBox ComboBoxInterpolationMethod;
+        protected Info_Panel InfoPanelAccountStatistics;
 
         /// <summary>
         /// Initializes the controls in panel pnlOverview
         /// </summary>
-        void InitializeAccount()
+        private void InitializeAccount()
         {
-            string[] asMethods = Enum.GetNames(typeof(InterpolationMethod));
-            for (int i = 0; i < asMethods.Length; i++)
-                asMethods[i] = Language.T(asMethods[i]);
+            string[] methods = Enum.GetNames(typeof (InterpolationMethod));
+            for (int i = 0; i < methods.Length; i++)
+                methods[i] = Language.T(methods[i]);
 
             Graphics g = CreateGraphics();
-            int iLongestMethod = 0;
-            foreach (string sMethod in asMethods)
-                if ((int)g.MeasureString(sMethod, Font).Width > iLongestMethod)
-                    iLongestMethod = (int)g.MeasureString(sMethod, Font).Width;
+            int maxWidth = 0;
+            foreach (string method in methods)
+                if ((int) g.MeasureString(method, Font).Width > maxWidth)
+                    maxWidth = (int) g.MeasureString(method, Font).Width;
             g.Dispose();
 
             // ComboBox Interpolation Methods
-            tscbInterpolationMethod = new ToolStripComboBox();
-            tscbInterpolationMethod.Name          = "tscbInterpolationMethod";
-            tscbInterpolationMethod.AutoSize      = false;
-            tscbInterpolationMethod.DropDownStyle = ComboBoxStyle.DropDownList;
-            tscbInterpolationMethod.Items.AddRange(asMethods);
-            tscbInterpolationMethod.SelectedIndex = 0;
-            tscbInterpolationMethod.Width         = iLongestMethod + (int)(18 * Data.HorizontalDLU);
-            tscbInterpolationMethod.ToolTipText   = Language.T("Bar interpolation method.");
-            tscbInterpolationMethod.SelectedIndexChanged += new EventHandler(SelectedIndexChanged);
-            tsAccount.Items.Add(tscbInterpolationMethod);
+            ComboBoxInterpolationMethod = new ToolStripComboBox
+            {
+                Name = "tscbInterpolationMethod",
+                AutoSize = false,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Width = maxWidth + (int) (18*Data.HorizontalDLU),
+                ToolTipText = Language.T("Bar interpolation method.")
+            };
+            foreach (string method in methods)
+                ComboBoxInterpolationMethod.Items.Add(method);
+            ComboBoxInterpolationMethod.SelectedIndex = 0;
+            ComboBoxInterpolationMethod.SelectedIndexChanged += SelectedIndexChanged;
+            tsAccount.Items.Add(ComboBoxInterpolationMethod);
 
             // Button Comparator
-            tsbtComparator =  new ToolStripButton();
-            tsbtComparator.Text        = Language.T("Comparator");
-            tsbtComparator.Name        = "Comparator";
-            tsbtComparator.Click      += new EventHandler(BtnTools_OnClick);
+            var tsbtComparator = new ToolStripButton {Text = Language.T("Comparator"), Name = "Comparator"};
+            tsbtComparator.Click += BtnTools_OnClick;
             tsbtComparator.ToolTipText = Language.T("Compare the interpolating methods.");
             tsAccount.Items.Add(tsbtComparator);
 
             // Button Scanner
-            tsbtScanner = new ToolStripButton();
-            tsbtScanner.Text        = Language.T("Scanner");
-            tsbtScanner.Name        = "Scanner";
-            tsbtScanner.Click      += new EventHandler(BtnTools_OnClick);
-            tsbtScanner.ToolTipText = Language.T("Perform a deep intrabar scan.") + Environment.NewLine + Language.T("Quick scan") + " - F6.";
+            var tsbtScanner = new ToolStripButton {Text = Language.T("Scanner"), Name = "Scanner"};
+            tsbtScanner.Click += BtnTools_OnClick;
+            tsbtScanner.ToolTipText = Language.T("Perform a deep intrabar scan.") + Environment.NewLine +
+                                      Language.T("Quick scan") + " - F6.";
             tsAccount.Items.Add(tsbtScanner);
 
             // Button Analyzer
-            tsbtAnalyzer = new ToolStripButton();
-            tsbtAnalyzer.Text   = Language.T("Analyzer");
-            tsbtAnalyzer.Name   = "Analyzer";
-            tsbtAnalyzer.Click += new EventHandler(BtnTools_OnClick);
+            var tsbtAnalyzer = new ToolStripButton {Text = Language.T("Analyzer"), Name = "Analyzer"};
+            tsbtAnalyzer.Click += BtnTools_OnClick;
             tsAccount.Items.Add(tsbtAnalyzer);
 
             // Info Panel Account Statistics
-            infpnlAccountStatistics = new Info_Panel();
-            infpnlAccountStatistics.Parent = pnlAccount;
-            infpnlAccountStatistics.Dock   = DockStyle.Fill;
+            InfoPanelAccountStatistics = new Info_Panel {Parent = pnlAccount, Dock = DockStyle.Fill};
 
-            Splitter spliter    = new Splitter();
-            spliter.Parent      = pnlAccount;
-            spliter.Dock        = DockStyle.Bottom;
-            spliter.BorderStyle = BorderStyle.None;
-            spliter.Height      = space;
+            new Splitter {Parent = pnlAccount, Dock = DockStyle.Bottom, BorderStyle = BorderStyle.None, Height = space};
 
             // Small Balance Chart
-            smallBalanceChart = new Small_Balance_Chart();
-            smallBalanceChart.Parent          = pnlAccount;
-            smallBalanceChart.Cursor          = Cursors.Hand;
-            smallBalanceChart.Dock            = DockStyle.Bottom;
-            smallBalanceChart.MinimumSize     = new Size(100, 50);
-            smallBalanceChart.ShowDynamicInfo = true;
-            smallBalanceChart.MouseMove      += new MouseEventHandler(SmallBalanceChart_MouseMove);
-            smallBalanceChart.MouseLeave     += new EventHandler(SmallBalanceChart_MouseLeave);
-            smallBalanceChart.MouseUp        += new MouseEventHandler(SmallBalanceChart_MouseUp);
-            toolTip.SetToolTip(smallBalanceChart, Language.T("Click to view the full chart.") +
-                                                  Environment.NewLine +
-                                                  Language.T("Right click to detach chart."));
+            BalanceChart = new Small_Balance_Chart
+            {
+                Parent = pnlAccount,
+                Cursor = Cursors.Hand,
+                Dock = DockStyle.Bottom,
+                MinimumSize = new Size(100, 50),
+                ShowDynamicInfo = true,
+                IsContextButtonVisible = true
+            };
+            BalanceChart.PopUpContextMenu.Items.AddRange(GetBalanceChartContextMenuItems());
+            BalanceChart.MouseMove += SmallBalanceChartMouseMove;
+            BalanceChart.MouseLeave += SmallBalanceChartMouseLeave;
+            BalanceChart.MouseUp += SmallBalanceChart_MouseUp;
+            toolTip.SetToolTip(BalanceChart, Language.T("Click to view the full chart.") +
+                                             Environment.NewLine +
+                                             Language.T("Right click to detach chart."));
 
-            pnlAccount.Resize += new EventHandler(pnlAccount_Resize);
+            pnlAccount.Resize += PnlAccountResize;
+        }
 
-            return;
+        private ToolStripItem[] GetBalanceChartContextMenuItems()
+        {
+            var menuStripShowFullBalanceChart = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.balance_chart,
+                Text = Language.T("Show Full Balance Chart") + "..."
+            };
+            menuStripShowFullBalanceChart.Click += ContextMenuShowFullBalanceChartClick;
+
+            var menuStripDetachChart = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.pushpin_detach,
+                Text = Language.T("Detach Balance Chart") + "..."
+            };
+            menuStripDetachChart.Click += ContextMenuDetachChartClick;
+
+            var itemCollection = new ToolStripItem[]
+            {
+                menuStripShowFullBalanceChart,
+                menuStripDetachChart
+            };
+
+            return itemCollection;
+        }
+
+        private void ContextMenuShowFullBalanceChartClick(object sender, EventArgs e)
+        {
+            ShowFullBalanceChart();
+        }
+
+        private void ContextMenuDetachChartClick(object sender, EventArgs e)
+        {
+            DetachBalanceChart();
         }
 
         /// <summary>
         /// Arranges the controls after resizing
         /// </summary>
-        void pnlAccount_Resize(object sender, EventArgs e)
+        private void PnlAccountResize(object sender, EventArgs e)
         {
-            smallBalanceChart.Height = 2 * pnlAccount.ClientSize.Height / (Configs.ShowJournal ? 3 : 4);
-
-            return;
+            BalanceChart.Height = 2*pnlAccount.ClientSize.Height/(Configs.ShowJournal ? 3 : 4);
         }
 
         /// <summary>
         /// Show the dynamic info on the status bar
         /// </summary>
-        void SmallBalanceChart_MouseMove(object sender, MouseEventArgs e)
+        private void SmallBalanceChartMouseMove(object sender, MouseEventArgs e)
         {
-            Small_Balance_Chart chart = (Small_Balance_Chart)sender;
+            var chart = (Small_Balance_Chart) sender;
             ToolStripStatusLabelChartInfo = chart.CurrentBarInfo;
-
-            return;
         }
 
         /// <summary>
         /// Deletes the dynamic info on the status bar
         /// </summary>
-        void SmallBalanceChart_MouseLeave(object sender, EventArgs e)
+        private void SmallBalanceChartMouseLeave(object sender, EventArgs e)
         {
             ToolStripStatusLabelChartInfo = string.Empty;
-
-            return;
         }
 
         /// <summary>
         /// Shows the full account chart after clicking on it
         /// </summary>
-        void SmallBalanceChart_MouseUp(object sender, MouseEventArgs e)
+        private void SmallBalanceChart_MouseUp(object sender, MouseEventArgs e)
         {
-            if (Data.IsData && Data.IsResult && e.Button == MouseButtons.Left)
+            if(!Data.IsData || !Data.IsResult) return;
+
+            if (e.Button == MouseButtons.Left)
             {
-                Chart chart = new Chart();
-
-                chart.BarPixels         = Configs.BalanceChartZoom;
-                chart.ShowInfoPanel     = Configs.BalanceChartInfoPanel;
-                chart.ShowDynInfo       = Configs.BalanceChartDynamicInfo;
-                chart.ShowGrid          = Configs.BalanceChartGrid;
-                chart.ShowCross         = Configs.BalanceChartCross;
-                chart.ShowVolume        = Configs.BalanceChartVolume;
-                chart.ShowPositionLots  = Configs.BalanceChartLots;
-                chart.ShowOrders        = Configs.BalanceChartEntryExitPoints;
-                chart.ShowPositionPrice = Configs.BalanceChartCorrectedPositionPrice;
-                chart.ShowBalanceEquity = Configs.BalanceChartBalanceEquityChart;
-                chart.ShowFloatingPL    = Configs.BalanceChartFloatingPLChart;
-                chart.ShowIndicators    = Configs.BalanceChartIndicators;
-                chart.ShowAmbiguousBars = Configs.BalanceChartAmbiguousMark;
-                chart.TrueCharts        = Configs.BalanceChartTrueCharts;
-                chart.ShowProtections   = Configs.BalanceChartProtections;
-
-                chart.ShowDialog();
-
-                Configs.BalanceChartZoom                   = chart.BarPixels;
-                Configs.BalanceChartInfoPanel              = chart.ShowInfoPanel;
-                Configs.BalanceChartDynamicInfo            = chart.ShowDynInfo;
-                Configs.BalanceChartGrid                   = chart.ShowGrid;
-                Configs.BalanceChartCross                  = chart.ShowCross;
-                Configs.BalanceChartVolume                 = chart.ShowVolume;
-                Configs.BalanceChartLots                   = chart.ShowPositionLots;
-                Configs.BalanceChartEntryExitPoints        = chart.ShowOrders;
-                Configs.BalanceChartCorrectedPositionPrice = chart.ShowPositionPrice;
-                Configs.BalanceChartBalanceEquityChart     = chart.ShowBalanceEquity;
-                Configs.BalanceChartFloatingPLChart        = chart.ShowFloatingPL;
-                Configs.BalanceChartIndicators             = chart.ShowIndicators;
-                Configs.BalanceChartAmbiguousMark          = chart.ShowAmbiguousBars;
-                Configs.BalanceChartTrueCharts             = chart.TrueCharts;
-                Configs.BalanceChartProtections            = chart.ShowProtections;
+                ShowFullBalanceChart();
             }
-            else if (Data.IsData && Data.IsResult && e.Button == MouseButtons.Right)
+            else if (e.Button == MouseButtons.Right)
             {
-                Dialogs.Balance_Chart balanceChart = new Dialogs.Balance_Chart();
-                balanceChart.ShowDialog();
+                DetachBalanceChart();
             }
+        }
 
-            return;
+        private static void DetachBalanceChart()
+        {
+            if(!Data.IsData || !Data.IsResult) return;
+
+            var balanceChart = new Balance_Chart();
+            balanceChart.ShowDialog();
+        }
+
+        private static void ShowFullBalanceChart()
+        {
+            if(!Data.IsData || !Data.IsResult) return;
+
+            var chart = new Chart
+            {
+                BarPixels = Configs.BalanceChartZoom,
+                ShowInfoPanel = Configs.BalanceChartInfoPanel,
+                ShowDynInfo = Configs.BalanceChartDynamicInfo,
+                ShowGrid = Configs.BalanceChartGrid,
+                ShowCross = Configs.BalanceChartCross,
+                ShowVolume = Configs.BalanceChartVolume,
+                ShowPositionLots = Configs.BalanceChartLots,
+                ShowOrders = Configs.BalanceChartEntryExitPoints,
+                ShowPositionPrice = Configs.BalanceChartCorrectedPositionPrice,
+                ShowBalanceEquity = Configs.BalanceChartBalanceEquityChart,
+                ShowFloatingPL = Configs.BalanceChartFloatingPLChart,
+                ShowIndicators = Configs.BalanceChartIndicators,
+                ShowAmbiguousBars = Configs.BalanceChartAmbiguousMark,
+                TrueCharts = Configs.BalanceChartTrueCharts,
+                ShowProtections = Configs.BalanceChartProtections
+            };
+
+            chart.ShowDialog();
+
+            Configs.BalanceChartZoom = chart.BarPixels;
+            Configs.BalanceChartInfoPanel = chart.ShowInfoPanel;
+            Configs.BalanceChartDynamicInfo = chart.ShowDynInfo;
+            Configs.BalanceChartGrid = chart.ShowGrid;
+            Configs.BalanceChartCross = chart.ShowCross;
+            Configs.BalanceChartVolume = chart.ShowVolume;
+            Configs.BalanceChartLots = chart.ShowPositionLots;
+            Configs.BalanceChartEntryExitPoints = chart.ShowOrders;
+            Configs.BalanceChartCorrectedPositionPrice = chart.ShowPositionPrice;
+            Configs.BalanceChartBalanceEquityChart = chart.ShowBalanceEquity;
+            Configs.BalanceChartFloatingPLChart = chart.ShowFloatingPL;
+            Configs.BalanceChartIndicators = chart.ShowIndicators;
+            Configs.BalanceChartAmbiguousMark = chart.ShowAmbiguousBars;
+            Configs.BalanceChartTrueCharts = chart.TrueCharts;
+            Configs.BalanceChartProtections = chart.ShowProtections;
         }
 
         /// <summary>
