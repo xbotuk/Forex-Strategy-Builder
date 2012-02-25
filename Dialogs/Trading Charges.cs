@@ -15,7 +15,7 @@ namespace Forex_Strategy_Builder
     /// </summary>
     public class Trading_Charges : Form
     {
-        Fancy_Panel pnlBase;
+        FancyPanel pnlBase;
 
         Label lblSpread;
         Label lblSwapLong;
@@ -98,7 +98,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public Trading_Charges()
         {
-            pnlBase = new Fancy_Panel();
+            pnlBase = new FancyPanel();
 
             lblSpread     = new Label();
             lblSwapLong   = new Label();
@@ -143,7 +143,7 @@ namespace Forex_Strategy_Builder
             lblSwapLong.BackColor = Color.Transparent;
             lblSwapLong.AutoSize  = true;
             lblSwapLong.Text      = Language.T("Swap number for a long position rollover") + " [" +
-                (Data.InstrProperties.SwapType == Commission_Type.money ?
+                (Data.InstrProperties.SwapType == CommissionType.money ?
                 Data.InstrProperties.PriceIn :
                 Language.T(Data.InstrProperties.SwapType.ToString())) + "]" + Environment.NewLine +
                 "(" +  Language.T("A positive value decreases your profit.") +")";
@@ -154,7 +154,7 @@ namespace Forex_Strategy_Builder
             lblSwapShort.BackColor = Color.Transparent;
             lblSwapShort.AutoSize  = true;
             lblSwapShort.Text      = Language.T("Swap number for a short position rollover") + " [" +
-                (Data.InstrProperties.SwapType == Commission_Type.money ?
+                (Data.InstrProperties.SwapType == CommissionType.money ?
                 Data.InstrProperties.PriceIn :
                 Language.T(Data.InstrProperties.SwapType.ToString())) + "]" + Environment.NewLine +
                 "(" + Language.T("A negative value decreases your profit.") + ")";
@@ -168,7 +168,7 @@ namespace Forex_Strategy_Builder
                 Data.InstrProperties.CommissionTypeToString  + " " +
                 Data.InstrProperties.CommissionScopeToString + " " +
                 Data.InstrProperties.CommissionTimeToString  +
-                (Data.InstrProperties.CommissionType == Commission_Type.money ? " [" + Data.InstrProperties.PriceIn + "]" : "");
+                (Data.InstrProperties.CommissionType == CommissionType.money ? " [" + Data.InstrProperties.PriceIn + "]" : "");
 
             // Label Slippage
             lblSlippage.Parent    = pnlBase;
@@ -359,7 +359,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         void BtnDefault_Click(object sender, EventArgs e)
         {
-            Instrument_Properties ip = new Instrument_Properties(Data.InstrProperties.Symbol, Data.InstrProperties.InstrType);
+            InstrumentProperties ip = new InstrumentProperties(Data.InstrProperties.Symbol, Data.InstrProperties.InstrType);
 
             nudSpread.Value     = (decimal)ip.Spread;
             nudSwapLong.Value   = (decimal)ip.SwapLong;

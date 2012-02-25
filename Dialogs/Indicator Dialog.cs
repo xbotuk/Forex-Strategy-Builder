@@ -52,9 +52,9 @@ namespace Forex_Strategy_Builder
         SlotTypes   slotType;
         bool        isDefined;
         string      indicatorName;
-        Fancy_Panel pnlTreeViewBase;
+        FancyPanel pnlTreeViewBase;
         TreeView    trvIndicators;
-        Fancy_Panel pnlParameters;
+        FancyPanel pnlParameters;
 
         Label lblIndicatorInfo;
         Label lblIndicatorWarning;
@@ -66,7 +66,7 @@ namespace Forex_Strategy_Builder
         Label[]    aLblNumeric;
         NUD[]      aNudNumeric;
         CheckBox[] aChbCheck;
-        Small_Balance_Chart pnlSmallBalanceChart;
+        SmallBalanceChart pnlSmallBalanceChart;
         Button btnAccept;
         Button btnDefault;
         Button btnHelp;
@@ -123,30 +123,30 @@ namespace Forex_Strategy_Builder
             if (slotType == SlotTypes.Open)
             {
                 slotCation      = Language.T("Opening Point of the Position");
-                pnlParameters   = new Fancy_Panel(slotCation, LayoutColors.ColorSlotCaptionBackOpen);
-                pnlTreeViewBase = new Fancy_Panel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackOpen);
+                pnlParameters   = new FancyPanel(slotCation, LayoutColors.ColorSlotCaptionBackOpen);
+                pnlTreeViewBase = new FancyPanel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackOpen);
             }
             else if (slotType == SlotTypes.OpenFilter)
             {
                 slotCation      = Language.T("Opening Logic Condition");
-                pnlParameters   = new Fancy_Panel(slotCation, LayoutColors.ColorSlotCaptionBackOpenFilter);
-                pnlTreeViewBase = new Fancy_Panel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackOpenFilter);
+                pnlParameters   = new FancyPanel(slotCation, LayoutColors.ColorSlotCaptionBackOpenFilter);
+                pnlTreeViewBase = new FancyPanel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackOpenFilter);
             }
             else if (slotType == SlotTypes.Close)
             {
                 slotCation      = Language.T("Closing Point of the Position");
-                pnlParameters   = new Fancy_Panel(slotCation, LayoutColors.ColorSlotCaptionBackClose);
-                pnlTreeViewBase = new Fancy_Panel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackClose);
+                pnlParameters   = new FancyPanel(slotCation, LayoutColors.ColorSlotCaptionBackClose);
+                pnlTreeViewBase = new FancyPanel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackClose);
             }
             else
             {
                 slotCation      = Language.T("Closing Logic Condition");
-                pnlParameters   = new Fancy_Panel(slotCation, LayoutColors.ColorSlotCaptionBackCloseFilter);
-                pnlTreeViewBase = new Fancy_Panel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackCloseFilter);
+                pnlParameters   = new FancyPanel(slotCation, LayoutColors.ColorSlotCaptionBackCloseFilter);
+                pnlTreeViewBase = new FancyPanel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackCloseFilter);
             }
 
             trvIndicators        = new TreeView();
-            pnlSmallBalanceChart = new Small_Balance_Chart();
+            pnlSmallBalanceChart = new SmallBalanceChart();
             btnAccept            = new Button();
             btnHelp              = new Button();
             btnDefault           = new Button();
@@ -651,7 +651,7 @@ namespace Forex_Strategy_Builder
                 trnIndicatorsMAOscillator, trnDateTime, trnCustomIndicators
             });
 
-            foreach (string indicatorName in Indicator_Store.GetIndicatorNames(slotType))
+            foreach (string indicatorName in IndicatorStore.GetIndicatorNames(slotType))
             {
                 TreeNode trn = new TreeNode();
                 trn.Tag  = true;
@@ -659,7 +659,7 @@ namespace Forex_Strategy_Builder
                 trn.Text = indicatorName;
                 trnAll.Nodes.Add(trn);
 
-                Indicator indicator = Indicator_Store.ConstructIndicator(indicatorName, slotType);
+                Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
                 TypeOfIndicator type = indicator.IndParam.IndicatorType;
 
                 if (indicator.CustomIndicator)
@@ -735,7 +735,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void TrvIndicatorsLoadIndicator(TreeNode treeNode)
         {
-            Indicator indicator = Indicator_Store.ConstructIndicator(trvIndicators.SelectedNode.Text, slotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(trvIndicators.SelectedNode.Text, slotType);
             UpdateFromIndicatorParam(indicator.IndParam);
             SetDefaultGroup();
             CalculateIndicator(true);
@@ -749,7 +749,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void BtnDefault_Click(object sender, EventArgs e)
         {
-            Indicator indicator = Indicator_Store.ConstructIndicator(indicatorName, slotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
             UpdateFromIndicatorParam(indicator.IndParam);
             SetDefaultGroup();
             CalculateIndicator(true);
@@ -821,7 +821,7 @@ namespace Forex_Strategy_Builder
             SetOppositeSignalBehaviour();
             SetClosingLogicConditions();
 
-            Indicator indicator = Indicator_Store.ConstructIndicator(indicatorName, slotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
 
             // List params
             for (int i = 0; i < 5; i++)
@@ -914,7 +914,7 @@ namespace Forex_Strategy_Builder
 
                 string caption = "Indicator Calculation Error";
 
-                Fancy_Message_Box msgBox = new Fancy_Message_Box(text, caption);
+                FancyMessageBox msgBox = new FancyMessageBox(text, caption);
                 msgBox.BoxWidth  = 450;
                 msgBox.BoxHeight = 250;
                 msgBox.Show();
@@ -974,7 +974,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void SetClosingLogicConditions()
         {
-            bool isClosingFiltersAllowed = Indicator_Store.ClosingIndicatorsWithClosingFilters.Contains(indicatorName);
+            bool isClosingFiltersAllowed = IndicatorStore.ClosingIndicatorsWithClosingFilters.Contains(indicatorName);
 
             // Removes or recovers closing logic slots.
             if (slotType == SlotTypes.Close && !isClosingFiltersAllowed && Data.Strategy.CloseFilters > 0)

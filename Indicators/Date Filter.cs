@@ -1,8 +1,7 @@
 // Date Filter Indicator
-// Last changed on 2009-05-05
 // Part of Forex Strategy Builder & Forex Strategy Trader
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
@@ -12,26 +11,28 @@ namespace Forex_Strategy_Builder
     /// <summary>
     /// Date Filter Indicator
     /// </summary>
-    public class Date_Filter : Indicator
+    public class DateFilter : Indicator
     {
         /// <summary>
         /// Sets the default indicator parameters for the designated slot type
         /// </summary>
-        public Date_Filter(SlotTypes slotType)
+        public DateFilter(SlotTypes slotType)
         {
             // General properties
             IndicatorName = "Date Filter";
             PossibleSlots = SlotTypes.OpenFilter;
 
             // Setting up the indicator parameters
-            IndParam = new IndicatorParam();
-            IndParam.IndicatorName = IndicatorName;
-            IndParam.SlotType      = slotType;
-            IndParam.IndicatorType = TypeOfIndicator.DateTime;
+            IndParam = new IndicatorParam
+                           {
+                               IndicatorName = IndicatorName,
+                               SlotType = slotType,
+                               IndicatorType = TypeOfIndicator.DateTime
+                           };
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
-            IndParam.ListParam[0].ItemList = new string[]
+            IndParam.ListParam[0].ItemList = new[]
             {
                 "Do not open positions before",
                 "Do not open positions after"
@@ -55,8 +56,6 @@ namespace Forex_Strategy_Builder
             IndParam.NumParam[1].Max     = 12;
             IndParam.NumParam[1].Enabled = true;
             IndParam.NumParam[1].ToolTip = "The month.";
-
-            return;
         }
 
         /// <summary>
@@ -65,67 +64,66 @@ namespace Forex_Strategy_Builder
         public override void Calculate(SlotTypes slotType)
         {
             // Reading the parameters
-            int iYear  = (int)IndParam.NumParam[0].Value;
-            int iMonth = (int)IndParam.NumParam[1].Value;
-            DateTime dtKeyDate = new DateTime(iYear, iMonth, 1);
+            var year  = (int)IndParam.NumParam[0].Value;
+            var month = (int)IndParam.NumParam[1].Value;
+            var keyDate = new DateTime(year, month, 1);
 
             // Calculation
-            int iFirstBar = 0;
-            double[] adBars = new double[Bars];
+            int firstBar = 0;
+            var values = new double[Bars];
 
             // Calculation of the logic.
             switch (IndParam.ListParam[0].Text)
             {
                 case "Do not open positions after":
-                    for (int iBar = iFirstBar; iBar < Bars; iBar++)
-                        if (Time[iBar] < dtKeyDate)
-                            adBars[iBar] = 1;
+                    for (int bar = firstBar; bar < Bars; bar++)
+                        if (Time[bar] < keyDate)
+                            values[bar] = 1;
 
                     break;
 
                 case "Do not open positions before":
-                    for (int iBar = iFirstBar; iBar < Bars; iBar++)
+                    for (int bar = firstBar; bar < Bars; bar++)
                     {
-                        if (Time[iBar] >= dtKeyDate)
+                        if (Time[bar] >= keyDate)
                         {
-                            iFirstBar = iBar;
+                            firstBar = bar;
                             break;
                         }
                     }
 
-                    iFirstBar = (int)Math.Min(iFirstBar, Bars - Configs.MIN_BARS);
+                    firstBar = Math.Min(firstBar, Bars - Configs.MinBars);
 
-                    for (int iBar = iFirstBar; iBar < Bars; iBar++)
+                    for (int bar = firstBar; bar < Bars; bar++)
                     {
-                        adBars[iBar] = 1;
+                        values[bar] = 1;
                     }
 
-                    break;
-
-                default:
                     break;
             }
 
             // Saving the components
             Component = new IndicatorComp[2];
 
-            Component[0] = new IndicatorComp();
-            Component[0].CompName      = "Allow Open Long";
-            Component[0].DataType      = IndComponentType.AllowOpenLong;
-            Component[0].ChartType     = IndChartType.NoChart;
-            Component[0].ShowInDynInfo = false;
-            Component[0].FirstBar      = iFirstBar;
-            Component[0].Value         = adBars;
+            Component[0] = new IndicatorComp
+                               {
+                                   CompName = "Allow Open Long",
+                                   DataType = IndComponentType.AllowOpenLong,
+                                   ChartType = IndChartType.NoChart,
+                                   ShowInDynInfo = false,
+                                   FirstBar = firstBar,
+                                   Value = values
+                               };
 
-            Component[1] = new IndicatorComp();
-            Component[1].CompName      = "Allow Open Short";
-            Component[1].DataType      = IndComponentType.AllowOpenShort;
-            Component[1].ChartType     = IndChartType.NoChart;
-            Component[1].ShowInDynInfo = false;
-            Component[1].FirstBar      = iFirstBar;
-            Component[1].Value         = adBars;
-
-            return;
+            Component[1] = new IndicatorComp
+                               {
+                                   CompName = "Allow Open Short",
+                                   DataType = IndComponentType.AllowOpenShort,
+                                   ChartType = IndChartType.NoChart,
+                                   ShowInDynInfo = false,
+                                   FirstBar = firstBar,
+                                   Value = values
+                               };
         }
 
         /// <summary>
@@ -133,9 +131,9 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public override void SetDescription(SlotTypes slotType)
         {
-            int iYear  = (int)IndParam.NumParam[0].Value;
-            int iMonth = (int)IndParam.NumParam[1].Value;
-            DateTime dtKeyDate = new DateTime(iYear, iMonth, 1);
+            var year  = (int)IndParam.NumParam[0].Value;
+            var month = (int)IndParam.NumParam[1].Value;
+            var keyDate = new DateTime(year, month, 1);
 
             EntryFilterLongDescription  = "(a back tester limitation) Do not open positions ";
             EntryFilterShortDescription = "(a back tester limitation) Do not open positions ";
@@ -143,20 +141,15 @@ namespace Forex_Strategy_Builder
             switch (IndParam.ListParam[0].Text)
             {
                 case "Do not open positions before":
-                    EntryFilterLongDescription  += "before " + dtKeyDate.ToShortDateString();
-                    EntryFilterShortDescription += "before " + dtKeyDate.ToShortDateString();
+                    EntryFilterLongDescription  += "before " + keyDate.ToShortDateString();
+                    EntryFilterShortDescription += "before " + keyDate.ToShortDateString();
                     break;
 
                 case "Do not open positions after":
-                    EntryFilterLongDescription  += "after " + dtKeyDate.ToShortDateString();
-                    EntryFilterShortDescription += "after " + dtKeyDate.ToShortDateString();
-                    break;
-
-                default:
+                    EntryFilterLongDescription  += "after " + keyDate.ToShortDateString();
+                    EntryFilterShortDescription += "after " + keyDate.ToShortDateString();
                     break;
             }
-
-            return;
         }
 
         /// <summary>
@@ -164,9 +157,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName;
-
-            return sString;
+            return IndicatorName;
         }
     }
 }

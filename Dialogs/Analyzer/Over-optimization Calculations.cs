@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder.Dialogs.Analyzer
 {
-    public partial class OverOptimization : Fancy_Panel
+    public partial class OverOptimization : FancyPanel
     {
         int countStratParams;
         int deviationSteps;
@@ -184,7 +184,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         {
             IndicatorParam ip = Data.Strategy.Slot[slot].IndParam;
 
-            Indicator indicator = Indicator_Store.ConstructIndicator(ip.IndicatorName, ip.SlotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(ip.IndicatorName, ip.SlotType);
 
             // List parameters
             for (int i = 0; i < 5; i++)

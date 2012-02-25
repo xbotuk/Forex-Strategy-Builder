@@ -24,15 +24,15 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         Panel               pnlCaptions;
         Panel               pnlParamsBase2;
         Panel               pnlParams;
-        Fancy_Panel         pnlLimitations;
-        Fancy_Panel         pnlSettings;
+        FancyPanel         pnlLimitations;
+        FancyPanel         pnlSettings;
 
         CheckBox[]          achbxParameterName;
         Label []            alblParameterValue;
         NumericUpDown []    anudParameterMin;
         NumericUpDown []    anudParameterMax;
         NumericUpDown []    anudParameterStep;
-        Small_Balance_Chart smallBalanceChart;
+        SmallBalanceChart smallBalanceChart;
         Label []            alblIndicatorName;
         Label               lblNoParams;
         ProgressBar         progressBar;

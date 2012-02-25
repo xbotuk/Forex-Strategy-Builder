@@ -731,7 +731,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             IndicatorParam ip = Data.Strategy.Slot[slot].IndParam;
 
-            Indicator indicator = Indicator_Store.ConstructIndicator(ip.IndicatorName, ip.SlotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(ip.IndicatorName, ip.SlotType);
 
             // List params
             for (int i = 0; i < 5; i++)

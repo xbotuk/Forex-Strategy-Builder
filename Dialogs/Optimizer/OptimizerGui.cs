@@ -25,10 +25,10 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             pnlParamsBase2    = new Panel();
             pnlCaptions       = new Panel();
             pnlParams         = new Panel();
-            pnlLimitations    = new Fancy_Panel(Language.T("Limitations"));
-            pnlSettings       = new Fancy_Panel(Language.T("Settings"));
+            pnlLimitations    = new FancyPanel(Language.T("Limitations"));
+            pnlSettings       = new FancyPanel(Language.T("Settings"));
             scrollBar         = new VScrollBar();
-            smallBalanceChart = new Small_Balance_Chart();
+            smallBalanceChart = new SmallBalanceChart();
             progressBar       = new ProgressBar();
             btnOptimize       = new Button();
             btnAccept         = new Button();
@@ -544,7 +544,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             isOOS = chbOutOfSample.Checked;
             barOOS = Data.Bars - Data.Bars * (int)nudOutOfSample.Value / 100 - 1;
 
-            smallBalanceChart.OOS    = isOOS;
+            smallBalanceChart.IsOOS    = isOOS;
             smallBalanceChart.OOSBar = barOOS;
 
             smallBalanceChart.SetChartData();

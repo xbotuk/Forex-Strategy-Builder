@@ -15,7 +15,7 @@ namespace Forex_Strategy_Builder
     /// </summary>
     public class Account_Settings : Form
     {
-        Fancy_Panel pnlBase;
+        FancyPanel pnlBase;
 
         Label lblAccountCurrency;
         Label lblInitialAccount;
@@ -94,7 +94,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public Account_Settings()
         {
-            pnlBase = new Fancy_Panel();
+            pnlBase = new FancyPanel();
 
             lblAccountCurrency  = new Label();
             lblInitialAccount   = new Label();
@@ -347,7 +347,7 @@ namespace Forex_Strategy_Builder
                 else if (cbxAccountCurrency.Text == "EUR")
                     rateToEUR = 1;
             }
-            else if (Data.InstrProperties.InstrType == Instrumet_Type.Forex && Data.InstrProperties.Symbol.StartsWith(cbxAccountCurrency.Text))
+            else if (Data.InstrProperties.InstrType == InstrumetType.Forex && Data.InstrProperties.Symbol.StartsWith(cbxAccountCurrency.Text))
             {
                 tbxExchangeRate.Text    = Language.T("Deal price");
                 tbxExchangeRate.Visible = true;

@@ -23,8 +23,8 @@ namespace Forex_Strategy_Builder
         NumericUpDown nudMarketClose;
         NumericUpDown nudMarketOpen;
 
-        Fancy_Panel pnlSettings;
-        Fancy_Panel pnlInfoBase;
+        FancyPanel pnlSettings;
+        FancyPanel pnlInfoBase;
         ProgressBar progressBar;
         TextBox tbxInfo;
         Button  btnHelp;
@@ -47,8 +47,8 @@ namespace Forex_Strategy_Builder
             lblIntro         = new Label();
             txbDataDirectory = new TextBox();
             btnBrowse        = new Button();
-            pnlSettings      = new Fancy_Panel();
-            pnlInfoBase      = new Fancy_Panel(Language.T("Imported Files"));
+            pnlSettings      = new FancyPanel();
+            pnlInfoBase      = new FancyPanel(Language.T("Imported Files"));
             tbxInfo          = new TextBox();
             btnHelp          = new Button();
             btnClose         = new Button();

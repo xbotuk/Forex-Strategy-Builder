@@ -27,8 +27,8 @@ namespace Forex_Strategy_Builder
         Label             lblEndingDate;
         DateTimePicker    dtpEndingDate;
 
-        Fancy_Panel       pnlSettings;
-        Fancy_Panel       pnlInfoBase;
+        FancyPanel       pnlSettings;
+        FancyPanel       pnlInfoBase;
         ProgressBar       progressBarFile;     // Progress of the Current File
         ProgressBar       progressBar;         // Progress of the Entire Import Process
         TextBox           tbxInfo;
@@ -54,8 +54,8 @@ namespace Forex_Strategy_Builder
             lblIntro         = new Label();
             txbDataDirectory = new TextBox();
             btnBrowse        = new Button();
-            pnlSettings      = new Fancy_Panel();
-            pnlInfoBase      = new Fancy_Panel(Language.T("Imported Files"));
+            pnlSettings      = new FancyPanel();
+            pnlInfoBase      = new FancyPanel(Language.T("Imported Files"));
             tbxInfo          = new TextBox();
             btnHelp          = new Button();
             btnClose         = new Button();

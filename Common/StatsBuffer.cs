@@ -40,6 +40,21 @@ namespace Forex_Strategy_Builder.Common
             MoneyBalance = new double[Data.Bars];
             MoneyEquity = new double[Data.Bars];
 
+            ProfitLoss = new int[Data.Bars];
+            MoneyProfitLoss = new double[Data.Bars];
+            FloatingPL = new int[Data.Bars];
+            MoneyFloatingPL = new double[Data.Bars];
+
+            SummaryDir = new PosDirection[Data.Bars];
+            SummaryTrans = new Transaction[Data.Bars];
+            SummaryLots = new double[Data.Bars];
+            SummaryAmount = new int[Data.Bars];
+            SummaryPrice = new double[Data.Bars];
+            SummaryRequiredMargin = new double[Data.Bars];
+            SummaryFreeMargin = new double[Data.Bars];
+            PosIcons = new PositionIcons[Data.Bars];
+            BackTestEval = new string[Data.Bars];
+
             for (var bar = 0; bar < Data.Bars; bar++)
             {
                 IsPosition[bar] = Backtester.IsPos(bar);
@@ -50,6 +65,21 @@ namespace Forex_Strategy_Builder.Common
                 Equity[bar]  = Backtester.Equity(bar);
                 MoneyBalance[bar] = Backtester.MoneyBalance(bar);
                 MoneyEquity[bar]  = Backtester.MoneyEquity(bar);
+
+                ProfitLoss[bar] = Backtester.ProfitLoss(bar);
+                MoneyProfitLoss[bar] = Backtester.MoneyProfitLoss(bar);
+                FloatingPL[bar] = Backtester.FloatingPL(bar);
+                MoneyFloatingPL[bar] = Backtester.MoneyFloatingPL(bar);
+
+                SummaryDir[bar] = Backtester.SummaryDir(bar);
+                SummaryTrans[bar] = Backtester.SummaryTrans(bar);
+                SummaryLots[bar] = Backtester.SummaryLots(bar);
+                SummaryAmount[bar] = Backtester.SummaryAmount(bar);
+                SummaryPrice[bar] = Backtester.SummaryPrice(bar);
+                SummaryRequiredMargin[bar] = Backtester.SummaryRequiredMargin(bar);
+                SummaryFreeMargin[bar] = Backtester.SummaryFreeMargin(bar);
+                PosIcons[bar] = Backtester.SummaryPositionIcon(bar);
+                BackTestEval[bar] = Backtester.BackTestEval(bar);
             }
 
             MarginCallBar = Backtester.MarginCallBar;
@@ -107,6 +137,22 @@ namespace Forex_Strategy_Builder.Common
         public static int MarginCallBar { get; private set; }
         public static bool IsScanPerformed { get; private set; }
         public static int ExecutedOrders { get; private set; }
+
+        public static int[] ProfitLoss { get; private set; }
+        public static double[] MoneyProfitLoss { get; private set; }
+        public static int[] FloatingPL { get; private set; }
+        public static double[] MoneyFloatingPL { get; private set; }
+
+        // Summary
+        public static PosDirection[] SummaryDir { get; private set; }
+        public static Transaction[] SummaryTrans { get; private set; }
+        public static double[] SummaryLots { get; private set; }
+        public static int[] SummaryAmount { get; private set; }
+        public static double[] SummaryPrice { get; private set; }
+        public static double[] SummaryRequiredMargin { get; private set; }
+        public static double[] SummaryFreeMargin { get; private set; }
+        public static string[] BackTestEval { get; private set; }
+        public static PositionIcons[] PosIcons { get; private set; }
 
         // Balance and equity in points.
         public static int[] Balance { get; private set; }
