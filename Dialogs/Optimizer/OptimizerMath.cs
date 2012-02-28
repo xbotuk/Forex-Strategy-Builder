@@ -17,6 +17,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
     /// </summary>
     public sealed partial class Optimizer
     {
+        private double[] _initialValues;
+
         /// <summary>
         /// Sets the parameters.
         /// </summary>
@@ -104,6 +106,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             AParameter = new Parameter[_parameters];
             AchbxParameterName = new CheckBox[_parameters];
+            AlblInitialValue = new Label[_parameters];
             AlblParameterValue = new Label[_parameters];
             AnudParameterMin = new NumericUpDown[_parameters];
             AnudParameterMax = new NumericUpDown[_parameters];
@@ -114,11 +117,14 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             {
                 AlblIndicatorName[param] = new Label();
                 AchbxParameterName[param] = new CheckBox();
+                AlblInitialValue[param] = new Label();
                 AlblParameterValue[param] = new Label();
                 AnudParameterMin[param] = new NumericUpDown();
                 AnudParameterMax[param] = new NumericUpDown();
                 AnudParameterStep[param] = new NumericUpDown();
             }
+
+            _initialValues = new double[_parameters];
         }
 
         /// <summary>
@@ -171,6 +177,13 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             double step = AParameter[param].Step;
             string stringFormat = "{0:F" + point + "}";
 
+            AlblInitialValue[param].ForeColor = _colorText;
+            AlblInitialValue[param].BackColor = Color.Transparent;
+            AlblInitialValue[param].Text = string.Format(stringFormat, value);
+            AlblInitialValue[param].Parent = PnlParams;
+            AlblInitialValue[param].Width = 55;
+            AlblInitialValue[param].TextAlign = ContentAlignment.MiddleCenter;
+
             AlblParameterValue[param].ForeColor = _colorText;
             AlblParameterValue[param].BackColor = Color.Transparent;
             AlblParameterValue[param].Text = string.Format(stringFormat, value);
@@ -184,7 +197,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             AnudParameterMin[param].BeginInit();
             AnudParameterMin[param].Minimum = (decimal) min;
             AnudParameterMin[param].Maximum = (decimal) max;
-            AnudParameterMin[param].Value = (decimal) Math.Round(Math.Max(value - 5*step, min), point);
+            AnudParameterMin[param].Value = (decimal) Math.Round(Math.Max(value - _lastSetStepButtonValue*step, min), point);
             AnudParameterMin[param].DecimalPlaces = point;
             AnudParameterMin[param].Increment = (decimal) step;
             AnudParameterMin[param].EndInit();
@@ -196,7 +209,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             AnudParameterMax[param].BeginInit();
             AnudParameterMax[param].Minimum = (decimal) min;
             AnudParameterMax[param].Maximum = (decimal) max;
-            AnudParameterMax[param].Value = (decimal) Math.Round(Math.Min(value + 5*step, max), point);
+            AnudParameterMax[param].Value = (decimal) Math.Round(Math.Min(value + _lastSetStepButtonValue*step, max), point);
             AnudParameterMax[param].DecimalPlaces = point;
             AnudParameterMax[param].Increment = (decimal) step;
             AnudParameterMax[param].EndInit();
@@ -216,6 +229,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             AnudParameterStep[param].Width = 70;
             AnudParameterStep[param].TextAlign = HorizontalAlignment.Center;
             _toolTip.SetToolTip(AnudParameterStep[param], Language.T("Step of change."));
+
+            _initialValues[param] = value;
         }
 
         /// <summary>
@@ -243,14 +258,11 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                     AlblIndicatorName[param].Visible = false;
                 }
                 AchbxParameterName[param].Location = new Point(horizMargin, vertPosition);
-                AlblParameterValue[param].Location = new Point(AchbxParameterName[param].Right + horizMargin,
-                                                               vertPosition - 1);
-                AnudParameterMin[param].Location = new Point(AlblParameterValue[param].Right + horizMargin,
-                                                             vertPosition + 2);
-                AnudParameterMax[param].Location = new Point(AnudParameterMin[param].Right + horizMargin,
-                                                             vertPosition + 2);
-                AnudParameterStep[param].Location = new Point(AnudParameterMax[param].Right + horizMargin,
-                                                              vertPosition + 2);
+                AlblInitialValue[param].Location = new Point(AchbxParameterName[param].Right + horizMargin, vertPosition - 1);
+                AlblParameterValue[param].Location = new Point(AlblInitialValue[param].Right + horizMargin, vertPosition - 1);
+                AnudParameterMin[param].Location = new Point(AlblParameterValue[param].Right + horizMargin, vertPosition + 2);
+                AnudParameterMax[param].Location = new Point(AnudParameterMin[param].Right + horizMargin, vertPosition + 2);
+                AnudParameterStep[param].Location = new Point(AnudParameterMax[param].Right + horizMargin, vertPosition + 2);
                 vertPosition += AchbxParameterName[param].Height + vertMargin;
                 totalHeight += AchbxParameterName[param].Height + vertMargin;
             }
@@ -273,6 +285,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
                 AnudParameterMin[param].Value = (decimal) Math.Round(Math.Max(value - deltaStep*step, min), point);
                 AnudParameterMax[param].Value = (decimal) Math.Round(Math.Min(value + deltaStep*step, max), point);
+                AlblParameterValue[param].Text = GetParameterText(param);
             }
         }
 
@@ -382,7 +395,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             BtnAccept.Enabled = false;
             BtnOptimize.Text = Language.T("Stop");
 
-            for (int i = 0; i <= (int) OptimizerButtons.SetStep15; i++)
+            for (int i = 0; i <= (int) OptimizerButtons.ResetStrategy; i++)
                 AOptimizerButtons[i].Enabled = false;
 
             foreach (Control control in PnlParams.Controls)
@@ -394,6 +407,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
             foreach (Control control in PnlSettings.Controls)
                 control.Enabled = false;
+            ChbHideFSB.Enabled = true;
 
             // Start the bgWorker
             BgWorker.RunWorkerAsync();
@@ -476,7 +490,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             ProgressBar.Value = 1;
 
             if (PnlParams.Visible)
-                for (int i = 0; i <= (int) OptimizerButtons.SetStep15; i++)
+                for (int i = 0; i <= (int) OptimizerButtons.ResetStrategy; i++)
                     AOptimizerButtons[i].Enabled = true;
 
             for (int i = 0; i < _parameters; i++)
@@ -727,10 +741,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         private void CalculateIndicator(int slot)
         {
             IndicatorParam ip = Data.Strategy.Slot[slot].IndParam;
-
             Indicator indicator = IndicatorStore.ConstructIndicator(ip.IndicatorName, ip.SlotType);
 
-            // List params
+            // List parameters
             for (int i = 0; i < 5; i++)
             {
                 indicator.IndParam.ListParam[i].Index = ip.ListParam[i].Index;
@@ -738,14 +751,14 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 indicator.IndParam.ListParam[i].Enabled = ip.ListParam[i].Enabled;
             }
 
-            // Numeric params
+            // Numeric parameters
             for (int i = 0; i < 6; i++)
             {
                 indicator.IndParam.NumParam[i].Value = ip.NumParam[i].Value;
                 indicator.IndParam.NumParam[i].Enabled = ip.NumParam[i].Enabled;
             }
 
-            // Check params
+            // Check parameters
             for (int i = 0; i < 2; i++)
             {
                 indicator.IndParam.CheckParam[i].Checked = ip.CheckParam[i].Checked;
@@ -894,9 +907,14 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             if (AlblParameterValue[param].Text == newText)
                 return newText;
 
-            if (Math.Abs(AParameter[param].BestValue - (double) AnudParameterMin[param].Value) < 0.000001)
+            var bestValue = AParameter[param].BestValue;
+            if (Math.Abs(bestValue - (double) AnudParameterMin[param].Value) < 0.000001)
                 newText = "[" + newText;
-            if (Math.Abs(AParameter[param].BestValue - (double) AnudParameterMax[param].Value) < 0.000001)
+            if (Math.Abs(bestValue - AParameter[param].Minimum) < 0.000001)
+                newText = "[" + newText;
+            if (Math.Abs(bestValue - (double) AnudParameterMax[param].Value) < 0.000001)
+                newText = newText + "]";
+            if (Math.Abs(bestValue - AParameter[param].Maximum) < 0.000001)
                 newText = newText + "]";
 
             return newText;
@@ -915,6 +933,37 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
             timer.Stop();
             timer.Dispose();
+        }
+
+        /// <summary>
+        /// Resets parameters and recalculates the strategy.
+        /// </summary>
+        private void ResetStrategyParameters()
+        {
+            for (int param = 0; param < _parameters; param++)
+            {
+                int point = AParameter[param].Point;
+                string stringFormat = "{0:F" + point + "}";
+                double value = _initialValues[param];
+
+                AParameter[param].Value = value;
+                AlblParameterValue[param].Text = string.Format(stringFormat, value);
+            }
+
+            int lastSlot = -1;
+            for (int param = 0; param < _parameters; param++)
+            {
+                if (AParameter[param].Type != OptimizerParameterType.Indicator) continue;
+                if (AParameter[param].SlotNumber == lastSlot) continue;
+                lastSlot = AParameter[param].SlotNumber;
+                CalculateIndicator(lastSlot);
+            }
+
+            Backtester.Calculate();
+            SmallBalanceChart.SetChartData();
+            SmallBalanceChart.InitChart();
+            SmallBalanceChart.Invalidate();
+            _isStartegyChanged = false;
         }
 
         #region Nested type: ShowParamBestValueCallback

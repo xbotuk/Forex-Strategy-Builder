@@ -357,27 +357,28 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             {
                 AOptimizerButtons[i] = new ToolStripButton {Tag = (OptimizerButtons) i};
                 AOptimizerButtons[i].Click += ButtonsClick;
+                AOptimizerButtons[i].DisplayStyle = ToolStripItemDisplayStyle.Text;
                 TsOptimizerButtons.Items.Add(AOptimizerButtons[i]);
-                AOptimizerButtons[i].DisplayStyle = i < 3
-                                                        ? ToolStripItemDisplayStyle.Image
-                                                        : ToolStripItemDisplayStyle.Text;
-                if (i == 2 || i == 5)
+                if (i == (int)OptimizerButtons.SelectRandom ||
+                    i == (int)OptimizerButtons.SetStep20 ||
+                    i == (int)OptimizerButtons.ResetStrategy)
                     TsOptimizerButtons.Items.Add(new ToolStripSeparator());
             }
 
             // Select All
             AOptimizerButtons[(int) OptimizerButtons.SelectAll].Image = Resources.optimizer_select_all;
+            AOptimizerButtons[(int) OptimizerButtons.SelectAll].DisplayStyle = ToolStripItemDisplayStyle.Image;
             AOptimizerButtons[(int) OptimizerButtons.SelectAll].ToolTipText = Language.T("Select all parameters.");
 
             // Select None
             AOptimizerButtons[(int) OptimizerButtons.SelectNone].Image = Resources.optimizer_select_none;
-            AOptimizerButtons[(int) OptimizerButtons.SelectNone].ToolTipText =
-                Language.T("Select none of the parameters.");
+            AOptimizerButtons[(int) OptimizerButtons.SelectNone].DisplayStyle = ToolStripItemDisplayStyle.Image;
+            AOptimizerButtons[(int) OptimizerButtons.SelectNone].ToolTipText = Language.T("Select none of the parameters.");
 
             // Select Random
             AOptimizerButtons[(int) OptimizerButtons.SelectRandom].Image = Resources.optimizer_select_random;
-            AOptimizerButtons[(int) OptimizerButtons.SelectRandom].ToolTipText =
-                Language.T("Select a random number of parameters.");
+            AOptimizerButtons[(int) OptimizerButtons.SelectRandom].DisplayStyle = ToolStripItemDisplayStyle.Image;
+            AOptimizerButtons[(int) OptimizerButtons.SelectRandom].ToolTipText = Language.T("Select a random number of parameters.");
 
             // Set step 5
             AOptimizerButtons[(int) OptimizerButtons.SetStep5].Text = "±5";
@@ -390,6 +391,15 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             // Set step 15
             AOptimizerButtons[(int) OptimizerButtons.SetStep15].Text = "±15";
             AOptimizerButtons[(int) OptimizerButtons.SetStep15].ToolTipText = Language.T("Set Min / Max ± 15 steps.");
+
+            // Set step 20
+            AOptimizerButtons[(int) OptimizerButtons.SetStep20].Text = "±20";
+            AOptimizerButtons[(int) OptimizerButtons.SetStep20].ToolTipText = Language.T("Set Min / Max ± 20 steps.");
+
+            // Reset Strategy
+            AOptimizerButtons[(int) OptimizerButtons.ResetStrategy].Image = Resources.refresh;
+            AOptimizerButtons[(int) OptimizerButtons.ResetStrategy].DisplayStyle = ToolStripItemDisplayStyle.Image;
+            AOptimizerButtons[(int) OptimizerButtons.ResetStrategy].ToolTipText = Language.T("Reset strategy parameters.");
 
             // Show Parameters
             AOptimizerButtons[(int) OptimizerButtons.ShowParams].Text = Language.T("Parameters");
@@ -441,7 +451,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 NUDSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
                 ChbOptimizerWritesReport.Checked = bool.Parse(options[i++]);
                 ChbHideFSB.Checked = bool.Parse(options[i++]);
-                _formHeight = int.Parse(options[i]);
+                _formHeight = int.Parse(options[i++]);
+                _lastSelectButton = (OptimizerButtons) Enum.Parse(typeof (OptimizerButtons), options[i++]);
+                _lastSetStepButtonValue = int.Parse(options[i]);
             }
             catch (Exception exception)
             {
@@ -477,7 +489,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 NUDSmoothBalanceCheckPoints.Value + ";" +
                 ChbOptimizerWritesReport.Checked + ";" +
                 ChbHideFSB.Checked + ";" +
-                Height;
+                Height + ";" +
+                _lastSelectButton + ";" +
+                _lastSetStepButtonValue;
 
             Configs.OptimizerOptions = options;
         }
@@ -497,10 +511,11 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             var stringFormat = new StringFormat {Alignment = StringAlignment.Center};
 
             g.DrawString(Language.T("Parameter"), Font, brush, 25, 3);
-            g.DrawString(Language.T("Value"), Font, brush, 190, 3, stringFormat);
-            g.DrawString(Language.T("Minimum"), Font, brush, 230, 3);
-            g.DrawString(Language.T("Maximum"), Font, brush, 303, 3);
-            g.DrawString(Language.T("Step"), Font, brush, 390, 3);
+            g.DrawString(Language.T("Initial"), Font, brush, 190, 3, stringFormat);
+            g.DrawString(Language.T("Value"), Font, brush, 250, 3, stringFormat);
+            g.DrawString(Language.T("Minimum"), Font, brush, 293, 3);
+            g.DrawString(Language.T("Maximum"), Font, brush, 367, 3);
+            g.DrawString(Language.T("Step"), Font, brush, 452, 3);
         }
 
         /// <summary>
@@ -510,14 +525,11 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             var pnl = (Panel) sender;
             Graphics g = e.Graphics;
-            var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
-                                    Border);
+            var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
 
             g.DrawLine(penBorder, 1, 0, 1, pnl.ClientSize.Height);
-            g.DrawLine(penBorder, pnl.ClientSize.Width - Border + 1, 0, pnl.ClientSize.Width - Border + 1,
-                       pnl.ClientSize.Height);
-            g.DrawLine(penBorder, 0, pnl.ClientSize.Height - Border + 1, pnl.ClientSize.Width,
-                       pnl.ClientSize.Height - Border + 1);
+            g.DrawLine(penBorder, pnl.ClientSize.Width - Border + 1, 0, pnl.ClientSize.Width - Border + 1, pnl.ClientSize.Height);
+            g.DrawLine(penBorder, 0, pnl.ClientSize.Height - Border + 1, pnl.ClientSize.Width, pnl.ClientSize.Height - Border + 1);
         }
 
         /// <summary>
@@ -602,21 +614,34 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             {
                 case OptimizerButtons.SelectAll:
                     SelectParameters(OptimizerButtons.SelectAll);
+                    _lastSelectButton = OptimizerButtons.SelectAll;
                     break;
                 case OptimizerButtons.SelectNone:
                     SelectParameters(OptimizerButtons.SelectNone);
+                    _lastSelectButton = OptimizerButtons.SelectNone;
                     break;
                 case OptimizerButtons.SelectRandom:
                     SelectParameters(OptimizerButtons.SelectRandom);
+                    _lastSelectButton = OptimizerButtons.SelectRandom;
                     break;
                 case OptimizerButtons.SetStep5:
                     SetParamsMinMax(5);
+                    _lastSetStepButtonValue = 5;
                     break;
                 case OptimizerButtons.SetStep10:
                     SetParamsMinMax(10);
+                    _lastSetStepButtonValue = 10;
                     break;
                 case OptimizerButtons.SetStep15:
                     SetParamsMinMax(15);
+                    _lastSetStepButtonValue = 15;
+                    break;
+                case OptimizerButtons.SetStep20:
+                    SetParamsMinMax(20);
+                    _lastSetStepButtonValue = 20;
+                    break;
+                case OptimizerButtons.ResetStrategy:
+                    ResetStrategyParameters();
                     break;
             }
         }

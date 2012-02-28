@@ -517,6 +517,7 @@
     <Content Include="Images\chart_protection.png" />
     <Content Include="Images\metatrader4.png" />
     <Content Include="Images\pushpin-detach.png" />
+    <Content Include="Images\refresh.png" />
     <Content Include="Resources\config.xml" />
     <Content Include="Resources\fsb-update.xml" />
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -11,6 +11,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         SetStep5,
         SetStep10,
         SetStep15,
+        SetStep20,
+        ResetStrategy,
         ShowParams,
         ShowLimitations,
         ShowSettings,

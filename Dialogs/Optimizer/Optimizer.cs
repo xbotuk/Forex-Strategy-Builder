@@ -18,7 +18,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
     public sealed partial class Optimizer : Form
     {
         private const int Border = 2;
-        private const int OptionsVersion = 1;
+        private const int OptionsVersion = 2;
         private readonly Random _rand = new Random();
         private readonly ToolTip _toolTip = new ToolTip();
         private int[] _aiChecked; // An array of the checked parameters
@@ -39,6 +39,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         private int _progressPercent; // Reached progress in %
         private int _protections; // Count of permanent protections
         private StringBuilder _sbReport;
+        private OptimizerButtons _lastSelectButton = OptimizerButtons.SelectRandom;
+        private int _lastSetStepButtonValue = 5;
 
         /// <summary>
         /// Constructor
@@ -72,6 +74,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         private FancyPanel PnlSettings { get; set; }
 
         private CheckBox[] AchbxParameterName { get; set; }
+        private Label[] AlblInitialValue { get; set; }
         private Label[] AlblParameterValue { get; set; }
         private NumericUpDown[] AnudParameterMin { get; set; }
         private NumericUpDown[] AnudParameterMax { get; set; }
@@ -128,11 +131,11 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             FormFSB.Visible = !ChbHideFSB.Checked;
 
             SetIndicatorParams();
-            SelectRandomParameters();
+            SelectParameters(_lastSelectButton);
 
-            Width = 495;
+            Width = 555;
             Height = Math.Max(_formHeight, 570);
-            MinimumSize = new Size(495, 570);
+            MinimumSize = new Size(555, 570);
         }
 
         /// <summary>
