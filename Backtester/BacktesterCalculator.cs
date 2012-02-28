@@ -1504,67 +1504,74 @@ namespace Forex_Strategy_Builder
 
             if (Configs.UseLogicalGroups)
             {
-                foreach (string group in _closingLogicGroups)
-                {
-                    bool isGroupAllowExit = false;
-                    for (int slot = Strategy.CloseSlot + 1; slot < Strategy.Slots; slot++)
-                    {
-                        if (Strategy.Slot[slot].LogicalGroup == group || Strategy.Slot[slot].LogicalGroup == "all")
-                        {
-                            bool isSlotAllowExit = false;
-                            foreach (IndicatorComp component in Strategy.Slot[slot].Component)
-                            {
-                                // We are searching the components for a permission to close the position.
-                                if (component.Value[bar] < 0.001)
-                                    continue;
-
-                                if (component.DataType == IndComponentType.ForceClose ||
-                                    component.DataType == IndComponentType.ForceCloseLong && _session[bar].Summary.PosDir == PosDirection.Long ||
-                                    component.DataType == IndComponentType.ForceCloseShort && _session[bar].Summary.PosDir == PosDirection.Short)
-                                {
-                                    isSlotAllowExit = true;
-                                    break;
-                                }
-                            }
-
-                            if (!isSlotAllowExit)
-                            {
-                                isGroupAllowExit = false;
-                                break;
-                            }
-                            isGroupAllowExit = true;
-                        }
-                    }
-
-                    if (isGroupAllowExit)
-                    {
-                        SetExitOrders(bar, priceExitLong, priceExitShort);
-                        break;
-                    }
-                }
+                AnalyseExitOrdersLogicalGroups(bar, priceExitShort, priceExitLong);
             }
             else
             {
-                bool stopSearching = false;
-                for (int slot = Strategy.CloseSlot + 1; slot < Strategy.Slots && !stopSearching; slot++)
+                AnalyseExitOrders(bar, priceExitLong, priceExitShort);
+            }
+        }
+
+        private static void AnalyseExitOrders(int bar, double priceExitLong, double priceExitShort)
+        {
+            bool stopSearching = false;
+            for (int slot = Strategy.CloseSlot + 1; slot < Strategy.Slots && !stopSearching; slot++)
+            {
+                for (int comp = 0; comp < Strategy.Slot[slot].Component.Length && !stopSearching; comp++)
                 {
-                    for (int comp = 0; comp < Strategy.Slot[slot].Component.Length && !stopSearching; comp++)
+                    // We are searching the components for a permission to close the position.
+                    if (Strategy.Slot[slot].Component[comp].Value[bar] < 0.001)
+                        continue;
+
+                    IndComponentType compDataType = Strategy.Slot[slot].Component[comp].DataType;
+
+                    if (compDataType == IndComponentType.ForceClose ||
+                        compDataType == IndComponentType.ForceCloseLong && _session[bar].Summary.PosDir == PosDirection.Long ||
+                        compDataType == IndComponentType.ForceCloseShort && _session[bar].Summary.PosDir == PosDirection.Short)
                     {
-                        // We are searching the components for a permission to close the position.
-                        if (Strategy.Slot[slot].Component[comp].Value[bar] < 0.001)
-                            continue;
-
-                        IndComponentType compDataType = Strategy.Slot[slot].Component[comp].DataType;
-
-                        if (compDataType == IndComponentType.ForceClose ||
-                            compDataType == IndComponentType.ForceCloseLong && _session[bar].Summary.PosDir == PosDirection.Long || 
-                            compDataType == IndComponentType.ForceCloseShort && _session[bar].Summary.PosDir == PosDirection.Short)
-                        {
-                            SetExitOrders(bar, priceExitLong, priceExitShort);
-                            stopSearching = true;
-                        }
+                        SetExitOrders(bar, priceExitLong, priceExitShort);
+                        stopSearching = true;
                     }
                 }
+            }
+        }
+
+        private static void AnalyseExitOrdersLogicalGroups(int bar, double priceExitShort, double priceExitLong)
+        {
+            foreach (string group in _closingLogicGroups)
+            {
+                bool isGroupAllowExit = false;
+                for (int slot = Strategy.CloseSlot + 1; slot < Strategy.Slots; slot++)
+                {
+                    if (Strategy.Slot[slot].LogicalGroup != group && Strategy.Slot[slot].LogicalGroup != "all")
+                        continue;
+                    bool isSlotAllowExit = false;
+                    foreach (IndicatorComp component in Strategy.Slot[slot].Component)
+                    {
+                        // We are searching the components for a permission to close the position.
+                        if (component.Value[bar] < 0.001)
+                            continue;
+
+                        if (component.DataType == IndComponentType.ForceClose ||
+                            component.DataType == IndComponentType.ForceCloseLong && _session[bar].Summary.PosDir == PosDirection.Long ||
+                            component.DataType == IndComponentType.ForceCloseShort && _session[bar].Summary.PosDir == PosDirection.Short)
+                        {
+                            isSlotAllowExit = true;
+                            break;
+                        }
+                    }
+
+                    if (!isSlotAllowExit)
+                    {
+                        isGroupAllowExit = false;
+                        break;
+                    }
+                    isGroupAllowExit = true;
+                }
+
+                if (!isGroupAllowExit) continue;
+                SetExitOrders(bar, priceExitLong, priceExitShort);
+                break;
             }
         }
 

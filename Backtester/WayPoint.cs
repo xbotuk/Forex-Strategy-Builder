@@ -32,6 +32,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
+        /// Default constructor.
+        /// </summary>
+        private WayPoint(){}
+
+        /// <summary>
         /// Gets or sets the waypoint price
         /// </summary>
         public double Price { get; private set; }
@@ -99,6 +104,18 @@ namespace Forex_Strategy_Builder
             }
 
             return output;
+        }
+
+        public WayPoint Copy()
+        {
+            var wayPoint = new WayPoint
+                               {
+                                   Price = Price,
+                                   WPType = WPType,
+                                   OrdNumb = OrdNumb,
+                                   PosNumb = PosNumb
+                               };
+            return wayPoint;
         }
     }
 }

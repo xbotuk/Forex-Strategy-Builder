@@ -1,13 +1,14 @@
-﻿// Journal_Pos Class
+﻿// JournalPositions Class
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Common;
 
 namespace Forex_Strategy_Builder
 {
@@ -53,9 +54,6 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public void SetUpJournal()
         {
-            if (Data.IsResult)
-                _positions = Backtester.Positions(SelectedBar);
-
             SetSizes();
             UpdateJournalData();
         }
@@ -155,24 +153,25 @@ namespace Forex_Strategy_Builder
             {
                 int row = pos - _firstPos;
 
-                _journalData[row, 0] = (Backtester.PosNumb(SelectedBar, pos) + 1).ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 1] = Language.T(Backtester.PosTransaction(SelectedBar, pos).ToString());
-                _journalData[row, 2] = Language.T(Backtester.PosDir(SelectedBar, pos).ToString());
+                _journalData[row, 0] = (StatsBuffer.PosNumb(SelectedBar, pos) + 1).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, 1] = Language.T(StatsBuffer.PosTransaction(SelectedBar, pos).ToString());
+                _journalData[row, 2] = Language.T(StatsBuffer.PosDir(SelectedBar, pos).ToString());
                 _journalData[row, 3] = Configs.AccountInMoney
-                                 ? (Backtester.PosDir(SelectedBar, pos) == PosDirection.Short ? "-" : "") + (Backtester.PosLots(SelectedBar, pos)*Data.InstrProperties.LotSize).ToString(CultureInfo.InvariantCulture)
-                                 : Backtester.PosLots(SelectedBar, pos).ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 4] = (Backtester.PosOrdNumb(SelectedBar, pos) + 1).ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 5] = Backtester.PosOrdPrice(SelectedBar, pos).ToString(Data.FF);
-                _journalData[row, 6] = Backtester.PosPrice(SelectedBar, pos).ToString(Data.FF);
+                                 ? (StatsBuffer.PosDir(SelectedBar, pos) == PosDirection.Short ? "-" : "") +
+                                    (StatsBuffer.PosLots(SelectedBar, pos)*Data.InstrProperties.LotSize)
+                                 : StatsBuffer.PosLots(SelectedBar, pos).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, 4] = (StatsBuffer.PosOrdNumb(SelectedBar, pos) + 1).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, 5] = StatsBuffer.PosOrdPrice(SelectedBar, pos).ToString(Data.FF);
+                _journalData[row, 6] = StatsBuffer.PosPrice(SelectedBar, pos).ToString(Data.FF);
 
                 // Profit Loss
-                if (Backtester.PosTransaction(SelectedBar, pos) == Transaction.Close ||
-                    Backtester.PosTransaction(SelectedBar, pos) == Transaction.Reduce ||
-                    Backtester.PosTransaction(SelectedBar, pos) == Transaction.Reverse)
+                if (StatsBuffer.PosTransaction(SelectedBar, pos) == Transaction.Close ||
+                    StatsBuffer.PosTransaction(SelectedBar, pos) == Transaction.Reduce ||
+                    StatsBuffer.PosTransaction(SelectedBar, pos) == Transaction.Reverse)
                 {
                     _journalData[row, 7] = Configs.AccountInMoney
-                        ? Backtester.PosMoneyProfitLoss(SelectedBar, pos).ToString("F2")
-                        : Math.Round(Backtester.PosProfitLoss(SelectedBar, pos)).ToString(CultureInfo.InvariantCulture);
+                        ? StatsBuffer.PosMoneyProfitLoss(SelectedBar, pos).ToString("F2")
+                        : Math.Round(StatsBuffer.PosProfitLoss(SelectedBar, pos)).ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -180,12 +179,12 @@ namespace Forex_Strategy_Builder
                 }
 
                 // Floating Profit Loss
-                if (pos == _positions - 1 && Backtester.PosTransaction(SelectedBar, pos) != Transaction.Close)
+                if (pos == _positions - 1 && StatsBuffer.PosTransaction(SelectedBar, pos) != Transaction.Close)
                 {
                     // Last bar position only
                     _journalData[row, 8] = Configs.AccountInMoney
-                        ? Backtester.PosMoneyFloatingPL(SelectedBar, pos).ToString("F2")
-                        : Math.Round(Backtester.PosFloatingPL(SelectedBar, pos)).ToString(CultureInfo.InvariantCulture);
+                        ? StatsBuffer.PosMoneyFloatingPL(SelectedBar, pos).ToString("F2")
+                        : Math.Round(StatsBuffer.PosFloatingPL(SelectedBar, pos)).ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -193,7 +192,7 @@ namespace Forex_Strategy_Builder
                 }
 
                 // Icons
-                _positionIcons[row] = Position.PositionIconImage(Backtester.PosIcon(SelectedBar, pos));
+                _positionIcons[row] = Position.PositionIconImage(StatsBuffer.PosIcon(SelectedBar, pos));
             }
         }
 
@@ -202,6 +201,9 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void SetSizes()
         {
+            _positions = Data.IsResult ? StatsBuffer.Positions(SelectedBar) : 0;
+            _rows = ClientSize.Height > 2 * _rowHeight + Border ? (ClientSize.Height - 2 * _rowHeight - Border) / _rowHeight : 0;
+
             if (_positions == 0)
             {
                 _firstPos = 0;
@@ -273,11 +275,8 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
-            base.OnResize(eventargs);
-
-            _rows = ClientSize.Height > 2*_rowHeight + Border ? (ClientSize.Height - 2*_rowHeight - Border)/_rowHeight : 0;
-
             SetUpJournal();
+            base.OnResize(eventargs);
             Invalidate();
         }
 
@@ -343,7 +342,6 @@ namespace Forex_Strategy_Builder
                     g.DrawString(_journalData[row, i], font, brushRowText, hScrll + (_xScaled[i] + _xScaled[i + 1])/2, (row + 2)*_rowHeight, sf);
             }
 
-            //g.DrawLine(penLines, 0, iRowHeight, ClientSize.Width, iRowHeight);
             for (int i = 1; i < _columns; i++)
                 g.DrawLine(penLines, _xScaled[i] + hScrll, 2*_rowHeight, _xScaled[i] + hScrll, ClientSize.Height);
 

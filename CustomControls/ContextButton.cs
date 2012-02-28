@@ -8,7 +8,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.User_interface
+namespace Forex_Strategy_Builder.CustomControls
 {
     public sealed class ContextButton : Panel
     {

@@ -1,14 +1,15 @@
 ﻿// Journal_Positions Class
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.User_interface;
+using Forex_Strategy_Builder.Common;
+using Forex_Strategy_Builder.CustomControls;
 
 namespace Forex_Strategy_Builder
 {
@@ -59,8 +60,8 @@ namespace Forex_Strategy_Builder
             get
             {
                 return ShowTransfers 
-                    ? Backtester.PosCoordinates[_firstPos + _selectedRow].Bar 
-                    : Backtester.PosCoordinates[_posNumbers[_firstPos + _selectedRow]].Bar;
+                    ? StatsBuffer.PosCoordinates[_firstPos + _selectedRow].Bar
+                    : StatsBuffer.PosCoordinates[_posNumbers[_firstPos + _selectedRow]].Bar;
             }
         }
 
@@ -86,19 +87,19 @@ namespace Forex_Strategy_Builder
         {
             if (ShowTransfers)
             {
-                _positions = Backtester.PositionsTotal;
+                _positions = StatsBuffer.PositionsTotal;
             }
             else
             {
-                _posNumbers = Backtester.PositionsTotal > 0 ? new int[Backtester.PositionsTotal] : new int[1];
+                _posNumbers = StatsBuffer.PositionsTotal > 0 ? new int[StatsBuffer.PositionsTotal] : new int[1];
                 _positions = 0;
                 for (int bar = 0; bar < Data.Bars; bar++)
                 {
-                    for (int pos = 0; pos < Backtester.Positions(bar); pos++)
+                    for (int pos = 0; pos < StatsBuffer.Positions(bar); pos++)
                     {
-                        Transaction transaction = Backtester.PosTransaction(bar, pos);
+                        Transaction transaction = StatsBuffer.PosTransaction(bar, pos);
                         if (transaction == Transaction.None || transaction == Transaction.Transfer) continue;
-                        _posNumbers[_positions] = Backtester.PosNumb(bar, pos);
+                        _posNumbers[_positions] = StatsBuffer.PosNumb(bar, pos);
                         _positions++;
                     }
                 }
@@ -284,7 +285,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Updates the journal data from the backtester
+        /// Updates the journal data from the StatsBuffer.
         /// </summary>
         void UpdateJournalData()
         {
@@ -299,8 +300,8 @@ namespace Forex_Strategy_Builder
                     posNumber = _posNumbers[posIndex];
 
                 int row = posIndex - _firstPos;
-                int bar = Backtester.PosCoordinates[posNumber].Bar;
-                Position position = Backtester.PosFromNumb(posNumber);
+                int bar = StatsBuffer.PosCoordinates[posNumber].Bar;
+                Position position = StatsBuffer.PosFromNumb(posNumber);
 
                 string posAmount = Configs.AccountInMoney 
                     ? (position.PosDir == PosDirection.Short ? "-" : "") + (position.PosLots*Data.InstrProperties.LotSize).ToString(CultureInfo.InvariantCulture)
@@ -384,7 +385,7 @@ namespace Forex_Strategy_Builder
                     _journalData[row, p++] = "-";
 
                 // Floating Profit Loss
-                if (position.PosNumb == Backtester.SummaryPosNumb(bar) &&
+                if (position.PosNumb == StatsBuffer.SummaryPosNumb(bar) &&
                     position.Transaction != Transaction.Close)
                     _journalData[row, p++] = floatingPL;  //Last position of the bar only
                 else
@@ -402,7 +403,7 @@ namespace Forex_Strategy_Builder
                     _journalData[row, p++] = position.Equity.ToString("F2");
                 }
 
-                _journalData[row, p] = Language.T(Backtester.BackTestEval(bar));
+                _journalData[row, p] = Language.T(StatsBuffer.BackTestEval(bar));
 
                 // Icons
                 _posIcons[row] = Position.PositionIconImage(position.PositionIcon);
@@ -448,6 +449,7 @@ namespace Forex_Strategy_Builder
                 _hScrollBar.Visible = false;
             }
 
+            UpdateContextButtonLocation();
             SetUpJournal();
             Invalidate();
         }

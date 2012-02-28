@@ -13,27 +13,20 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public Session(int maxPos, int maxOrd)
         {
+            MaxPos = maxPos;
+            MaxOrd = maxOrd;
+            MaxWayPoints = maxOrd + 4;
             Positions = 0;
             Orders = 0;
-            Position = new Position[maxPos];
-            Order = new Order[maxOrd];
+            WayPoints = 0;
+            Position = new Position[MaxPos];
+            Order = new Order[MaxOrd];
+            WayPoint = new WayPoint[MaxWayPoints];
             Position[0] = new Position();
             BacktestEval = BacktestEval.None;
-            WayPoint = new WayPoint[maxOrd + 4];
-            WayPoints = 0;
             IsTopReached = false;
             IsBottomReached = false;
         }
-
-        /// <summary>
-        /// The number of orders
-        /// </summary>
-        public int Orders { get; set; }
-
-        /// <summary>
-        /// The orders during the session
-        /// </summary>
-        public Order[] Order { get; private set; }
 
         /// <summary>
         /// The number of positions
@@ -44,6 +37,16 @@ namespace Forex_Strategy_Builder
         /// The positions during the session
         /// </summary>
         public Position[] Position { get; private set; }
+
+        /// <summary>
+        /// The number of orders
+        /// </summary>
+        public int Orders { get; set; }
+
+        /// <summary>
+        /// The orders during the session
+        /// </summary>
+        public Order[] Order { get; private set; }
 
         /// <summary>
         /// The position at the end of the session
@@ -59,14 +62,14 @@ namespace Forex_Strategy_Builder
         public BacktestEval BacktestEval { get; set; }
 
         /// <summary>
-        /// The price route
-        /// </summary>
-        public WayPoint[] WayPoint { get; private set; }
-
-        /// <summary>
         /// The count of interpolating steps
         /// </summary>
         public int WayPoints { get; private set; }
+
+        /// <summary>
+        /// The price route
+        /// </summary>
+        public WayPoint[] WayPoint { get; private set; }
 
         /// <summary>
         /// Is the top of the bar was reached
@@ -77,6 +80,10 @@ namespace Forex_Strategy_Builder
         /// Is the bottom of the bar was reached
         /// </summary>
         public bool IsBottomReached { get; set; }
+
+        private int MaxPos { get; set; }
+        private int MaxOrd { get; set; }
+        private int MaxWayPoints { get; set; }
 
         /// <summary>
         /// Sets a Way Point
@@ -89,6 +96,28 @@ namespace Forex_Strategy_Builder
                 WayPoint[WayPoints] = new WayPoint(price, type, -1, -1);
 
             WayPoints++;
+        }
+
+        public Session Copy()
+        {
+            var session = new Session(MaxPos, MaxOrd)
+                              {
+                                  Positions = Positions,
+                                  Orders = Orders,
+                                  BacktestEval = BacktestEval,
+                                  WayPoints = WayPoints,
+                                  IsTopReached = IsTopReached,
+                                  IsBottomReached = IsBottomReached
+                              };
+
+            for (int i = 0; i < Positions; i++)
+                session.Position[i] = Position[i].Copy();
+            for (int i = 0; i < Orders; i++)
+                session.Order[i] = Order[i].Copy();
+            for (int i = 0; i < WayPoints; i++)
+                session.WayPoint[i] = WayPoint[i].Copy();
+
+            return session;
         }
     }
 }

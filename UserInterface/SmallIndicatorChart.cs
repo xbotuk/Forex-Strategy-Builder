@@ -231,12 +231,12 @@ namespace Forex_Strategy_Builder
                 _yVolume[index] = (int) (_yPriceBottom - Data.Volume[bar]*_scaleYVol);
 
                 // Draw position lots
-                if (StatsBuffer.IsPosition[bar])
+                if (StatsBuffer.IsPos(bar))
                 {
-                    var posHight = (int) (Math.Max(StatsBuffer.PositionLotsCount[bar]*2, 2));
+                    var posHight = (int) (Math.Max(StatsBuffer.SummaryLots(bar)*2, 2));
                     int yPos = _yPriceBottom - posHight;
 
-                    switch (StatsBuffer.PositionDirection[bar])
+                    switch (StatsBuffer.SummaryDir(bar))
                     {
                         case PosDirection.Long:
                             _rectPosition[index] = new Rectangle(_x[index], yPos, 1, posHight);

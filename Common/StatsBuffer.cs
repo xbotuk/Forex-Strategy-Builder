@@ -4,6 +4,8 @@
 // Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
+using System;
+
 namespace Forex_Strategy_Builder.Common
 {
     /// <summary>
@@ -17,175 +19,342 @@ namespace Forex_Strategy_Builder.Common
         /// </summary>
         public static void UpdateStatsBuffer()
         {
-            UpdateStartegyStats();
-            UpdateAccountStats();
-
-            if (Configs.AdditionalStatistics)
-                UpdateAdditionalAccountStats();
-        }
-
-        private static void UpdateStartegyStats()
-        {
             Strategy = Data.Strategy.Clone();
-        }
+            _session = Backtester.GetAllSessionsCopy();
+            _posCoord = Backtester.GetPosCoordinateCopy();
+            _ordCoord = Backtester.GetOrdCoordinateCopy();
 
-        private static void UpdateAccountStats()
-        {
-            IsPosition = new bool[Data.Bars];
-            PositionLotsCount = new double[Data.Bars];
-            PositionDirection = new PosDirection[Data.Bars];
-
-            Balance = new int[Data.Bars];
-            Equity = new int[Data.Bars];
-            MoneyBalance = new double[Data.Bars];
-            MoneyEquity = new double[Data.Bars];
-
-            ProfitLoss = new int[Data.Bars];
-            MoneyProfitLoss = new double[Data.Bars];
-            FloatingPL = new int[Data.Bars];
-            MoneyFloatingPL = new double[Data.Bars];
-
-            SummaryDir = new PosDirection[Data.Bars];
-            SummaryTrans = new Transaction[Data.Bars];
-            SummaryLots = new double[Data.Bars];
-            SummaryAmount = new int[Data.Bars];
-            SummaryPrice = new double[Data.Bars];
-            SummaryRequiredMargin = new double[Data.Bars];
-            SummaryFreeMargin = new double[Data.Bars];
-            PosIcons = new PositionIcons[Data.Bars];
-            BackTestEval = new string[Data.Bars];
-
-            for (var bar = 0; bar < Data.Bars; bar++)
-            {
-                IsPosition[bar] = Backtester.IsPos(bar);
-                PositionLotsCount[bar] = Backtester.SummaryLots(bar);
-                PositionDirection[bar] = Backtester.SummaryDir(bar);
-
-                Balance[bar] = Backtester.Balance(bar);
-                Equity[bar]  = Backtester.Equity(bar);
-                MoneyBalance[bar] = Backtester.MoneyBalance(bar);
-                MoneyEquity[bar]  = Backtester.MoneyEquity(bar);
-
-                ProfitLoss[bar] = Backtester.ProfitLoss(bar);
-                MoneyProfitLoss[bar] = Backtester.MoneyProfitLoss(bar);
-                FloatingPL[bar] = Backtester.FloatingPL(bar);
-                MoneyFloatingPL[bar] = Backtester.MoneyFloatingPL(bar);
-
-                SummaryDir[bar] = Backtester.SummaryDir(bar);
-                SummaryTrans[bar] = Backtester.SummaryTrans(bar);
-                SummaryLots[bar] = Backtester.SummaryLots(bar);
-                SummaryAmount[bar] = Backtester.SummaryAmount(bar);
-                SummaryPrice[bar] = Backtester.SummaryPrice(bar);
-                SummaryRequiredMargin[bar] = Backtester.SummaryRequiredMargin(bar);
-                SummaryFreeMargin[bar] = Backtester.SummaryFreeMargin(bar);
-                PosIcons[bar] = Backtester.SummaryPositionIcon(bar);
-                BackTestEval[bar] = Backtester.BackTestEval(bar);
-            }
-
-            MarginCallBar = Backtester.MarginCallBar;
-            IsScanPerformed = Backtester.IsScanPerformed;
-            ExecutedOrders = Backtester.ExecutedOrders;
-            NetBalance = Backtester.NetBalance;
-            NetMoneyBalance = Backtester.NetMoneyBalance;
-
-            MaxBalance = Backtester.MaxBalance;
-            MinBalance = Backtester.MinBalance;
-            MaxEquity = Backtester.MaxEquity;
-            MinEquity = Backtester.MinEquity;
-
-            MaxMoneyBalance = Backtester.MaxMoneyBalance;
-            MinMoneyBalance = Backtester.MinMoneyBalance;
-            MaxMoneyEquity = Backtester.MaxMoneyEquity;
-            MinMoneyEquity = Backtester.MinMoneyEquity;
-        }
-
-        private static void UpdateAdditionalAccountStats()
-        {
-            LongBalance = new int[Data.Bars];
-            ShortBalance = new int[Data.Bars];
-            LongMoneyBalance = new double[Data.Bars];
-            ShortMoneyBalance = new double[Data.Bars];
-
-            for (var bar = 0; bar < Data.Bars; bar++)
-            {
-                LongBalance[bar]  = Backtester.LongBalance(bar);
-                ShortBalance[bar] = Backtester.ShortBalance(bar);
-                LongMoneyBalance[bar]  = Backtester.LongMoneyBalance(bar);
-                ShortMoneyBalance[bar] = Backtester.ShortMoneyBalance(bar);
-            }
-
-            MaxLongBalance = Backtester.MaxLongBalance;
-            MinLongBalance = Backtester.MinLongBalance;
-            MaxShortBalance = Backtester.MaxShortBalance;
-            MinShortBalance = Backtester.MinShortBalance;
-
-            MaxLongMoneyBalance = Backtester.MaxLongMoneyBalance;
-            MinLongMoneyBalance = Backtester.MinLongMoneyBalance;
-            MaxShortMoneyBalance = Backtester.MaxShortMoneyBalance;
-            MinShortMoneyBalance = Backtester.MinShortMoneyBalance;
+            PositionsTotal = Backtester.PositionsTotal;
         }
 
         // Calculated strategy data including all indicator parameters and values.
         public static Strategy Strategy { get; private set; }
         public static int FirstBar { get { return Strategy.FirstBar; } }
 
-        // Positions
-        public static bool[] IsPosition { get; private set; }
-        public static double[] PositionLotsCount { get; private set; }
-        public static PosDirection[] PositionDirection { get; private set; }
+        /// <summary>
+        /// Checks whether we have a position. "Closed" is also a position.
+        /// </summary>
+        public static bool IsPos(int bar)
+        {
+            PosDirection dir = _session[bar].Summary.PosDir;
+            return dir == PosDirection.Long 
+                || dir == PosDirection.Short 
+                || dir == PosDirection.Closed;
+        }
 
-        public static int MarginCallBar { get; private set; }
-        public static bool IsScanPerformed { get; private set; }
-        public static int ExecutedOrders { get; private set; }
+        /// <summary>
+        /// Returns the position's Profit Loss in pips.
+        /// </summary>
+        public static int ProfitLoss(int bar)
+        {
+            return (int)Math.Round(_session[bar].Summary.ProfitLoss);
+        }
 
-        public static int[] ProfitLoss { get; private set; }
-        public static double[] MoneyProfitLoss { get; private set; }
-        public static int[] FloatingPL { get; private set; }
-        public static double[] MoneyFloatingPL { get; private set; }
+        /// <summary>
+        /// Returns the bar end Profit Loss in currency.
+        /// </summary>
+        public static double MoneyProfitLoss(int bar)
+        {
+            return _session[bar].Summary.MoneyProfitLoss;
+        }
 
-        // Summary
-        public static PosDirection[] SummaryDir { get; private set; }
-        public static Transaction[] SummaryTrans { get; private set; }
-        public static double[] SummaryLots { get; private set; }
-        public static int[] SummaryAmount { get; private set; }
-        public static double[] SummaryPrice { get; private set; }
-        public static double[] SummaryRequiredMargin { get; private set; }
-        public static double[] SummaryFreeMargin { get; private set; }
-        public static string[] BackTestEval { get; private set; }
-        public static PositionIcons[] PosIcons { get; private set; }
+        /// <summary>
+        /// Returns the Floating Profit Loss at the end of the bar in pips
+        /// </summary>
+        public static int FloatingPL(int bar)
+        {
+            return (int)Math.Round(_session[bar].Summary.FloatingPL);
+        }
 
-        // Balance and equity in points.
-        public static int[] Balance { get; private set; }
-        public static int[] Equity { get; private set; }
-        public static int NetBalance { get; private set; }
-        public static int MaxBalance { get; private set; }
-        public static int MinBalance { get; private set; }
-        public static int MaxEquity { get; private set; }
-        public static int MinEquity { get; private set; }
+        /// <summary>
+        /// Returns the bar end Floating Profit Loss in currency
+        /// </summary>
+        public static double MoneyFloatingPL(int bar)
+        {
+            return _session[bar].Summary.MoneyFloatingPL;
+        }
 
-        // Balance and equity in currency.
-        public static double[] MoneyBalance { get; private set; }
-        public static double[] MoneyEquity { get; private set; }
-        public static double NetMoneyBalance { get; private set; }
-        public static double MaxMoneyBalance { get; private set; }
-        public static double MinMoneyBalance { get; private set; }
-        public static double MaxMoneyEquity { get; private set; }
-        public static double MinMoneyEquity { get; private set; }
+        /// <summary>
+        /// Position lots at the end of the bar.
+        /// </summary>
+        public static double SummaryLots(int bar)
+        {
+            return _session[bar].Summary.PosLots;
+        }
 
-        // Additional stats in points.
-        public static int[] LongBalance { get; private set; }
-        public static int[] ShortBalance { get; private set; }
-        public static int MaxLongBalance { get; private set; }
-        public static int MinLongBalance { get; private set; }
-        public static int MaxShortBalance { get; private set; }
-        public static int MinShortBalance { get; private set; }
+        /// <summary>
+        /// Position direction at the end of the bar
+        /// </summary>
+        public static PosDirection SummaryDir(int bar)
+        {
+            return _session[bar].Summary.PosDir;
+        }
 
-        // Additional stats in currency.
-        public static double[] LongMoneyBalance { get; private set; }
-        public static double[] ShortMoneyBalance { get; private set; }
-        public static double MaxLongMoneyBalance { get; private set; }
-        public static double MinLongMoneyBalance { get; private set; }
-        public static double MaxShortMoneyBalance { get; private set; }
-        public static double MinShortMoneyBalance { get; private set; }
+        /// <summary>
+        /// Position amount at the end of the bar.
+        /// </summary>
+        public static int SummaryAmount(int bar)
+        {
+            return (int)Math.Round(_session[bar].Summary.PosLots * Data.InstrProperties.LotSize);
+        }
+
+        /// <summary>
+        /// The last transaction for the bar.
+        /// </summary>
+        public static Transaction SummaryTrans(int bar)
+        {
+            return _session[bar].Summary.Transaction;
+        }
+
+        /// <summary>
+        /// Position price at the end of the bar.
+        /// </summary>
+        public static double SummaryPrice(int bar)
+        {
+            return _session[bar].Summary.PosPrice;
+        }
+
+        /// <summary>
+        /// Returns the Required Margin at the end of the bar
+        /// </summary>
+        public static double SummaryRequiredMargin(int bar)
+        {
+            return _session[bar].Summary.RequiredMargin;
+        }
+
+        /// <summary>
+        /// Returns the Free Margin at the end of the bar
+        /// </summary>
+        public static double SummaryFreeMargin(int bar)
+        {
+            return _session[bar].Summary.FreeMargin;
+        }
+
+        /// <summary>
+        /// The position's Icon
+        /// </summary>
+        public static PositionIcons SummaryPositionIcon(int bar)
+        {
+            return _session[bar].Summary.PositionIcon;
+        }
+
+        /// <summary>
+        /// Returns the backtest safety evaluation
+        /// </summary>
+        public static string BackTestEval(int bar)
+        {
+            return bar < FirstBar || _session[bar].BacktestEval == BacktestEval.None
+                       ? ""
+                       : _session[bar].BacktestEval.ToString();
+        }
+
+        /// <summary>
+        /// Returns the account balance at the end of the bar in pips
+        /// </summary>
+        public static int Balance(int bar)
+        {
+            return (int)Math.Round(_session[bar].Summary.Balance);
+        }
+
+        /// <summary>
+        /// Returns the equity at the end of the bar in pips
+        /// </summary>
+        public static int Equity(int bar)
+        {
+            return (int)Math.Round(_session[bar].Summary.Equity);
+        }
+
+        /// <summary>
+        /// Returns the account balance in currency
+        /// </summary>
+        public static double MoneyBalance(int bar)
+        {
+            return _session[bar].Summary.MoneyBalance;
+        }
+
+        /// <summary>
+        /// Returns the current bill in currency.
+        /// </summary>
+        public static double MoneyEquity(int bar)
+        {
+            return _session[bar].Summary.MoneyEquity;
+        }
+
+        /// <summary>
+        /// Returns the number of orders for the designated bar
+        /// </summary>
+        public static int Orders(int bar)
+        {
+            return _session[bar].Orders;
+        }
+
+        /// <summary>
+        ///  Bar's way points count.
+        /// </summary>
+        public static int WayPoints(int bar)
+        {
+            return _session[bar].WayPoints;
+        }
+
+        /// <summary>
+        ///  Way point
+        /// </summary>
+        public static WayPoint WayPoint(int bar, int wayPointNumber)
+        {
+            return _session[bar].WayPoint[wayPointNumber];
+        }
+
+        /// <summary>
+        /// Returns the Order Number
+        /// </summary>
+        public static int OrdNumb(int bar, int ord)
+        {
+            return _session[bar].Order[ord].OrdNumb;
+        }
+
+        /// <summary>
+        /// Returns the order with the corresponding number
+        /// </summary>
+        public static Order OrdFromNumb(int ordNumber)
+        {
+            if (ordNumber < 0) ordNumber = 0;
+            return _session[_ordCoord[ordNumber].Bar].Order[_ordCoord[ordNumber].Ord];
+        }
+
+        /// <summary>
+        /// Number of the positions during de session.
+        /// </summary>
+        public static int Positions(int bar)
+        {
+            return _session[bar].Positions;
+        }
+
+        /// <summary>
+        /// The position Profit Loss
+        /// </summary>
+        public static double PosProfitLoss(int bar, int pos)
+        {
+            return _session[bar].Position[pos].ProfitLoss;
+        }
+
+        /// <summary>
+        /// The position Floating P/L
+        /// </summary>
+        public static double PosFloatingPL(int bar, int pos)
+        {
+            return _session[bar].Position[pos].FloatingPL;
+        }
+
+        /// <summary>
+        /// The position Profit Loss in currency
+        /// </summary>
+        public static double PosMoneyProfitLoss(int bar, int pos)
+        {
+            return _session[bar].Position[pos].MoneyProfitLoss;
+        }
+
+        /// <summary>
+        /// The position Floating Profit Loss in currency
+        /// </summary>
+        public static double PosMoneyFloatingPL(int bar, int pos)
+        {
+            return _session[bar].Position[pos].MoneyFloatingPL;
+        }
+
+        /// <summary>
+        /// The position's corrected price
+        /// </summary>
+        public static double PosPrice(int bar, int pos)
+        {
+            return _session[bar].Position[pos].PosPrice;
+        }
+
+        /// <summary>
+        /// The position's Transaction
+        /// </summary>
+        public static Transaction PosTransaction(int bar, int pos)
+        {
+            return _session[bar].Position[pos].Transaction;
+        }
+
+        /// <summary>
+        /// The position forming order number
+        /// </summary>
+        public static int PosOrdNumb(int bar, int pos)
+        {
+            return _session[bar].Position[pos].FormOrdNumb;
+        }
+
+        /// <summary>
+        /// The number of the position
+        /// </summary>
+        public static int PosNumb(int bar, int pos)
+        {
+            return _session[bar].Position[pos].PosNumb;
+        }
+
+        /// <summary>
+        /// Returns the position with the required number
+        /// </summary>
+        public static Position PosFromNumb(int posNumber)
+        {
+            if (posNumber < 0) posNumber = 0;
+            return _session[_posCoord[posNumber].Bar].Position[_posCoord[posNumber].Pos];
+        }
+
+        /// <summary>
+        /// Last Position's number.
+        /// </summary>
+        public static int SummaryPosNumb(int bar)
+        {
+            return _session[bar].Summary.PosNumb;
+        }
+
+        /// <summary>
+        /// The position direction
+        /// </summary>
+        public static PosDirection PosDir(int bar, int pos)
+        {
+            return _session[bar].Position[pos].PosDir;
+        }
+
+        /// <summary>
+        /// The position lots
+        /// </summary>
+        public static double PosLots(int bar, int pos)
+        {
+            return _session[bar].Position[pos].PosLots;
+        }
+
+        /// <summary>
+        /// The position forming order price
+        /// </summary>
+        public static double PosOrdPrice(int bar, int pos)
+        {
+            return _session[bar].Position[pos].FormOrdPrice;
+        }
+
+        /// <summary>
+        /// The position's Icon
+        /// </summary>
+        public static PositionIcons PosIcon(int bar, int pos)
+        {
+            return _session[bar].Position[pos].PositionIcon;
+        }
+
+        /// <summary>
+        /// Gets the position coordinates.
+        /// </summary>
+        public static PositionCoordinates[] PosCoordinates { get { return _posCoord; } }
+
+        /// <summary>
+        /// Gets the total number of the positions.
+        /// </summary>
+        public static int PositionsTotal { get; private set; }
+
+
+        private static Session[] _session;
+        private static OrderCoordinates[] _ordCoord;
+        private static PositionCoordinates[] _posCoord;
     }
 }

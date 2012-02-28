@@ -216,7 +216,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Updates the journal data from the backtester
+        /// Updates the journal data from StatsBuffer
         /// </summary>
         public void UpdateJournalData()
         {
@@ -227,7 +227,7 @@ namespace Forex_Strategy_Builder
             {
                 var row = bar - _firstBar;
                 var col = 0;
-                var isPos = StatsBuffer.IsPosition[bar];
+                var isPos = StatsBuffer.IsPos(bar);
                 var inMoney = Configs.AccountInMoney;
 
                 _journalData[row, col++] = (bar + 1).ToString(CultureInfo.InvariantCulture);
@@ -238,50 +238,49 @@ namespace Forex_Strategy_Builder
                 _journalData[row, col++] = Data.Low[bar].ToString(Data.FF);
                 _journalData[row, col++] = Data.Close[bar].ToString(Data.FF);
                 _journalData[row, col++] = Data.Volume[bar].ToString(CultureInfo.InvariantCulture);
-                _journalData[row, col++] = isPos ? Language.T(StatsBuffer.SummaryTrans[bar].ToString()) : "";
-                _journalData[row, col++] = isPos ? Language.T(StatsBuffer.SummaryDir[bar].ToString()) : "";
+                _journalData[row, col++] = isPos ? Language.T(StatsBuffer.SummaryTrans(bar).ToString()) : "";
+                _journalData[row, col++] = isPos ? Language.T(StatsBuffer.SummaryDir(bar).ToString()) : "";
                 _journalData[row, col++] = isPos ? GetPositionAmmountString(bar) : "";
-                _journalData[row, col++] = isPos ? StatsBuffer.SummaryPrice[bar].ToString(Data.FF) : "";
+                _journalData[row, col++] = isPos ? StatsBuffer.SummaryPrice(bar).ToString(Data.FF) : "";
                 _journalData[row, col++] = isPos ? GetPositionProfitString(bar) : "";
                 _journalData[row, col++] = isPos ? GetPositionFloatingPLString(bar) : "";
-                _journalData[row, col++] = inMoney ? StatsBuffer.MoneyBalance[bar].ToString("F2") : StatsBuffer.Balance[bar].ToString(CultureInfo.InvariantCulture);
-                _journalData[row, col++] = inMoney ? StatsBuffer.MoneyEquity[bar].ToString("F2") : StatsBuffer.Equity[bar].ToString(CultureInfo.InvariantCulture);
-                _journalData[row, col++] = StatsBuffer.SummaryRequiredMargin[bar].ToString("F2");
-                _journalData[row, col++] = StatsBuffer.SummaryFreeMargin[bar].ToString("F2");
-                _journalData[row, col] = Language.T(StatsBuffer.BackTestEval[bar]);
+                _journalData[row, col++] = inMoney ? StatsBuffer.MoneyBalance(bar).ToString("F2") : StatsBuffer.Balance(bar).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, col++] = inMoney ? StatsBuffer.MoneyEquity(bar).ToString("F2") : StatsBuffer.Equity(bar).ToString(CultureInfo.InvariantCulture);
+                _journalData[row, col++] = StatsBuffer.SummaryRequiredMargin(bar).ToString("F2");
+                _journalData[row, col++] = StatsBuffer.SummaryFreeMargin(bar).ToString("F2");
+                _journalData[row, col] = Language.T(StatsBuffer.BackTestEval(bar));
 
-                _positionIcons[row] = isPos ? Position.PositionIconImage(StatsBuffer.PosIcons[bar]) : Properties.Resources.pos_square;
+                _positionIcons[row] = isPos ? Position.PositionIconImage(StatsBuffer.SummaryPositionIcon(bar)) : Properties.Resources.pos_square;
             }
         }
 
         private string GetPositionAmmountString(int bar)
         {
-            var sign = StatsBuffer.SummaryDir[bar] == PosDirection.Short ? "-" : "";
+            var sign = StatsBuffer.SummaryDir(bar) == PosDirection.Short ? "-" : "";
             if (Configs.AccountInMoney)
-                return sign + StatsBuffer.SummaryAmount[bar].ToString(CultureInfo.InvariantCulture);
-            return StatsBuffer.SummaryLots[bar].ToString(CultureInfo.InvariantCulture);
+                return sign + StatsBuffer.SummaryAmount(bar).ToString(CultureInfo.InvariantCulture);
+            return StatsBuffer.SummaryLots(bar).ToString(CultureInfo.InvariantCulture);
         }
 
         private string GetPositionProfitString(int bar)
         {
-            if (StatsBuffer.SummaryTrans[bar] == Transaction.Close ||
-                StatsBuffer.SummaryTrans[bar] == Transaction.Reduce ||
-                StatsBuffer.SummaryTrans[bar] == Transaction.Reverse)
+            Transaction trans = StatsBuffer.SummaryTrans(bar);
+            if (trans == Transaction.Close || trans == Transaction.Reduce || trans == Transaction.Reverse)
             {
                 return Configs.AccountInMoney
-                           ? StatsBuffer.MoneyProfitLoss[bar].ToString("F2")
-                           : StatsBuffer.ProfitLoss[bar].ToString(CultureInfo.InvariantCulture);
+                           ? StatsBuffer.MoneyProfitLoss(bar).ToString("F2")
+                           : StatsBuffer.ProfitLoss(bar).ToString(CultureInfo.InvariantCulture);
             }
             return "-";
         }
 
         private string GetPositionFloatingPLString(int bar)
         {
-            if (StatsBuffer.SummaryTrans[bar] == Transaction.Close)
+            if (StatsBuffer.SummaryTrans(bar) == Transaction.Close)
                 return "-";
             return Configs.AccountInMoney
-                       ? StatsBuffer.MoneyFloatingPL[bar].ToString("F2")
-                       : StatsBuffer.FloatingPL[bar].ToString(CultureInfo.InvariantCulture);
+                       ? StatsBuffer.MoneyFloatingPL(bar).ToString("F2")
+                       : StatsBuffer.FloatingPL(bar).ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>

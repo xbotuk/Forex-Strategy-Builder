@@ -89,6 +89,7 @@
   <ItemGroup>
     <Compile Include="Enumerations\BacktestEval.cs" />
     <Compile Include="Enumerations\InterpolationMethod.cs" />
+    <Compile Include="Enumerations\OrderIcons.cs" />
     <Compile Include="Enumerations\PositionIcons.cs" />
     <Compile Include="Enumerations\StrategyPriceType.cs" />
     <Compile Include="Enumerations\OrderCondition.cs" />
@@ -215,20 +216,20 @@
     <Compile Include="IndicatorCompiler\StrategyToIndicator.cs" />
     <Compile Include="Indicators\Fibonacci.cs" />
     <Compile Include="Instruments\Bar.cs" />
-    <Compile Include="Controls\ContextButton.cs">
+    <Compile Include="CustomControls\ContextButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\ContextPanel.cs">
+    <Compile Include="CustomControls\ContextPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UserInterface\ControlsBase.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\MicroBalanceChartImage.cs" />
-    <Compile Include="Controls\FancyPanel.cs">
+    <Compile Include="CustomControls\FancyPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\InfoPanel.cs">
+    <Compile Include="CustomControls\InfoPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Utils\SortableDictionary.cs" />
@@ -304,7 +305,7 @@
     </Compile>
     <Compile Include="Indicators\Top Bottom Price.cs" />
     <Compile Include="Indicators\Week Closing.cs" />
-    <Compile Include="Controls\FancyMessageBox.cs">
+    <Compile Include="CustomControls\FancyMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Utils\FormState.cs" />
@@ -409,7 +410,7 @@
     </Compile>
     <Compile Include="Backtester\Order.cs" />
     <Compile Include="Backtester\Position.cs" />
-    <Compile Include="Controls\NUD.cs">
+    <Compile Include="CustomControls\NUD.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UserInterface\SmallIndicatorChart.cs">
@@ -436,7 +437,7 @@
     <Compile Include="UserInterface\SmallBalanceChart.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\Browser.cs">
+    <Compile Include="CustomControls\Browser.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Common\Data.cs" />

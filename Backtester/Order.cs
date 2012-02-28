@@ -96,24 +96,50 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Gets the order's icon.
         /// </summary>
-        public Image OrderIcon
+        public OrderIcons OrderIcon
         {
             get
             {
-                Image img = Properties.Resources.warning;
+                var icon = OrderIcons.BuyCancel;
 
                 switch (OrdStatus)
                 {
                     case OrderStatus.Executed:
-                        img = OrdDir == OrderDirection.Buy ? Properties.Resources.ord_buy : Properties.Resources.ord_sell;
+                        icon = OrdDir == OrderDirection.Buy ? OrderIcons.Buy : OrderIcons.Sell;
                         break;
                     case OrderStatus.Cancelled:
-                        img = OrdDir == OrderDirection.Buy ? Properties.Resources.ord_buy_cancel : Properties.Resources.ord_sell_cancel;
+                        icon = OrdDir == OrderDirection.Buy ? OrderIcons.BuyCancel : OrderIcons.SellCancel;
                         break;
                 }
 
-                return img;
+                return icon;
             }
+        }
+
+        /// <summary>
+        /// Gets the order's icon
+        /// </summary>
+        public static Image OrderIconImage(OrderIcons icon)
+        {
+            Image img = Properties.Resources.pos_square;
+
+            switch (icon)
+            {
+                case OrderIcons.Buy:
+                    img = Properties.Resources.ord_buy;
+                    break;
+                case OrderIcons.Sell:
+                    img = Properties.Resources.ord_sell;
+                    break;
+                case OrderIcons.BuyCancel:
+                    img = Properties.Resources.ord_buy_cancel;
+                    break;
+                case OrderIcons.SellCancel:
+                    img = Properties.Resources.ord_sell_cancel;
+                    break;
+            }
+
+            return img;
         }
 
         /// <summary>

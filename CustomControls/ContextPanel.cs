@@ -8,7 +8,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.User_interface
+namespace Forex_Strategy_Builder.CustomControls
 {
     public class ContextPanel : Panel
     {
@@ -68,6 +68,11 @@ namespace Forex_Strategy_Builder.User_interface
         protected override void OnResize(EventArgs eventargs)
         {
             base.OnResize(eventargs);
+            UpdateContextButtonLocation();
+        }
+
+        protected void UpdateContextButtonLocation()
+        {
             _contextButton.Location = new Point(Width - _contextButton.Width - 2, 0);
         }
 

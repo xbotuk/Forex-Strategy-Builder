@@ -5,7 +5,6 @@
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
-using System.Drawing;
 
 namespace Forex_Strategy_Builder
 {
@@ -104,16 +103,14 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public static bool IsPos(int bar)
         {
-            bool isPosition =
-                _session[bar].Summary.PosDir == PosDirection.Long  ||
-                _session[bar].Summary.PosDir == PosDirection.Short ||
-                _session[bar].Summary.PosDir == PosDirection.Closed;
-
-            return isPosition;
+            PosDirection dir = _session[bar].Summary.PosDir;
+            return dir == PosDirection.Long
+                || dir == PosDirection.Short
+                || dir == PosDirection.Closed;
         }
 
         /// <summary>
-        /// Checks whether we have got a position.
+        /// Checks whether we have a position.
         /// </summary>
         private static bool IsOpenPos(int bar)
         {
@@ -481,12 +478,9 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public static string BackTestEval(int bar)
         {
-            string eval = _session[bar].BacktestEval.ToString();
-
-            if (bar < FirstBar || _session[bar].BacktestEval == BacktestEval.None)
-                eval = "";
-
-            return eval;
+            return bar < FirstBar || _session[bar].BacktestEval == BacktestEval.None
+                       ? ""
+                       : _session[bar].BacktestEval.ToString();
         }
 
         /// <summary>
@@ -542,6 +536,39 @@ namespace Forex_Strategy_Builder
         public static int WayPoints(int bar)
         {
             return _session[bar].WayPoints;
+        }
+
+        /// <summary>
+        /// Copies all sessions.
+        /// </summary>
+        public static Session[] GetAllSessionsCopy()
+        {
+            var sessions = new Session[Bars];
+            for (int bar = 0; bar < Bars; bar++)
+                sessions[bar] = _session[bar].Copy();
+            return sessions;
+        }
+
+        /// <summary>
+        /// Copies Position Coordinates.
+        /// </summary>
+        public static PositionCoordinates[] GetPosCoordinateCopy()
+        {
+            var posCoposinates = new PositionCoordinates[_posCoord.Length];
+            for (int i = 0; i < _posCoord.Length; i++)
+                posCoposinates[i] = _posCoord[i];
+            return posCoposinates;
+        }
+
+        /// <summary>
+        /// Copies Order Coordinates.
+        /// </summary>
+        public static OrderCoordinates[] GetOrdCoordinateCopy()
+        {
+            var ordCoordinates = new OrderCoordinates[_ordCoord.Length];
+            for (int i = 0; i < _ordCoord.Length; i++)
+                ordCoordinates[i] = _ordCoord[i];
+            return ordCoordinates;
         }
     }
 }
