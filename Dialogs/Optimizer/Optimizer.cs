@@ -1,7 +1,7 @@
 // Strategy Optimizer
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
@@ -15,101 +15,42 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
     /// <summary>
     /// The Optimizer
     /// </summary>
-    public partial class Optimizer : Form
+    public sealed partial class Optimizer : Form
     {
-        ToolStrip tsOptimizerButtons;
-        ToolStripButton[] aOptimizerButtons;
-
-        Panel               pnlParamsBase;
-        Panel               pnlCaptions;
-        Panel               pnlParamsBase2;
-        Panel               pnlParams;
-        FancyPanel         pnlLimitations;
-        FancyPanel         pnlSettings;
-
-        CheckBox[]          achbxParameterName;
-        Label []            alblParameterValue;
-        NumericUpDown []    anudParameterMin;
-        NumericUpDown []    anudParameterMax;
-        NumericUpDown []    anudParameterStep;
-        SmallBalanceChart smallBalanceChart;
-        Label []            alblIndicatorName;
-        Label               lblNoParams;
-        ProgressBar         progressBar;
-        Button              btnOptimize;
-        Button              btnAccept;
-        Button              btnCancel;
-        Parameter[]         aParameter;
-        ToolTip             toolTip = new ToolTip();
-        Random              random  = new Random();
-        VScrollBar          scrollBar;
-        BackgroundWorker    bgWorker;
-        bool                isStartegyChanged = false;
-
-        CheckBox      chbAmbiguousBars;
-        NumericUpDown nudAmbiguousBars;
-        CheckBox      chbMaxDrawdown;
-        NumericUpDown nudMaxDrawdown;
-        CheckBox      chbMinTrades;
-        NumericUpDown nudMinTrades;
-        CheckBox      chbMaxTrades;
-        NumericUpDown nudMaxTrades;
-        CheckBox      chbWinLossRatio;
-        NumericUpDown nudWinLossRatio;
-        CheckBox      chbEquityPercent;
-        NumericUpDown nudEquityPercent;
-        CheckBox      chbOOSPatternFilter;
-        NumericUpDown nudOOSPatternPercent;
-        CheckBox      chbSmoothBalanceLines;
-        NumericUpDown nudSmoothBalancePercent;
-        NumericUpDown nudSmoothBalanceCheckPoints;
-        CheckBox      chbOptimizerWritesReport;
-
-        CheckBox chbHideFSB;
-        Button btnReset;
-
-        int   parameters;   // Count of the NumericParameters
-        int   protections;  // Count of permanent protections
-        bool  isOptimizing = false; // It is true when the optimizer is running
-
-        int   checkedParams;   // Count of the checked parameters
-        int[] aiChecked;       // An array of the checked parameters
-        int   cycles;          // Count of the cycles
-        int   computedCycles;  // Currently completed cycles
-        int   progressPercent; // Reached progress in %
-
-        // Out of Sample
-        int  barOOS = Data.Bars - 1;
-        bool isOOS  = false;
-        CheckBox      chbOutOfSample;
-        NumericUpDown nudOutOfSample;
-
-        Font fontIndicator;
-        Font fontParamValueBold;
-        Font fontParamValueRegular;
-        Color colorText;
-
-        int border = 2;
-        StringBuilder sbReport;
-
-        Form formFSB;
-        public Form SetParrentForm { set { formFSB = value; } }
-
-        bool isReset = false;
-        const int OptionsVersion = 1;
-        private int formHeight;
+        private const int Border = 2;
+        private const int OptionsVersion = 1;
+        private readonly Random _rand = new Random();
+        private readonly ToolTip _toolTip = new ToolTip();
+        private int[] _aiChecked; // An array of the checked parameters
+        private int _barOOS = Data.Bars - 1;
+        private int _checkedParams; // Count of the checked parameters
+        private Color _colorText;
+        private int _computedCycles; // Currently completed cycles
+        private int _cycles; // Count of the cycles
+        private Font _fontIndicator;
+        private Font _fontParamValueBold;
+        private Font _fontParamValueRegular;
+        private int _formHeight;
+        private bool _isOOS;
+        private bool _isOptimizing; // It is true when the optimizer is running
+        private bool _isReset;
+        private bool _isStartegyChanged;
+        private int _parameters; // Count of the NumericParameters
+        private int _progressPercent; // Reached progress in %
+        private int _protections; // Count of permanent protections
+        private StringBuilder _sbReport;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public Optimizer()
         {
-            Icon         = Data.Icon;
-            BackColor    = LayoutColors.ColorFormBack;
-            AcceptButton = btnAccept;
-            CancelButton = btnCancel;
-            Text         = Language.T("Optimizer");
-            FormClosing += new FormClosingEventHandler(Optimizer_FormClosing);
+            Icon = Data.Icon;
+            BackColor = LayoutColors.ColorFormBack;
+            AcceptButton = BtnAccept;
+            CancelButton = BtnCancel;
+            Text = Language.T("Optimizer");
+            FormClosing += OptimizerFormClosing;
 
             InitializeControls();
             SetupButtons();
@@ -117,9 +58,65 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             SetPanelSettings();
             LoadOptions();
 
-            chbHideFSB.CheckedChanged += new EventHandler(HideFSB_Click);
+            ChbHideFSB.CheckedChanged += HideFSBClick;
+        }
 
-            return;
+        private ToolStrip TsOptimizerButtons { get; set; }
+        private ToolStripButton[] AOptimizerButtons { get; set; }
+
+        private Panel PnlParamsBase { get; set; }
+        private Panel PnlCaptions { get; set; }
+        private Panel PnlParamsBase2 { get; set; }
+        private Panel PnlParams { get; set; }
+        private FancyPanel PnlLimitations { get; set; }
+        private FancyPanel PnlSettings { get; set; }
+
+        private CheckBox[] AchbxParameterName { get; set; }
+        private Label[] AlblParameterValue { get; set; }
+        private NumericUpDown[] AnudParameterMin { get; set; }
+        private NumericUpDown[] AnudParameterMax { get; set; }
+        private NumericUpDown[] AnudParameterStep { get; set; }
+        private SmallBalanceChart SmallBalanceChart { get; set; }
+        private Label[] AlblIndicatorName { get; set; }
+        private Label LblNoParams { get; set; }
+        private ProgressBar ProgressBar { get; set; }
+        private Button BtnOptimize { get; set; }
+        private Button BtnAccept { get; set; }
+        private Button BtnCancel { get; set; }
+        private Parameter[] AParameter { get; set; }
+        private VScrollBar ScrollBar { get; set; }
+        private BackgroundWorker BgWorker { get; set; }
+
+        private CheckBox ChbAmbiguousBars { get; set; }
+        private NumericUpDown NUDAmbiguousBars { get; set; }
+        private CheckBox ChbMaxDrawdown { get; set; }
+        private NumericUpDown NUDMaxDrawdown { get; set; }
+        private CheckBox ChbMinTrades { get; set; }
+        private NumericUpDown NUDMinTrades { get; set; }
+        private CheckBox ChbMaxTrades { get; set; }
+        private NumericUpDown NUDMaxTrades { get; set; }
+        private CheckBox ChbWinLossRatio { get; set; }
+        private NumericUpDown NUDWinLossRatio { get; set; }
+        private CheckBox ChbEquityPercent { get; set; }
+        private NumericUpDown NUDEquityPercent { get; set; }
+        private CheckBox ChbOOSPatternFilter { get; set; }
+        private NumericUpDown NUDOOSPatternPercent { get; set; }
+        private CheckBox ChbSmoothBalanceLines { get; set; }
+        private NumericUpDown NUDSmoothBalancePercent { get; set; }
+        private NumericUpDown NUDSmoothBalanceCheckPoints { get; set; }
+        private CheckBox ChbOptimizerWritesReport { get; set; }
+
+        private CheckBox ChbHideFSB { get; set; }
+        private Button BtnResetSettings { get; set; }
+
+        private CheckBox ChbOutOfSample { get; set; }
+        private NumericUpDown NUDOutOfSample { get; set; }
+
+        private Form FormFSB { get; set; }
+
+        public Form SetParrentForm
+        {
+            set { FormFSB = value; }
         }
 
         /// <summary>
@@ -128,16 +125,14 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            formFSB.Visible = !chbHideFSB.Checked;
+            FormFSB.Visible = !ChbHideFSB.Checked;
 
             SetIndicatorParams();
             SelectRandomParameters();
 
-            Width  = 495;
-            Height = Math.Max(formHeight, 570);
+            Width = 495;
+            Height = Math.Max(_formHeight, 570);
             MinimumSize = new Size(495, 570);
-
-            return;
         }
 
         /// <summary>
@@ -147,159 +142,167 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             base.OnResize(e);
 
-            int buttonHeight = (int)(Data.VerticalDLU * 15.5);
-            int btnVertSpace = (int)(Data.VerticalDLU * 5.5);
-            int btnHrzSpace  = (int)(Data.HorizontalDLU * 3);
-            int buttonWidth  = (ClientSize.Width - 4 * btnHrzSpace) / 3;
-            int space        = btnHrzSpace;
+            var buttonHeight = (int) (Data.VerticalDLU*15.5);
+            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            int buttonWidth = (ClientSize.Width - 4*btnHrzSpace)/3;
+            int space = btnHrzSpace;
 
             // Button Cancel
-            btnCancel.Size     = new Size(buttonWidth, buttonHeight);
-            btnCancel.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
+            BtnCancel.Size = new Size(buttonWidth, buttonHeight);
+            BtnCancel.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
+                                           ClientSize.Height - buttonHeight - btnVertSpace);
 
             // Button Accept
-            btnAccept.Size     = new Size(buttonWidth, buttonHeight);
-            btnAccept.Location = new Point(btnCancel.Left - buttonWidth - btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
+            BtnAccept.Size = new Size(buttonWidth, buttonHeight);
+            BtnAccept.Location = new Point(BtnCancel.Left - buttonWidth - btnHrzSpace,
+                                           ClientSize.Height - buttonHeight - btnVertSpace);
 
             // Button Optimize
-            btnOptimize.Size     = new Size(buttonWidth, buttonHeight);
-            btnOptimize.Location = new Point(btnAccept.Left - buttonWidth - btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
+            BtnOptimize.Size = new Size(buttonWidth, buttonHeight);
+            BtnOptimize.Location = new Point(BtnAccept.Left - buttonWidth - btnHrzSpace,
+                                             ClientSize.Height - buttonHeight - btnVertSpace);
 
             // ProgressBar
-            progressBar.Size     = new Size(ClientSize.Width - 2 * space, (int)(Data.VerticalDLU * 9));
-            progressBar.Location = new Point(space, btnCancel.Top - progressBar.Height - btnVertSpace);
+            ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
+            ProgressBar.Location = new Point(space, BtnCancel.Top - ProgressBar.Height - btnVertSpace);
 
             // Panel Preview
-            smallBalanceChart.Size     = new Size(ClientSize.Width - 2 * space, 200);
-            smallBalanceChart.Location = new Point(space, progressBar.Top - space - smallBalanceChart.Height);
+            SmallBalanceChart.Size = new Size(ClientSize.Width - 2*space, 200);
+            SmallBalanceChart.Location = new Point(space, ProgressBar.Top - space - SmallBalanceChart.Height);
 
-            // Panel Params Base
-            pnlParamsBase.Size     = new Size(ClientSize.Width - 2 * space, smallBalanceChart.Top - 2 * space - tsOptimizerButtons.Bottom);
-            pnlParamsBase.Location = new Point(space, tsOptimizerButtons.Bottom + space);
+            // Panel Parameters Base
+            PnlParamsBase.Size = new Size(ClientSize.Width - 2*space,
+                                          SmallBalanceChart.Top - 2*space - TsOptimizerButtons.Bottom);
+            PnlParamsBase.Location = new Point(space, TsOptimizerButtons.Bottom + space);
 
-            // Panel Params Base 2
-            pnlParamsBase2.Size = new Size(pnlParamsBase.Width - 2 * border, pnlParamsBase.Height - pnlCaptions.Height - border);
-            pnlParamsBase2.Location = new Point(border, pnlCaptions.Height);
+            // Panel Parameters Base 2
+            PnlParamsBase2.Size = new Size(PnlParamsBase.Width - 2*Border,
+                                           PnlParamsBase.Height - PnlCaptions.Height - Border);
+            PnlParamsBase2.Location = new Point(Border, PnlCaptions.Height);
 
-            // Panel Params
-            pnlParams.Width = pnlParamsBase2.ClientSize.Width - scrollBar.Width;
+            // Panel Parameters
+            PnlParams.Width = PnlParamsBase2.ClientSize.Width - ScrollBar.Width;
 
-            // No params
-            lblNoParams.Location = new Point(5, 5);
+            // No Parameters
+            LblNoParams.Location = new Point(5, 5);
 
             // Panel Limitations
-            pnlLimitations.Size     = pnlParamsBase.Size;
-            pnlLimitations.Location = pnlParamsBase.Location;
+            PnlLimitations.Size = PnlParamsBase.Size;
+            PnlLimitations.Location = PnlParamsBase.Location;
 
-            int nudWidth = 55;
+            const int nudWidth = 55;
 
             // chbAmbiguousBars
-            chbAmbiguousBars.Location = new Point(border + 5, 27);
+            ChbAmbiguousBars.Location = new Point(Border + 5, 27);
 
             // nudAmbiguousBars
-            nudAmbiguousBars.Width    = nudWidth;
-            nudAmbiguousBars.Location = new Point(pnlLimitations.ClientSize.Width - nudWidth - border - 5, chbAmbiguousBars.Top - 1);
+            NUDAmbiguousBars.Width = nudWidth;
+            NUDAmbiguousBars.Location = new Point(PnlLimitations.ClientSize.Width - nudWidth - Border - 5,
+                                                  ChbAmbiguousBars.Top - 1);
 
             // MaxDrawdown
-            chbMaxDrawdown.Location = new Point(border + 5, chbAmbiguousBars.Bottom + border + 4);
-            nudMaxDrawdown.Width    = nudWidth;
-            nudMaxDrawdown.Location = new Point(nudAmbiguousBars.Left , chbMaxDrawdown.Top - 1);
+            ChbMaxDrawdown.Location = new Point(Border + 5, ChbAmbiguousBars.Bottom + Border + 4);
+            NUDMaxDrawdown.Width = nudWidth;
+            NUDMaxDrawdown.Location = new Point(NUDAmbiguousBars.Left, ChbMaxDrawdown.Top - 1);
 
             // MaxDrawdown %
-            chbEquityPercent.Location = new Point(border + 5, nudMaxDrawdown.Bottom + border + 4);
-            nudEquityPercent.Width    = nudWidth;
-            nudEquityPercent.Location = new Point(nudAmbiguousBars.Left, chbEquityPercent.Top - 1);
+            ChbEquityPercent.Location = new Point(Border + 5, NUDMaxDrawdown.Bottom + Border + 4);
+            NUDEquityPercent.Width = nudWidth;
+            NUDEquityPercent.Location = new Point(NUDAmbiguousBars.Left, ChbEquityPercent.Top - 1);
 
             // MinTrades
-            chbMinTrades.Location = new Point(border + 5, chbEquityPercent.Bottom + border + 4);
-            nudMinTrades.Width    = nudWidth;
-            nudMinTrades.Location = new Point(nudAmbiguousBars.Left, chbMinTrades.Top - 1);
+            ChbMinTrades.Location = new Point(Border + 5, ChbEquityPercent.Bottom + Border + 4);
+            NUDMinTrades.Width = nudWidth;
+            NUDMinTrades.Location = new Point(NUDAmbiguousBars.Left, ChbMinTrades.Top - 1);
 
             // MaxTrades
-            chbMaxTrades.Location = new Point(border + 5, chbMinTrades.Bottom + border + 4);
-            nudMaxTrades.Width    = nudWidth;
-            nudMaxTrades.Location = new Point(nudAmbiguousBars.Left, chbMaxTrades.Top - 1);
+            ChbMaxTrades.Location = new Point(Border + 5, ChbMinTrades.Bottom + Border + 4);
+            NUDMaxTrades.Width = nudWidth;
+            NUDMaxTrades.Location = new Point(NUDAmbiguousBars.Left, ChbMaxTrades.Top - 1);
 
             // WinLossRatios
-            chbWinLossRatio.Location = new Point(border + 5, chbMaxTrades.Bottom + border + 4);
-            nudWinLossRatio.Width    = nudWidth;
-            nudWinLossRatio.Location = new Point(nudAmbiguousBars.Left, chbWinLossRatio.Top - 1);
+            ChbWinLossRatio.Location = new Point(Border + 5, ChbMaxTrades.Bottom + Border + 4);
+            NUDWinLossRatio.Width = nudWidth;
+            NUDWinLossRatio.Location = new Point(NUDAmbiguousBars.Left, ChbWinLossRatio.Top - 1);
 
             // OOS Pattern Filter
-            chbOOSPatternFilter.Location = new Point(border + 5, chbWinLossRatio.Bottom + border + 4);
-            nudOOSPatternPercent.Width    = nudWidth;
-            nudOOSPatternPercent.Location = new Point(nudAmbiguousBars.Left, chbOOSPatternFilter.Top - 1);
+            ChbOOSPatternFilter.Location = new Point(Border + 5, ChbWinLossRatio.Bottom + Border + 4);
+            NUDOOSPatternPercent.Width = nudWidth;
+            NUDOOSPatternPercent.Location = new Point(NUDAmbiguousBars.Left, ChbOOSPatternFilter.Top - 1);
 
             // Balance lines pattern
-            chbSmoothBalanceLines.Location       = new Point(border + 5, chbOOSPatternFilter.Bottom + border + 4);
-            nudSmoothBalancePercent.Width        = nudWidth;
-            nudSmoothBalancePercent.Location     = new Point(nudAmbiguousBars.Left, chbSmoothBalanceLines.Top - 1);
-            nudSmoothBalanceCheckPoints.Width    = nudWidth;
-            nudSmoothBalanceCheckPoints.Location = new Point(nudSmoothBalancePercent.Left - nudWidth - border, chbSmoothBalanceLines.Top - 1);
+            ChbSmoothBalanceLines.Location = new Point(Border + 5, ChbOOSPatternFilter.Bottom + Border + 4);
+            NUDSmoothBalancePercent.Width = nudWidth;
+            NUDSmoothBalancePercent.Location = new Point(NUDAmbiguousBars.Left, ChbSmoothBalanceLines.Top - 1);
+            NUDSmoothBalanceCheckPoints.Width = nudWidth;
+            NUDSmoothBalanceCheckPoints.Location = new Point(NUDSmoothBalancePercent.Left - nudWidth - Border,
+                                                             ChbSmoothBalanceLines.Top - 1);
 
             // Panel Settings
-            pnlSettings.Size     = pnlParamsBase.Size;
-            pnlSettings.Location = pnlParamsBase.Location;
+            PnlSettings.Size = PnlParamsBase.Size;
+            PnlSettings.Location = PnlParamsBase.Location;
 
             // Out Of Sample
-            chbOutOfSample.Location = new Point(border + 5, 27);
-            nudOutOfSample.Width    = nudWidth;
-            nudOutOfSample.Location = new Point(pnlSettings.ClientSize.Width - nudWidth - border - 5, chbOutOfSample.Top - 1);
+            ChbOutOfSample.Location = new Point(Border + 5, 27);
+            NUDOutOfSample.Width = nudWidth;
+            NUDOutOfSample.Location = new Point(PnlSettings.ClientSize.Width - nudWidth - Border - 5,
+                                                ChbOutOfSample.Top - 1);
 
             // chbOptimizerWritesReport
-            chbOptimizerWritesReport.Location = new Point(border + 5, chbOutOfSample.Bottom + border + 4);
+            ChbOptimizerWritesReport.Location = new Point(Border + 5, ChbOutOfSample.Bottom + Border + 4);
 
             // Hide FSB when generator starts
-            chbHideFSB.Location = new Point(border + 5, chbOptimizerWritesReport.Bottom + border + 4);
+            ChbHideFSB.Location = new Point(Border + 5, ChbOptimizerWritesReport.Bottom + Border + 4);
 
             // Button Reset
-            btnReset.Width = pnlSettings.ClientSize.Width - 2 * (border + 5);
-            btnReset.Location = new Point(border + 5, pnlSettings.Height - btnReset.Height - border - 2);
+            BtnResetSettings.Width = PnlSettings.ClientSize.Width - 2*(Border + 5);
+            BtnResetSettings.Location = new Point(Border + 5, PnlSettings.Height - BtnResetSettings.Height - Border - 2);
 
             // pnlCaptions
-            pnlCaptions.Height = 20;
-            pnlCaptions.Invalidate();
-
-            return;
+            PnlCaptions.Height = 20;
+            PnlCaptions.Invalidate();
         }
 
         /// <summary>
         /// Check whether the strategy have been changed.
         /// </summary>
-        void Optimizer_FormClosing(object sender, FormClosingEventArgs e)
+        private void OptimizerFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!isReset)
+            if (!_isReset)
                 SaveOptions();
 
-            if (isOptimizing)
-            {   // Cancel the asynchronous operation.
-                bgWorker.CancelAsync();
+            if (_isOptimizing)
+            {
+                // Cancel the asynchronous operation.
+                BgWorker.CancelAsync();
                 e.Cancel = true;
             }
-            else if (DialogResult == DialogResult.Cancel && isStartegyChanged)
+            else if (DialogResult == DialogResult.Cancel && _isStartegyChanged)
             {
                 DialogResult dr = MessageBox.Show(Language.T("Do you want to accept changes to the strategy?"),
-                    Language.T("Optimizer"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                                  Language.T("Optimizer"), MessageBoxButtons.YesNoCancel,
+                                                  MessageBoxIcon.Question);
 
-                if (dr == DialogResult.Cancel)
+                switch (dr)
                 {
-                    e.Cancel = true;
-                }
-                else if (dr == DialogResult.Yes)
-                {
-                    DialogResult = DialogResult.OK;
-                }
-                else if (dr == DialogResult.No)
-                {
-                    DialogResult = DialogResult.Cancel;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                    case DialogResult.Yes:
+                        DialogResult = DialogResult.OK;
+                        break;
+                    case DialogResult.No:
+                        DialogResult = DialogResult.Cancel;
+                        break;
                 }
             }
-            else if (DialogResult == DialogResult.OK && !isStartegyChanged)
+            else if (DialogResult == DialogResult.OK && !_isStartegyChanged)
             {
                 DialogResult = DialogResult.Cancel;
             }
 
-            formFSB.Visible = true;
+            FormFSB.Visible = true;
         }
-   }
+    }
 }
