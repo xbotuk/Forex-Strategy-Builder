@@ -229,9 +229,7 @@
     <Compile Include="CustomControls\FancyPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CustomControls\InfoPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="CustomControls\InfoPanel.cs" />
     <Compile Include="Utils\SortableDictionary.cs" />
     <Compile Include="Strategy\StrategyXML.cs" />
     <Compile Include="Dialogs\Command Console.cs">
@@ -521,6 +519,7 @@
     <Content Include="Images\histogram_chart.png" />
     <Content Include="Images\histogram_chart2.png" />
     <Content Include="Images\ind_chart.png" />
+    <Content Include="Images\info_panel.png" />
     <Content Include="Images\metatrader4.png" />
     <Content Include="Images\pushpin-detach.png" />
     <Content Include="Images\refresh.png" />

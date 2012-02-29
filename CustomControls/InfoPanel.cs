@@ -1,4 +1,4 @@
-﻿// Info_Panel Class
+﻿// InfoPanel Class
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
 // Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
@@ -7,10 +7,11 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.CustomControls;
 
 namespace Forex_Strategy_Builder
 {
-    public class InfoPanel : Panel
+    public class InfoPanel : ContextPanel
     {
         private const int Border = 2;
         private const float PaddingParamData = 4;
@@ -215,10 +216,9 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
-            base.OnResize(eventargs);
-
             CalculateScrollBarStatus();
             CalculateTabs();
+            base.OnResize(eventargs);
             Invalidate();
         }
 

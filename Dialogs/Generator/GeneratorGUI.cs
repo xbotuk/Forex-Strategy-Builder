@@ -165,11 +165,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             PnlTop10.Parent = this;
             PnlIndicators.Parent = this;
 
-            // smallBalanceChart
+            // Small Balance Chart
             BalanceChart.Parent = this;
             BalanceChart.BackColor = LayoutColors.ColorControlBack;
             BalanceChart.Visible = true;
             BalanceChart.Cursor = Cursors.Hand;
+            BalanceChart.IsContextButtonVisible = true;
+            BalanceChart.PopUpContextMenu.Items.AddRange(GetBalanceChartContextMenuItems());
             BalanceChart.Click += AccountAutputClick;
             BalanceChart.DoubleClick += AccountAutputClick;
             _toolTip.SetToolTip(BalanceChart, Language.T("Show account statistics."));
@@ -179,6 +181,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             InfpnlAccountStatistics.Parent = this;
             InfpnlAccountStatistics.Visible = false;
             InfpnlAccountStatistics.Cursor = Cursors.Hand;
+            InfpnlAccountStatistics.IsContextButtonVisible = true;
+            InfpnlAccountStatistics.PopUpContextMenu.Items.AddRange(GetInfoPanelContextMenuItems());
             InfpnlAccountStatistics.Click += AccountAutputClick;
             InfpnlAccountStatistics.DoubleClick += AccountAutputClick;
             _toolTip.SetToolTip(InfpnlAccountStatistics, Language.T("Show account chart."));
@@ -1141,6 +1145,40 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             {
                 LblCalcStrNumb.Text = text;
             }
+        }
+
+        private ToolStripItem[] GetBalanceChartContextMenuItems()
+        {
+            var mi1 = new ToolStripMenuItem
+            {
+                Image = Resources.info_panel,
+                Text = Language.T("Account Statistics")
+            };
+            mi1.Click += AccountAutputClick;
+
+            var itemCollection = new ToolStripItem[]
+            {
+                mi1
+            };
+
+            return itemCollection;
+        }
+
+        private ToolStripItem[] GetInfoPanelContextMenuItems()
+        {
+            var mi1 = new ToolStripMenuItem
+            {
+                Image = Resources.chart_balance_equity,
+                Text = Language.T("Account Chart")
+            };
+            mi1.Click += AccountAutputClick;
+
+            var itemCollection = new ToolStripItem[]
+            {
+                mi1
+            };
+
+            return itemCollection;
         }
 
         /// <summary>

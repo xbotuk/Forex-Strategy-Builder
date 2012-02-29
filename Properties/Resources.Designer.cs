@@ -577,6 +577,13 @@ namespace Forex_Strategy_Builder.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap info_panel {
+            get {
+                object obj = ResourceManager.GetObject("info_panel", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap information {
             get {
                 object obj = ResourceManager.GetObject("information", resourceCulture);
