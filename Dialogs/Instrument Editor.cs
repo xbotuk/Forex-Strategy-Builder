@@ -17,9 +17,9 @@ namespace Forex_Strategy_Builder
     /// </summary>
     public class Instrument_Editor : Form
     {
-        Fancy_Panel pnlInstruments;
-        Fancy_Panel pnlProperties;
-        Fancy_Panel pnlAddInstrument;
+        FancyPanel pnlInstruments;
+        FancyPanel pnlProperties;
+        FancyPanel pnlAddInstrument;
 
         // Instruments' controls
         ListBox lbxInstruments;
@@ -88,7 +88,7 @@ namespace Forex_Strategy_Builder
         Color colorText;
         bool  bNeedReset;
 
-        Instrument_Properties instrPropSelectedInstrument;
+        InstrumentProperties instrPropSelectedInstrument;
 
         /// <summary>
         /// If a reset is necessary.
@@ -100,9 +100,9 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public Instrument_Editor()
         {
-            pnlInstruments   = new Fancy_Panel(Language.T("Instruments"));
-            pnlProperties    = new Fancy_Panel(Language.T("Instrument Properties"));
-            pnlAddInstrument = new Fancy_Panel(Language.T("Add an Instrument"));
+            pnlInstruments   = new FancyPanel(Language.T("Instruments"));
+            pnlProperties    = new FancyPanel(Language.T("Instrument Properties"));
+            pnlAddInstrument = new FancyPanel(Language.T("Add an Instrument"));
 
             // Instruments' controls
             lbxInstruments = new ListBox();
@@ -237,7 +237,7 @@ namespace Forex_Strategy_Builder
             cbxAddInstrType.Parent        = pnlAddInstrument;
             cbxAddInstrType.Name          = "cbxAddInstrType";
             cbxAddInstrType.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbxAddInstrType.Items.AddRange(Enum.GetNames(typeof(Instrumet_Type)));
+            cbxAddInstrType.Items.AddRange(Enum.GetNames(typeof(InstrumetType)));
             cbxAddInstrType.SelectedIndex = 0;
 
             // btnAddInstrAdd
@@ -775,7 +775,7 @@ namespace Forex_Strategy_Builder
             string errorMessage = "";
 
             // Symbol
-            if (!ValidateSymbol(tbxPropSymbol.Text, (Instrumet_Type)Enum.Parse(typeof(Instrumet_Type), tbxPropType.Text)))
+            if (!ValidateSymbol(tbxPropSymbol.Text, (InstrumetType)Enum.Parse(typeof(InstrumetType), tbxPropType.Text)))
                 errorMessage += Environment.NewLine + Language.T("Wrong Symbol!");
 
             // Price In
@@ -807,11 +807,11 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Validates the instrument properties
         /// </summary>
-        bool ValidateSymbol(string symbol, Instrumet_Type instrType)
+        bool ValidateSymbol(string symbol, InstrumetType instrType)
         {
             bool isResult = false;
 
-            if (instrType == Instrumet_Type.Forex)
+            if (instrType == InstrumetType.Forex)
             {
                 Regex regex = new Regex(@"^[A-Z]{6}$");
                 isResult = (regex.IsMatch(symbol) && symbol.Substring(0,3) != symbol.Substring(3,3));
@@ -848,8 +848,8 @@ namespace Forex_Strategy_Builder
             nudPropCommission.Value         = (decimal)instrPropSelectedInstrument.Commission;
             nudPropSlippage.Value           = (decimal)instrPropSelectedInstrument.Slippage;
 
-            tbxPropPriceIn.Enabled  = instrPropSelectedInstrument.InstrType != Instrumet_Type.Forex;
-            tbxPropFileName.Enabled = instrPropSelectedInstrument.InstrType != Instrumet_Type.Forex;
+            tbxPropPriceIn.Enabled  = instrPropSelectedInstrument.InstrType != InstrumetType.Forex;
+            tbxPropFileName.Enabled = instrPropSelectedInstrument.InstrType != InstrumetType.Forex;
 
             SetAcountExchangeRate();
 
@@ -862,14 +862,14 @@ namespace Forex_Strategy_Builder
         void SetSelectedInstrument()
         {
             instrPropSelectedInstrument.Symbol          = tbxPropSymbol.Text;
-            instrPropSelectedInstrument.InstrType       = (Instrumet_Type)Enum.Parse(typeof(Instrumet_Type), tbxPropType.Text);
+            instrPropSelectedInstrument.InstrType       = (InstrumetType)Enum.Parse(typeof(InstrumetType), tbxPropType.Text);
             instrPropSelectedInstrument.Comment         = tbxPropComment.Text;
             instrPropSelectedInstrument.PriceIn         = tbxPropPriceIn.Text;
             instrPropSelectedInstrument.BaseFileName    = tbxPropFileName.Text;
-            instrPropSelectedInstrument.SwapType        = (Commission_Type)Enum.GetValues(typeof(Commission_Type)).GetValue(cbxPropSwap.SelectedIndex);
-            instrPropSelectedInstrument.CommissionType  = (Commission_Type)Enum.GetValues(typeof(Commission_Type)).GetValue(cbxPropCommission.SelectedIndex);
-            instrPropSelectedInstrument.CommissionScope = (Commission_Scope)Enum.GetValues(typeof(Commission_Scope)).GetValue(cbxPropCommScope.SelectedIndex);
-            instrPropSelectedInstrument.CommissionTime  = (Commission_Time)Enum.GetValues(typeof(Commission_Time)).GetValue(cbxPropCommTime.SelectedIndex);
+            instrPropSelectedInstrument.SwapType        = (CommissionType)Enum.GetValues(typeof(CommissionType)).GetValue(cbxPropSwap.SelectedIndex);
+            instrPropSelectedInstrument.CommissionType  = (CommissionType)Enum.GetValues(typeof(CommissionType)).GetValue(cbxPropCommission.SelectedIndex);
+            instrPropSelectedInstrument.CommissionScope = (CommissionScope)Enum.GetValues(typeof(CommissionScope)).GetValue(cbxPropCommScope.SelectedIndex);
+            instrPropSelectedInstrument.CommissionTime  = (CommissionTime)Enum.GetValues(typeof(CommissionTime)).GetValue(cbxPropCommTime.SelectedIndex);
             instrPropSelectedInstrument.Digits     = (int)nudPropDigits.Value;
             instrPropSelectedInstrument.LotSize    = (int)nudPropLotSize.Value;
             instrPropSelectedInstrument.Spread     = (float)nudPropSpread.Value;
@@ -1036,10 +1036,10 @@ namespace Forex_Strategy_Builder
         /// </summary>
         void BtnAddInstrAdd_Click(object sender, EventArgs e)
         {
-            if (ValidateSymbol(tbxAddInstrSymbol.Text, (Instrumet_Type)Enum.Parse(typeof(Instrumet_Type), cbxAddInstrType.Text)) &&
+            if (ValidateSymbol(tbxAddInstrSymbol.Text, (InstrumetType)Enum.Parse(typeof(InstrumetType), cbxAddInstrType.Text)) &&
                 !lbxInstruments.Items.Contains(tbxAddInstrSymbol.Text))
             {
-                instrPropSelectedInstrument = new Instrument_Properties(tbxAddInstrSymbol.Text, (Instrumet_Type)Enum.Parse(typeof(Instrumet_Type), cbxAddInstrType.Text));
+                instrPropSelectedInstrument = new InstrumentProperties(tbxAddInstrSymbol.Text, (InstrumetType)Enum.Parse(typeof(InstrumetType), cbxAddInstrType.Text));
                 SetPropertiesForm();
                 SetSelectedInstrument();
             }
@@ -1144,9 +1144,9 @@ namespace Forex_Strategy_Builder
         {
             if (bNeedReset)
             {
-                Dictionary<String, Instrument_Properties> temp = new Dictionary<string, Instrument_Properties>(Instruments.InstrumentList.Count);
+                Dictionary<String, InstrumentProperties> temp = new Dictionary<string, InstrumentProperties>(Instruments.InstrumentList.Count);
 
-                foreach (KeyValuePair<String, Instrument_Properties> kvp in Instruments.InstrumentList)
+                foreach (KeyValuePair<String, InstrumentProperties> kvp in Instruments.InstrumentList)
                     temp.Add(kvp.Key, kvp.Value.Clone());
 
                 Instruments.InstrumentList.Clear();

@@ -1,139 +1,95 @@
 // Instrument class
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
 using System.IO;
+using Forex_Strategy_Builder.Properties;
 
 namespace Forex_Strategy_Builder
 {
     public class Instrument
     {
-        Instrument_Properties instrProperties; // The instrument properties.
-        int      period; // Represented as a number of minutes
-        DateTime timeUpdate;  // Data update time
-        int      bars; // Count of data bars
-        Bar[]    aBar; // An array containing the data
-
-        // Statistical information
-        double instrMinPrice;
-        double instrMaxPrice;
-        int averageGap;
-        int maxGap;
-        int averageHighLow;
-        int maxHighLow;
-        int averageCloseOpen;
-        int maxCloseOpen;
-        int instrDaysOff;
-
-        // Statistical information
-        public double MinPrice         { get { return instrMinPrice; } }
-        public double MaxPrice         { get { return instrMaxPrice; } }
-        public int    MaxGap           { get { return maxGap; } }
-        public int    DaysOff          { get { return instrDaysOff; } }
-        public int    MaxHighLow       { get { return maxHighLow; } }
-        public int    MaxCloseOpen     { get { return maxCloseOpen; } }
-        public int    AverageGap       { get { return averageGap; } }
-        public int    AverageHighLow   { get { return averageHighLow; } }
-        public int    AverageCloseOpen { get { return averageCloseOpen; } }
-
-        // Date format
-        DateFormat dfDateFormat = DateFormat.Unknown;
-
-        // Data directory
-        string pathDataDir = "." + Path.DirectorySeparatorChar + "Data" + Path.DirectorySeparatorChar;
-
-        bool isCut = false; // Whether the data have been cut
-
-        /// <summary>
-        /// Whether the data have been cut
-        /// </summary>
-        public bool Cut { get { return isCut; } set { isCut = value; } }
-
-
-        // General instrument info
-        public string   Symbol { get { return instrProperties.Symbol; } }
-        public int      Period { get { return period; } }
-        public int      Bars   { get { return bars; } }
-        public double   Point  { get { return instrProperties.Point; } }
-        public DateTime Update { get { return timeUpdate; } }
-
-        // -------------------------------------------------------------
-        int  maxBars    = 20000;
-        int  startYear  = 1990;
-        int  startMonth = 1;
-        int  startDay   = 1;
-        int  endYear    = 2020;
-        int  endMonth   = 1;
-        int  endDay     = 1;
-        bool useStartDate = false;
-        bool useEndDate   = false;
-
-        /// <summary>
-        /// Maximum data bars
-        /// </summary>
-        public int MaxBars { set { maxBars = value; } }
-        /// <summary>
-        /// Starting year
-        /// </summary>
-        public int StartYear { set { startYear = value; } }
-        /// <summary>
-        /// Starting month
-        /// </summary>
-        public int StartMonth { set { startMonth = value; } }
-        /// <summary>
-        /// Starting day
-        /// </summary>
-        public int StartDay { set { startDay = value; } }
-        /// <summary>
-        /// Ending year
-        /// </summary>
-        public int EndYear { set { endYear = value; } }
-        /// <summary>
-        /// Ending month
-        /// </summary>
-        public int EndMonth { set { endMonth = value; } }
-        /// <summary>
-        /// Ending day
-        /// </summary>
-        public int EndDay { set { endDay = value; } }
-        /// <summary>
-        /// Use end date
-        /// </summary>
-        public bool UseEndDate { get { return useEndDate; } set { useEndDate = value; } }
-        /// <summary>
-        /// Use start date
-        /// </summary>
-        public bool UseStartDate { get { return useStartDate; } set { useStartDate = value; } }
-        // -------------------------------------------------------------
-
-        // Bar info
-        public DateTime Time    (int bar) { return aBar[bar].Time  ; }
-        public double   Open    (int bar) { return aBar[bar].Open  ; }
-        public double   High    (int bar) { return aBar[bar].High  ; }
-        public double   Low     (int bar) { return aBar[bar].Low   ; }
-        public double   Close   (int bar) { return aBar[bar].Close ; }
-        public int      Volume (int bar) { return aBar[bar].Volume; }
-
-        public DateFormat FormatDate { get { return dfDateFormat; } set { dfDateFormat = value; } }
-        public string DataDir { get { return pathDataDir; } set { pathDataDir = value; } }
-
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        Instrument()
-        {
-        }
+        private readonly InstrumentProperties _instrProperties; // The instrument properties.
+        private Bar[] _aBar; // An array containing the data
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Instrument(Instrument_Properties instrProperties, int period)
+        public Instrument(InstrumentProperties instrProperties, int period)
         {
-            this.instrProperties = instrProperties;
-            this.period = period;
+            DataDir = "." + Path.DirectorySeparatorChar + "Data" + Path.DirectorySeparatorChar;
+            FormatDate = DateFormat.Unknown;
+            EndTime = new DateTime(2020, 1, 1, 0, 0, 0);
+            StartTime = new DateTime(1990, 1, 1, 0, 0, 0);
+            MaxBars = 20000;
+            _instrProperties = instrProperties;
+            Period = period;
+        }
+
+        // Statistical information
+        public double MinPrice { get; private set; }
+        public double MaxPrice { get; private set; }
+        public int MaxGap { get; private set; }
+        public int DaysOff { get; private set; }
+        public int MaxHighLow { get; private set; }
+        public int MaxCloseOpen { get; private set; }
+        public int AverageGap { get; private set; }
+        public int AverageHighLow { get; private set; }
+        public int AverageCloseOpen { get; private set; }
+        public bool Cut { get; private set; }
+
+
+        // General instrument info
+        public string Symbol { get { return _instrProperties.Symbol; } }
+        private int Period { get; set; }
+        public int Bars { get; private set; }
+        private double Point { get { return _instrProperties.Point; } }
+        public DateTime Update { get; private set; }
+
+        // -------------------------------------------------------------
+
+        public int MaxBars { private get; set; }
+        public DateTime StartTime { private get; set; }
+        public DateTime EndTime { private get; set; }
+        public bool UseEndTime { private get; set; }
+        public bool UseStartTime { private get; set; }
+        public DateFormat FormatDate { private get; set; }
+        public string DataDir { private get; set; }
+
+        // -------------------------------------------------------------
+
+        // Bar info
+        public DateTime Time(int bar)
+        {
+            return _aBar[bar].Time;
+        }
+
+        public double Open(int bar)
+        {
+            return _aBar[bar].Open;
+        }
+
+        public double High(int bar)
+        {
+            return _aBar[bar].High;
+        }
+
+        public double Low(int bar)
+        {
+            return _aBar[bar].Low;
+        }
+
+        public double Close(int bar)
+        {
+            return _aBar[bar].Close;
+        }
+
+        public int Volume(int bar)
+        {
+            return _aBar[bar].Volume;
         }
 
         /// <summary>
@@ -143,30 +99,30 @@ namespace Forex_Strategy_Builder
         public int LoadData()
         {
             // The source data file full name
-            string sourceDataFile = pathDataDir + instrProperties.BaseFileName + period.ToString() + ".csv";
+            string sourceDataFile = DataDir + _instrProperties.BaseFileName + Period + ".csv";
 
             // Checks the access to the file
             if (!File.Exists(sourceDataFile))
                 return 1;
 
-            StreamReader sr = new StreamReader(sourceDataFile);
+            var sr = new StreamReader(sourceDataFile);
             string sData = sr.ReadToEnd();
             sr.Close();
 
-            Data_Parser dp = new Data_Parser();
+            var dp = new DataParser();
 
             int respond = -1;
             int parsedBars = dp.Parse(sData);
 
             if (parsedBars > 0)
             {
-                aBar = dp.Bar;
-                bars = parsedBars;
+                _aBar = dp.Bar;
+                Bars = parsedBars;
                 RefineData();
                 DataHorizon();
                 CheckMarketData();
                 SetDataStats();
-                timeUpdate = aBar[bars - 1].Time;
+                Update = _aBar[Bars - 1].Time;
                 respond = 0;
             }
 
@@ -179,19 +135,19 @@ namespace Forex_Strategy_Builder
         /// <returns>0 - success</returns>
         public int LoadResourceData()
         {
-            Data_Parser dataParser = new Data_Parser();
+            var dataParser = new DataParser();
             int respond = -1;
-            int parsedBars = dataParser.Parse(Properties.Resources.EURUSD1440);
+            int parsedBars = dataParser.Parse(Resources.EURUSD1440);
 
             if (parsedBars > 0)
             {
-                aBar = dataParser.Bar;
-                bars = parsedBars;
+                _aBar = dataParser.Bar;
+                Bars = parsedBars;
                 RefineData();
                 DataHorizon();
                 CheckMarketData();
                 SetDataStats();
-                timeUpdate = aBar[bars - 1].Time;
+                Update = _aBar[Bars - 1].Time;
                 respond = 0;
             }
 
@@ -201,18 +157,18 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Refines the market data
         /// </summary>
-        void RefineData()
+        private void RefineData()
         {
             // Fill In data gaps
             if (Configs.FillInDataGaps)
             {
                 for (int bar = 1; bar < Bars; bar++)
                 {
-                    aBar[bar].Open = aBar[bar - 1].Close;
-                    if (aBar[bar].Open > aBar[bar].High || aBar[bar].Close > aBar[bar].High)
-                        aBar[bar].High = aBar[bar].Open > aBar[bar].Close ? aBar[bar].Open : aBar[bar].Close;
-                    if (aBar[bar].Open < aBar[bar].Low || aBar[bar].Close < aBar[bar].Low)
-                        aBar[bar].Low = aBar[bar].Open < aBar[bar].Close ? aBar[bar].Open : aBar[bar].Close;
+                    _aBar[bar].Open = _aBar[bar - 1].Close;
+                    if (_aBar[bar].Open > _aBar[bar].High || _aBar[bar].Close > _aBar[bar].High)
+                        _aBar[bar].High = _aBar[bar].Open > _aBar[bar].Close ? _aBar[bar].Open : _aBar[bar].Close;
+                    if (_aBar[bar].Open < _aBar[bar].Low || _aBar[bar].Close < _aBar[bar].Low)
+                        _aBar[bar].Low = _aBar[bar].Open < _aBar[bar].Close ? _aBar[bar].Open : _aBar[bar].Close;
                 }
             }
 
@@ -220,13 +176,13 @@ namespace Forex_Strategy_Builder
             if (Configs.CutBadData)
             {
                 int maxConsecutiveBars = 0;
-                int maxConsecutiveBar  = 0;
-                int consecutiveBars    = 0;
-                int lastBar            = 0;
+                int maxConsecutiveBar = 0;
+                int consecutiveBars = 0;
+                int lastBar = 0;
 
                 for (int bar = 0; bar < Bars; bar++)
                 {
-                    if (Math.Abs(aBar[bar].Open - aBar[bar].Close) < Data.InstrProperties.Point / 2)
+                    if (Math.Abs(_aBar[bar].Open - _aBar[bar].Close) < Data.InstrProperties.Point/2)
                     {
                         if (lastBar == bar - 1 || lastBar == 0)
                         {
@@ -236,7 +192,7 @@ namespace Forex_Strategy_Builder
                             if (consecutiveBars > maxConsecutiveBars)
                             {
                                 maxConsecutiveBars = consecutiveBars;
-                                maxConsecutiveBar  = bar;
+                                maxConsecutiveBar = bar;
                             }
                         }
                     }
@@ -251,7 +207,7 @@ namespace Forex_Strategy_Builder
 
                 int firstBar = Math.Max(maxConsecutiveBar, 1);
                 for (int bar = firstBar; bar < Bars; bar++)
-                    if ((Time(bar) - Time(bar - 1)).Days > 5 && period < 10080)
+                    if ((Time(bar) - Time(bar - 1)).Days > 5 && Period < 10080)
                         firstBar = bar;
 
                 if (firstBar == 1)
@@ -259,137 +215,130 @@ namespace Forex_Strategy_Builder
 
                 if (firstBar > 0)
                 {
-                    Bar[] aBarCopy = new Bar[bars];
-                    aBar.CopyTo(aBarCopy, 0);
+                    var aBarCopy = new Bar[Bars];
+                    _aBar.CopyTo(aBarCopy, 0);
 
-                    aBar = new Bar[bars - firstBar];
-                    for (int bar = firstBar; bar < bars; bar++)
-                        aBar[bar - firstBar] = aBarCopy[bar];
+                    _aBar = new Bar[Bars - firstBar];
+                    for (int bar = firstBar; bar < Bars; bar++)
+                        _aBar[bar - firstBar] = aBarCopy[bar];
 
-                    bars = bars - firstBar;
-                    isCut  = true;
+                    Bars = Bars - firstBar;
+                    Cut = true;
                 }
             }
-
-            return;
         }
 
         /// <summary>
         /// Data Horizon - Cuts some data
         /// </summary>
-        int DataHorizon()
+        private void DataHorizon()
         {
-            if (bars < Configs.MIN_BARS) return 0;
+            if (Bars < Configs.MinBars) return;
 
             int startBar = 0;
-            int endBar   = bars - 1;
-            DateTime startDate = new DateTime(startYear, startMonth, startDay);
-            DateTime endDate   = new DateTime(endYear,   endMonth,   endDay);
+            int endBar = Bars - 1;
 
             // Set the starting date
-            if (useStartDate && aBar[0].Time < startDate)
+            if (UseStartTime && _aBar[0].Time < StartTime)
             {
-                for (int bar = 0; bar < bars; bar++)
+                for (int bar = 0; bar < Bars; bar++)
                 {
-                    if (aBar[bar].Time >= startDate)
+                    if (_aBar[bar].Time >= StartTime)
                     {
-                        startBar  = bar;
+                        startBar = bar;
                         break;
                     }
                 }
             }
 
             // Set the end date
-            if (useEndDate && aBar[bars - 1].Time > endDate)
-            {   // We need to cut out the newest bars
-                for (int bar = 0; bar < bars; bar++)
+            if (UseEndTime && _aBar[Bars - 1].Time > EndTime)
+            {
+                // We need to cut out the newest bars
+                for (int bar = 0; bar < Bars; bar++)
                 {
-                    if (aBar[bar].Time >= endDate)
+                    if (_aBar[bar].Time >= EndTime)
                     {
-                        endBar  = bar - 1;
+                        endBar = bar - 1;
                         break;
                     }
                 }
             }
 
-            if (endBar - startBar > maxBars - 1)
+            if (endBar - startBar > MaxBars - 1)
             {
-                startBar = endBar - maxBars + 1;
+                startBar = endBar - MaxBars + 1;
             }
 
-            if (endBar - startBar < Configs.MIN_BARS)
+            if (endBar - startBar < Configs.MinBars)
             {
-                startBar = endBar - Configs.MIN_BARS + 1;
+                startBar = endBar - Configs.MinBars + 1;
                 if (startBar < 0)
                 {
                     startBar = 0;
-                    endBar = Configs.MIN_BARS - 1;
+                    endBar = Configs.MinBars - 1;
                 }
             }
 
             // Cut the data
-            if (startBar > 0 || endBar < bars - 1)
+            if (startBar > 0 || endBar < Bars - 1)
             {
-                Bar[] aBarCopy = new Bar[bars];
-                aBar.CopyTo(aBarCopy, 0);
+                var aBarCopy = new Bar[Bars];
+                _aBar.CopyTo(aBarCopy, 0);
 
                 int newBars = endBar - startBar + 1;
 
-                aBar = new Bar[newBars];
+                _aBar = new Bar[newBars];
                 for (int bar = startBar; bar <= endBar; bar++)
-                    aBar[bar - startBar] = aBarCopy[bar];
+                    _aBar[bar - startBar] = aBarCopy[bar];
 
-                bars   = newBars;
-                timeUpdate = aBar[newBars - 1].Time;
-                isCut  = true;
+                Bars = newBars;
+                Update = _aBar[newBars - 1].Time;
+                Cut = true;
             }
-
-            return 0;
         }
 
         /// <summary>
         /// Checks the loaded data
         /// </summary>
-        bool CheckMarketData()
+        private void CheckMarketData()
         {
-            for (int bar = 0; bar < Bars; bar++)
-            {
-                if (High(bar) < Open(bar)  ||
-                    High(bar) < Low(bar)   ||
-                    High(bar) < Close(bar) ||
-                    Low(bar)  > Open(bar)  ||
-                    Low(bar)  > Close(bar))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            // Not Implemented yet
+            //for (int bar = 0; bar < Bars; bar++)
+            //{
+            //    if (High(bar) < Open(bar) ||
+            //        High(bar) < Low(bar) ||
+            //        High(bar) < Close(bar) ||
+            //        Low(bar) > Open(bar) ||
+            //        Low(bar) > Close(bar))
+            //    {
+            //        return true;
+            //    }
+            //}
         }
 
         /// <summary>
         /// Calculate statistics for the loaded data.
         /// </summary>
-        void SetDataStats()
+        private void SetDataStats()
         {
-            instrMinPrice = double.MaxValue;
-            instrMaxPrice = double.MinValue;
-            double maxHighLowPrice   = double.MinValue;
+            MinPrice = double.MaxValue;
+            MaxPrice = double.MinValue;
+            double maxHighLowPrice = double.MinValue;
             double maxCloseOpenPrice = double.MinValue;
-            double sumHighLow   = 0;
+            double sumHighLow = 0;
             double sumCloseOpen = 0;
-            instrDaysOff = 0;
+            DaysOff = 0;
             double sumGap = 0;
             double instrMaxGap = double.MinValue;
-            double gap;
 
             for (int bar = 1; bar < Bars; bar++)
             {
-                if (High(bar) > instrMaxPrice)
-                    instrMaxPrice = High(bar);
+                if (High(bar) > MaxPrice)
+                    MaxPrice = High(bar);
 
-                if (Low(bar) < instrMinPrice)
-                    instrMinPrice = Low(bar);
+                if (Low(bar) < MinPrice)
+                    MinPrice = Low(bar);
 
                 if (Math.Abs(High(bar) - Low(bar)) > maxHighLowPrice)
                     maxHighLowPrice = Math.Abs(High(bar) - Low(bar));
@@ -400,32 +349,30 @@ namespace Forex_Strategy_Builder
                 sumCloseOpen += Math.Abs(Close(bar) - Open(bar));
 
                 int dayDiff = (Time(bar) - Time(bar - 1)).Days;
-                if (instrDaysOff < dayDiff)
-                    instrDaysOff = dayDiff;
+                if (DaysOff < dayDiff)
+                    DaysOff = dayDiff;
 
-                gap = Math.Abs(Open(bar) - Close(bar - 1));
+                double gap = Math.Abs(Open(bar) - Close(bar - 1));
                 sumGap += gap;
                 if (instrMaxGap < gap)
                     instrMaxGap = gap;
             }
 
-            maxHighLow       = (int)(maxHighLowPrice / Point);
-            averageHighLow   = (int)(sumHighLow / (Bars * Point));
-            maxCloseOpen     = (int)(maxCloseOpenPrice / Point);
-            averageCloseOpen = (int)(sumCloseOpen / (Bars * Point));
-            maxGap           = (int)(instrMaxGap / Point);
-            averageGap       = (int)(sumGap / ((Bars - 1) * Point));
-
-            return;
+            MaxHighLow = (int) (maxHighLowPrice/Point);
+            AverageHighLow = (int) (sumHighLow/(Bars*Point));
+            MaxCloseOpen = (int) (maxCloseOpenPrice/Point);
+            AverageCloseOpen = (int) (sumCloseOpen/(Bars*Point));
+            MaxGap = (int) (instrMaxGap/Point);
+            AverageGap = (int) (sumGap/((Bars - 1)*Point));
         }
     }
 
     public enum DateFormat
     {
-        DayMonthYear,
-        MonthDayYear,
-        YearDayMonth,
-        YearMonthDay,
+        //DayMonthYear,
+        //MonthDayYear,
+        //YearDayMonth,
+        //YearMonthDay,
         Unknown
     }
 }

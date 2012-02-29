@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder.Dialogs.Analyzer
 {
-    public class Options : Fancy_Panel
+    public class Options : FancyPanel
     {
         Label lblColumnSeparator;
         Label lblDecimalSeparator;

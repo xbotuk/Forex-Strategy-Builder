@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder.Dialogs.Analyzer
 {
-    public partial class OverOptimization : Fancy_Panel
+    public partial class OverOptimization : FancyPanel
     {
         Label lblIntro;
         Label lblDeviation;

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder.Dialogs.Analyzer
 {
-    class Cumulative_Strategy : Fancy_Panel
+    class Cumulative_Strategy : FancyPanel
     {
         Button btnAddStrategy;
         Button btnResetReport;

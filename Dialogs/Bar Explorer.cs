@@ -221,9 +221,9 @@ namespace Forex_Strategy_Builder
 
             string longestDescription = "";
             foreach (WayPointType wpType in Enum.GetValues(typeof(WayPointType)))
-                if (g.MeasureString(Language.T(Way_Point.WPTypeToString(wpType)), fontInfo).Width >
+                if (g.MeasureString(Language.T(WayPoint.WPTypeToString(wpType)), fontInfo).Width >
                     g.MeasureString(longestDescription, fontInfo).Width)
-                    longestDescription = Language.T(Way_Point.WPTypeToString(wpType));
+                    longestDescription = Language.T(WayPoint.WPTypeToString(wpType));
 
             string longestDirection = "";
             foreach (PosDirection posDir in Enum.GetValues(typeof(PosDirection)))
@@ -1049,7 +1049,7 @@ namespace Forex_Strategy_Builder
                 int    ordNumber = Backtester.WayPoint(barCurrent, pnt).OrdNumb;
 
                 g.DrawString((pnt + 1).ToString(), fontInfo, brush, (aiX[0] + aiX[1]) / 2, y, sf);
-                g.DrawString(Language.T(Way_Point.WPTypeToString(wpType)), fontInfo, brush, aiX[1] + 2, y);
+                g.DrawString(Language.T(WayPoint.WPTypeToString(wpType)), fontInfo, brush, aiX[1] + 2, y);
                 g.DrawString(Backtester.WayPoint(barCurrent, pnt).Price.ToString(FF), fontInfo, brush, (aiX[3] + aiX[2]) / 2, y, sf);
 
                 if (positionNumber > -1)

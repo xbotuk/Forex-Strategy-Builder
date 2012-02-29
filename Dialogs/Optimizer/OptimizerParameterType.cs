@@ -2,6 +2,9 @@
 {
     public enum OptimizerParameterType
     {
-        PermanentSL, PermanentTP, BreakEven, Indicator
+        PermanentSL,
+        PermanentTP,
+        BreakEven,
+        Indicator
     }
 }

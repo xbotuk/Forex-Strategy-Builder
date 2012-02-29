@@ -5,12 +5,8 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
     /// </summary>
     public struct CoupleOfParams
     {
-        int  _param1;
-        int  _param2;
-        bool _isPassed;
-
-        public int Param1 { get { return _param1; } set { _param1 = value; } }
-        public int Param2 { get { return _param2; } set { _param2 = value; } }
-        public bool IsPassed { get { return _isPassed; } set { _isPassed = value; } }
+        public int Param1 { get; set; }
+        public int Param2 { get; set; }
+        public bool IsPassed { get; set; }
     }
 }

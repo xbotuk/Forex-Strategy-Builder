@@ -1,12 +1,13 @@
 // Forex Strategy Builder - Scanner
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -18,20 +19,19 @@ namespace Forex_Strategy_Builder
     public sealed class Scanner : Form
     {
         // Controls
-        private readonly Small_Balance_Chart _balanceChart;
-        private readonly Panel _infoPanel;
-        private readonly ProgressBar _progressBar;
-        private readonly Label _lblProgress;
-        private readonly Button _btnClose;
-        private readonly CheckBox _chbAutoscan;
-        private readonly CheckBox _chbTickScan;
-        private readonly BackgroundWorker _bgWorker;
+        private SmallBalanceChart BalanceChart { get; set; }
+        private Panel InfoPanel { get; set; }
+        private ProgressBar ProgressBar { get; set; }
+        private Label LblProgress { get; set; }
+        private Button BtnClose { get; set; }
+        private CheckBox ChbAutoscan { get; set; }
+        private CheckBox ChbTickScan { get; set; }
+        private BackgroundWorker BgWorker { get; set; }
 
         private readonly Color _colorText;
         private readonly Font _fontInfo;
         private readonly int _infoRowHeight;
         private readonly bool _isTickDataFile;
-        private bool _isCompactMode;
         private bool _isLoadingNow;
         private int _progressPercent;
         private string _warningMessage;
@@ -41,20 +41,20 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public Scanner()
         {
-            _infoPanel = new Panel();
-            _balanceChart = new Small_Balance_Chart();
-            _progressBar = new ProgressBar();
-            _lblProgress = new Label();
-            _chbAutoscan = new CheckBox();
-            _chbTickScan = new CheckBox();
-            _btnClose = new Button();
+            InfoPanel = new Panel();
+            BalanceChart = new SmallBalanceChart();
+            ProgressBar = new ProgressBar();
+            LblProgress = new Label();
+            ChbAutoscan = new CheckBox();
+            ChbTickScan = new CheckBox();
+            BtnClose = new Button();
 
             MaximizeBox = false;
             MinimizeBox = false;
             ShowInTaskbar = false;
             Icon = Data.Icon;
             FormBorderStyle = FormBorderStyle.FixedDialog;
-            AcceptButton = _btnClose;
+            AcceptButton = BtnClose;
             Text = Language.T("Intrabar Scanner");
             BackColor = LayoutColors.ColorFormBack;
             FormClosing += ScannerFormClosing;
@@ -65,68 +65,63 @@ namespace Forex_Strategy_Builder
             _isTickDataFile = CheckTickDataFile();
 
             // pnlInfo
-            _infoPanel.Parent = this;
-            _infoPanel.BackColor = LayoutColors.ColorControlBack;
-            _infoPanel.Paint += PnlInfoPaint;
+            InfoPanel.Parent = this;
+            InfoPanel.BackColor = LayoutColors.ColorControlBack;
+            InfoPanel.Paint += PnlInfoPaint;
 
             // Small Balance Chart
-            _balanceChart.Parent = this;
+            BalanceChart.Parent = this;
 
             // ProgressBar
-            _progressBar.Parent = this;
+            ProgressBar.Parent = this;
 
             // Label Progress
-            _lblProgress.Parent = this;
-            _lblProgress.ForeColor = LayoutColors.ColorControlText;
-            _lblProgress.AutoSize = true;
+            LblProgress.Parent = this;
+            LblProgress.ForeColor = LayoutColors.ColorControlText;
+            LblProgress.AutoSize = true;
 
             // Automatic Scan checkbox.
-            _chbAutoscan.Parent = this;
-            _chbAutoscan.ForeColor = _colorText;
-            _chbAutoscan.BackColor = Color.Transparent;
-            _chbAutoscan.Text = Language.T("Automatic Scan");
-            _chbAutoscan.Checked = Configs.Autoscan;
-            _chbAutoscan.AutoSize = true;
-            _chbAutoscan.CheckedChanged += ChbAutoscanCheckedChanged;
+            ChbAutoscan.Parent = this;
+            ChbAutoscan.ForeColor = _colorText;
+            ChbAutoscan.BackColor = Color.Transparent;
+            ChbAutoscan.Text = Language.T("Automatic Scan");
+            ChbAutoscan.Checked = Configs.Autoscan;
+            ChbAutoscan.AutoSize = true;
+            ChbAutoscan.CheckedChanged += ChbAutoscanCheckedChanged;
 
             // Tick Scan checkbox.
-            _chbTickScan.Parent = this;
-            _chbTickScan.ForeColor = _colorText;
-            _chbTickScan.BackColor = Color.Transparent;
-            _chbTickScan.Text = Language.T("Use Ticks");
-            _chbTickScan.Checked = Configs.UseTickData && _isTickDataFile;
-            _chbTickScan.AutoSize = true;
-            _chbTickScan.Visible = _isTickDataFile;
-            _chbTickScan.CheckedChanged += ChbTickScanCheckedChanged;
+            ChbTickScan.Parent = this;
+            ChbTickScan.ForeColor = _colorText;
+            ChbTickScan.BackColor = Color.Transparent;
+            ChbTickScan.Text = Language.T("Use Ticks");
+            ChbTickScan.Checked = Configs.UseTickData && _isTickDataFile;
+            ChbTickScan.AutoSize = true;
+            ChbTickScan.Visible = _isTickDataFile;
+            ChbTickScan.CheckedChanged += ChbTickScanCheckedChanged;
 
             //Button Close
-            _btnClose.Parent = this;
-            _btnClose.Name = "Close";
-            _btnClose.Text = Language.T("Close");
-            _btnClose.DialogResult = DialogResult.OK;
-            _btnClose.UseVisualStyleBackColor = true;
+            BtnClose.Parent = this;
+            BtnClose.Name = "Close";
+            BtnClose.Text = Language.T("Close");
+            BtnClose.DialogResult = DialogResult.OK;
+            BtnClose.UseVisualStyleBackColor = true;
 
             // BackGroundWorker
-            _bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
-            _bgWorker.DoWork += BgWorkerDoWork;
-            _bgWorker.ProgressChanged += BgWorkerProgressChanged;
-            _bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
+            BgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            BgWorker.DoWork += BgWorkerDoWork;
+            BgWorker.ProgressChanged += BgWorkerProgressChanged;
+            BgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
 
             _isLoadingNow = false;
 
             if (!_isTickDataFile)
                 Configs.UseTickData = false;
-
-            return;
         }
 
         /// <summary>
         /// Sets scanner compact mode.
         /// </summary>
-        public bool CompactMode
-        {
-            set { _isCompactMode = value; }
-        }
+        public bool CompactMode { private get; set; }
 
         /// <summary>
         /// Perform initializing
@@ -135,12 +130,12 @@ namespace Forex_Strategy_Builder
         {
             base.OnLoad(e);
 
-            if (_isCompactMode)
+            if (CompactMode)
             {
-                _infoPanel.Visible = false;
-                _balanceChart.Visible = false;
-                _lblProgress.Visible = true;
-                _chbAutoscan.Visible = false;
+                InfoPanel.Visible = false;
+                BalanceChart.Visible = false;
+                LblProgress.Visible = true;
+                ChbAutoscan.Visible = false;
 
                 Width = 300;
                 Height = 95;
@@ -150,16 +145,14 @@ namespace Forex_Strategy_Builder
             }
             else
             {
-                _lblProgress.Visible = false;
-                _chbAutoscan.Visible = true;
+                LblProgress.Visible = false;
+                ChbAutoscan.Visible = true;
+                BalanceChart.SetChartData();
                 Width = 460;
                 Height = 540;
                 if (!_isTickDataFile)
                     Height -= _infoRowHeight;
-                _balanceChart.SetChartData();
             }
-
-            return;
         }
 
         /// <summary>
@@ -175,51 +168,49 @@ namespace Forex_Strategy_Builder
             var btnHrzSpace = (int) (Data.HorizontalDLU*3);
             int space = btnHrzSpace;
 
-            if (_isCompactMode)
+            if (CompactMode)
             {
                 //Button Close
-                _btnClose.Size = new Size(buttonWidth, buttonHeight);
-                _btnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
+                BtnClose.Size = new Size(buttonWidth, buttonHeight);
+                BtnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
                                                ClientSize.Height - buttonHeight - btnVertSpace);
 
                 // ProgressBar
-                _progressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
-                _progressBar.Location = new Point(space, btnVertSpace);
+                ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
+                ProgressBar.Location = new Point(space, btnVertSpace);
 
                 // Label Progress
-                _lblProgress.Location = new Point(space, _btnClose.Top + 5);
+                LblProgress.Location = new Point(space, BtnClose.Top + 5);
             }
             else
             {
                 //Button Close
-                _btnClose.Size = new Size(buttonWidth, buttonHeight);
-                _btnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
+                BtnClose.Size = new Size(buttonWidth, buttonHeight);
+                BtnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
                                                ClientSize.Height - buttonHeight - btnVertSpace);
 
                 // ProgressBar
-                _progressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
-                _progressBar.Location = new Point(space, _btnClose.Top - _progressBar.Height - btnVertSpace);
+                ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
+                ProgressBar.Location = new Point(space, BtnClose.Top - ProgressBar.Height - btnVertSpace);
 
                 // Panel Info
                 int pnlInfoHeight = _isTickDataFile ? _infoRowHeight*11 + 2 : _infoRowHeight*10 + 2;
-                _infoPanel.Size = new Size(ClientSize.Width - 2*space, pnlInfoHeight);
-                _infoPanel.Location = new Point(space, space);
+                InfoPanel.Size = new Size(ClientSize.Width - 2*space, pnlInfoHeight);
+                InfoPanel.Location = new Point(space, space);
 
                 // Panel balance chart
-                _balanceChart.Size = new Size(ClientSize.Width - 2*space, _progressBar.Top - _infoPanel.Bottom - 2*space);
-                _balanceChart.Location = new Point(space, _infoPanel.Bottom + space);
+                BalanceChart.Size = new Size(ClientSize.Width - 2*space, ProgressBar.Top - InfoPanel.Bottom - 2*space);
+                BalanceChart.Location = new Point(space, InfoPanel.Bottom + space);
 
                 // Label Progress
-                _lblProgress.Location = new Point(space, _btnClose.Top + 5);
+                LblProgress.Location = new Point(space, BtnClose.Top + 5);
 
                 // Auto scan checkbox
-                _chbAutoscan.Location = new Point(space, _btnClose.Top + 5);
+                ChbAutoscan.Location = new Point(space, BtnClose.Top + 5);
 
                 // TickScan checkbox
-                _chbTickScan.Location = new Point(_chbAutoscan.Right + space, _btnClose.Top + 5);
+                ChbTickScan.Location = new Point(ChbAutoscan.Right + space, BtnClose.Top + 5);
             }
-
-            return;
         }
 
         /// <summary>
@@ -229,7 +220,7 @@ namespace Forex_Strategy_Builder
         {
             base.OnShown(e);
 
-            if (_isCompactMode)
+            if (CompactMode)
                 return;
 
             if (!Data.IsIntrabarData)
@@ -240,11 +231,9 @@ namespace Forex_Strategy_Builder
             {
                 Backtester.Scan();
                 ShowScanningResult();
-                _progressBar.Value = 100;
-                _btnClose.Focus();
+                ProgressBar.Value = 100;
+                BtnClose.Focus();
             }
-
-            return;
         }
 
         /// <summary>
@@ -252,14 +241,10 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ScannerFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_isLoadingNow)
-            {
-                // Cancels the asynchronous operation.
-                _bgWorker.CancelAsync();
-                e.Cancel = true;
-            }
-
-            return;
+            if (!_isLoadingNow) return;
+            // Cancels the asynchronous operation.
+            BgWorker.CancelAsync();
+            e.Cancel = true;
         }
 
         /// <summary>
@@ -309,7 +294,7 @@ namespace Forex_Strategy_Builder
                                               Alignment = StringAlignment.Near
                                           };
             string stringCaptionText = Language.T("Intrabar Data");
-            float captionWidth = Math.Min(_infoPanel.ClientSize.Width, xp7 - xp0);
+            float captionWidth = Math.Min(InfoPanel.ClientSize.Width, xp7 - xp0);
             float captionTextWidth = g.MeasureString(stringCaptionText, _fontInfo).Width;
             float captionTextX = Math.Max((captionWidth - captionTextWidth)/2f, 0);
             var pfCaptionText = new PointF(captionTextX, 0);
@@ -321,13 +306,13 @@ namespace Forex_Strategy_Builder
             g.DrawString(stringCaptionText, _fontInfo, brush, rectfCaption, stringFormatCaption);
 
             // Second title row
-            g.DrawString(Language.T("Period"), _fontInfo, brush, (xp1 + xp0)/2, _infoRowHeight, sf);
-            g.DrawString(Language.T("Bars"), _fontInfo, brush, (xp2 + xp1)/2, _infoRowHeight, sf);
-            g.DrawString(Language.T("From"), _fontInfo, brush, (xp3 + xp2)/2, _infoRowHeight, sf);
-            g.DrawString(Language.T("Until"), _fontInfo, brush, (xp4 + xp3)/2, _infoRowHeight, sf);
-            g.DrawString(Language.T("Coverage"), _fontInfo, brush, (xp5 + xp4)/2, _infoRowHeight, sf);
-            g.DrawString("%", _fontInfo, brush, (xp6 + xp5)/2, _infoRowHeight, sf);
-            g.DrawString(Language.T("Label"), _fontInfo, brush, (xp7 + xp6)/2, _infoRowHeight, sf);
+            g.DrawString(Language.T("Period"), _fontInfo, brush, (xp1 + xp0)/2f, _infoRowHeight, sf);
+            g.DrawString(Language.T("Bars"), _fontInfo, brush, (xp2 + xp1)/2f, _infoRowHeight, sf);
+            g.DrawString(Language.T("From"), _fontInfo, brush, (xp3 + xp2)/2f, _infoRowHeight, sf);
+            g.DrawString(Language.T("Until"), _fontInfo, brush, (xp4 + xp3)/2f, _infoRowHeight, sf);
+            g.DrawString(Language.T("Coverage"), _fontInfo, brush, (xp5 + xp4)/2f, _infoRowHeight, sf);
+            g.DrawString("%", _fontInfo, brush, (xp6 + xp5)/2f, _infoRowHeight, sf);
+            g.DrawString(Language.T("Label"), _fontInfo, brush, (xp7 + xp6)/2f, _infoRowHeight, sf);
 
             brush = new SolidBrush(LayoutColors.ColorControlText);
             int allPeriods = Enum.GetValues(typeof (DataPeriods)).Length;
@@ -336,7 +321,7 @@ namespace Forex_Strategy_Builder
                 int y = (period + 2)*_infoRowHeight;
                 var point = new Point(xp0, y);
 
-                if (period%2f != 0)
+                if (Math.Abs(period%2f - 0) > 0.0001)
                     g.FillRectangle(new SolidBrush(LayoutColors.ColorEvenRowBack), new Rectangle(point, size));
             }
 
@@ -362,11 +347,11 @@ namespace Forex_Strategy_Builder
                     double percentage = 100d*tickBars/Data.Bars;
 
                     int y = 2*_infoRowHeight;
-                    string ticks = (Data.Ticks > 999999) ? (Data.Ticks/1000).ToString() + "K" : Data.Ticks.ToString();
+                    string ticks = (Data.Ticks > 999999) ? (Data.Ticks/1000).ToString(CultureInfo.InvariantCulture) + "K" : Data.Ticks.ToString(CultureInfo.InvariantCulture);
                     g.DrawString(ticks, _fontInfo, brush, (xp2 + xp1)/2, y, sf);
-                    g.DrawString((firstBarWithTicks + 1).ToString(), _fontInfo, brush, (xp3 + xp2)/2, y, sf);
-                    g.DrawString((lastBarWithTicks + 1).ToString(), _fontInfo, brush, (xp4 + xp3)/2, y, sf);
-                    g.DrawString(tickBars.ToString(), _fontInfo, brush, (xp5 + xp4)/2, y, sf);
+                    g.DrawString((firstBarWithTicks + 1).ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp3 + xp2)/2, y, sf);
+                    g.DrawString((lastBarWithTicks + 1).ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp4 + xp3)/2, y, sf);
+                    g.DrawString(tickBars.ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp5 + xp4)/2, y, sf);
                     g.DrawString(percentage.ToString("F2"), _fontInfo, brush, (xp6 + xp5)/2, y, sf);
 
                     var rectf = new RectangleF(xp6 + 10, y + 4, xp7 - xp6 - 20, 9);
@@ -447,11 +432,10 @@ namespace Forex_Strategy_Builder
 
                 if (coveredBars > 0 || period == Data.Period)
                 {
-                    g.DrawString(intraBars.ToString(), _fontInfo, brush, (xp2 + xp1)/2, y, sf);
-                    g.DrawString(fromBar.ToString(), _fontInfo, brush, (xp3 + xp2)/2, y, sf);
-                    g.DrawString(untilBar.ToString(), _fontInfo, brush, (xp4 + xp3)/2, y, sf);
-                    g.DrawString(coveredBars.ToString() + (isMultyAreas ? "*" : ""), _fontInfo, brush, (xp5 + xp4)/2, y,
-                                 sf);
+                    g.DrawString(intraBars.ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp2 + xp1)/2, y, sf);
+                    g.DrawString(fromBar.ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp3 + xp2)/2, y, sf);
+                    g.DrawString(untilBar.ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp4 + xp3)/2, y, sf);
+                    g.DrawString(coveredBars.ToString(CultureInfo.InvariantCulture) + (isMultyAreas ? "*" : ""), _fontInfo, brush, (xp5 + xp4)/2, y, sf);
                     g.DrawString(percentage.ToString("F2"), _fontInfo, brush, (xp6 + xp5)/2, y, sf);
 
                     var rectf = new RectangleF(xp6 + 10, y + 4, xp7 - xp6 - 20, 9);
@@ -475,8 +459,6 @@ namespace Forex_Strategy_Builder
                        pnl.ClientSize.Height);
             g.DrawLine(penBorder, 0, pnl.ClientSize.Height - border + 1, pnl.ClientSize.Width,
                        pnl.ClientSize.Height - border + 1);
-
-            return;
         }
 
         /// <summary>
@@ -487,25 +469,23 @@ namespace Forex_Strategy_Builder
             if (_isLoadingNow)
             {
                 // Cancel the asynchronous operation.
-                _bgWorker.CancelAsync();
+                BgWorker.CancelAsync();
                 return;
             }
 
             Cursor = Cursors.WaitCursor;
-            _progressBar.Value = 0;
+            ProgressBar.Value = 0;
             _warningMessage = string.Empty;
             _isLoadingNow = true;
             _progressPercent = 0;
-            _lblProgress.Visible = true;
-            _chbAutoscan.Visible = false;
-            _chbTickScan.Visible = false;
+            LblProgress.Visible = true;
+            ChbAutoscan.Visible = false;
+            ChbTickScan.Visible = false;
 
-            _btnClose.Text = Language.T("Cancel");
+            BtnClose.Text = Language.T("Cancel");
 
             // Start the bgWorker
-            _bgWorker.RunWorkerAsync();
-
-            return;
+            BgWorker.RunWorkerAsync();
         }
 
         /// <summary>
@@ -525,9 +505,9 @@ namespace Forex_Strategy_Builder
         private void BgWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             if (e.ProgressPercentage == 200)
-                _progressBar.Style = ProgressBarStyle.Marquee;
+                ProgressBar.Style = ProgressBarStyle.Marquee;
             else
-                _progressBar.Value = e.ProgressPercentage;
+                ProgressBar.Value = e.ProgressPercentage;
         }
 
         /// <summary>
@@ -535,12 +515,10 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (Data.IsIntrabarData ||
-                Configs.UseTickData && Data.IsTickData ||
-                Data.Period == DataPeriods.min1)
+            if (Data.IsIntrabarData || Configs.UseTickData && Data.IsTickData || Data.Period == DataPeriods.min1)
                 Backtester.Scan();
 
-            if (!_isCompactMode)
+            if (!CompactMode)
                 ShowScanningResult();
             CompleteScanning();
 
@@ -551,10 +529,8 @@ namespace Forex_Strategy_Builder
                                 Language.T("You can try also \"Cut Off Bad Data\"."),
                                 Language.T("Scanner"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-            if (_isCompactMode)
+            if (CompactMode)
                 Close();
-
-            return;
         }
 
         /// <summary>
@@ -562,13 +538,13 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowScanningResult()
         {
-            _balanceChart.SetChartData();
-            _balanceChart.InitChart();
-            _balanceChart.Invalidate();
-            _infoPanel.Invalidate();
+            BalanceChart.SetChartData();
+            BalanceChart.InitChart();
+            BalanceChart.Invalidate();
+            InfoPanel.Invalidate();
 
-            _chbAutoscan.Visible = true;
-            _chbTickScan.Visible = Configs.UseTickData || _isTickDataFile;
+            ChbAutoscan.Visible = true;
+            ChbTickScan.Visible = Configs.UseTickData || _isTickDataFile;
         }
 
         /// <summary>
@@ -576,15 +552,15 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void CompleteScanning()
         {
-            _progressBar.Style = ProgressBarStyle.Blocks;
+            ProgressBar.Style = ProgressBarStyle.Blocks;
 
-            _lblProgress.Text = string.Empty;
-            _lblProgress.Visible = false;
+            LblProgress.Text = string.Empty;
+            LblProgress.Visible = false;
 
-            _btnClose.Text = Language.T("Close");
+            BtnClose.Text = Language.T("Close");
             Cursor = Cursors.Default;
             _isLoadingNow = false;
-            _btnClose.Focus();
+            BtnClose.Focus();
         }
 
         /// <summary>
@@ -669,8 +645,6 @@ namespace Forex_Strategy_Builder
                     MessageBox.Show(ex.Message);
                 }
             }
-
-            return;
         }
 
         /// <summary>
@@ -682,7 +656,7 @@ namespace Forex_Strategy_Builder
                                  {
                                      DataDir = Data.OfflineDataDir,
                                      FormatDate = DateFormat.Unknown,
-                                     MaxBars = Configs.MAX_INTRA_BARS
+                                     MaxBars = Configs.MaxIntraBars
                                  };
 
 
@@ -701,7 +675,7 @@ namespace Forex_Strategy_Builder
                     if (Data.Update - instrument.Update > new TimeSpan(24, 0, 0))
                         _warningMessage += Environment.NewLine + Language.T("Data for:") + " " + Data.Symbol + " " +
                                            Data.DataPeriodToString(period) + " - " + Language.T("Updated on:") + " " +
-                                           instrument.Update.ToString();
+                                           instrument.Update.ToString(CultureInfo.InvariantCulture);
                 }
 
                 int startBigBar;
@@ -763,8 +737,6 @@ namespace Forex_Strategy_Builder
                                        (bar + 1) + " - " + Data.Time[bar];
                 }
             }
-
-            return;
         }
 
         /// <summary>
@@ -858,8 +830,6 @@ namespace Forex_Strategy_Builder
                         Data.IntraBarData[bar][maxIntrabar].High = Data.High[bar];
                 }
             }
-
-            return;
         }
 
         /// <summary>
@@ -963,7 +933,7 @@ namespace Forex_Strategy_Builder
                 {
                     if (Data.TickData[bar] == null)
                     {
-                        sw.WriteLine((bar + 1).ToString() + "\t" +
+                        sw.WriteLine((bar + 1).ToString(CultureInfo.InvariantCulture) + "\t" +
                                      Data.Time[bar].ToString("yyyy-MM-dd HH:mm") + "\t" +
                                      Data.Time[bar].DayOfWeek);
                     }
@@ -985,13 +955,13 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void SetLabelProgressText(string text)
         {
-            if (_lblProgress.InvokeRequired)
+            if (LblProgress.InvokeRequired)
             {
                 Invoke(new SetLabelProgressCallback(SetLabelProgressText), new object[] {text});
             }
             else
             {
-                _lblProgress.Text = text;
+                LblProgress.Text = text;
             }
         }
 
@@ -1000,9 +970,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ChbAutoscanCheckedChanged(object sender, EventArgs e)
         {
-            Configs.Autoscan = _chbAutoscan.Checked;
-
-            return;
+            Configs.Autoscan = ChbAutoscan.Checked;
         }
 
         /// <summary>
@@ -1010,10 +978,8 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ChbTickScanCheckedChanged(object sender, EventArgs e)
         {
-            Configs.UseTickData = _chbTickScan.Checked;
+            Configs.UseTickData = ChbTickScan.Checked;
             StartLoading();
-
-            return;
         }
 
         #region Nested type: SetLabelProgressCallback

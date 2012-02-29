@@ -496,7 +496,7 @@ namespace Forex_Strategy_Builder
             string[] asIndicatorTexts = new string[Data.Strategy.Slots];
             for (int iSlot = 0; iSlot < Data.Strategy.Slots; iSlot++)
             {
-                Indicator indicator = Indicator_Store.ConstructIndicator(Data.Strategy.Slot[iSlot].IndicatorName, Data.Strategy.Slot[iSlot].SlotType);
+                Indicator indicator = IndicatorStore.ConstructIndicator(Data.Strategy.Slot[iSlot].IndicatorName, Data.Strategy.Slot[iSlot].SlotType);
                 indicator.IndParam = Data.Strategy.Slot[iSlot].IndParam;
                 asIndicatorTexts[iSlot] = indicator.ToString();
                 indPanels += Data.Strategy.Slot[iSlot].SeparatedChart ? 1 : 0;
@@ -654,7 +654,7 @@ namespace Forex_Strategy_Builder
                 }
                 if (isChart)
                 {
-                    Indicator indicator = Indicator_Store.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName, Data.Strategy.Slot[slot].SlotType);
+                    Indicator indicator = IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName, Data.Strategy.Slot[slot].SlotType);
                     indicator.IndParam = Data.Strategy.Slot[slot].IndParam;
                     if (!chartTitle.Contains(indicator.ToString()))
                         chartTitle += Environment.NewLine + indicator.ToString();
@@ -1740,7 +1740,7 @@ namespace Forex_Strategy_Builder
 
 
             // Chart title
-            Indicator indicator = Indicator_Store.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName, Data.Strategy.Slot[slot].SlotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName, Data.Strategy.Slot[slot].SlotType);
             indicator.IndParam = Data.Strategy.Slot[slot].IndParam;
             string indicatorText = indicator.ToString();
             Size sizeTitle = g.MeasureString(indicatorText, Font).ToSize();
