@@ -10,13 +10,15 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.CustomControls;
 
 
 namespace Forex_Strategy_Builder {
     /// <summary>
     /// Draws a small histogram chart
     /// </summary>
-    public class SmallHistogramChart : Panel {
+    public class SmallHistogramChart : ContextPanel
+    {
         int space = 5;
         int border = 2;
 
@@ -498,6 +500,7 @@ namespace Forex_Strategy_Builder {
         /// </summary>
         protected override void OnResize(EventArgs eventargs) {
             InitChart();
+            base.OnResize(eventargs);
             Invalidate();
         }
 

@@ -21,6 +21,7 @@ namespace Forex_Strategy_Builder
         protected SmallHistogramChart HistogramChart { get; private set; }
         protected InfoPanel InfoPanelMarketStatistics { get; private set; }
         private ToolStripButton ButtonCharges { get; set; }
+        private Panel _marketChartsBase;
 
         /// <summary>
         /// Initialize the controls in panel pnlMarket
@@ -89,15 +90,24 @@ namespace Forex_Strategy_Builder
             // Splitter
             new Splitter {Parent = PanelMarket, Dock = DockStyle.Bottom, BorderStyle = BorderStyle.None, Height = Gap};
 
+            // Panel Charts Base
+            _marketChartsBase = new Panel
+                                    {
+                                        Parent = PanelMarket,
+                                        Dock = DockStyle.Bottom,
+                                        MinimumSize = new Size(100, 50)
+                                    };
+
             // Small Indicator Chart
             IndicatorChart = new SmallIndicatorChart
-                                 {
-                                     Parent = PanelMarket,
-                                     Cursor = Cursors.Hand,
-                                     Dock = DockStyle.Bottom,
-                                     MinimumSize = new Size(100, 50),
-                                     ShowDynamicInfo = true
-                                 };
+                                {
+                                    Parent = _marketChartsBase,
+                                    Cursor = Cursors.Hand,
+                                    Dock = DockStyle.Fill,
+                                    ShowDynamicInfo = true,
+                                    IsContextButtonVisible = true
+                                };
+            IndicatorChart.PopUpContextMenu.Items.AddRange(GetIndicatorChartContextMenuItems());
             IndicatorChart.MouseUp += IndicatorChartMouseUp;
             IndicatorChart.MouseMove += IndicatorChartMouseMove;
             IndicatorChart.MouseLeave += IndicatorChartMouseLeave;
@@ -105,13 +115,14 @@ namespace Forex_Strategy_Builder
 
             // Small Histogram Chart
             HistogramChart = new SmallHistogramChart
-                                 {
-                                     Parent = PanelMarket,
-                                     Dock = DockStyle.Bottom,
-                                     MinimumSize = new Size(100, 50),
-                                     ShowDynamicInfo = true,
-									 Visible = false
-                                 };
+                                {
+                                    Parent = _marketChartsBase,
+                                    Dock = DockStyle.Fill,
+                                    ShowDynamicInfo = true,
+									Visible = false,
+                                    IsContextButtonVisible = true
+                                };
+            HistogramChart.PopUpContextMenu.Items.AddRange(GetHistogramChartContextMenuItems());
             HistogramChart.MouseMove += HistogramChartMouseMove;
             HistogramChart.MouseLeave += IndicatorChartMouseLeave;
 
@@ -133,8 +144,67 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void PnlMarketResize(object sender, EventArgs e)
         {
-            IndicatorChart.Height = 2*PanelMarket.ClientSize.Height/(Configs.ShowJournal ? 3 : 4);
-            HistogramChart.Height = 2*PanelMarket.ClientSize.Height/(Configs.ShowJournal ? 3 : 4);
+            _marketChartsBase.Height = 2 * PanelMarket.ClientSize.Height / (Configs.ShowJournal ? 3 : 4);
+        }
+
+        private ToolStripItem[] GetIndicatorChartContextMenuItems()
+        {
+            var mi1 = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.bar_chart,
+                Text = Language.T("Show full Indicator Chart") + "..."
+            };
+            mi1.Click += ContextMenuShowFullIndicatorChartClick;
+
+            var mi2 = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.histogram_chart,
+                Text = Language.T("Trade Distribution Chart")
+            };
+            mi2.Click += ContextMenuShowHistogramChartClick;
+
+            var itemCollection = new ToolStripItem[]
+            {
+                mi1,
+                mi2
+            };
+
+            return itemCollection;
+        }
+
+        private ToolStripItem[] GetHistogramChartContextMenuItems()
+        {
+            var mi1 = new ToolStripMenuItem
+            {
+                Image = Properties.Resources.ind_chart,
+                Text = Language.T("Indicator Chart")
+            };
+            mi1.Click += ContextMenuShowIndicatorChartClick;
+
+
+            var itemCollection = new ToolStripItem[]
+            {
+                mi1
+            };
+
+            return itemCollection;
+        }
+
+        private void ContextMenuShowFullIndicatorChartClick(object sender, EventArgs e)
+        {
+            ShowFullIndicatorChart();
+        }
+
+        private void ContextMenuShowHistogramChartClick(object sender, EventArgs e)
+        {
+            IndicatorChart.Visible = false;
+            HistogramChart.Visible = true;
+        }
+
+        private void ContextMenuShowIndicatorChartClick(object sender, EventArgs e)
+        {
+            HistogramChart.Visible = false;
+            IndicatorChart.Visible = true;
         }
 
         /// <summary>
@@ -149,44 +219,8 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void IndicatorChartMouseUp(object sender, MouseEventArgs e)
         {
-            if (!Data.IsData || !Data.IsResult || e.Button != MouseButtons.Left) return;
-            var chart = new Chart
-                            {
-                                BarPixels = Configs.IndicatorChartZoom,
-                                ShowInfoPanel = Configs.IndicatorChartInfoPanel,
-                                ShowDynInfo = Configs.IndicatorChartDynamicInfo,
-                                ShowGrid = Configs.IndicatorChartGrid,
-                                ShowCross = Configs.IndicatorChartCross,
-                                ShowVolume = Configs.IndicatorChartVolume,
-                                ShowPositionLots = Configs.IndicatorChartLots,
-                                ShowOrders = Configs.IndicatorChartEntryExitPoints,
-                                ShowPositionPrice = Configs.IndicatorChartCorrectedPositionPrice,
-                                ShowBalanceEquity = Configs.IndicatorChartBalanceEquityChart,
-                                ShowFloatingPL = Configs.IndicatorChartFloatingPLChart,
-                                ShowIndicators = Configs.IndicatorChartIndicators,
-                                ShowAmbiguousBars = Configs.IndicatorChartAmbiguousMark,
-                                TrueCharts = Configs.IndicatorChartTrueCharts,
-                                ShowProtections = Configs.IndicatorChartProtections
-                            };
-
-
-            chart.ShowDialog();
-
-            Configs.IndicatorChartZoom = chart.BarPixels;
-            Configs.IndicatorChartInfoPanel = chart.ShowInfoPanel;
-            Configs.IndicatorChartDynamicInfo = chart.ShowDynInfo;
-            Configs.IndicatorChartGrid = chart.ShowGrid;
-            Configs.IndicatorChartCross = chart.ShowCross;
-            Configs.IndicatorChartVolume = chart.ShowVolume;
-            Configs.IndicatorChartLots = chart.ShowPositionLots;
-            Configs.IndicatorChartEntryExitPoints = chart.ShowOrders;
-            Configs.IndicatorChartCorrectedPositionPrice = chart.ShowPositionPrice;
-            Configs.IndicatorChartBalanceEquityChart = chart.ShowBalanceEquity;
-            Configs.IndicatorChartFloatingPLChart = chart.ShowFloatingPL;
-            Configs.IndicatorChartIndicators = chart.ShowIndicators;
-            Configs.IndicatorChartAmbiguousMark = chart.ShowAmbiguousBars;
-            Configs.IndicatorChartTrueCharts = chart.TrueCharts;
-            Configs.IndicatorChartProtections = chart.ShowProtections;
+            if (e.Button != MouseButtons.Left) return;
+            ShowFullIndicatorChart();
         }
 
         /// <summary>
@@ -213,6 +247,48 @@ namespace Forex_Strategy_Builder
         private void IndicatorChartMouseLeave(object sender, EventArgs e)
         {
             StatusLabelChartInfo = string.Empty;
+        }
+
+        private void ShowFullIndicatorChart()
+        {
+            if (!Data.IsData || !Data.IsResult) return;
+            var chart = new Chart
+            {
+                BarPixels = Configs.IndicatorChartZoom,
+                ShowInfoPanel = Configs.IndicatorChartInfoPanel,
+                ShowDynInfo = Configs.IndicatorChartDynamicInfo,
+                ShowGrid = Configs.IndicatorChartGrid,
+                ShowCross = Configs.IndicatorChartCross,
+                ShowVolume = Configs.IndicatorChartVolume,
+                ShowPositionLots = Configs.IndicatorChartLots,
+                ShowOrders = Configs.IndicatorChartEntryExitPoints,
+                ShowPositionPrice = Configs.IndicatorChartCorrectedPositionPrice,
+                ShowBalanceEquity = Configs.IndicatorChartBalanceEquityChart,
+                ShowFloatingPL = Configs.IndicatorChartFloatingPLChart,
+                ShowIndicators = Configs.IndicatorChartIndicators,
+                ShowAmbiguousBars = Configs.IndicatorChartAmbiguousMark,
+                TrueCharts = Configs.IndicatorChartTrueCharts,
+                ShowProtections = Configs.IndicatorChartProtections
+            };
+
+
+            chart.ShowDialog();
+
+            Configs.IndicatorChartZoom = chart.BarPixels;
+            Configs.IndicatorChartInfoPanel = chart.ShowInfoPanel;
+            Configs.IndicatorChartDynamicInfo = chart.ShowDynInfo;
+            Configs.IndicatorChartGrid = chart.ShowGrid;
+            Configs.IndicatorChartCross = chart.ShowCross;
+            Configs.IndicatorChartVolume = chart.ShowVolume;
+            Configs.IndicatorChartLots = chart.ShowPositionLots;
+            Configs.IndicatorChartEntryExitPoints = chart.ShowOrders;
+            Configs.IndicatorChartCorrectedPositionPrice = chart.ShowPositionPrice;
+            Configs.IndicatorChartBalanceEquityChart = chart.ShowBalanceEquity;
+            Configs.IndicatorChartFloatingPLChart = chart.ShowFloatingPL;
+            Configs.IndicatorChartIndicators = chart.ShowIndicators;
+            Configs.IndicatorChartAmbiguousMark = chart.ShowAmbiguousBars;
+            Configs.IndicatorChartTrueCharts = chart.TrueCharts;
+            Configs.IndicatorChartProtections = chart.ShowProtections;
         }
     }
 }

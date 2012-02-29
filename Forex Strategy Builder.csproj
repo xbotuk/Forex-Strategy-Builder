@@ -518,6 +518,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\chart_protection.png" />
+    <Content Include="Images\histogram_chart.png" />
+    <Content Include="Images\histogram_chart2.png" />
+    <Content Include="Images\ind_chart.png" />
     <Content Include="Images\metatrader4.png" />
     <Content Include="Images\pushpin-detach.png" />
     <Content Include="Images\refresh.png" />

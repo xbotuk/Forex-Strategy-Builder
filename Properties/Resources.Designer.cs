@@ -542,10 +542,31 @@ namespace Forex_Strategy_Builder.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap histogram_chart {
+            get {
+                object obj = ResourceManager.GetObject("histogram_chart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap histogram_chart2 {
+            get {
+                object obj = ResourceManager.GetObject("histogram_chart2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon Icon {
             get {
                 object obj = ResourceManager.GetObject("Icon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ind_chart {
+            get {
+                object obj = ResourceManager.GetObject("ind_chart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -9,13 +9,14 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Forex_Strategy_Builder.Common;
+using Forex_Strategy_Builder.CustomControls;
 
 namespace Forex_Strategy_Builder
 {
     /// <summary>
     /// Draws a small indicator chart
     /// </summary>
-    public class SmallIndicatorChart : Panel
+    public class SmallIndicatorChart : ContextPanel
     {
         private const int Space = 5;
         private const int Border = 2;
@@ -577,8 +578,8 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
-            base.OnResize(eventargs);
             InitChart();
+            base.OnResize(eventargs);
             Invalidate();
         }
     }
