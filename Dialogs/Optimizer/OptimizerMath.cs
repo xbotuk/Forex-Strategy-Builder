@@ -476,9 +476,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         {
             Backtester.Calculate();
             Backtester.CalculateAccountStats();
-            SmallBalanceChart.SetChartData();
-            SmallBalanceChart.InitChart();
-            SmallBalanceChart.Invalidate();
+            BalanceChart.SetChartData();
+            BalanceChart.InitChart();
+            BalanceChart.Invalidate();
 
             if (!e.Cancelled && Configs.PlaySounds)
                 SystemSounds.Exclamation.Play();
@@ -561,9 +561,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                         bestBalance = balance;
                         AParameter[param].BestValue = value;
                         ShowParamBestValue(param);
-                        SmallBalanceChart.SetChartData();
-                        SmallBalanceChart.InitChart();
-                        SmallBalanceChart.Invalidate();
+                        BalanceChart.SetChartData();
+                        BalanceChart.InitChart();
+                        BalanceChart.Invalidate();
                         _isStartegyChanged = true;
                         SetStrategyToGeneratorHistory();
                     }
@@ -690,9 +690,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                             AParameter[param2].BestValue = value2;
                             ShowParamBestValue(param1);
                             ShowParamBestValue(param2);
-                            SmallBalanceChart.SetChartData();
-                            SmallBalanceChart.InitChart();
-                            SmallBalanceChart.Invalidate();
+                            BalanceChart.SetChartData();
+                            BalanceChart.InitChart();
+                            BalanceChart.Invalidate();
                             _isStartegyChanged = true;
                             SetStrategyToGeneratorHistory();
                         }
@@ -960,9 +960,10 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             }
 
             Backtester.Calculate();
-            SmallBalanceChart.SetChartData();
-            SmallBalanceChart.InitChart();
-            SmallBalanceChart.Invalidate();
+            Backtester.CalculateAccountStats();
+            BalanceChart.SetChartData();
+            BalanceChart.InitChart();
+            BalanceChart.Invalidate();
             _isStartegyChanged = false;
         }
 

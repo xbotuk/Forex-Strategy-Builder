@@ -79,7 +79,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         private NumericUpDown[] AnudParameterMin { get; set; }
         private NumericUpDown[] AnudParameterMax { get; set; }
         private NumericUpDown[] AnudParameterStep { get; set; }
-        private SmallBalanceChart SmallBalanceChart { get; set; }
+        private SmallBalanceChart BalanceChart { get; set; }
         private Label[] AlblIndicatorName { get; set; }
         private Label LblNoParams { get; set; }
         private ProgressBar ProgressBar { get; set; }
@@ -171,12 +171,12 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             ProgressBar.Location = new Point(space, BtnCancel.Top - ProgressBar.Height - btnVertSpace);
 
             // Panel Preview
-            SmallBalanceChart.Size = new Size(ClientSize.Width - 2*space, 200);
-            SmallBalanceChart.Location = new Point(space, ProgressBar.Top - space - SmallBalanceChart.Height);
+            BalanceChart.Size = new Size(ClientSize.Width - 2*space, 200);
+            BalanceChart.Location = new Point(space, ProgressBar.Top - space - BalanceChart.Height);
 
             // Panel Parameters Base
             PnlParamsBase.Size = new Size(ClientSize.Width - 2*space,
-                                          SmallBalanceChart.Top - 2*space - TsOptimizerButtons.Bottom);
+                                          BalanceChart.Top - 2*space - TsOptimizerButtons.Bottom);
             PnlParamsBase.Location = new Point(space, TsOptimizerButtons.Bottom + space);
 
             // Panel Parameters Base 2

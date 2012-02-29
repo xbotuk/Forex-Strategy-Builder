@@ -29,7 +29,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             PnlLimitations = new FancyPanel(Language.T("Limitations"));
             PnlSettings = new FancyPanel(Language.T("Settings"));
             ScrollBar = new VScrollBar();
-            SmallBalanceChart = new SmallBalanceChart();
+            BalanceChart = new SmallBalanceChart();
             ProgressBar = new ProgressBar();
             BtnOptimize = new Button();
             BtnAccept = new Button();
@@ -40,35 +40,35 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             _fontIndicator = new Font(Font.FontFamily, 11);
             _colorText = LayoutColors.ColorControlText;
 
-            // pnlParamsBase
+            // Panel Parameters Base
             PnlParamsBase.Parent = this;
             PnlParamsBase.BackColor = LayoutColors.ColorControlBack;
             PnlParamsBase.Paint += PnlParamsBasePaint;
 
-            // pnlCaptions
+            // Panel Captions
             PnlCaptions.Parent = PnlParamsBase;
             PnlCaptions.Dock = DockStyle.Top;
             PnlCaptions.BackColor = LayoutColors.ColorCaptionBack;
             PnlCaptions.ForeColor = LayoutColors.ColorCaptionText;
             PnlCaptions.Paint += PnlCaptionsPaint;
 
-            // pnlParamsBase2
+            // Panel Parameters Base 2
             PnlParamsBase2.Parent = PnlParamsBase;
             PnlParamsBase2.BackColor = LayoutColors.ColorControlBack;
             PnlParamsBase2.Resize += PnlParamsBase2Resize;
 
-            // VScrollBar
+            // ScrollBar
             ScrollBar.Parent = PnlParamsBase2;
             ScrollBar.Dock = DockStyle.Right;
             ScrollBar.TabStop = true;
             ScrollBar.ValueChanged += ScrollBarValueChanged;
             ScrollBar.MouseWheel += ScrollBarMouseWheel;
 
-            // pnlParams
+            // Panel Parameters
             PnlParams.Parent = PnlParamsBase2;
             PnlParams.BackColor = LayoutColors.ColorControlBack;
 
-            // lblNoParams
+            // Label No Parameters
             LblNoParams.Parent = PnlParams;
             LblNoParams.Text = Language.T("There are no parameters suitable for optimization.");
             LblNoParams.AutoSize = true;
@@ -82,10 +82,10 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             PnlSettings.Parent = this;
             PnlSettings.Visible = false;
 
-            // smallBalanceChart
-            SmallBalanceChart.Parent = this;
-            SmallBalanceChart.BackColor = LayoutColors.ColorControlBack;
-            SmallBalanceChart.SetChartData();
+            // Small Balance Chart
+            BalanceChart.Parent = this;
+            BalanceChart.BackColor = LayoutColors.ColorControlBack;
+            BalanceChart.SetChartData();
 
             // ProgressBar
             ProgressBar.Parent = this;
@@ -540,12 +540,12 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             _isOOS = ChbOutOfSample.Checked;
             _barOOS = Data.Bars - Data.Bars*(int) NUDOutOfSample.Value/100 - 1;
 
-            SmallBalanceChart.OOSBar = _barOOS;
+            BalanceChart.OOSBar = _barOOS;
 
             if (!_isOOS) return;
-            SmallBalanceChart.SetChartData();
-            SmallBalanceChart.InitChart();
-            SmallBalanceChart.Invalidate();
+            BalanceChart.SetChartData();
+            BalanceChart.InitChart();
+            BalanceChart.Invalidate();
         }
 
         /// <summary>
@@ -556,12 +556,12 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             _isOOS = ChbOutOfSample.Checked;
             _barOOS = Data.Bars - Data.Bars*(int) NUDOutOfSample.Value/100 - 1;
 
-            SmallBalanceChart.IsOOS = _isOOS;
-            SmallBalanceChart.OOSBar = _barOOS;
+            BalanceChart.IsOOS = _isOOS;
+            BalanceChart.OOSBar = _barOOS;
 
-            SmallBalanceChart.SetChartData();
-            SmallBalanceChart.InitChart();
-            SmallBalanceChart.Invalidate();
+            BalanceChart.SetChartData();
+            BalanceChart.InitChart();
+            BalanceChart.Invalidate();
         }
 
         /// <summary>
