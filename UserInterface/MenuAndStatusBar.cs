@@ -70,7 +70,7 @@ namespace Forex_Strategy_Builder
                                 ShortcutKeys = Keys.Control | Keys.N,
                                 ToolTipText = Language.T("Open the default strategy \"New.xml\".")
                             };
-            miNew.Click += MenuStrategyNew_OnClick;
+            miNew.Click += MenuStrategyNewOnClick;
             miFile.DropDownItems.Add(miNew);
 
             var miOpen = new ToolStripMenuItem
@@ -80,7 +80,7 @@ namespace Forex_Strategy_Builder
                                  ShortcutKeys = Keys.Control | Keys.O,
                                  ToolTipText = Language.T("Open a strategy.")
                              };
-            miOpen.Click += MenuFileOpen_OnClick;
+            miOpen.Click += MenuFileOpenOnClick;
             miFile.DropDownItems.Add(miOpen);
 
             var miSave = new ToolStripMenuItem
@@ -90,7 +90,7 @@ namespace Forex_Strategy_Builder
                                  ShortcutKeys = Keys.Control | Keys.S,
                                  ToolTipText = Language.T("Save the strategy.")
                              };
-            miSave.Click += MenuFileSave_OnClick;
+            miSave.Click += MenuFileSaveOnClick;
             miFile.DropDownItems.Add(miSave);
 
             var miSaveAs = new ToolStripMenuItem
@@ -99,7 +99,7 @@ namespace Forex_Strategy_Builder
                                    Image = Resources.save_as,
                                    ToolTipText = Language.T("Save a copy of the strategy.")
                                };
-            miSaveAs.Click += MenuFileSaveAs_OnClick;
+            miSaveAs.Click += MenuFileSaveAsOnClick;
             miFile.DropDownItems.Add(miSaveAs);
 
             miFile.DropDownItems.Add(new ToolStripSeparator());
@@ -124,7 +124,7 @@ namespace Forex_Strategy_Builder
                                          ToolTipText = Language.T("Undo the last change in the strategy."),
                                          ShortcutKeys = Keys.Control | Keys.Z
                                      };
-            miStrategyUndo.Click += MenuStrategyUndo_OnClick;
+            miStrategyUndo.Click += MenuStrategyUndoOnClick;
             miEdit.DropDownItems.Add(miStrategyUndo);
 
             miEdit.DropDownItems.Add(new ToolStripSeparator());
@@ -136,7 +136,7 @@ namespace Forex_Strategy_Builder
                                          Image = Resources.copy,
                                          ShortcutKeys = Keys.Control | Keys.C
                                      };
-            miStrategyCopy.Click += MenuStrategyCopy_OnClick;
+            miStrategyCopy.Click += MenuStrategyCopyOnClick;
             miEdit.DropDownItems.Add(miStrategyCopy);
 
             var miStrategyPaste = new ToolStripMenuItem
@@ -146,7 +146,7 @@ namespace Forex_Strategy_Builder
                                           Image = Resources.paste,
                                           ShortcutKeys = Keys.Control | Keys.V
                                       };
-            miStrategyPaste.Click += MenuStrategyPaste_OnClick;
+            miStrategyPaste.Click += MenuStrategyPasteOnClick;
             miEdit.DropDownItems.Add(miStrategyPaste);
 
             miEdit.DropDownItems.Add(new ToolStripSeparator());
@@ -157,7 +157,7 @@ namespace Forex_Strategy_Builder
                                            Image = Resources.prev_gen,
                                            ShortcutKeys = Keys.Control | Keys.H
                                        };
-            miPrevGenHistory.Click += MenuPrevHistory_OnClick;
+            miPrevGenHistory.Click += MenuPrevHistoryOnClick;
             miEdit.DropDownItems.Add(miPrevGenHistory);
 
             var miNextGenHistory = new ToolStripMenuItem
@@ -166,7 +166,7 @@ namespace Forex_Strategy_Builder
                                            Image = Resources.next_gen,
                                            ShortcutKeys = Keys.Control | Keys.J
                                        };
-            miNextGenHistory.Click += MenuNextHistory_OnClick;
+            miNextGenHistory.Click += MenuNextHistoryOnClick;
             miEdit.DropDownItems.Add(miNextGenHistory);
 
             //View
@@ -191,7 +191,7 @@ namespace Forex_Strategy_Builder
                                            Text = Language.T("Make New Translation") + "...",
                                            Image = Resources.new_translation
                                        };
-            miNewTranslation.Click += MenuTools_OnClick;
+            miNewTranslation.Click += MenuToolsOnClick;
             miLanguageTools.DropDownItems.Add(miNewTranslation);
 
             var miEditTranslation = new ToolStripMenuItem
@@ -200,7 +200,7 @@ namespace Forex_Strategy_Builder
                                             Text = Language.T("Edit Current Translation") + "...",
                                             Image = Resources.edit_translation
                                         };
-            miEditTranslation.Click += MenuTools_OnClick;
+            miEditTranslation.Click += MenuToolsOnClick;
             miLanguageTools.DropDownItems.Add(miEditTranslation);
 
             miLanguageTools.DropDownItems.Add(new ToolStripSeparator());
@@ -211,7 +211,7 @@ namespace Forex_Strategy_Builder
                                                Text = Language.T("Show English Phrases") + "...",
                                                Image = Resources.view_translation
                                            };
-            miShowEnglishPhrases.Click += MenuTools_OnClick;
+            miShowEnglishPhrases.Click += MenuToolsOnClick;
             miLanguageTools.DropDownItems.Add(miShowEnglishPhrases);
 
             var miShowAltPhrases = new ToolStripMenuItem
@@ -220,7 +220,7 @@ namespace Forex_Strategy_Builder
                                            Text = Language.T("Show Translated Phrases") + "...",
                                            Image = Resources.view_translation
                                        };
-            miShowAltPhrases.Click += MenuTools_OnClick;
+            miShowAltPhrases.Click += MenuToolsOnClick;
             miLanguageTools.DropDownItems.Add(miShowAltPhrases);
 
             var miShowBothPhrases = new ToolStripMenuItem
@@ -229,7 +229,7 @@ namespace Forex_Strategy_Builder
                                             Text = Language.T("Show All Phrases") + "...",
                                             Image = Resources.view_translation
                                         };
-            miShowBothPhrases.Click += MenuTools_OnClick;
+            miShowBothPhrases.Click += MenuToolsOnClick;
             miLanguageTools.DropDownItems.Add(miShowBothPhrases);
 
             miView.DropDownItems.Add(miLanguageTools);
@@ -243,7 +243,7 @@ namespace Forex_Strategy_Builder
                                            ShortcutKeys = Keys.F2,
                                            Image = Resources.bar_chart
                                        };
-            miShowPriceChart.Click += ShowPriceChart_OnClick;
+            miShowPriceChart.Click += ShowPriceChartOnClick;
             miView.DropDownItems.Add(miShowPriceChart);
 
             var miShowAccountChart = new ToolStripMenuItem
@@ -253,7 +253,7 @@ namespace Forex_Strategy_Builder
                                              Image = Resources.balance_chart,
                                              ShortcutKeys = Keys.F3
                                          };
-            miShowAccountChart.Click += ShowAccountChart_OnClick;
+            miShowAccountChart.Click += ShowAccountChartOnClick;
             miView.DropDownItems.Add(miShowAccountChart);
 
             miView.DropDownItems.Add(new ToolStripSeparator());
@@ -264,7 +264,7 @@ namespace Forex_Strategy_Builder
                                                      Text = Language.T("Journal by Positions") + " " + Language.T("without Transfers"),
                                                      Checked = Configs.ShowJournal && !Configs.JournalByBars && !Configs.JournalShowTransfers
                                                  };
-            MiJournalByPosWithoutTransfers.Click += MenuJournal_OnClick;
+            MiJournalByPosWithoutTransfers.Click += MenuJournalOnClick;
             miView.DropDownItems.Add(MiJournalByPosWithoutTransfers);
 
             MiJournalByPos = new ToolStripMenuItem
@@ -273,7 +273,7 @@ namespace Forex_Strategy_Builder
                                      Text = Language.T("Journal by Positions"),
                                      Checked = Configs.ShowJournal && !Configs.JournalByBars && Configs.JournalShowTransfers
                                  };
-            MiJournalByPos.Click += MenuJournal_OnClick;
+            MiJournalByPos.Click += MenuJournalOnClick;
             miView.DropDownItems.Add(MiJournalByPos);
 
             MiJournalByBars = new ToolStripMenuItem
@@ -282,7 +282,7 @@ namespace Forex_Strategy_Builder
                                       Text = Language.T("Journal by Bars"),
                                       Checked = Configs.ShowJournal && Configs.JournalByBars
                                   };
-            MiJournalByBars.Click += MenuJournal_OnClick;
+            MiJournalByBars.Click += MenuJournalOnClick;
             miView.DropDownItems.Add(MiJournalByBars);
 
             miView.DropDownItems.Add(new ToolStripSeparator());
@@ -295,7 +295,7 @@ namespace Forex_Strategy_Builder
                                        CheckOnClick = true,
                                        ShortcutKeys = Keys.Alt | Keys.Enter
                                    };
-            miFullScreen.Click += MenuViewFullScreen_OnClick;
+            miFullScreen.Click += MenuViewFullScreenOnClick;
             miView.DropDownItems.Add(miFullScreen);
 
             var miLoadColor = new ToolStripMenuItem {Text = Language.T("Color Scheme"), Image = Resources.palette};
@@ -304,7 +304,7 @@ namespace Forex_Strategy_Builder
                 var miColor = new ToolStripMenuItem
                                   {Text = LayoutColors.ColorSchemeList[i], Name = LayoutColors.ColorSchemeList[i]};
                 miColor.Checked = miColor.Name == Configs.ColorScheme;
-                miColor.Click += MenuLoadColor_OnClick;
+                miColor.Click += MenuLoadColorOnClick;
                 miLoadColor.DropDownItems.Add(miColor);
             }
 
@@ -317,7 +317,7 @@ namespace Forex_Strategy_Builder
                                          Checked = Configs.GradientView,
                                          CheckOnClick = true
                                      };
-            miGradientView.Click += MenuGradientView_OnClick;
+            miGradientView.Click += MenuGradientViewOnClick;
             miView.DropDownItems.Add(miGradientView);
 
             var miShowStatusBar = new ToolStripMenuItem
@@ -327,7 +327,7 @@ namespace Forex_Strategy_Builder
                                           Checked = Configs.ShowStatusBar,
                                           CheckOnClick = true
                                       };
-            miShowStatusBar.Click += ShowStatusBar_OnClick;
+            miShowStatusBar.Click += ShowStatusBarOnClick;
             miView.DropDownItems.Add(miShowStatusBar);
 
             // Account
@@ -341,7 +341,7 @@ namespace Forex_Strategy_Builder
                                                Language.T("Display the account and the statistics in currency."),
                                            Checked = Configs.AccountInMoney
                                        };
-            MiAccountShowInMoney.Click += AccountShowInMoney_OnClick;
+            MiAccountShowInMoney.Click += AccountShowInMoneyOnClick;
             miAccount.DropDownItems.Add(MiAccountShowInMoney);
 
             MiAccountShowInPips = new ToolStripMenuItem
@@ -351,7 +351,7 @@ namespace Forex_Strategy_Builder
                                           ToolTipText = Language.T("Display the account and the statistics in pips."),
                                           Checked = !Configs.AccountInMoney
                                       };
-            MiAccountShowInPips.Click += AccountShowInMoney_OnClick;
+            MiAccountShowInPips.Click += AccountShowInMoneyOnClick;
             miAccount.DropDownItems.Add(MiAccountShowInPips);
 
             miAccount.DropDownItems.Add(new ToolStripSeparator());
@@ -362,7 +362,7 @@ namespace Forex_Strategy_Builder
                                             Image = Resources.account_sett,
                                             ToolTipText = Language.T("Set the account parameters.")
                                         };
-            miAccountSettings.Click += MenuAccountSettings_OnClick;
+            miAccountSettings.Click += MenuAccountSettingsOnClick;
             miAccount.DropDownItems.Add(miAccountSettings);
 
             // Market
@@ -375,7 +375,7 @@ namespace Forex_Strategy_Builder
                                        ToolTipText = Language.T("Reload the market data."),
                                        ShortcutKeys = Keys.Control | Keys.L
                                    };
-            miReLoadData.Click += MenuLoadData_OnClick;
+            miReLoadData.Click += MenuLoadDataOnClick;
             miMarket.DropDownItems.Add(miReLoadData);
 
             miMarket.DropDownItems.Add(new ToolStripSeparator());
@@ -387,7 +387,7 @@ namespace Forex_Strategy_Builder
                                     ToolTipText = Language.T("Spread, Swap numbers, Slippage."),
                                     Image = Resources.charges
                                 };
-            miCharges.Click += MenuTools_OnClick;
+            miCharges.Click += MenuToolsOnClick;
             miMarket.DropDownItems.Add(miCharges);
 
             var miDataHorizon = new ToolStripMenuItem
@@ -396,7 +396,7 @@ namespace Forex_Strategy_Builder
                                         Image = Resources.data_horizon,
                                         ToolTipText = Language.T("Limit the number of data bars and the starting date.")
                                     };
-            miDataHorizon.Click += MenuDataHorizon_OnClick;
+            miDataHorizon.Click += MenuDataHorizonOnClick;
             miMarket.DropDownItems.Add(miDataHorizon);
 
             var miDataDirectory = new ToolStripMenuItem
@@ -405,7 +405,7 @@ namespace Forex_Strategy_Builder
                                           Image = Resources.data_directory,
                                           ToolTipText = Language.T("Change the current offline data directory.")
                                       };
-            miDataDirectory.Click += MenuDataDirectory_OnClick;
+            miDataDirectory.Click += MenuDataDirectoryOnClick;
             miMarket.DropDownItems.Add(miDataDirectory);
 
             var miInstrumentEditor = new ToolStripMenuItem
@@ -415,7 +415,7 @@ namespace Forex_Strategy_Builder
                                              Image = Resources.instr_edit,
                                              ToolTipText = Language.T("Add, edit, or delete instruments.")
                                          };
-            miInstrumentEditor.Click += MenuTools_OnClick;
+            miInstrumentEditor.Click += MenuToolsOnClick;
             miMarket.DropDownItems.Add(miInstrumentEditor);
 
             miMarket.DropDownItems.Add(new ToolStripSeparator());
@@ -427,7 +427,7 @@ namespace Forex_Strategy_Builder
                                       CheckOnClick = true,
                                       Checked = Configs.CheckData
                                   };
-            miCheckData.Click += MenuCheckData_OnClick;
+            miCheckData.Click += MenuCheckDataOnClick;
             miMarket.DropDownItems.Add(miCheckData);
 
             var miCutBadData = new ToolStripMenuItem
@@ -437,7 +437,7 @@ namespace Forex_Strategy_Builder
                                        CheckOnClick = true,
                                        Checked = Configs.CutBadData
                                    };
-            miCutBadData.Click += MenuRefineData_OnClick;
+            miCutBadData.Click += MenuRefineDataOnClick;
             miMarket.DropDownItems.Add(miCutBadData);
 
             var miFillDataGaps = new ToolStripMenuItem
@@ -447,7 +447,7 @@ namespace Forex_Strategy_Builder
                                          CheckOnClick = true,
                                          Checked = Configs.FillInDataGaps
                                      };
-            miFillDataGaps.Click += MenuRefineData_OnClick;
+            miFillDataGaps.Click += MenuRefineDataOnClick;
             miMarket.DropDownItems.Add(miFillDataGaps);
 
             miMarket.DropDownItems.Add(new ToolStripSeparator());
@@ -470,7 +470,7 @@ namespace Forex_Strategy_Builder
                                               Text = Language.T("Import MetaTrader 4 HST Files") + "...",
                                               Image = Resources.metatrader4
                                           };
-            miMetaTrader4Import.Click += MenuTools_OnClick;
+            miMetaTrader4Import.Click += MenuToolsOnClick;
             miMarket.DropDownItems.Add(miMetaTrader4Import);
 
             var miJForexImport = new ToolStripMenuItem
@@ -479,7 +479,7 @@ namespace Forex_Strategy_Builder
                                          Text = Language.T("Import JForex Data Files") + "...",
                                          Image = Resources.jforex
                                      };
-            miJForexImport.Click += MenuTools_OnClick;
+            miJForexImport.Click += MenuToolsOnClick;
             miMarket.DropDownItems.Add(miJForexImport);
 
             // Strategy
@@ -492,7 +492,7 @@ namespace Forex_Strategy_Builder
                                              ToolTipText = Language.T("See the strategy overview."),
                                              ShortcutKeys = Keys.F4
                                          };
-            miStrategyOverview.Click += MenuStrategyOverview_OnClick;
+            miStrategyOverview.Click += MenuStrategyOverviewOnClick;
             miStrategy.DropDownItems.Add(miStrategyOverview);
 
             var miCalculate = new ToolStripMenuItem
@@ -502,7 +502,7 @@ namespace Forex_Strategy_Builder
                                       ToolTipText = Language.T("Recalculate the strategy."),
                                       ShortcutKeys = Keys.F5
                                   };
-            miCalculate.Click += MenuAnalysisCalculate_OnClick;
+            miCalculate.Click += MenuAnalysisCalculateOnClick;
             miStrategy.DropDownItems.Add(miCalculate);
 
             var miQuickScan = new ToolStripMenuItem
@@ -512,7 +512,7 @@ namespace Forex_Strategy_Builder
                                       Image = Resources.fast_scan,
                                       ShortcutKeys = Keys.F6
                                   };
-            miQuickScan.Click += MenuQuickScan_OnClick;
+            miQuickScan.Click += MenuQuickScanOnClick;
             miStrategy.DropDownItems.Add(miQuickScan);
 
             miStrategy.DropDownItems.Add(new ToolStripSeparator());
@@ -523,7 +523,7 @@ namespace Forex_Strategy_Builder
                                             Image = Resources.publish_strategy,
                                             ToolTipText = Language.T("Publish the strategy in the program's forum.")
                                         };
-            miStrategyPublish.Click += MenuStrategyBBcode_OnClick;
+            miStrategyPublish.Click += MenuStrategyBBcodeOnClick;
             miStrategy.DropDownItems.Add(miStrategyPublish);
 
             miStrategy.DropDownItems.Add(new ToolStripSeparator());
@@ -535,7 +535,7 @@ namespace Forex_Strategy_Builder
                                              Checked = Configs.UseLogicalGroups,
                                              CheckOnClick = true
                                          };
-            miUseLogicalGroups.Click += MenuUseLogicalGroups_OnClick;
+            miUseLogicalGroups.Click += MenuUseLogicalGroupsOnClick;
             miStrategy.DropDownItems.Add(miUseLogicalGroups);
 
             var miOpeningLogicConditions = new ToolStripMenuItem
@@ -553,7 +553,7 @@ namespace Forex_Strategy_Builder
                                                   Tag = i,
                                                   Checked = (Configs.MaxEntryFilters == i)
                                               };
-                miOpeningLogicSlots.Click += MenuOpeningLogicSlots_OnClick;
+                miOpeningLogicSlots.Click += MenuOpeningLogicSlotsOnClick;
                 miOpeningLogicConditions.DropDownItems.Add(miOpeningLogicSlots);
             }
 
@@ -572,7 +572,7 @@ namespace Forex_Strategy_Builder
                                                   Tag = i,
                                                   Checked = (Configs.MaxExitFilters == i)
                                               };
-                miClosingLogicSlots.Click += MenuClosingLogicSlots_OnClick;
+                miClosingLogicSlots.Click += MenuClosingLogicSlotsOnClick;
                 miClosingLogicConditions.DropDownItems.Add(miClosingLogicSlots);
             }
 
@@ -585,7 +585,7 @@ namespace Forex_Strategy_Builder
                                              Checked = Configs.RememberLastStr,
                                              CheckOnClick = true
                                          };
-            miStrategyRemember.Click += MenuStrategyRemember_OnClick;
+            miStrategyRemember.Click += MenuStrategyRememberOnClick;
             miStrategy.DropDownItems.Add(miStrategyRemember);
 
             MiStrategyAUPBV = new ToolStripMenuItem
@@ -595,7 +595,7 @@ namespace Forex_Strategy_Builder
                                       Checked = true,
                                       CheckOnClick = true
                                   };
-            MiStrategyAUPBV.Click += MenuStrategyAUPBV_OnClick;
+            MiStrategyAUPBV.Click += MenuStrategyAUPBVOnClick;
             miStrategy.DropDownItems.Add(MiStrategyAUPBV);
 
             // Export
@@ -608,7 +608,7 @@ namespace Forex_Strategy_Builder
                                         Text = Language.T("Market Data") + "...",
                                         ToolTipText = Language.T("Export market data as a spreadsheet.")
                                     };
-            miExpDataOnly.Click += Export_OnClick;
+            miExpDataOnly.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpDataOnly);
 
             var miExpCSVData = new ToolStripMenuItem
@@ -618,7 +618,7 @@ namespace Forex_Strategy_Builder
                                        Text = Language.T("Data File") + "...",
                                        ToolTipText = Language.T("Export market data as a CSV file.")
                                    };
-            miExpCSVData.Click += Export_OnClick;
+            miExpCSVData.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpCSVData);
 
             var miExpIndicators = new ToolStripMenuItem
@@ -628,7 +628,7 @@ namespace Forex_Strategy_Builder
                                           Image = Resources.export,
                                           ToolTipText = Language.T("Export market data and indicators as a spreadsheet.")
                                       };
-            miExpIndicators.Click += Export_OnClick;
+            miExpIndicators.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpIndicators);
 
             var miExpBarSummary = new ToolStripMenuItem
@@ -637,7 +637,7 @@ namespace Forex_Strategy_Builder
                                           Text = Language.T("Bar Summary") + "...",
                                           Image = Resources.export, ToolTipText = Language.T("Export the transactions summary by bars as a spreadsheet.")
                                       };
-            miExpBarSummary.Click += Export_OnClick;
+            miExpBarSummary.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpBarSummary);
 
             var miExpPositions = new ToolStripMenuItem
@@ -647,7 +647,7 @@ namespace Forex_Strategy_Builder
                                          ToolTipText = Language.T("Export positions in pips as a spreadsheet."),
                                          Image = Resources.export
                                      };
-            miExpPositions.Click += Export_OnClick;
+            miExpPositions.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpPositions);
 
             var miExpPositionsNoTransfer = new ToolStripMenuItem
@@ -657,7 +657,7 @@ namespace Forex_Strategy_Builder
                                                    ToolTipText = Language.T("Export positions in pips as a spreadsheet."),
                                                    Image = Resources.export
                                                };
-            miExpPositionsNoTransfer.Click += Export_OnClick;
+            miExpPositionsNoTransfer.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpPositionsNoTransfer);
 
             var miExpMoneyPositions = new ToolStripMenuItem
@@ -667,7 +667,7 @@ namespace Forex_Strategy_Builder
                                               Image = Resources.export,
                                               ToolTipText = Language.T("Export positions in currency as a spreadsheet.")
                                           };
-            miExpMoneyPositions.Click += Export_OnClick;
+            miExpMoneyPositions.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpMoneyPositions);
 
             var miExpMoneyPositionsNoTransfer = new ToolStripMenuItem
@@ -677,7 +677,7 @@ namespace Forex_Strategy_Builder
                                                         Image = Resources.export,
                                                         ToolTipText = Language.T("Export positions in currency as a spreadsheet.")
                                                     };
-            miExpMoneyPositionsNoTransfer.Click += Export_OnClick;
+            miExpMoneyPositionsNoTransfer.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpMoneyPositionsNoTransfer);
 
             // Testing
@@ -692,7 +692,7 @@ namespace Forex_Strategy_Builder
                                          Checked = Configs.Autoscan,
                                          CheckOnClick = true
                                      };
-            MiStrategyAutoscan.Click += MenuStrategyAutoscan_OnClick;
+            MiStrategyAutoscan.Click += MenuStrategyAutoscanOnClick;
             miTesting.DropDownItems.Add(MiStrategyAutoscan);
 
             var miTradeUntilMC = new ToolStripMenuItem
@@ -706,7 +706,7 @@ namespace Forex_Strategy_Builder
                                              Environment.NewLine +
                                              Language.T("Do not open a new position when the Free Margin is insufficient.")
                                      };
-            miTradeUntilMC.Click += TradeUntilMC_OnClick;
+            miTradeUntilMC.Click += TradeUntilMCOnClick;
             miTesting.DropDownItems.Add(miTradeUntilMC);
 
             var miAdditionalStats = new ToolStripMenuItem
@@ -717,7 +717,7 @@ namespace Forex_Strategy_Builder
                                             CheckOnClick = true,
                                             ToolTipText = Language.T("Show long/short balance lines on the chart and more statistics in the overview.")
                                         };
-            miAdditionalStats.Click += AdditionalStats_OnClick;
+            miAdditionalStats.Click += AdditionalStatsOnClick;
             miTesting.DropDownItems.Add(miAdditionalStats);
 
             var miShowClosePrice = new ToolStripMenuItem
@@ -727,7 +727,7 @@ namespace Forex_Strategy_Builder
                                            Checked = Configs.ShowPriceChartOnAccountChart,
                                            CheckOnClick = true
                                        };
-            miShowClosePrice.Click += ShowPriceLine_OnClick;
+            miShowClosePrice.Click += ShowPriceLineOnClick;
             miTesting.DropDownItems.Add(miShowClosePrice);
 
             // Analysis
@@ -739,7 +739,7 @@ namespace Forex_Strategy_Builder
                                                Name = "tsmiOverOptimization",
                                                Image = Resources.overoptimization_chart
                                            };
-            tsmiOverOptimization.Click += MenuTools_OnClick;
+            tsmiOverOptimization.Click += MenuToolsOnClick;
             miAnalysis.DropDownItems.Add(tsmiOverOptimization);
 
             var tsmiCumulativeStrategy = new ToolStripMenuItem
@@ -748,7 +748,7 @@ namespace Forex_Strategy_Builder
                                                  Name = "tsmiCumulativeStrategy",
                                                  Image = Resources.cumulative_str
                                              };
-            tsmiCumulativeStrategy.Click += MenuTools_OnClick;
+            tsmiCumulativeStrategy.Click += MenuToolsOnClick;
             //miAnalysis.DropDownItems.Add(tsmiCumulativeStrategy);
 
             // Tools
@@ -761,7 +761,7 @@ namespace Forex_Strategy_Builder
                                        ToolTipText = Language.T("Compare the interpolating methods."),
                                        Image = Resources.comparator
                                    };
-            miComparator.Click += MenuTools_OnClick;
+            miComparator.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miComparator);
 
             var miScanner = new ToolStripMenuItem
@@ -771,7 +771,7 @@ namespace Forex_Strategy_Builder
                                     ToolTipText = Language.T("Perform a deep intrabar scan."),
                                     Image = Resources.scanner
                                 };
-            miScanner.Click += MenuTools_OnClick;
+            miScanner.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miScanner);
 
             var miOptimizer = new ToolStripMenuItem
@@ -781,7 +781,7 @@ namespace Forex_Strategy_Builder
                                       ToolTipText = Language.T("Optimize the strategy parameters."),
                                       Image = Resources.optimizer
                                   };
-            miOptimizer.Click += MenuTools_OnClick;
+            miOptimizer.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miOptimizer);
 
             var miGenerator = new ToolStripMenuItem
@@ -791,7 +791,7 @@ namespace Forex_Strategy_Builder
                                       ToolTipText = Language.T("Generate or improve a strategy."),
                                       Image = Resources.generator
                                   };
-            miGenerator.Click += MenuTools_OnClick;
+            miGenerator.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miGenerator);
 
             var miBarExplorer = new ToolStripMenuItem
@@ -801,7 +801,7 @@ namespace Forex_Strategy_Builder
                                         ToolTipText = Language.T("Show the price route inside a bar."),
                                         Image = Resources.bar_explorer
                                     };
-            miBarExplorer.Click += MenuTools_OnClick;
+            miBarExplorer.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miBarExplorer);
 
             miTools.DropDownItems.Add(new ToolStripSeparator());
@@ -820,7 +820,7 @@ namespace Forex_Strategy_Builder
                                       Image = Resources.reload_ind,
                                       ShortcutKeys = Keys.Control | Keys.I
                                   };
-            miReloadInd.Click += MenuTools_OnClick;
+            miReloadInd.Click += MenuToolsOnClick;
             miCustomInd.DropDownItems.Add(miReloadInd);
 
             var miCheckInd = new ToolStripMenuItem
@@ -829,7 +829,7 @@ namespace Forex_Strategy_Builder
                                      Text = Language.T("Check the Custom Indicators"),
                                      Image = Resources.check_ind
                                  };
-            miCheckInd.Click += MenuTools_OnClick;
+            miCheckInd.Click += MenuToolsOnClick;
             miCustomInd.DropDownItems.Add(miCheckInd);
 
             miCustomInd.DropDownItems.Add(new ToolStripSeparator());
@@ -840,7 +840,7 @@ namespace Forex_Strategy_Builder
                                        Text = Language.T("Export the Strategy as a Custom Indicator"),
                                        Image = Resources.str_export_as_ci
                                    };
-            miExportAsCi.Click += MenuTools_OnClick;
+            miExportAsCi.Click += MenuToolsOnClick;
             miCustomInd.DropDownItems.Add(miExportAsCi);
 
             miCustomInd.DropDownItems.Add(new ToolStripSeparator());
@@ -851,7 +851,7 @@ namespace Forex_Strategy_Builder
                                           Text = Language.T("Open the Source Files Folder") + "...",
                                           Image = Resources.folder_open
                                       };
-            miOpenIndFolder.Click += MenuTools_OnClick;
+            miOpenIndFolder.Click += MenuToolsOnClick;
             miCustomInd.DropDownItems.Add(miOpenIndFolder);
 
             var miCustIndForum = new ToolStripMenuItem
@@ -872,7 +872,7 @@ namespace Forex_Strategy_Builder
                                          Checked = Configs.LoadCustomIndicators,
                                          CheckOnClick = true
                                      };
-            miLoadCstomInd.Click += LoadCustomIndicators_OnClick;
+            miLoadCstomInd.Click += LoadCustomIndicatorsOnClick;
             miCustomInd.DropDownItems.Add(miLoadCstomInd);
 
             var miShowCstomInd = new ToolStripMenuItem
@@ -882,7 +882,7 @@ namespace Forex_Strategy_Builder
                                          Checked = Configs.ShowCustomIndicators,
                                          CheckOnClick = true
                                      };
-            miShowCstomInd.Click += ShowCustomIndicators_OnClick;
+            miShowCstomInd.Click += ShowCustomIndicatorsOnClick;
             miCustomInd.DropDownItems.Add(miShowCstomInd);
 
             miTools.DropDownItems.Add(miCustomInd);
@@ -896,7 +896,7 @@ namespace Forex_Strategy_Builder
                                        Checked = Configs.PlaySounds,
                                        CheckOnClick = true
                                    };
-            miPlaySounds.Click += MenuTools_OnClick;
+            miPlaySounds.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miPlaySounds);
 
             miTools.DropDownItems.Add(new ToolStripSeparator());
@@ -907,7 +907,7 @@ namespace Forex_Strategy_Builder
                                              Image = Resources.profit_calculator,
                                              Text = Language.T("Profit Calculator") + "..."
                                          };
-            miProfitCalculator.Click += MenuTools_OnClick;
+            miProfitCalculator.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miProfitCalculator);
 
             var miPivotPoints = new ToolStripMenuItem
@@ -916,7 +916,7 @@ namespace Forex_Strategy_Builder
                                         Image = Resources.pivot_points,
                                         Text = Language.T("Pivot Points") + "..."
                                     };
-            miPivotPoints.Click += MenuTools_OnClick;
+            miPivotPoints.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miPivotPoints);
 
             var miFibonacciLevels = new ToolStripMenuItem
@@ -925,7 +925,7 @@ namespace Forex_Strategy_Builder
                                             Image = Resources.fibo_levels,
                                             Text = Language.T("Fibonacci Levels") + "..."
                                         };
-            miFibonacciLevels.Click += MenuTools_OnClick;
+            miFibonacciLevels.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miFibonacciLevels);
 
             miTools.DropDownItems.Add(new ToolStripSeparator());
@@ -942,7 +942,7 @@ namespace Forex_Strategy_Builder
                                        ToolTipText = Language.T("A simple calculator."),
                                        ShortcutKeys = Keys.F12
                                    };
-            miCalculator.Click += MenuTools_OnClick;
+            miCalculator.Click += MenuToolsOnClick;
             miAdditional.DropDownItems.Add(miCalculator);
 
             miAdditional.DropDownItems.Add(new ToolStripSeparator());
@@ -953,7 +953,7 @@ namespace Forex_Strategy_Builder
                                            Text = Language.T("Command Console") + "...",
                                            Image = Resources.prompt
                                        };
-            miCommandConsole.Click += MenuTools_OnClick;
+            miCommandConsole.Click += MenuToolsOnClick;
             miAdditional.DropDownItems.Add(miCommandConsole);
 
             if (Directory.Exists(Data.AdditionalFolder))
@@ -974,7 +974,7 @@ namespace Forex_Strategy_Builder
                     miAdditionalSubMenu.Text = Language.T(name) + "...";
                     miAdditionalSubMenu.Image = FileIconExtractor.GetIcon(file).ToBitmap();
                     miAdditionalSubMenu.Tag = file;
-                    miAdditionalSubMenu.Click += AdditionalSubMenu_OnClick;
+                    miAdditionalSubMenu.Click += AdditionalSubMenuOnClick;
                     miAdditional.DropDownItems.Add(miAdditionalSubMenu);
                     if (key != Keys.None)
                         miAdditionalSubMenu.ShortcutKeys = Keys.Control | Keys.Shift | key;
@@ -1029,7 +1029,7 @@ namespace Forex_Strategy_Builder
                                          ToolTipText = Language.T("Reset the program settings to their default values. You will need to restart!"),
                                          Image = Resources.warning
                                      };
-            miResetConfigs.Click += MenuTools_OnClick;
+            miResetConfigs.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miResetConfigs);
 
             // Help
@@ -1086,7 +1086,7 @@ namespace Forex_Strategy_Builder
                                        Checked = Configs.SendUsageStats,
                                        CheckOnClick = true
                                    };
-            miUsageStats.Click += MenuUsageStats_OnClick;
+            miUsageStats.Click += MenuUsageStatsOnClick;
             miHelp.DropDownItems.Add(miUsageStats);
 
             miHelp.DropDownItems.Add(new ToolStripSeparator());
@@ -1097,7 +1097,7 @@ namespace Forex_Strategy_Builder
                                         Checked = Configs.CheckForUpdates,
                                         CheckOnClick = true
                                     };
-            miHelpUpdates.Click += MenuHelpUpdates_OnClick;
+            miHelpUpdates.Click += MenuHelpUpdatesOnClick;
             miHelp.DropDownItems.Add(miHelpUpdates);
 
             var miHelpNewBeta = new ToolStripMenuItem
@@ -1106,7 +1106,7 @@ namespace Forex_Strategy_Builder
                                         Checked = Configs.CheckForNewBeta,
                                         CheckOnClick = true
                                     };
-            miHelpNewBeta.Click += MenuHelpNewBeta_OnClick;
+            miHelpNewBeta.Click += MenuHelpNewBetaOnClick;
             miHelp.DropDownItems.Add(miHelpNewBeta);
 
 
@@ -1219,21 +1219,21 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Saves the current strategy
         /// </summary>
-        protected virtual void MenuFileSave_OnClick(object sender, EventArgs e)
+        protected virtual void MenuFileSaveOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Opens the SaveAs menu
         /// </summary>
-        protected virtual void MenuFileSaveAs_OnClick(object sender, EventArgs e)
+        protected virtual void MenuFileSaveAsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Opens a saved strategy
         /// </summary>
-        protected virtual void MenuFileOpen_OnClick(object sender, EventArgs e)
+        protected virtual void MenuFileOpenOnClick(object sender, EventArgs e)
         {
         }
 
@@ -1253,7 +1253,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Gradient View Changed
         /// </summary>
-        private void MenuGradientView_OnClick(object sender, EventArgs e)
+        private void MenuGradientViewOnClick(object sender, EventArgs e)
         {
             Configs.GradientView = ((ToolStripMenuItem) sender).Checked;
             PanelWorkspace.Invalidate(true);
@@ -1262,91 +1262,91 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Load a color scheme
         /// </summary>
-        protected virtual void MenuLoadColor_OnClick(object sender, EventArgs e)
+        protected virtual void MenuLoadColorOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Change Full Scream mode
         /// </summary>
-        protected virtual void MenuViewFullScreen_OnClick(object sender, EventArgs e)
+        protected virtual void MenuViewFullScreenOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Whether to express account in pips or in currency
         /// </summary>
-        protected virtual void AccountShowInMoney_OnClick(object sender, EventArgs e)
+        protected virtual void AccountShowInMoneyOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Open the account setting dialog
         /// </summary>
-        protected virtual void MenuAccountSettings_OnClick(object sender, EventArgs e)
+        protected virtual void MenuAccountSettingsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Loads data
         /// </summary>
-        protected virtual void MenuLoadData_OnClick(object sender, EventArgs e)
+        protected virtual void MenuLoadDataOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Check the data
         /// </summary>
-        protected virtual void MenuCheckData_OnClick(object sender, EventArgs e)
+        protected virtual void MenuCheckDataOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Refine the data
         /// </summary>
-        protected virtual void MenuRefineData_OnClick(object sender, EventArgs e)
+        protected virtual void MenuRefineDataOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Data Horizon
         /// </summary>
-        protected virtual void MenuDataHorizon_OnClick(object sender, EventArgs e)
+        protected virtual void MenuDataHorizonOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Data Directory
         /// </summary>
-        protected virtual void MenuDataDirectory_OnClick(object sender, EventArgs e)
+        protected virtual void MenuDataDirectoryOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Loads the default strategy
         /// </summary>
-        protected virtual void MenuStrategyNew_OnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyNewOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Opens the strategy settings dialogue
         /// </summary>
-        protected virtual void MenuStrategyAUPBV_OnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyAUPBVOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Use logical groups menu item.
         /// </summary>
-        protected virtual void MenuUseLogicalGroups_OnClick(object sender, EventArgs e)
+        protected virtual void MenuUseLogicalGroupsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Remember the last used strategy
         /// </summary>
-        private void MenuStrategyRemember_OnClick(object sender, EventArgs e)
+        private void MenuStrategyRememberOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             Configs.RememberLastStr = mi.Checked;
@@ -1357,14 +1357,14 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Automatic scanning.
         /// </summary>
-        protected virtual void MenuStrategyAutoscan_OnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyAutoscanOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Opens the strategy overview window
         /// </summary>
-        private void MenuStrategyOverview_OnClick(object sender, EventArgs e)
+        private void MenuStrategyOverviewOnClick(object sender, EventArgs e)
         {
             var so = new Browser(Language.T("Strategy Overview"), Data.Strategy.GenerateHTMLOverview());
             so.Show();
@@ -1373,42 +1373,42 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Undoes the strategy
         /// </summary>
-        protected virtual void MenuStrategyUndo_OnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyUndoOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Copies the strategy to clipboard.
         /// </summary>
-        protected virtual void MenuStrategyCopy_OnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyCopyOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Pastes a strategy from clipboard.
         /// </summary>
-        protected virtual void MenuStrategyPaste_OnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyPasteOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Export the strategy in BBCode format - ready to post in the forum
         /// </summary>
-        protected virtual void MenuStrategyBBcode_OnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyBBcodeOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Forces the calculating of the strategy
         /// </summary>
-        protected virtual void MenuAnalysisCalculate_OnClick(object sender, EventArgs e)
+        protected virtual void MenuAnalysisCalculateOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Forces the scanning of the strategy
         /// </summary>
-        protected virtual void MenuQuickScan_OnClick(object sender, EventArgs e)
+        protected virtual void MenuQuickScanOnClick(object sender, EventArgs e)
         {
         }
 
@@ -1424,35 +1424,35 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Menu Journal mode click
         /// </summary>
-        protected virtual void MenuJournal_OnClick(object sender, EventArgs e)
+        protected virtual void MenuJournalOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Menu TradeUntilMC mode click
         /// </summary>
-        protected virtual void TradeUntilMC_OnClick(object sender, EventArgs e)
+        protected virtual void TradeUntilMCOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Menu miAdditionalStats mode click
         /// </summary>
-        protected virtual void AdditionalStats_OnClick(object sender, EventArgs e)
+        protected virtual void AdditionalStatsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   Tools menu
         /// </summary>
-        protected virtual void MenuTools_OnClick(object sender, EventArgs e)
+        protected virtual void MenuToolsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         ///   AdditionalSub menu
         /// </summary>
-        private void AdditionalSubMenu_OnClick(object sender, EventArgs e)
+        private void AdditionalSubMenuOnClick(object sender, EventArgs e)
         {
             var item = (ToolStripMenuItem) sender;
             Process.Start(item.Tag.ToString());
@@ -1461,7 +1461,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Show the full Price Chart
         /// </summary>
-        private void ShowPriceChart_OnClick(object sender, EventArgs e)
+        private void ShowPriceChartOnClick(object sender, EventArgs e)
         {
             if (!Data.IsData || !Data.IsResult) return;
             var chart = new Chart
@@ -1504,7 +1504,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Show the full Account Chart
         /// </summary>
-        private void ShowAccountChart_OnClick(object sender, EventArgs e)
+        private void ShowAccountChartOnClick(object sender, EventArgs e)
         {
             if (!Data.IsData || !Data.IsResult) return;
             var chart = new Chart
@@ -1547,7 +1547,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Export menu
         /// </summary>
-        private void Export_OnClick(object sender, EventArgs e)
+        private void ExportOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             string name = mi.Name;
@@ -1592,7 +1592,7 @@ namespace Forex_Strategy_Builder
 
             if ((string) mi.Tag == "tips")
             {
-                var shv = new Starting_Tips();
+                var shv = new StartingTips();
                 shv.Show();
                 return;
             }
@@ -1627,7 +1627,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Menu miHelpUpdates click
         /// </summary>
-        private void MenuHelpUpdates_OnClick(object sender, EventArgs e)
+        private void MenuHelpUpdatesOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             Configs.CheckForUpdates = mi.Checked;
@@ -1636,7 +1636,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Menu miHelpNewBeta click
         /// </summary>
-        private void MenuHelpNewBeta_OnClick(object sender, EventArgs e)
+        private void MenuHelpNewBetaOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             Configs.CheckForNewBeta = mi.Checked;
@@ -1645,7 +1645,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Menu UsageStatistics click
         /// </summary>
-        private void MenuUsageStats_OnClick(object sender, EventArgs e)
+        private void MenuUsageStatsOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             Configs.SendUsageStats = mi.Checked;
@@ -1654,7 +1654,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Menu LoadCustomIndicators click
         /// </summary>
-        private void LoadCustomIndicators_OnClick(object sender, EventArgs e)
+        private void LoadCustomIndicatorsOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             Configs.LoadCustomIndicators = mi.Checked;
@@ -1663,7 +1663,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Menu ShowCustomIndicators click
         /// </summary>
-        private void ShowCustomIndicators_OnClick(object sender, EventArgs e)
+        private void ShowCustomIndicatorsOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             Configs.ShowCustomIndicators = mi.Checked;
@@ -1672,7 +1672,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Menu Shows or hides the status bar.
         /// </summary>
-        private void ShowStatusBar_OnClick(object sender, EventArgs e)
+        private void ShowStatusBarOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             Configs.ShowStatusBar = mi.Checked;
@@ -1682,37 +1682,37 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        ///   Menu MenuOpeningLogicSlots_OnClick
+        ///   Menu MenuOpeningLogicSlotsOnClick
         /// </summary>
-        protected virtual void MenuOpeningLogicSlots_OnClick(object sender, EventArgs e)
+        protected virtual void MenuOpeningLogicSlotsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        ///   Menu MenuClosingLogicSlots_OnClick
+        ///   Menu MenuClosingLogicSlotsOnClick
         /// </summary>
-        protected virtual void MenuClosingLogicSlots_OnClick(object sender, EventArgs e)
+        protected virtual void MenuClosingLogicSlotsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        ///   Menu MenuPrevHistory_OnClick
+        ///   Menu MenuPrevHistoryOnClick
         /// </summary>
-        protected virtual void MenuPrevHistory_OnClick(object sender, EventArgs e)
+        protected virtual void MenuPrevHistoryOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        ///   Menu MenuNextHistory_OnClick
+        ///   Menu MenuNextHistoryOnClick
         /// </summary>
-        protected virtual void MenuNextHistory_OnClick(object sender, EventArgs e)
+        protected virtual void MenuNextHistoryOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        ///   Menu ShowPriceLine_OnClick
+        ///   Menu ShowPriceLineOnClick
         /// </summary>
-        protected virtual void ShowPriceLine_OnClick(object sender, EventArgs e)
+        protected virtual void ShowPriceLineOnClick(object sender, EventArgs e)
         {
         }
     }

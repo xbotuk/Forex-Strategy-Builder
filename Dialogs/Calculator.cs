@@ -1,33 +1,20 @@
 // Math Calculator
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder
 {
-    public class Calculator : Form
+    public sealed class Calculator : Form
     {
-        TextBox tbxInput;
-        Regex   expression;
-
-        bool isDebug = false;
-        bool isKeyPhrasesSet = false;
-
-        /// <summary>
-        /// Key phrase debug
-        /// </summary>
-        public bool IsDebug { get { return isDebug; } }
-
-        /// <summary>
-        /// Is a key phrase set
-        /// </summary>
-        public bool IsKeyPhrasesSet { get { return isKeyPhrasesSet; } }
+        private Regex _expression;
 
         /// <summary>
         /// Constructor
@@ -35,67 +22,67 @@ namespace Forex_Strategy_Builder
         public Calculator()
         {
             // Test Box Input
-            tbxInput = new TextBox();
-            tbxInput.Parent   = this;
-            tbxInput.Location = Point.Empty;
-            tbxInput.Size     = new Size(190, 20);
-            tbxInput.KeyUp   += new KeyEventHandler(TbxInput_KeyUp);
+            TbxInput = new TextBox {Parent = this, Location = Point.Empty, Size = new Size(190, 20)};
+            TbxInput.KeyUp += TbxInputKeyUp;
 
             // The Form
             AutoScaleDimensions = new SizeF(6F, 13F);
-            AutoScaleMode       = AutoScaleMode.Font;
-            ClientSize          = tbxInput.Size;
-            FormBorderStyle     = FormBorderStyle.FixedToolWindow;
-            Opacity             = 0.8;
-            ShowInTaskbar       = false;
-            StartPosition       = FormStartPosition.CenterScreen;
-            Text                = Language.T("Calculator") + " (F1 - " + Language.T("Help") + ")";
-            TopMost             = true;
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = TbxInput.Size;
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            Opacity = 0.8;
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = Language.T("Calculator") + " (F1 - " + Language.T("Help") + ")";
+            TopMost = true;
 
             SetPatterns();
         }
 
+        private TextBox TbxInput { get; set; }
+
         /// <summary>
         /// Sets the patterns
         /// </summary>
-        void SetPatterns()
+        private void SetPatterns()
         {
-            string patternNumber   = @"(?<numb>\-?\d+([\.,]\d+)?(E[\+\-]\d{1,2})?)";
-            string patternOperator = @"(?<operator>[\+\-\*/\^])";
-            string patternLast     = @"(?<last>[^\d\.,E])";
+            const string patternNumber = @"(?<numb>\-?\d+([\.,]\d+)?(E[\+\-]\d{1,2})?)";
+            const string patternOperator = @"(?<operator>[\+\-\*/\^])";
+            const string patternLast = @"(?<last>[^\d\.,E])";
 
-            string sOperation = string.Format(
+            string operation = string.Format(
                 @"{0}\s*{1}\s*{2}\s*{3}",
                 patternNumber.Replace("numb", "arg1"),
                 patternOperator,
                 patternNumber.Replace("numb", "arg2"),
                 patternLast);
 
-            expression = new Regex(sOperation, RegexOptions.Compiled);
+            _expression = new Regex(operation, RegexOptions.Compiled);
         }
 
         /// <summary>
         /// Catches the hot keys
         /// </summary>
-        private void TbxInput_KeyUp(object sender, KeyEventArgs e)
+        private void TbxInputKeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
-                ParseInput(tbxInput.Text + "=");
+                ParseInput(TbxInput.Text + "=");
             else if (e.KeyCode == Keys.Escape)
-                tbxInput.Clear();
+                TbxInput.Clear();
             else if (e.KeyCode == Keys.F1)
                 MessageBox.Show(
                     Language.T("Write the mathematical expression in the box.") + Environment.NewLine +
                     Language.T("Enter the first number, the operator and the second number.") + Environment.NewLine +
-                    Language.T("To see the result press a key or continue with the next operation.") + Environment.NewLine + Environment.NewLine +
-                    Language.T("Addition")   + ": 12.34 + 8.8 =" + Environment.NewLine +
-                    Language.T("Power")      + ": -5.3 ^ 2 ="    + Environment.NewLine +
-                    Language.T("Percent")    + ": 2.2 * 125 %"   + Environment.NewLine + Environment.NewLine +
-                    Language.T("Operations") + ": + - * / ^ %"   + Environment.NewLine + Environment.NewLine +
-                    Language.T("Hot keys")   + ":" + Environment.NewLine + "   F1 - " +
-                    Language.T("Help")       + Environment.NewLine + "   Esc - " +
-                    Language.T("Clear")      + Environment.NewLine + "   F11 / F12 - " +
-                    Language.T("Opacity")    + Environment.NewLine + "   (Alt + F4) - " +
+                    Language.T("To see the result press a key or continue with the next operation.") +
+                    Environment.NewLine + Environment.NewLine +
+                    Language.T("Addition") + ": 12.34 + 8.8 =" + Environment.NewLine +
+                    Language.T("Power") + ": -5.3 ^ 2 =" + Environment.NewLine +
+                    Language.T("Percent") + ": 2.2 * 125 %" + Environment.NewLine + Environment.NewLine +
+                    Language.T("Operations") + ": + - * / ^ %" + Environment.NewLine + Environment.NewLine +
+                    Language.T("Hot keys") + ":" + Environment.NewLine + "   F1 - " +
+                    Language.T("Help") + Environment.NewLine + "   Esc - " +
+                    Language.T("Clear") + Environment.NewLine + "   F11 / F12 - " +
+                    Language.T("Opacity") + Environment.NewLine + "   (Alt + F4) - " +
                     Language.T("Exit"),
                     Language.T("Calculator Help"),
                     MessageBoxButtons.OK,
@@ -105,18 +92,18 @@ namespace Forex_Strategy_Builder
             else if (e.KeyCode == Keys.F12 && Opacity < 1.0f)
                 Opacity += 0.1f;
             else
-                ParseInput(tbxInput.Text);
+                ParseInput(TbxInput.Text);
         }
 
         /// <summary>
         /// Does the job
         /// </summary>
-        void ParseInput(string input)
+        private void ParseInput(string input)
         {
-            string dcmlSeparator   = System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
+            string dcmlSeparator = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
             input = input.Replace(".", dcmlSeparator);
             input = input.Replace(",", dcmlSeparator);
-            Match  match  = expression.Match(input);
+            Match match = _expression.Match(input);
             double result = double.NaN;
 
             if (match.Success)
@@ -130,30 +117,30 @@ namespace Forex_Strategy_Builder
                 if (optr == "+")
                     result = arg1 + arg2;
 
-                // Subtraction
+                    // Subtraction
                 else if (optr == "-")
                     result = arg1 - arg2;
 
-                // Multiplication
+                    // Multiplication
                 else if (optr == "*" && last != "%")
-                    result = arg1 * arg2;
+                    result = arg1*arg2;
 
-                // Division
+                    // Division
                 else if (optr == @"/")
                 {
-                    if (arg2 != 0) result = arg1 / arg2;
+                    if (Math.Abs(arg2 - 0) > 0.000000001) result = arg1/arg2;
                     else if (arg1 > 0) result = double.PositiveInfinity;
                     else if (arg1 < 0) result = double.NegativeInfinity;
                 }
 
-                // Percent
+                    // Percent
                 else if (optr == "*" && last == "%")
                 {
-                    result = arg1 * arg2 / 100;
+                    result = arg1*arg2/100;
                     last = "=";
                 }
 
-                // Power
+                    // Power
                 else if (optr == "^")
                     result = Math.Pow(arg1, arg2);
 
@@ -162,11 +149,9 @@ namespace Forex_Strategy_Builder
                 else
                     last = " ";
 
-                tbxInput.Clear();
-                tbxInput.AppendText(result.ToString() + last);
+                TbxInput.Clear();
+                TbxInput.AppendText(result.ToString(CultureInfo.InvariantCulture) + last);
             }
-
-            return;
         }
     }
 }

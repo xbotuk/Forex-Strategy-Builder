@@ -1,121 +1,128 @@
 ﻿// Strategy Analyzer class
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
 using System.Drawing;
+using System.Media;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Properties;
 
 namespace Forex_Strategy_Builder.Dialogs.Analyzer
 {
-    public class Analyzer : Form
+    public sealed class Analyzer : Form
     {
-        Button btnClose;
-        ToolStrip tsMainMenu;
-        Dialogs.Analyzer.Options pnlOptions;
-        Dialogs.Analyzer.OverOptimization pnlOverOptimization;
-        Dialogs.Analyzer.Cumulative_Strategy pnlCumulativeStrategy;
-
-        public Form SetParrentForm { set { pnlOptions.SetParrentForm = value; } }
-
         /// <summary>
         /// Constructor
         /// </summary>
         public Analyzer(string menuItem)
         {
-            Text            = Language.T("Strategy Analyzer");
-            MaximizeBox     = false;
-            Icon            = Data.Icon;
+            Text = Language.T("Strategy Analyzer");
+            MaximizeBox = false;
+            Icon = Data.Icon;
             FormBorderStyle = FormBorderStyle.FixedDialog;
-            AcceptButton    = btnClose;
-            FormClosing    += new FormClosingEventHandler(Actions_FormClosing);
+            AcceptButton = BtnClose;
+            FormClosing += ActionsFormClosing;
 
             // Button Close
-            btnClose = new Button();
-            btnClose.Parent = this;
-            btnClose.Text   = Language.T("Close");
-            btnClose.DialogResult = DialogResult.Cancel;
-            btnClose.UseVisualStyleBackColor = true;
+            BtnClose = new Button
+                           {
+                               Parent = this,
+                               Text = Language.T("Close"),
+                               DialogResult = DialogResult.Cancel,
+                               UseVisualStyleBackColor = true
+                           };
 
             SetupMenuBar();
             SetPanelOptions();
             SetPanelOverOptimization();
             SetPanelCumulativeStrategy();
 
-            ToolStripMenuItem tsMenuItem = new ToolStripMenuItem();
-            tsMenuItem.Name = menuItem;
-            MainMenu_Click(tsMenuItem, EventArgs.Empty);
+            var tsMenuItem = new ToolStripMenuItem {Name = menuItem};
+            MainMenuClick(tsMenuItem, EventArgs.Empty);
+        }
+
+        private Button BtnClose { get; set; }
+        private ToolStrip TsMainMenu { get; set; }
+        private Options PnlOptions { get; set; }
+        private OverOptimization PnlOverOptimization { get; set; }
+        private CumulativeStrategy PnlCumulativeStrategy { get; set; }
+
+        public Form SetParrentForm
+        {
+            set { PnlOptions.SetParrentForm = value; }
         }
 
         /// <summary>
         /// Sets items in the Main Menu.
         /// </summary>
-        void SetupMenuBar()
+        private void SetupMenuBar()
         {
-            tsMainMenu = new ToolStrip();
-            tsMainMenu.Parent = this;
+            TsMainMenu = new ToolStrip {Parent = this};
 
-            ToolStripMenuItem tsmiAnalysis = new ToolStripMenuItem();
-            tsmiAnalysis.Text = Language.T("Analysis");
-            tsMainMenu.Items.Add(tsmiAnalysis);
+            var tsmiAnalysis = new ToolStripMenuItem {Text = Language.T("Analysis")};
+            TsMainMenu.Items.Add(tsmiAnalysis);
 
-            ToolStripMenuItem tsmiOverOptimization = new ToolStripMenuItem();
-            tsmiOverOptimization.Text   = Language.T("Over-optimization Report");
-            tsmiOverOptimization.Name   = "tsmiOverOptimization";
-            tsmiOverOptimization.Image  = Properties.Resources.overoptimization_chart;
-            tsmiOverOptimization.Click += new EventHandler(MainMenu_Click);
+            var tsmiOverOptimization = new ToolStripMenuItem
+                                           {
+                                               Text = Language.T("Over-optimization Report"),
+                                               Name = "tsmiOverOptimization",
+                                               Image = Resources.overoptimization_chart
+                                           };
+            tsmiOverOptimization.Click += MainMenuClick;
             tsmiAnalysis.DropDownItems.Add(tsmiOverOptimization);
 
-            ToolStripMenuItem tsmiCumulativeStrategy = new ToolStripMenuItem();
-            tsmiCumulativeStrategy.Text   = Language.T("Cumulative Strategy");
-            tsmiCumulativeStrategy.Name   = "tsmiCumulativeStrategy";
-            tsmiCumulativeStrategy.Image = Properties.Resources.cumulative_str;
-            tsmiCumulativeStrategy.Click += new EventHandler(MainMenu_Click);
+            var tsmiCumulativeStrategy = new ToolStripMenuItem
+                                             {
+                                                 Text = Language.T("Cumulative Strategy"),
+                                                 Name = "tsmiCumulativeStrategy",
+                                                 Image = Resources.cumulative_str
+                                             };
+            tsmiCumulativeStrategy.Click += MainMenuClick;
             //tsmiAnalysis.DropDownItems.Add(tsmiCumulativeStrategy);
 
-            ToolStripMenuItem tsmiTools = new ToolStripMenuItem();
-            tsmiTools.Text = Language.T("Tools");
-            tsMainMenu.Items.Add(tsmiTools);
+            var tsmiTools = new ToolStripMenuItem {Text = Language.T("Tools")};
+            TsMainMenu.Items.Add(tsmiTools);
 
-            ToolStripMenuItem tsmiOptions = new ToolStripMenuItem();
-            tsmiOptions.Text   = Language.T("Options");
-            tsmiOptions.Name   = "tsmiOptions";
-            tsmiOptions.Image  = Properties.Resources.tools;
-            tsmiOptions.Click += new EventHandler(MainMenu_Click);
+            var tsmiOptions = new ToolStripMenuItem
+                                  {
+                                      Text = Language.T("Options"),
+                                      Name = "tsmiOptions",
+                                      Image = Resources.tools
+                                  };
+            tsmiOptions.Click += MainMenuClick;
             tsmiTools.DropDownItems.Add(tsmiOptions);
         }
 
-        void MainMenu_Click(object sender, EventArgs e)
+        private void MainMenuClick(object sender, EventArgs e)
         {
             if (IsSomethingRunning())
             {
-                System.Media.SystemSounds.Hand.Play();
+                SystemSounds.Hand.Play();
                 return;
             }
 
-            ToolStripMenuItem button = (ToolStripMenuItem)sender;
+            var button = (ToolStripMenuItem) sender;
             string name = button.Name;
 
             switch (name)
             {
                 case "tsmiOptions":
-                    pnlOverOptimization.Visible = false;
-                    pnlCumulativeStrategy.Visible = false;
-                    pnlOptions.Visible = true;
+                    PnlOverOptimization.Visible = false;
+                    PnlCumulativeStrategy.Visible = false;
+                    PnlOptions.Visible = true;
                     break;
                 case "tsmiOverOptimization":
-                    pnlOptions.Visible = false;
-                    pnlCumulativeStrategy.Visible = false;
-                    pnlOverOptimization.Visible = true;
+                    PnlOptions.Visible = false;
+                    PnlCumulativeStrategy.Visible = false;
+                    PnlOverOptimization.Visible = true;
                     break;
                 case "tsmiCumulativeStrategy":
-                    pnlOptions.Visible = false;
-                    pnlOverOptimization.Visible = false;
-                    pnlCumulativeStrategy.Visible = true;
-                    break;
-                default:
+                    PnlOptions.Visible = false;
+                    PnlOverOptimization.Visible = false;
+                    PnlCumulativeStrategy.Visible = true;
                     break;
             }
         }
@@ -127,11 +134,9 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         {
             base.OnLoad(e);
 
-            pnlOptions.SetFSBVisiability();
+            PnlOptions.SetFSBVisiability();
 
             ClientSize = new Size(500, 400);
-
-            return;
         }
 
         /// <summary>
@@ -147,39 +152,38 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
-            int buttonHeight = (int)(Data.VerticalDLU * 15.5);
-            int buttonWidth  = (int)(Data.HorizontalDLU * 60);
-            int btnVertSpace = (int)(Data.VerticalDLU * 5.5);
-            int btnHrzSpace  = (int)(Data.HorizontalDLU * 3);
-            int space        = btnHrzSpace;
+            var buttonHeight = (int) (Data.VerticalDLU*15.5);
+            var buttonWidth = (int) (Data.HorizontalDLU*60);
+            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            int space = btnHrzSpace;
 
             // Button Close
-            btnClose.Size = new Size(buttonWidth, buttonHeight);
-            btnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
+            BtnClose.Size = new Size(buttonWidth, buttonHeight);
+            BtnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
+                                          ClientSize.Height - buttonHeight - btnVertSpace);
 
             // pnlOptions
-            pnlOptions.Size = new Size(ClientSize.Width - 2 * space, btnClose.Top - space - btnVertSpace - tsMainMenu.Bottom);
-            pnlOptions.Location = new Point(space, tsMainMenu.Bottom + space);
+            PnlOptions.Size = new Size(ClientSize.Width - 2*space,
+                                       BtnClose.Top - space - btnVertSpace - TsMainMenu.Bottom);
+            PnlOptions.Location = new Point(space, TsMainMenu.Bottom + space);
 
             // pnlOverOptimization
-            pnlOverOptimization.Size = pnlOptions.Size;
-            pnlOverOptimization.Location = pnlOptions.Location;
+            PnlOverOptimization.Size = PnlOptions.Size;
+            PnlOverOptimization.Location = PnlOptions.Location;
 
             // pnlCumulativeStrategy
-            pnlCumulativeStrategy.Size = pnlOptions.Size;
-            pnlCumulativeStrategy.Location = pnlOptions.Location;
+            PnlCumulativeStrategy.Size = PnlOptions.Size;
+            PnlCumulativeStrategy.Location = PnlOptions.Location;
         }
 
         /// <summary>
         /// It shows if some process is running.
         /// </summary>
         /// <returns></returns>
-        bool IsSomethingRunning()
+        private bool IsSomethingRunning()
         {
-            bool isRunning = false;
-
-            if (pnlOverOptimization.IsRunning)
-                isRunning = true;
+            bool isRunning = PnlOverOptimization.IsRunning;
 
             return isRunning;
         }
@@ -187,38 +191,34 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         /// <summary>
         /// Analyzer closes
         /// </summary>
-        void Actions_FormClosing(object sender, FormClosingEventArgs e)
+        private void ActionsFormClosing(object sender, FormClosingEventArgs e)
         {
             if (IsSomethingRunning())
             {
-                System.Media.SystemSounds.Hand.Play();
+                SystemSounds.Hand.Play();
                 e.Cancel = true;
             }
             else
             {
-                pnlOptions.ShowFSB();
+                PnlOptions.ShowFSB();
             }
         }
 
-        void SetPanelOptions()
+        private void SetPanelOptions()
         {
-            pnlOptions = new Dialogs.Analyzer.Options(Language.T("Options"));
-            pnlOptions.Parent  = this;
-            pnlOptions.Visible = false;
+            PnlOptions = new Options(Language.T("Options")) {Parent = this, Visible = false};
         }
 
-        void SetPanelOverOptimization()
+        private void SetPanelOverOptimization()
         {
-            pnlOverOptimization = new Dialogs.Analyzer.OverOptimization(Language.T("Over-optimization Report"));
-            pnlOverOptimization.Parent  = this;
-            pnlOverOptimization.Visible = true;
+            PnlOverOptimization = new OverOptimization(Language.T("Over-optimization Report"))
+                                      {Parent = this, Visible = true};
         }
 
-        void SetPanelCumulativeStrategy()
+        private void SetPanelCumulativeStrategy()
         {
-            pnlCumulativeStrategy = new Dialogs.Analyzer.Cumulative_Strategy(Language.T("Cumulative Strategy"));
-            pnlCumulativeStrategy.Parent = this;
-            pnlCumulativeStrategy.Visible = false;
+            PnlCumulativeStrategy = new CumulativeStrategy(Language.T("Cumulative Strategy"))
+                                        {Parent = this, Visible = false};
         }
-   }
+    }
 }

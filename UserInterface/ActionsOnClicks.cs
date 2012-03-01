@@ -12,6 +12,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Forex_Strategy_Builder.Dialogs.Analyzer;
+using Forex_Strategy_Builder.Dialogs.JForex;
 
 namespace Forex_Strategy_Builder
 {
@@ -23,7 +24,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Changes the Full Screen mode.
         /// </summary>
-        protected override void MenuViewFullScreen_OnClick(object sender, EventArgs e)
+        protected override void MenuViewFullScreenOnClick(object sender, EventArgs e)
         {
             var mi = (ToolStripMenuItem) sender;
             if (mi.Checked)
@@ -138,7 +139,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Whether to express account in pips or in currency
         /// </summary>
-        protected override void AccountShowInMoney_OnClick(object sender, EventArgs e)
+        protected override void AccountShowInMoneyOnClick(object sender, EventArgs e)
         {
             switch (((ToolStripMenuItem) sender).Name)
             {
@@ -160,7 +161,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Opens the account setting dialog
         /// </summary>
-        protected override void MenuAccountSettings_OnClick(object sender, EventArgs e)
+        protected override void MenuAccountSettingsOnClick(object sender, EventArgs e)
         {
             ShowAccountSettings();
         }
@@ -168,7 +169,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Copies the strategy to clipboard.
         /// </summary>
-        protected override void MenuStrategyCopy_OnClick(object sender, EventArgs e)
+        protected override void MenuStrategyCopyOnClick(object sender, EventArgs e)
         {
             XmlDocument xmlDoc = StrategyXML.CreateStrategyXmlDoc(Data.Strategy);
             Clipboard.SetText(xmlDoc.InnerXml);
@@ -177,7 +178,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Pastes a strategy from clipboard.
         /// </summary>
-        protected override void MenuStrategyPaste_OnClick(object sender, EventArgs e)
+        protected override void MenuStrategyPasteOnClick(object sender, EventArgs e)
         {
             DialogResult dialogResult = WhetherSaveChangedStrategy();
 
@@ -233,7 +234,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Load a color scheme.
         /// </summary>
-        protected override void MenuLoadColor_OnClick(object sender, EventArgs e)
+        protected override void MenuLoadColorOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             if (!toolStripMenuItem.Checked)
@@ -252,7 +253,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Performs actions corresponding on the menu item Load.
         /// </summary>
-        protected override void MenuLoadData_OnClick(object sender, EventArgs e)
+        protected override void MenuLoadDataOnClick(object sender, EventArgs e)
         {
             if (LoadInstrument(false) == 0)
                 Calculate(true);
@@ -263,7 +264,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Check the data.
         /// </summary>
-        protected override void MenuCheckData_OnClick(object sender, EventArgs e)
+        protected override void MenuCheckDataOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             Configs.CheckData = toolStripMenuItem.Checked;
@@ -274,7 +275,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Refine the data
         /// </summary>
-        protected override void MenuRefineData_OnClick(object sender, EventArgs e)
+        protected override void MenuRefineDataOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             if (toolStripMenuItem.Name == "miCutBadData")
@@ -290,7 +291,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Data Horizon
         /// </summary>
-        protected override void MenuDataHorizon_OnClick(object sender, EventArgs e)
+        protected override void MenuDataHorizonOnClick(object sender, EventArgs e)
         {
             DataHorizon();
         }
@@ -298,7 +299,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Data Directory
         /// </summary>
-        protected override void MenuDataDirectory_OnClick(object sender, EventArgs e)
+        protected override void MenuDataDirectoryOnClick(object sender, EventArgs e)
         {
             var dataDirectory = new DataDirectory();
 
@@ -329,7 +330,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Autos can
         /// </summary>
-        protected override void MenuStrategyAutoscan_OnClick(object sender, EventArgs e)
+        protected override void MenuStrategyAutoscanOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             Configs.Autoscan = toolStripMenuItem.Checked;
@@ -342,7 +343,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// TradeUntillMC
         /// </summary>
-        protected override void TradeUntilMC_OnClick(object sender, EventArgs e)
+        protected override void TradeUntilMCOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             Configs.TradeUntilMarginCall = toolStripMenuItem.Checked;
@@ -350,9 +351,9 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// AdditionalStats_OnClick
+        /// AdditionalStatsOnClick
         /// </summary>
-        protected override void AdditionalStats_OnClick(object sender, EventArgs e)
+        protected override void AdditionalStatsOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             Configs.AdditionalStatistics = toolStripMenuItem.Checked;
@@ -362,7 +363,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Opens the strategy settings dialogue.
         /// </summary>
-        protected override void MenuStrategyAUPBV_OnClick(object sender, EventArgs e)
+        protected override void MenuStrategyAUPBVOnClick(object sender, EventArgs e)
         {
             UsePreviousBarValueChange();
         }
@@ -370,7 +371,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Export the strategy in BBCode format - ready to post in the forum
         /// </summary>
-        protected override void MenuStrategyBBcode_OnClick(object sender, EventArgs e)
+        protected override void MenuStrategyBBcodeOnClick(object sender, EventArgs e)
         {
             PublishStrategy();
         }
@@ -387,7 +388,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Forces the calculation of the strategy.
         /// </summary>
-        protected override void MenuAnalysisCalculate_OnClick(object sender, EventArgs e)
+        protected override void MenuAnalysisCalculateOnClick(object sender, EventArgs e)
         {
             Calculate(true);
         }
@@ -395,7 +396,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Forces the intrabar scanning of the strategy.
         /// </summary>
-        protected override void MenuQuickScan_OnClick(object sender, EventArgs e)
+        protected override void MenuQuickScanOnClick(object sender, EventArgs e)
         {
             Scan();
         }
@@ -403,7 +404,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Loads the default strategy.
         /// </summary>
-        protected override void MenuStrategyNew_OnClick(object sender, EventArgs e)
+        protected override void MenuStrategyNewOnClick(object sender, EventArgs e)
         {
             NewStrategy();
         }
@@ -411,7 +412,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Opens the dialog form OpenFileDialog.
         /// </summary>
-        protected override void MenuFileOpen_OnClick(object sender, EventArgs e)
+        protected override void MenuFileOpenOnClick(object sender, EventArgs e)
         {
             OpenFile();
         }
@@ -419,7 +420,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Saves the strategy.
         /// </summary>
-        protected override void MenuFileSave_OnClick(object sender, EventArgs e)
+        protected override void MenuFileSaveOnClick(object sender, EventArgs e)
         {
             SaveStrategy();
         }
@@ -427,7 +428,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Opens the dialog form SaveFileDialog.
         /// </summary>
-        protected override void MenuFileSaveAs_OnClick(object sender, EventArgs e)
+        protected override void MenuFileSaveAsOnClick(object sender, EventArgs e)
         {
             SaveAsStrategy();
         }
@@ -435,7 +436,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Undoes the strategy.
         /// </summary>
-        protected override void MenuStrategyUndo_OnClick(object sender, EventArgs e)
+        protected override void MenuStrategyUndoOnClick(object sender, EventArgs e)
         {
             UndoStrategy();
         }
@@ -443,7 +444,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Loads the previously generated strategy
         /// </summary>
-        protected override void MenuPrevHistory_OnClick(object sender, EventArgs e)
+        protected override void MenuPrevHistoryOnClick(object sender, EventArgs e)
         {
             if (Data.GeneratorHistory.Count <= 0 || Data.GenHistoryIndex <= 0) return;
             Data.GenHistoryIndex--;
@@ -455,7 +456,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Loads the next generated strategy
         /// </summary>
-        protected override void MenuNextHistory_OnClick(object sender, EventArgs e)
+        protected override void MenuNextHistoryOnClick(object sender, EventArgs e)
         {
             if (Data.GeneratorHistory.Count <= 0 || Data.GenHistoryIndex >= Data.GeneratorHistory.Count - 1) return;
             Data.GenHistoryIndex++;
@@ -467,7 +468,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Tools menu
         /// </summary>
-        protected override void MenuTools_OnClick(object sender, EventArgs e)
+        protected override void MenuToolsOnClick(object sender, EventArgs e)
         {
             string name = ((ToolStripMenuItem) sender).Name;
 
@@ -572,7 +573,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Tools button
         /// </summary>
-        protected override void BtnTools_OnClick(object sender, EventArgs e)
+        protected override void BtnToolsOnClick(object sender, EventArgs e)
         {
             string name = ((ToolStripButton) sender).Name;
 
@@ -619,7 +620,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Menu Journal
         /// </summary>
-        protected override void MenuJournal_OnClick(object sender, EventArgs e)
+        protected override void MenuJournalOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
 
@@ -711,7 +712,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowProfitCalculator()
         {
-            var profitCalculator = new Profit_Calculator();
+            var profitCalculator = new ProfitCalculator();
             profitCalculator.Show();
         }
 
@@ -720,7 +721,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowPivotPoints()
         {
-            var pivotPointsCalculator = new Pivot_Points_Calculator();
+            var pivotPointsCalculator = new PivotPointsCalculator();
             pivotPointsCalculator.Show();
         }
 
@@ -729,7 +730,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowFibonacciLevels()
         {
-            var fibonacciLevelsCalculator = new Fibonacci_Levels_Calculator();
+            var fibonacciLevelsCalculator = new FibonacciLevelsCalculator();
             fibonacciLevelsCalculator.Show();
         }
 
@@ -738,7 +739,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowCommandConsole()
         {
-            var commandConsole = new Command_Console();
+            var commandConsole = new CommandConsole();
             commandConsole.Show();
         }
 
@@ -747,7 +748,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void MakeNewTranslation()
         {
-            var newTranslation = new New_Translation();
+            var newTranslation = new NewTranslation();
             newTranslation.Show();
         }
 
@@ -756,7 +757,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void EditTranslation()
         {
-            var editTranslation = new Edit_Translation();
+            var editTranslation = new EditTranslation();
             editTranslation.Show();
         }
 
@@ -765,7 +766,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void MetaTrader4Import()
         {
-            var metaTrader4Import = new MetaTrader4_Import();
+            var metaTrader4Import = new MetaTrader4Import();
             metaTrader4Import.ShowDialog();
         }
 
@@ -774,14 +775,14 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void JForexImport()
         {
-            var jForexImport = new JForex_Import();
+            var jForexImport = new JForexImport();
             jForexImport.ShowDialog();
         }
 
         /// <summary>
         /// Use logical groups menu item.
         /// </summary>
-        protected override void MenuUseLogicalGroups_OnClick(object sender, EventArgs e)
+        protected override void MenuUseLogicalGroupsOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
 
@@ -828,37 +829,37 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Menu MenuOpeningLogicSlots_OnClick.
+        /// Menu MenuOpeningLogicSlotsOnClick.
         /// </summary>
-        protected override void MenuOpeningLogicSlots_OnClick(object sender, EventArgs e)
+        protected override void MenuOpeningLogicSlotsOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             Configs.MaxEntryFilters = (int) toolStripMenuItem.Tag;
 
-            foreach (ToolStripMenuItem m in toolStripMenuItem.Owner.Items)
-                m.Checked = ((int) m.Tag == Configs.MaxEntryFilters);
+            foreach (ToolStripMenuItem menuItem in toolStripMenuItem.Owner.Items)
+                menuItem.Checked = ((int) menuItem.Tag == Configs.MaxEntryFilters);
 
             RebuildStrategyLayout();
         }
 
         /// <summary>
-        /// Menu MenuClosingLogicSlots_OnClick.
+        /// Menu MenuClosingLogicSlotsOnClick.
         /// </summary>
-        protected override void MenuClosingLogicSlots_OnClick(object sender, EventArgs e)
+        protected override void MenuClosingLogicSlotsOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             Configs.MaxExitFilters = (int) toolStripMenuItem.Tag;
 
-            foreach (ToolStripMenuItem m in toolStripMenuItem.Owner.Items)
-                m.Checked = ((int) m.Tag == Configs.MaxExitFilters);
+            foreach (ToolStripMenuItem menuItem in toolStripMenuItem.Owner.Items)
+                menuItem.Checked = ((int) menuItem.Tag == Configs.MaxExitFilters);
 
             RebuildStrategyLayout();
         }
 
         /// <summary>
-        /// Menu ShowPriceLine_OnClick.
+        /// Menu ShowPriceLineOnClick.
         /// </summary>
-        protected override void ShowPriceLine_OnClick(object sender, EventArgs e)
+        protected override void ShowPriceLineOnClick(object sender, EventArgs e)
         {
             var toolStripMenuItem = (ToolStripMenuItem) sender;
             Configs.ShowPriceChartOnAccountChart = toolStripMenuItem.Checked;

@@ -1,7 +1,7 @@
 // Backtester class - Statistics
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
@@ -26,7 +26,6 @@ namespace Forex_Strategy_Builder
         static int[] _balanceDrawdown;
         static int[] _equityDrawdown;
 
-        static int    _executedOrders;
         static int    _barsInPosition;
         static int    _totalTrades;
 
@@ -40,6 +39,10 @@ namespace Forex_Strategy_Builder
 
         static Backtester()
         {
+            AdditionalStatsValueShort = new string[0];
+            AdditionalStatsValueLong = new string[0];
+            AdditionalStatsValueTotal = new string[0];
+            AdditionalStatsParamName = new string[0];
             InterpolationMethod = InterpolationMethod.Pessimistic;
             AccountStatsFlags = new bool[0];
             AccountStatsValue = new string[0];
@@ -139,7 +142,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Gets the count of executed orders
         /// </summary>
-        public static int ExecutedOrders { get { return _executedOrders; } }
+        public static int ExecutedOrders { get; private set; }
 
         /// <summary>
         /// Gets the count of lots have been traded
@@ -478,13 +481,13 @@ namespace Forex_Strategy_Builder
 
             WinLossRatio = WinningTrades / Math.Max((LosingTrades + WinningTrades), 1.0);
 
-            _executedOrders = 0;
+            ExecutedOrders = 0;
             TradedLots = 0;
             for (int ord = 0; ord < SentOrders; ord++)
             {
                 if (OrdFromNumb(ord).OrdStatus == OrderStatus.Executed)
                 {
-                    _executedOrders++;
+                    ExecutedOrders++;
                     TradedLots += OrdFromNumb(ord).OrdLots;
                 }
             }
@@ -690,9 +693,7 @@ namespace Forex_Strategy_Builder
                 size = maxMargin * Configs.Leverage / (exchangeRate * InstrProperties.LotSize);
             }
 
-            size = NormalizeEntryLots(size);
-
-            return size;
+            return NormalizeEntryLots(size);
         }
 
         /// <summary>

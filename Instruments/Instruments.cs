@@ -34,13 +34,13 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Gets the symbols list.
         /// </summary>
-        public static string[] SymbolList
+        public static IEnumerable<string> SymbolList
         {
             get
             {
-                var asSymbols = new string[_dictInstrument.Count];
-                _dictInstrument.Keys.CopyTo(asSymbols, 0);
-                return asSymbols;
+                var symbols = new string[_dictInstrument.Count];
+                _dictInstrument.Keys.CopyTo(symbols, 0);
+                return symbols;
             }
         }
 

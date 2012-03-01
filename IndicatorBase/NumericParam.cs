@@ -73,9 +73,9 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Gets the corrected value of parameter as a string.
         /// </summary>
-        public string AnotherValueToString(double dAnotherValue)
+        public string AnotherValueToString(double anotherValue)
         {
-            return String.Format("{0:F" + Point + "}", dAnotherValue);
+            return String.Format("{0:F" + Point + "}", anotherValue);
         }
 
         /// <summary>

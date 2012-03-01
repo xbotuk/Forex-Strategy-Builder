@@ -38,6 +38,7 @@ namespace Forex_Strategy_Builder.CustomControls
         public bool IsContextButtonVisible
         {
             set { _contextButton.Visible = value; }
+            get { return _contextButton.Visible; }
         }
 
         protected Color ContextButtonColorBack

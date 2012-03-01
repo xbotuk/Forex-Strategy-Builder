@@ -79,7 +79,7 @@ namespace Forex_Strategy_Builder
                                     ToolTipText = Language.T("Spread, Swap numbers, Slippage."),
                                     Overflow = ToolStripItemOverflow.Never
                                 };
-            ButtonCharges.Click += BtnTools_OnClick;
+            ButtonCharges.Click += BtnToolsOnClick;
             ToolStripMarket.Items.Add(ButtonCharges);
 
             ToolStripMarket.Resize += TsMarketResize;

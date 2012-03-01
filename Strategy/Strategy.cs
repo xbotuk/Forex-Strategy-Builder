@@ -618,8 +618,6 @@ namespace Forex_Strategy_Builder
             Symbol = Data.Symbol;
             DataPeriod = Data.Period;
 
-            // Create the XmlDocument.
-            var strategyXML = new StrategyXML();
             XmlDocument xmlDocStrategy = StrategyXML.CreateStrategyXmlDoc(this);
 
             try

@@ -1,7 +1,7 @@
 ﻿// Strategy Analyzer - Options
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
@@ -12,91 +12,99 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 {
     public class Options : FancyPanel
     {
-        Label lblColumnSeparator;
-        Label lblDecimalSeparator;
-
-        ComboBox cbxColumnSeparator;
-        ComboBox cbxDecimalSeparator;
-
-        CheckBox chbHideFSB;
-        Form formFSB;
-        public Form SetParrentForm { set { formFSB = value;  } }
-
-        public Options(string caption) : base (caption)
+        public Options(string caption) : base(caption)
         {
             Color colorText = LayoutColors.ColorControlText;
 
-            lblColumnSeparator  = new Label();
-            lblDecimalSeparator = new Label();
-
-            cbxColumnSeparator  = new ComboBox();
-            cbxDecimalSeparator = new ComboBox();
+            LblColumnSeparator = new Label();
+            LblDecimalSeparator = new Label();
+            CbxColumnSeparator = new ComboBox();
+            CbxDecimalSeparator = new ComboBox();
+            ChbHideFSB = new CheckBox();
 
             // Label Decimal Separator
-            lblDecimalSeparator.Parent    = this;
-            lblDecimalSeparator.ForeColor = colorText;
-            lblDecimalSeparator.BackColor = Color.Transparent;
-            lblDecimalSeparator.AutoSize  = true;
-            lblDecimalSeparator.Text      = Language.T("Report - decimal separator");
+            LblDecimalSeparator.Parent = this;
+            LblDecimalSeparator.ForeColor = colorText;
+            LblDecimalSeparator.BackColor = Color.Transparent;
+            LblDecimalSeparator.AutoSize = true;
+            LblDecimalSeparator.Text = Language.T("Report - decimal separator");
 
             // Label Column Separator
-            lblColumnSeparator.Parent    = this;
-            lblColumnSeparator.ForeColor = colorText;
-            lblColumnSeparator.BackColor = Color.Transparent;
-            lblColumnSeparator.AutoSize  = true;
-            lblColumnSeparator.Text      = Language.T("Report - column separator");
+            LblColumnSeparator.Parent = this;
+            LblColumnSeparator.ForeColor = colorText;
+            LblColumnSeparator.BackColor = Color.Transparent;
+            LblColumnSeparator.AutoSize = true;
+            LblColumnSeparator.Text = Language.T("Report - column separator");
 
             // ComboBox Column Separator
-            cbxDecimalSeparator.Parent = this;
-            cbxDecimalSeparator.Items.AddRange(new string[] { Language.T("Dot") + " '.'", Language.T("Comma") + " ','" });
-            cbxDecimalSeparator.SelectedIndex = Configs.DecimalSeparator == "." ? 0 : 1;
-            cbxDecimalSeparator.SelectedIndexChanged += new EventHandler(DecimalSeparator_Changed);
+            CbxDecimalSeparator.Parent = this;
+            CbxDecimalSeparator.Items.AddRange(new object[] {Language.T("Dot") + " '.'", Language.T("Comma") + " ','"});
+            CbxDecimalSeparator.SelectedIndex = Configs.DecimalSeparator == "." ? 0 : 1;
+            CbxDecimalSeparator.SelectedIndexChanged += DecimalSeparatorChanged;
 
             // ComboBox Column Separator
-            cbxColumnSeparator.Parent = this;
-            cbxColumnSeparator.Items.AddRange(new string[] { Language.T("Comma") + " ','", Language.T("Semicolon") + " ';'", Language.T("Tab") + @" '\t'" });
-            cbxColumnSeparator.SelectedIndex = Configs.ColumnSeparator == "," ? 0 : Configs.ColumnSeparator == ";" ? 1 : 2;
-            cbxColumnSeparator.SelectedIndexChanged += new EventHandler(ColumnSeparator_Changed);
+            CbxColumnSeparator.Parent = this;
+            CbxColumnSeparator.Items.AddRange(new object[]
+                                                  {
+                                                      Language.T("Comma") + " ','", Language.T("Semicolon") + " ';'",
+                                                      Language.T("Tab") + @" '\t'"
+                                                  });
+            CbxColumnSeparator.SelectedIndex = Configs.ColumnSeparator == ","
+                                                   ? 0
+                                                   : Configs.ColumnSeparator == ";" ? 1 : 2;
+            CbxColumnSeparator.SelectedIndexChanged += ColumnSeparator_Changed;
 
             // Hide FSB at startup.
-            chbHideFSB = new CheckBox();
-            chbHideFSB.Parent    = this;
-            chbHideFSB.ForeColor = colorText;
-            chbHideFSB.BackColor = Color.Transparent;
-            chbHideFSB.Text      = Language.T("Hide FSB when Analyzer starts");
-            chbHideFSB.Checked   = Configs.AnalyzerHideFSB;
-            chbHideFSB.AutoSize  = true;
-            chbHideFSB.CheckedChanged += new EventHandler(HideFSB_Click);
+            ChbHideFSB.Parent = this;
+            ChbHideFSB.ForeColor = colorText;
+            ChbHideFSB.BackColor = Color.Transparent;
+            ChbHideFSB.Text = Language.T("Hide FSB when Analyzer starts");
+            ChbHideFSB.Checked = Configs.AnalyzerHideFSB;
+            ChbHideFSB.AutoSize = true;
+            ChbHideFSB.CheckedChanged += HideFSBClick;
 
-            this.Resize += new EventHandler(pnlOptions_Resize);
+            Resize += PnlOptionsResize;
         }
 
-        void pnlOptions_Resize(object sender, EventArgs e)
+        private Label LblColumnSeparator { get; set; }
+        private Label LblDecimalSeparator { get; set; }
+
+        private ComboBox CbxColumnSeparator { get; set; }
+        private ComboBox CbxDecimalSeparator { get; set; }
+
+        private CheckBox ChbHideFSB { get; set; }
+        private Form FormFSB { get; set; }
+
+        public Form SetParrentForm
         {
-            int buttonHeight = (int)(Data.VerticalDLU * 15.5);
-            int buttonWidth  = (int)(Data.HorizontalDLU * 60);
-            int btnHrzSpace  = (int)(Data.HorizontalDLU * 3);
-            int space    = btnHrzSpace;
-            int border   = 2;
-
-            lblDecimalSeparator.Location = new Point(btnHrzSpace + border, 0 * buttonHeight + 2 * space + 18);
-            lblColumnSeparator.Location  = new Point(btnHrzSpace + border, 1 * buttonHeight + 3 * space + 18);
-
-            int maxLabelRight = lblDecimalSeparator.Right;
-            if (lblColumnSeparator.Right > maxLabelRight) maxLabelRight = lblColumnSeparator.Right;
-            int cbxLeft  = maxLabelRight + btnHrzSpace;
-            int cbxWidth = 120;
-            cbxDecimalSeparator.Size     = new Size(cbxWidth, buttonHeight);
-            cbxColumnSeparator.Size      = new Size(cbxWidth, buttonHeight);
-            cbxDecimalSeparator.Location = new Point(cbxLeft, 0 * buttonHeight + 2 * space + 16);
-            cbxColumnSeparator.Location  = new Point(cbxLeft, 1 * buttonHeight + 3 * space + 16);
-
-            chbHideFSB.Location = new Point(btnHrzSpace + border + 4, 2 * buttonHeight + 4 * space + 18);
+            set { FormFSB = value; }
         }
 
-        void ColumnSeparator_Changed(object sender, EventArgs e)
+        private void PnlOptionsResize(object sender, EventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
+            var buttonHeight = (int) (Data.VerticalDLU*15.5);
+            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            int space = btnHrzSpace;
+            const int border = 2;
+
+            LblDecimalSeparator.Location = new Point(btnHrzSpace + border, 0*buttonHeight + 2*space + 18);
+            LblColumnSeparator.Location = new Point(btnHrzSpace + border, 1*buttonHeight + 3*space + 18);
+
+            int maxLabelRight = LblDecimalSeparator.Right;
+            if (LblColumnSeparator.Right > maxLabelRight) maxLabelRight = LblColumnSeparator.Right;
+            int cbxLeft = maxLabelRight + btnHrzSpace;
+            const int cbxWidth = 120;
+            CbxDecimalSeparator.Size = new Size(cbxWidth, buttonHeight);
+            CbxColumnSeparator.Size = new Size(cbxWidth, buttonHeight);
+            CbxDecimalSeparator.Location = new Point(cbxLeft, 0*buttonHeight + 2*space + 16);
+            CbxColumnSeparator.Location = new Point(cbxLeft, 1*buttonHeight + 3*space + 16);
+
+            ChbHideFSB.Location = new Point(btnHrzSpace + border + 4, 2*buttonHeight + 4*space + 18);
+        }
+
+        private void ColumnSeparator_Changed(object sender, EventArgs e)
+        {
+            var comboBox = (ComboBox) sender;
             switch (comboBox.SelectedIndex)
             {
                 case 0: // Comma
@@ -108,15 +116,12 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                 case 2: // Tab
                     Configs.ColumnSeparator = "\t";
                     break;
-                default:
-                    break;
-
             }
         }
 
-        void DecimalSeparator_Changed(object sender, EventArgs e)
+        private void DecimalSeparatorChanged(object sender, EventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
+            var comboBox = (ComboBox) sender;
             switch (comboBox.SelectedIndex)
             {
                 case 0: // Dot
@@ -125,20 +130,18 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                 case 1: // Comma
                     Configs.DecimalSeparator = ",";
                     break;
-                default:
-                    break;
             }
         }
 
         /// <summary>
         /// Toggles FSB visibility.
         /// </summary>
-        void HideFSB_Click(object sender, EventArgs e)
+        private void HideFSBClick(object sender, EventArgs e)
         {
-            if (formFSB != null)
-                formFSB.Visible = !chbHideFSB.Checked;
+            if (FormFSB != null)
+                FormFSB.Visible = !ChbHideFSB.Checked;
 
-            Configs.AnalyzerHideFSB = chbHideFSB.Checked;
+            Configs.AnalyzerHideFSB = ChbHideFSB.Checked;
         }
 
         /// <summary>
@@ -146,8 +149,8 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         /// </summary>
         public void ShowFSB()
         {
-            if (formFSB != null)
-                formFSB.Visible = true;
+            if (FormFSB != null)
+                FormFSB.Visible = true;
         }
 
         /// <summary>
@@ -155,8 +158,8 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         /// </summary>
         public void SetFSBVisiability()
         {
-            if (formFSB != null)
-                formFSB.Visible = !Configs.AnalyzerHideFSB;
+            if (FormFSB != null)
+                FormFSB.Visible = !Configs.AnalyzerHideFSB;
         }
     }
 }

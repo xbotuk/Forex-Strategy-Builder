@@ -1260,13 +1260,13 @@ namespace Forex_Strategy_Builder
             if (!_isConfigLoaded)
                 return;
 
-            MinBars                   = MinBarsDefault;
-            MaxBarsLimit                   = MaxBarsLimitDefault;
+            MinBars                  = MinBarsDefault;
+            MaxBarsLimit             = MaxBarsLimitDefault;
             MaxIntraBars             = MaxIntraBarsDefault;
             MaxEntryFilters          = MaxEntryFiltersDefault;
             MaxExitFilters           = MaxExitFiltersDefault;
-            SigmaModeMainChart      = SigmaModeMainChartDefault;
-            SigmaModeSeparatedChart = SigmaModeSeparatedChartDefault;
+            SigmaModeMainChart       = SigmaModeMainChartDefault;
+            SigmaModeSeparatedChart  = SigmaModeSeparatedChartDefault;
 
             Language                   = LanguageDefault;
             ShowStartingTip            = ShowStartingTipDefault;

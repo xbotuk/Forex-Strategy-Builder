@@ -87,6 +87,11 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\JForex\JForexDataFiles.cs" />
+    <Compile Include="Dialogs\JForex\JForexImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Enumerations\ChartButtons.cs" />
     <Compile Include="Enumerations\BacktestEval.cs" />
     <Compile Include="Enumerations\InterpolationMethod.cs" />
     <Compile Include="Enumerations\OrderIcons.cs" />
@@ -134,23 +139,23 @@
     <Compile Include="Dialogs\Analyzer\Analyzer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Analyzer\Cumulative Strategy.cs">
+    <Compile Include="Dialogs\Analyzer\CumulativeStrategy.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Dialogs\Analyzer\Options.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dialogs\Analyzer\Over-optimization Calculations.cs">
+    <Compile Include="Dialogs\Analyzer\OverOptimizationCalculations.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dialogs\Analyzer\Over-optimization Chart Form.cs">
+    <Compile Include="Dialogs\Analyzer\OverOptimizationChartsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Analyzer\Over-optimization Charts.cs">
+    <Compile Include="Dialogs\Analyzer\OverOptimizationCharts.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dialogs\Analyzer\Over-optimization Data Table.cs" />
-    <Compile Include="Dialogs\Analyzer\Over-optimization GUI.cs">
+    <Compile Include="Dialogs\Analyzer\OverOptimizationDataTable.cs" />
+    <Compile Include="Dialogs\Analyzer\OverOptimizationGUI.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Dialogs\SeparateBalanceChart.cs">
@@ -165,13 +170,10 @@
     <Compile Include="Dialogs\Generator\GeneratorOptimization.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\JForex_Import.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Dialogs\Generator\Top10Slot.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dialogs\MetaTrader4_Import.cs">
+    <Compile Include="Dialogs\MetaTrader4Import.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\Optimizer\CoupleOfParams.cs" />
@@ -188,10 +190,10 @@
     </Compile>
     <Compile Include="Dialogs\Optimizer\Parameter.cs" />
     <Compile Include="Indicators\N Bars Exit.cs" />
-    <Compile Include="Dialogs\About Screen.cs">
+    <Compile Include="Dialogs\AboutScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Account Settings.cs">
+    <Compile Include="Dialogs\AccountSettings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\ActionsOnClicks.cs">
@@ -205,7 +207,7 @@
     <Compile Include="Backtester\BacktesterOrders.cs" />
     <Compile Include="Backtester\BacktesterPublics.cs" />
     <Compile Include="Backtester\BacktesterStatistics.cs" />
-    <Compile Include="Dialogs\Bar Explorer.cs">
+    <Compile Include="Dialogs\BarExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IndicatorCompiler\CSharpCompiler.cs" />
@@ -229,10 +231,12 @@
     <Compile Include="CustomControls\FancyPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CustomControls\InfoPanel.cs" />
+    <Compile Include="CustomControls\InfoPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utils\SortableDictionary.cs" />
     <Compile Include="Strategy\StrategyXML.cs" />
-    <Compile Include="Dialogs\Command Console.cs">
+    <Compile Include="Dialogs\CommandConsole.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\ControlsJournal.cs">
@@ -244,10 +248,10 @@
     <Compile Include="UserInterface\ControlsStrategy.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Edit Translation.cs">
+    <Compile Include="Dialogs\EditTranslation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Fibonacci Levels.cs">
+    <Compile Include="Dialogs\FibonacciLevelsCalculator.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IndicatorBase\CheckParam.cs" />
@@ -275,7 +279,7 @@
     <Compile Include="Dialogs\DataHorizon.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Data Directory.cs">
+    <Compile Include="Dialogs\DataDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Instruments\DataParser.cs" />
@@ -308,7 +312,7 @@
     </Compile>
     <Compile Include="Utils\FormState.cs" />
     <Compile Include="Instruments\InstrumentProperties.cs" />
-    <Compile Include="Dialogs\Instrument Editor.cs">
+    <Compile Include="Dialogs\InstrumentEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\JournalByBars.cs">
@@ -324,16 +328,16 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Common\Language.cs" />
-    <Compile Include="Dialogs\New Translation.cs">
+    <Compile Include="Dialogs\NewTranslation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Pivot Points.cs">
+    <Compile Include="Dialogs\PivotPointsCalculator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Profit Calculator.cs">
+    <Compile Include="Dialogs\ProfitCalculator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Trading Charges.cs">
+    <Compile Include="Dialogs\TradingCharges.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -341,7 +345,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\Strategy Publish.cs">
+    <Compile Include="Dialogs\StrategyPublish.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Common\Configs.cs" />
@@ -417,10 +421,10 @@
     <Compile Include="UserInterface\SmallIndicatorChart.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dialogs\Starting Tips.cs">
+    <Compile Include="Dialogs\StartingTips.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\Strategy Description.cs">
+    <Compile Include="Dialogs\StrategyDescription.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\StrategyLayout.cs">
@@ -443,7 +447,7 @@
     </Compile>
     <Compile Include="Common\Data.cs" />
     <Compile Include="IndicatorBase\Indicator.cs" />
-    <Compile Include="Dialogs\Indicator Dialog.cs">
+    <Compile Include="Dialogs\IndicatorDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Indicators\Accelerator Oscillator.cs" />

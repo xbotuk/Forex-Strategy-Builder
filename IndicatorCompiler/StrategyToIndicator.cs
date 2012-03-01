@@ -36,7 +36,6 @@ namespace Forex_Strategy_Builder
             strategy = strategy.Replace("#BASEPERIOD#", Data.DataPeriodToString(Data.Period));
             strategy = strategy.Replace("#STARTDATE#", Data.Time[Data.FirstBar].ToString(CultureInfo.InvariantCulture));
             strategy = strategy.Replace("#ENDDATE#", Data.Time[Data.Bars - 1].ToString(CultureInfo.InvariantCulture));
-
             strategy = strategy.Replace("#PERIODMINUTES#", ((int) Data.Period).ToString(CultureInfo.InvariantCulture));
             strategy = strategy.Replace("#LISTLONG#", sbLong.ToString());
             strategy = strategy.Replace("#LISTSHORT#", sbShort.ToString());

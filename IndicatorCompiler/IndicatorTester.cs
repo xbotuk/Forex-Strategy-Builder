@@ -50,14 +50,14 @@ namespace Forex_Strategy_Builder
             }
 
             // Tests the SeparatedChartMaxValue properties.
-            if (!indicator.SeparatedChart && indicator.SeparatedChartMaxValue != double.MinValue)
+            if (!indicator.SeparatedChart && Math.Abs(indicator.SeparatedChartMaxValue - double.MinValue) > 0.000001)
             {
                 sb.AppendLine("\tSet SeparatedChart = true; or remove the property: SeparatedChartMaxValue = " + indicator.SeparatedChartMaxValue);
                 isOk = false;
             }
 
             // Tests the SeparatedChartMinValue properties.
-            if (!indicator.SeparatedChart && indicator.SeparatedChartMinValue != double.MaxValue)
+            if (!indicator.SeparatedChart && Math.Abs(indicator.SeparatedChartMinValue - double.MaxValue) > 0.000001)
             {
                 sb.AppendLine("\tSet SeparatedChart = true; or remove the property: SeparatedChartMinValue = " + indicator.SeparatedChartMinValue);
                 isOk = false;

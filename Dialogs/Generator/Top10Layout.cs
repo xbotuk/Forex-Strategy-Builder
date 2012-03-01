@@ -12,8 +12,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 {
     public sealed class Top10Layout : Panel
     {
-        private readonly VScrollBar _vScrollBarStrategy;
-        private readonly FlowLayoutPanel _flowLayoutStrategy;
+        private VScrollBar VScrollBarStrategy { get; set; }
+        private FlowLayoutPanel FlowLayoutStrategy { get; set; }
 
         private readonly int _maxStrategies;
         private readonly ToolTip _toolTip;
@@ -35,18 +35,18 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
             _top10Holder = new SortableDictionary<int, Top10StrategyInfo>();
 
-            _flowLayoutStrategy = new FlowLayoutPanel();
-            _vScrollBarStrategy = new VScrollBar();
+            FlowLayoutStrategy = new FlowLayoutPanel();
+            VScrollBarStrategy = new VScrollBar();
 
             // FlowLayoutStrategy
-            _flowLayoutStrategy.Parent = this;
-            _flowLayoutStrategy.AutoScroll = false;
-            _flowLayoutStrategy.BackColor = LayoutColors.ColorControlBack;
+            FlowLayoutStrategy.Parent = this;
+            FlowLayoutStrategy.AutoScroll = false;
+            FlowLayoutStrategy.BackColor = LayoutColors.ColorControlBack;
 
-            //VScrollBarStrategy
-            _vScrollBarStrategy.Parent = this;
-            _vScrollBarStrategy.TabStop = true;
-            _vScrollBarStrategy.Scroll += VScrollBarScroll;
+            // VScrollBarStrategy
+            VScrollBarStrategy.Parent = this;
+            VScrollBarStrategy.TabStop = true;
+            VScrollBarStrategy.Scroll += VScrollBarScroll;
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
-            _flowLayoutStrategy.SuspendLayout();
+            FlowLayoutStrategy.SuspendLayout();
             SetVerticalScrollBar();
-            _flowLayoutStrategy.ResumeLayout();
+            FlowLayoutStrategy.ResumeLayout();
         }
 
         /// <summary>
@@ -78,9 +78,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         public void AddStrategyInfo(Top10StrategyInfo top10StrategyInfo)
         {
             if (_top10Holder.ContainsKey(top10StrategyInfo.Balance))
-            {
                 return;
-            }
 
             if (_top10Holder.Count == _maxStrategies && top10StrategyInfo.Balance <= _minBalance)
                 return;
@@ -91,7 +89,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 _top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
             }
             else if (_top10Holder.Count < _maxStrategies)
+            {
                 _top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
+            }
 
             _top10Holder.ReverseSort();
 
@@ -153,18 +153,18 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         private void ArrangeTop10Slots()
         {
-            _flowLayoutStrategy.SuspendLayout();
-            _flowLayoutStrategy.Controls.Clear();
+            FlowLayoutStrategy.SuspendLayout();
+            FlowLayoutStrategy.Controls.Clear();
             foreach (var keyValue in _top10Holder)
             {
                 Top10Slot top10Slot = keyValue.Value.Top10Slot;
-                top10Slot.Width = ClientSize.Width - _vScrollBarStrategy.Width - 2*Space;
+                top10Slot.Width = ClientSize.Width - VScrollBarStrategy.Width - 2*Space;
                 top10Slot.Margin = new Padding(Space, Space, 0, 0);
                 top10Slot.Cursor = Cursors.Hand;
                 _toolTip.SetToolTip(top10Slot, Language.T("Activate the strategy."));
-                _flowLayoutStrategy.Controls.Add(top10Slot);
+                FlowLayoutStrategy.Controls.Add(top10Slot);
             }
-            _flowLayoutStrategy.ResumeLayout();
+            FlowLayoutStrategy.ResumeLayout();
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         private void SetVerticalScrollBar()
         {
-            int width = ClientSize.Width - _vScrollBarStrategy.Width;
+            int width = ClientSize.Width - VScrollBarStrategy.Width;
             int height = ClientSize.Height;
             int totalHeight = 100;
 
@@ -181,25 +181,25 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
             if (totalHeight < height)
             {
-                _vScrollBarStrategy.Enabled = false;
-                _vScrollBarStrategy.Visible = false;
+                VScrollBarStrategy.Enabled = false;
+                VScrollBarStrategy.Visible = false;
             }
             else
             {
-                _vScrollBarStrategy.Enabled = true;
-                _vScrollBarStrategy.Visible = true;
-                _vScrollBarStrategy.Value = 0;
-                _vScrollBarStrategy.SmallChange = 30;
-                _vScrollBarStrategy.LargeChange = 60;
-                _vScrollBarStrategy.Maximum = Math.Max(totalHeight - height + 80, 0);
-                _vScrollBarStrategy.Location = new Point(width, 0);
-                _vScrollBarStrategy.Height = height;
-                _vScrollBarStrategy.Cursor = Cursors.Default;
+                VScrollBarStrategy.Enabled = true;
+                VScrollBarStrategy.Visible = true;
+                VScrollBarStrategy.Value = 0;
+                VScrollBarStrategy.SmallChange = 30;
+                VScrollBarStrategy.LargeChange = 60;
+                VScrollBarStrategy.Maximum = Math.Max(totalHeight - height + 80, 0);
+                VScrollBarStrategy.Location = new Point(width, 0);
+                VScrollBarStrategy.Height = height;
+                VScrollBarStrategy.Cursor = Cursors.Default;
             }
 
-            _flowLayoutStrategy.Width = width;
-            _flowLayoutStrategy.Height = totalHeight;
-            _flowLayoutStrategy.Location = Point.Empty;
+            FlowLayoutStrategy.Width = width;
+            FlowLayoutStrategy.Height = totalHeight;
+            FlowLayoutStrategy.Location = Point.Empty;
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private void VScrollBarScroll(object sender, ScrollEventArgs e)
         {
             var vscroll = (VScrollBar) sender;
-            _flowLayoutStrategy.Location = new Point(0, -vscroll.Value);
+            FlowLayoutStrategy.Location = new Point(0, -vscroll.Value);
         }
     }
 }

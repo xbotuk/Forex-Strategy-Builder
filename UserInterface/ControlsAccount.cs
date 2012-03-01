@@ -55,20 +55,20 @@ namespace Forex_Strategy_Builder
 
             // Button Comparator
             var tsbtComparator = new ToolStripButton {Text = Language.T("Comparator"), Name = "Comparator"};
-            tsbtComparator.Click += BtnTools_OnClick;
+            tsbtComparator.Click += BtnToolsOnClick;
             tsbtComparator.ToolTipText = Language.T("Compare the interpolating methods.");
             ToolStripAccount.Items.Add(tsbtComparator);
 
             // Button Scanner
             var tsbtScanner = new ToolStripButton {Text = Language.T("Scanner"), Name = "Scanner"};
-            tsbtScanner.Click += BtnTools_OnClick;
+            tsbtScanner.Click += BtnToolsOnClick;
             tsbtScanner.ToolTipText = Language.T("Perform a deep intrabar scan.") + Environment.NewLine +
                                       Language.T("Quick scan") + " - F6.";
             ToolStripAccount.Items.Add(tsbtScanner);
 
             // Button Analyzer
             var tsbtAnalyzer = new ToolStripButton {Text = Language.T("Analyzer"), Name = "Analyzer"};
-            tsbtAnalyzer.Click += BtnTools_OnClick;
+            tsbtAnalyzer.Click += BtnToolsOnClick;
             ToolStripAccount.Items.Add(tsbtAnalyzer);
 
             // Info Panel Account Statistics
@@ -227,14 +227,14 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Opens the corresponding tool
         /// </summary>
-        protected virtual void BtnTools_OnClick(object sender, EventArgs e)
+        protected virtual void BtnToolsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
         /// Tools menu
         /// </summary>
-        protected override void MenuTools_OnClick(object sender, EventArgs e)
+        protected override void MenuToolsOnClick(object sender, EventArgs e)
         {
         }
     }

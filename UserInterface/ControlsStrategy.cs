@@ -31,13 +31,13 @@ namespace Forex_Strategy_Builder
         {
             // Button Overview
             var tsbtOverview = new ToolStripButton {Name = "Overview", Text = Language.T("Overview")};
-            tsbtOverview.Click += BtnTools_OnClick;
+            tsbtOverview.Click += BtnToolsOnClick;
             tsbtOverview.ToolTipText = Language.T("See the strategy overview.");
             ToolStripStrategy.Items.Add(tsbtOverview);
 
             // Button Generator
             var tsbtGenerator = new ToolStripButton {Name = "Generator", Text = Language.T("Generator")};
-            tsbtGenerator.Click += BtnTools_OnClick;
+            tsbtGenerator.Click += BtnToolsOnClick;
             tsbtGenerator.ToolTipText = Language.T("Generate or improve a strategy.");
             ToolStripStrategy.Items.Add(tsbtGenerator);
 
@@ -79,7 +79,7 @@ namespace Forex_Strategy_Builder
 
             // Button Optimizer
             var tsbtOptimizer = new ToolStripButton {Name = "Optimizer", Text = Language.T("Optimizer")};
-            tsbtOptimizer.Click += BtnTools_OnClick;
+            tsbtOptimizer.Click += BtnToolsOnClick;
             tsbtOptimizer.ToolTipText = Language.T("Optimize the strategy parameters.");
             ToolStripStrategy.Items.Add(tsbtOptimizer);
 
@@ -354,7 +354,7 @@ namespace Forex_Strategy_Builder
         private void BtnStrategyDescriptionClick(object sender, EventArgs e)
         {
             string oldInfo = Data.Strategy.Description;
-            var si = new Strategy_Description();
+            var si = new StrategyDescription();
             si.ShowDialog();
             if (oldInfo == Data.Strategy.Description) return;
             Data.SetStrategyIndicators();

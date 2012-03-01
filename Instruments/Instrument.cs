@@ -21,7 +21,6 @@ namespace Forex_Strategy_Builder
         public Instrument(InstrumentProperties instrProperties, int period)
         {
             DataDir = "." + Path.DirectorySeparatorChar + "Data" + Path.DirectorySeparatorChar;
-            FormatDate = DateFormat.Unknown;
             EndTime = new DateTime(2020, 1, 1, 0, 0, 0);
             StartTime = new DateTime(1990, 1, 1, 0, 0, 0);
             MaxBars = 20000;
@@ -56,7 +55,6 @@ namespace Forex_Strategy_Builder
         public DateTime EndTime { private get; set; }
         public bool UseEndTime { private get; set; }
         public bool UseStartTime { private get; set; }
-        public DateFormat FormatDate { private get; set; }
         public string DataDir { private get; set; }
 
         // -------------------------------------------------------------
@@ -365,14 +363,5 @@ namespace Forex_Strategy_Builder
             MaxGap = (int) (instrMaxGap/Point);
             AverageGap = (int) (sumGap/((Bars - 1)*Point));
         }
-    }
-
-    public enum DateFormat
-    {
-        //DayMonthYear,
-        //MonthDayYear,
-        //YearDayMonth,
-        //YearMonthDay,
-        Unknown
     }
 }

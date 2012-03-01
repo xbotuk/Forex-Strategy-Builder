@@ -1,7 +1,7 @@
 ﻿// Language class
 // Part of Forex Strategy Builder & Forex Strategy Trader
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Forex_Strategy_Builder.Properties;
 
 namespace Forex_Strategy_Builder
 {
@@ -19,48 +20,50 @@ namespace Forex_Strategy_Builder
     /// </summary>
     public static class Language
     {
-        static Dictionary<String, String> languageFiles; // Language files <Language><FileName>
-        static Dictionary<String, String> dictLanguage;  // Language dictionary
-        static string[] languageList; // List of the languages
-        static string translatedBy;
-        static string website;
-        static string contacts;
-        static List<string> listMissingPhrases = new List<string>();
+        private static Dictionary<String, String> _languageFiles; // Language files <Language><FileName>
+
+        static Language()
+        {
+            MissingPhrases = new List<string>();
+        }
 
         /// <summary>
         /// Gets the language dictionary.
         /// </summary>
-        public static Dictionary<String, String> Translation { get { return dictLanguage; } }
+        public static Dictionary<string, string> Translation { get; private set; }
 
         /// <summary>
         /// Gets the language files list.
         /// </summary>
-        public static string[] LanguageList { get { return languageList; } }
+        public static string[] LanguageList { get; private set; }
 
         /// <summary>
         /// Gets language file name.
         /// </summary>
-        public static string LanguageFileName { get { return Path.GetFileName(languageFiles[Configs.Language]); } }
+        public static string LanguageFileName
+        {
+            get { return Path.GetFileName(_languageFiles[Configs.Language]); }
+        }
 
         /// <summary>
         /// Gets the author name.
         /// </summary>
-        public static string Author { get { return translatedBy; } }
+        public static string Author { get; private set; }
 
         /// <summary>
         /// Gets the author's website.
         /// </summary>
-        public static string AuthorsWebsite { get { return website; } }
+        public static string AuthorsWebsite { get; private set; }
 
         /// <summary>
         /// Gets the author's email.
         /// </summary>
-        public static string AuthorsEmail { get { return contacts; } }
+        public static string AuthorsEmail { get; private set; }
 
         /// <summary>
         /// Gets the list of missing phrases.
         /// </summary>
-        public static List<string> MissingPhrases { get { return listMissingPhrases; } }
+        public static List<string> MissingPhrases { get; private set; }
 
         /// <summary>
         /// Language Translation.
@@ -72,75 +75,82 @@ namespace Forex_Strategy_Builder
 
             string translated = phrase;
 
-            if (dictLanguage.ContainsKey(phrase))
-                translated = dictLanguage[phrase];
-            else if (!listMissingPhrases.Contains(phrase))
-                listMissingPhrases.Add(phrase);
+            if (Translation.ContainsKey(phrase))
+                translated = Translation[phrase];
+            else if (!MissingPhrases.Contains(phrase))
+                MissingPhrases.Add(phrase);
 
             return translated;
         }
 
         /// <summary>
-        /// Inits the languages.
+        /// Initializes the languages.
         /// </summary>
         public static void InitLanguages()
         {
-            languageFiles = new Dictionary<string, string>();
+            _languageFiles = new Dictionary<string, string>();
             bool bIsLanguageSet = false;
 
             if (Directory.Exists(Data.LanguageDir) && Directory.GetFiles(Data.LanguageDir).Length > 0)
             {
                 string[] asLangFiles = Directory.GetFiles(Data.LanguageDir);
 
-                foreach (string sLangFile in asLangFiles)
+                foreach (string langFile in asLangFiles)
                 {
-                    if (sLangFile.EndsWith(".xml", true, null))
+                    if (!langFile.EndsWith(".xml", true, null)) continue;
+                    try
                     {
-                        try
+                        var xmlLanguage = new XmlDocument();
+                        xmlLanguage.Load(langFile);
+                        XmlNode node = xmlLanguage.SelectSingleNode("lang//language");
+
+                        if (node == null)
                         {
-                            XmlDocument xmlLanguage = new XmlDocument();
-                            xmlLanguage.Load(sLangFile);
-                            XmlNode node = xmlLanguage.SelectSingleNode("lang//language");
+                            // There is no language specified it the lang file
+                            string sMessageText = "Language file: " + langFile + Environment.NewLine +
+                                                  Environment.NewLine +
+                                                  "The language is not specified!";
+                            MessageBox.Show(sMessageText, "Language Files Loading", MessageBoxButtons.OK,
+                                            MessageBoxIcon.Exclamation);
+                        }
+                        else if (_languageFiles.ContainsKey(node.InnerText))
+                        {
+                            // This language has been already loaded
+                            string sMessageText = "Language file: " + langFile + Environment.NewLine +
+                                                  Environment.NewLine +
+                                                  "Duplicated language!";
+                            MessageBox.Show(sMessageText, "Language Files Loading", MessageBoxButtons.OK,
+                                            MessageBoxIcon.Exclamation);
+                        }
+                        else
+                        {
+                            // It looks OK
+                            string sLanguage = node.InnerText;
+                            _languageFiles.Add(sLanguage, langFile);
 
-                            if (node == null)
-                            {   // There is no language specified it the lang file
-                                string sMessageText = "Language file: " + sLangFile + Environment.NewLine + Environment.NewLine +
-                                    "The language is not specified!";
-                                MessageBox.Show(sMessageText, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            }
-                            else if (languageFiles.ContainsKey(node.InnerText))
-                            {   // This language has been already loaded
-                                string sMessageText = "Language file: " + sLangFile + Environment.NewLine + Environment.NewLine +
-                                    "Duplicated language!";
-                                MessageBox.Show(sMessageText, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            }
-                            else
-                            {   // It looks OK
-                                string sLanguage = node.InnerText;
-                                languageFiles.Add(sLanguage, sLangFile);
-
-                                if (sLanguage == Configs.Language)
-                                {
-                                    LoadLanguageFile(sLangFile);
-                                    bIsLanguageSet = true;
-                                }
+                            if (sLanguage == Configs.Language)
+                            {
+                                LoadLanguageFile(langFile);
+                                bIsLanguageSet = true;
                             }
                         }
-                        catch (Exception e)
-                        {
-                            string sMessageText = "Language file: " + sLangFile + Environment.NewLine + Environment.NewLine +
-                                "Error in the language file!" + Environment.NewLine + Environment.NewLine + e.Message;
-                            MessageBox.Show(sMessageText, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        string sMessageText = "Language file: " + langFile + Environment.NewLine + Environment.NewLine +
+                                              "Error in the language file!" + Environment.NewLine + Environment.NewLine +
+                                              e.Message;
+                        MessageBox.Show(sMessageText, "Language Files Loading", MessageBoxButtons.OK,
+                                        MessageBoxIcon.Exclamation);
                     }
                 }
             }
 
-            if (!languageFiles.ContainsKey("English"))
-                languageFiles.Add("English", "System");
+            if (!_languageFiles.ContainsKey("English"))
+                _languageFiles.Add("English", "System");
 
-            if (!languageFiles.ContainsKey("Български"))
-                languageFiles.Add("Български", "System");
+            if (!_languageFiles.ContainsKey("Български"))
+                _languageFiles.Add("Български", "System");
 
             if (!bIsLanguageSet)
             {
@@ -155,55 +165,55 @@ namespace Forex_Strategy_Builder
 
             CheckLangFile();
 
-            languageList = new string[languageFiles.Count];
-            languageFiles.Keys.CopyTo(languageList, 0);
-            System.Array.Sort(languageList);
+            LanguageList = new string[_languageFiles.Count];
+            _languageFiles.Keys.CopyTo(LanguageList, 0);
+            Array.Sort(LanguageList);
         }
 
         /// <summary>
         /// Loads a language dictionary.
         /// </summary>
-        static void LoadLanguageFile(string sLangFile)
+        private static void LoadLanguageFile(string sLangFile)
         {
-            XmlDocument xmlLanguage = new XmlDocument();
+            var xmlLanguage = new XmlDocument();
 
             if (sLangFile == "Български" || sLangFile == "English")
-                xmlLanguage.InnerXml = Properties.Resources.Bulgarian;
+                xmlLanguage.InnerXml = Resources.Bulgarian;
             else
                 xmlLanguage.Load(sLangFile);
 
-            translatedBy = xmlLanguage.SelectSingleNode("lang//translatedby").InnerText;
-            website      = xmlLanguage.SelectSingleNode("lang//website").InnerText;
-            contacts  = xmlLanguage.SelectSingleNode("lang//corrections").InnerText;
+            Author = xmlLanguage.SelectSingleNode("lang//translatedby").InnerText;
+            AuthorsWebsite = xmlLanguage.SelectSingleNode("lang//website").InnerText;
+            AuthorsEmail = xmlLanguage.SelectSingleNode("lang//corrections").InnerText;
 
             XmlNodeList xmlStringList = xmlLanguage.GetElementsByTagName("str");
 
             int iStrings = xmlStringList.Count;
-            dictLanguage = new Dictionary<string, string>(iStrings);
+            Translation = new Dictionary<string, string>(iStrings);
 
             foreach (XmlNode nodeString in xmlStringList)
             {
                 string sMain = nodeString.SelectSingleNode("main").InnerText;
-                string sAlt  = nodeString.SelectSingleNode("alt").InnerText;
+                string sAlt = nodeString.SelectSingleNode("alt").InnerText;
 
-                if (Data.Debug && dictLanguage.ContainsValue(sAlt))
+                if (Data.Debug && Translation.ContainsValue(sAlt))
                 {
-                    string sMessage = "The string" + ": " + sAlt + Environment.NewLine + "appears more than once in the language file";
-                    System.Windows.Forms.MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string sMessage = "The string" + ": " + sAlt + Environment.NewLine +
+                                      "appears more than once in the language file";
+                    MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
-                if (dictLanguage.ContainsKey(sMain))
+                if (Translation.ContainsKey(sMain))
                 {
-                    string sMessage = "The string" + ": " + sMain + Environment.NewLine + "appears more than once in the language file";
-                    System.Windows.Forms.MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string sMessage = "The string" + ": " + sMain + Environment.NewLine +
+                                      "appears more than once in the language file";
+                    MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
-                    dictLanguage.Add(sMain, sAlt);
+                    Translation.Add(sMain, sAlt);
                 }
             }
-
-            return;
         }
 
         /// <summary>
@@ -213,78 +223,77 @@ namespace Forex_Strategy_Builder
         {
             // Generate Bulgarian.xml
             string sFilePath = Path.Combine(Data.LanguageDir, "Bulgarian.xml");
-            string sContent  = Properties.Resources.Bulgarian;
+            string sContent = Resources.Bulgarian;
             SaveTextFile(sFilePath, sContent);
 
             // Generate English.xml
-            string patternMain = @"<main>(?<main>.*)</main>";
-            string patternAlt  = @"<alt>(?<alt>.*)</alt>";
-            Regex expression = new Regex(".*" + patternMain + patternAlt + ".*", RegexOptions.Compiled);
+            const string patternMain = @"<main>(?<main>.*)</main>";
+            const string patternAlt = @"<alt>(?<alt>.*)</alt>";
+            var expression = new Regex(".*" + patternMain + patternAlt + ".*", RegexOptions.Compiled);
             sFilePath = Path.Combine(Data.LanguageDir, "English.xml");
-            StringBuilder sb = new StringBuilder();
-            foreach (string sLine in sContent.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+            var sb = new StringBuilder();
+            foreach (string line in sContent.Split(new[] {Environment.NewLine}, StringSplitOptions.None))
             {
-                Match match = expression.Match(sLine);
+                Match match = expression.Match(line);
                 if (match.Success)
                 {
                     string main = match.Groups["main"].Value;
-                    string alt  = match.Groups["alt"].Value;
-                    sb.AppendLine(sLine.Replace(alt, main));
+                    string alt = match.Groups["alt"].Value;
+                    sb.AppendLine(line.Replace(alt, main));
                 }
                 else
-                    sb.AppendLine(sLine);
+                    sb.AppendLine(line);
             }
             sContent = sb.ToString();
             sContent = sContent.Replace("Български", "English");
             SaveTextFile(sFilePath, sContent);
-
-            return;
         }
 
         /// <summary>
         /// Generates a new language file.
         /// </summary>
-        public static bool GenerateNewLangFile(string sFileName, string sLang, string sAuthor, string sWebsite, string sEmail)
+        public static bool GenerateNewLangFile(string sFileName, string sLang, string sAuthor, string sWebsite,
+                                               string sEmail)
         {
-            string sContent    = Properties.Resources.Bulgarian;
-            string patternMain = @"<main>(?<main>.*)</main>";
-            string patternAlt  = @"<alt>(?<alt>.*)</alt>";
-            Regex  expression  = new Regex(".*" + patternMain + patternAlt + ".*", RegexOptions.Compiled);
-            string sFilePath   = Path.Combine(Data.LanguageDir, sFileName);
-            StringBuilder sb   = new StringBuilder();
-            foreach (string sLine in sContent.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+            string sContent = Resources.Bulgarian;
+            const string patternMain = @"<main>(?<main>.*)</main>";
+            const string patternAlt = @"<alt>(?<alt>.*)</alt>";
+            var expression = new Regex(".*" + patternMain + patternAlt + ".*", RegexOptions.Compiled);
+            string filePath = Path.Combine(Data.LanguageDir, sFileName);
+            var sb = new StringBuilder();
+            foreach (string sLine in sContent.Split(new[] {Environment.NewLine}, StringSplitOptions.None))
             {
                 Match match = expression.Match(sLine);
                 if (match.Success)
                 {
                     string main = match.Groups["main"].Value;
-                    string alt  = match.Groups["alt"].Value;
+                    string alt = match.Groups["alt"].Value;
                     sb.AppendLine(sLine.Replace(alt, main));
                 }
                 else
                     sb.AppendLine(sLine);
             }
             sContent = sb.ToString();
-            sContent = sContent.Replace("Български",           sLang);
+            sContent = sContent.Replace("Български", sLang);
             sContent = sContent.Replace("Forex Software Ltd.", sAuthor);
             sContent = sContent.Replace(@"http://forexsb.com", sWebsite);
-            sContent = sContent.Replace(@"info@forexsb.com",   sEmail);
+            sContent = sContent.Replace(@"info@forexsb.com", sEmail);
 
-            return SaveTextFile(sFilePath, sContent);
+            return SaveTextFile(filePath, sContent);
         }
 
         /// <summary>
         /// Generates a new language file.
         /// </summary>
-        public static void SaveLangFile(Dictionary<string,string> dict , string sAuthor, string sWebsite, string sEmail)
+        public static void SaveLangFile(Dictionary<string, string> dict, string sAuthor, string sWebsite, string sEmail)
         {
-            string path = languageFiles[Configs.Language];
-            XmlDocument xmlLanguage = new XmlDocument();
+            string path = _languageFiles[Configs.Language];
+            var xmlLanguage = new XmlDocument();
             xmlLanguage.Load(path);
 
             xmlLanguage.SelectSingleNode("lang//translatedby").InnerText = sAuthor;
-            xmlLanguage.SelectSingleNode("lang//website"     ).InnerText = sWebsite;
-            xmlLanguage.SelectSingleNode("lang//corrections" ).InnerText = sEmail;
+            xmlLanguage.SelectSingleNode("lang//website").InnerText = sWebsite;
+            xmlLanguage.SelectSingleNode("lang//corrections").InnerText = sEmail;
 
             XmlNodeList xmlStringList = xmlLanguage.GetElementsByTagName("str");
 
@@ -301,8 +310,6 @@ namespace Forex_Strategy_Builder
             {
                 MessageBox.Show(e.Message);
             }
-
-            return;
         }
 
         /// <summary>
@@ -315,44 +322,47 @@ namespace Forex_Strategy_Builder
 
             foreach (string langFile in langFiles)
             {
-                if (langFile.EndsWith(".xml", true, null))
+                if (!langFile.EndsWith(".xml", true, null)) continue;
+                var xmlBaseLanguage = new XmlDocument {InnerXml = Resources.Bulgarian};
+
+                var xmlLanguage = new XmlDocument();
+                xmlLanguage.Load(langFile);
+
+                try
                 {
-                    XmlDocument xmlBaseLanguage = new XmlDocument();
-                    xmlBaseLanguage.InnerXml = Properties.Resources.Bulgarian;
+                    xmlBaseLanguage.SelectSingleNode("lang//language").InnerText =
+                        xmlLanguage.SelectSingleNode("lang//language").InnerText;
+                    xmlBaseLanguage.SelectSingleNode("lang//translatedby").InnerText =
+                        xmlLanguage.SelectSingleNode("lang//translatedby").InnerText;
+                    xmlBaseLanguage.SelectSingleNode("lang//website").InnerText =
+                        xmlLanguage.SelectSingleNode("lang//website").InnerText;
+                    xmlBaseLanguage.SelectSingleNode("lang//corrections").InnerText =
+                        xmlLanguage.SelectSingleNode("lang//corrections").InnerText;
 
-                    XmlDocument xmlLanguage = new XmlDocument();
-                    xmlLanguage.Load(langFile);
-
-                    try
+                    XmlNodeList xmlBaseStringList = xmlBaseLanguage.GetElementsByTagName("str");
+                    XmlNodeList xmlStringList = xmlLanguage.GetElementsByTagName("str");
+                    foreach (XmlNode nodeBaseString in xmlBaseStringList)
                     {
-                        xmlBaseLanguage.SelectSingleNode("lang//language").InnerText     = xmlLanguage.SelectSingleNode("lang//language").InnerText;
-                        xmlBaseLanguage.SelectSingleNode("lang//translatedby").InnerText = xmlLanguage.SelectSingleNode("lang//translatedby").InnerText;
-                        xmlBaseLanguage.SelectSingleNode("lang//website").InnerText      = xmlLanguage.SelectSingleNode("lang//website").InnerText;
-                        xmlBaseLanguage.SelectSingleNode("lang//corrections").InnerText  = xmlLanguage.SelectSingleNode("lang//corrections").InnerText;
+                        string main = nodeBaseString.SelectSingleNode("main").InnerText;
+                        nodeBaseString.SelectSingleNode("alt").InnerText = main;
 
-                        XmlNodeList xmlBaseStringList = xmlBaseLanguage.GetElementsByTagName("str");
-                        XmlNodeList xmlStringList     = xmlLanguage.GetElementsByTagName("str");
-                        foreach (XmlNode nodeBaseString in xmlBaseStringList)
-                        {
-                            string main = nodeBaseString.SelectSingleNode("main").InnerText;
-                            nodeBaseString.SelectSingleNode("alt").InnerText = main;
-
-                            foreach (XmlNode nodeString in xmlStringList)
-                                if(nodeString.SelectSingleNode("main").InnerText == main)
-                                    nodeBaseString.SelectSingleNode("alt").InnerText = nodeString.SelectSingleNode("alt").InnerText;
-                        }
-
-                        report += xmlLanguage.SelectSingleNode("lang//language").InnerText + " - OK" + Environment.NewLine;
-                    }
-                    catch (Exception e)
-                    {
-                        string message = "Language file: " + langFile + Environment.NewLine + Environment.NewLine +
-                            "Error in the language file!" + Environment.NewLine + Environment.NewLine + e.Message;
-                        MessageBox.Show(message, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        foreach (XmlNode nodeString in xmlStringList)
+                            if (nodeString.SelectSingleNode("main").InnerText == main)
+                                nodeBaseString.SelectSingleNode("alt").InnerText =
+                                    nodeString.SelectSingleNode("alt").InnerText;
                     }
 
-                    xmlBaseLanguage.Save(langFile);
+                    report += xmlLanguage.SelectSingleNode("lang//language").InnerText + " - OK" + Environment.NewLine;
                 }
+                catch (Exception e)
+                {
+                    string message = "Language file: " + langFile + Environment.NewLine + Environment.NewLine +
+                                     "Error in the language file!" + Environment.NewLine + Environment.NewLine +
+                                     e.Message;
+                    MessageBox.Show(message, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
+                xmlBaseLanguage.Save(langFile);
             }
 
             return report;
@@ -361,14 +371,14 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Saves a text file
         /// </summary>
-        static bool SaveTextFile(string sFilePath, string sContent)
+        private static bool SaveTextFile(string sFilePath, string sContent)
         {
-            bool bSuccess = false;
+            bool success = false;
 
             try
             {
                 // Pass the file path and filename to the StreamWriter Constructor
-                StreamWriter sw = new StreamWriter(sFilePath);
+                var sw = new StreamWriter(sFilePath);
 
                 // Write the text
                 sw.Write(sContent);
@@ -376,36 +386,38 @@ namespace Forex_Strategy_Builder
                 // Close the file
                 sw.Close();
 
-                bSuccess = true;
+                success = true;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
 
-            return bSuccess;
+            return success;
         }
 
         /// <summary>
         /// Checks the language file.
         /// </summary>
-        static void CheckLangFile()
+        private static void CheckLangFile()
         {
-            XmlDocument xmlLanguage = new XmlDocument();
-            xmlLanguage.InnerXml = Properties.Resources.Bulgarian;
+            var xmlLanguage = new XmlDocument {InnerXml = Resources.Bulgarian};
             XmlNodeList xmlStringList = xmlLanguage.GetElementsByTagName("str");
 
             int iStrings = xmlStringList.Count;
-            List<string> listPhrases= new List<string>(iStrings);
+            var listPhrases = new List<string>(iStrings);
 
             foreach (XmlNode nodeString in xmlStringList)
             {
-                string sMain = nodeString.SelectSingleNode("main").InnerText;
+                XmlNode selectSingleNode = nodeString.SelectSingleNode("main");
+                if (selectSingleNode == null) continue;
+                string sMain = selectSingleNode.InnerText;
 
                 if (listPhrases.Contains(sMain))
                 {
-                    string sMessage = "The string" + ": " + sMain + Environment.NewLine + "appears more than once in the base language file";
-                    System.Windows.Forms.MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string sMessage = "The string" + ": " + sMain + Environment.NewLine +
+                                      "appears more than once in the base language file";
+                    MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
@@ -413,40 +425,39 @@ namespace Forex_Strategy_Builder
                 }
             }
 
-            string sErrors = "";
+            string errors = "";
 
-            foreach (KeyValuePair<string, string> kvp in dictLanguage)
+            foreach (var kvp in Translation)
                 if (!listPhrases.Contains(kvp.Key))
-                    sErrors += kvp.Key + Environment.NewLine;
+                    errors += kvp.Key + Environment.NewLine;
 
-            if (sErrors != "")
+            if (errors != "")
             {
-                string sMessage = "Unused phrases:" + Environment.NewLine + Environment.NewLine + sErrors;
-                System.Windows.Forms.MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string sMessage = "Unused phrases:" + Environment.NewLine + Environment.NewLine + errors;
+                MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
-            sErrors = "";
+            errors = "";
 
             foreach (string sPhrase in listPhrases)
-                if (!dictLanguage.ContainsKey(sPhrase))
-                    sErrors += sPhrase + Environment.NewLine;
+                if (!Translation.ContainsKey(sPhrase))
+                    errors += sPhrase + Environment.NewLine;
 
-            if (sErrors != "")
+            if (errors != "")
             {
-                string sMessage = "The language file does not contain the phrases:" + Environment.NewLine + Environment.NewLine + sErrors;
-                System.Windows.Forms.MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string sMessage = "The language file does not contain the phrases:" + Environment.NewLine +
+                                  Environment.NewLine + errors;
+                MessageBox.Show(sMessage, "Language Files Loading", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-
-            return;
         }
 
         /// <summary>
         /// Shows the phrases in a web browser.
         /// </summary>
-        /// <param name="iWhatToshow">1 - English, 2 - Alt, 3 - Both, 4 - Wiki</param>
-        public static void ShowPhrases(int iWhatToShow)
+        /// <param name="whatToShow">1 - English, 2 - Alt, 3 - Both, 4 - Wiki</param>
+        public static void ShowPhrases(int whatToShow)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             // Header
             sb.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
@@ -465,17 +476,18 @@ namespace Forex_Strategy_Builder
 
             sb.AppendLine("<h1>" + T("Language Phrases") + "</h1>");
 
-            string[] asEnglishPhrases = new string[dictLanguage.Count];
-            string[] asAltPhrases = new string[dictLanguage.Count];
-            dictLanguage.Keys.CopyTo(asEnglishPhrases, 0);
-            dictLanguage.Values.CopyTo(asAltPhrases, 0);
+            var asEnglishPhrases = new string[Translation.Count];
+            var asAltPhrases = new string[Translation.Count];
+            Translation.Keys.CopyTo(asEnglishPhrases, 0);
+            Translation.Values.CopyTo(asAltPhrases, 0);
 
             string sTranslating = "<p>" +
-                T("Translated by") + ": " + translatedBy + "<br />" +
-                T("Website")       + ": <a href=\"" + website + "\" target=\"_blanc\">" + website + "</a>" + "<br />" +
-                T("Contacts")      + ": " + contacts + "</p><hr />";
+                                  T("Translated by") + ": " + Author + "<br />" +
+                                  T("Website") + ": <a href=\"" + AuthorsWebsite + "\" target=\"_blanc\">" +
+                                  AuthorsWebsite + "</a>" + "<br />" +
+                                  T("Contacts") + ": " + AuthorsEmail + "</p><hr />";
 
-            if (iWhatToShow == 1)
+            if (whatToShow == 1)
             {
                 sb.AppendLine("<h2>" + T("Useful for Automatic Translation") + "</h2>");
                 sb.AppendLine(sTranslating);
@@ -486,7 +498,7 @@ namespace Forex_Strategy_Builder
                 }
                 sb.AppendLine("</p>");
             }
-            else if (iWhatToShow == 2)
+            else if (whatToShow == 2)
             {
                 sb.AppendLine("<h2>" + T("Useful for Spell Check") + "</h2>");
                 sb.AppendLine(sTranslating);
@@ -497,18 +509,18 @@ namespace Forex_Strategy_Builder
                 }
                 sb.AppendLine("</p>");
             }
-            else if (iWhatToShow == 3)
+            else if (whatToShow == 3)
             {
                 sb.AppendLine("<h2>" + T("Useful for Translation Check") + "</h2>");
                 sb.AppendLine(sTranslating);
                 sb.AppendLine("<p>");
                 foreach (string sPhrase in asEnglishPhrases)
                 {
-                    sb.AppendLine(sPhrase + " - " + dictLanguage[sPhrase] + "<br/>");
+                    sb.AppendLine(sPhrase + " - " + Translation[sPhrase] + "<br/>");
                 }
                 sb.AppendLine("</p>");
             }
-            else if (iWhatToShow == 4)
+            else if (whatToShow == 4)
             {
                 sb.AppendLine("<h2>" + T("Wiki Format") + "</h2>");
                 sb.AppendLine(sTranslating);
@@ -518,7 +530,7 @@ namespace Forex_Strategy_Builder
                 sb.AppendLine("^ English ^" + Configs.Language + "^" + "<br/>");
                 foreach (string sPhrase in asEnglishPhrases)
                 {
-                    sb.AppendLine("| " + sPhrase + " | " + dictLanguage[sPhrase] + " |" + "<br/>");
+                    sb.AppendLine("| " + sPhrase + " | " + Translation[sPhrase] + " |" + "<br/>");
                 }
                 sb.AppendLine("</p>");
             }
@@ -526,10 +538,8 @@ namespace Forex_Strategy_Builder
             // Footer
             sb.AppendLine("</div></body></html>");
 
-            Browser brwsr = new Browser(T("Translation"), sb.ToString());
-            brwsr.Show();
-
-            return;
+            var browser = new Browser(T("Translation"), sb.ToString());
+            browser.Show();
         }
 
         /// <summary>
@@ -537,40 +547,37 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public static void ImportLanguageFile(string sLangFile)
         {
-            string patternMain = @"<main>(?<main>.*)</main>";
-            string patternAlt  = @"<alt>(?<alt>.*)</alt>";
-            Regex  expression  = new Regex(".*" + patternMain + patternAlt + ".*", RegexOptions.Compiled);
+            const string patternMain = @"<main>(?<main>.*)</main>";
+            const string patternAlt = @"<alt>(?<alt>.*)</alt>";
+            var expression = new Regex(".*" + patternMain + patternAlt + ".*", RegexOptions.Compiled);
 
-            string sContent = Properties.Resources.Bulgarian;
+            string content = Resources.Bulgarian;
             string sFilePath = Path.Combine(Data.LanguageDir, "Imported.xml");
             string[] asPhrases = sLangFile.Split(Environment.NewLine.ToCharArray()[0]);
 
-            StringBuilder sb = new StringBuilder();
-            int iPhraseNumber = 0;
-            foreach (string sLine in sContent.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+            var sb = new StringBuilder();
+            int phraseNumber = 0;
+            foreach (string sLine in content.Split(new[] {Environment.NewLine}, StringSplitOptions.None))
             {
                 Match match = expression.Match(sLine);
                 if (match.Success)
                 {
-                    if (iPhraseNumber >= asPhrases.Length)
+                    if (phraseNumber >= asPhrases.Length)
                         break;
 
-                    int index  = match.Groups["alt"].Index;
+                    int index = match.Groups["alt"].Index;
                     int lenght = match.Groups["alt"].Length;
 
-                    string translation = asPhrases[iPhraseNumber].Trim();
+                    string translation = asPhrases[phraseNumber].Trim();
                     sb.AppendLine(sLine.Remove(index, lenght).Insert(index, translation));
-                    iPhraseNumber++;
+                    phraseNumber++;
                 }
                 else
                     sb.AppendLine(sLine);
             }
-            sContent = sb.ToString();
-            sContent = sContent.Replace("Български", "Imported");
-            SaveTextFile(sFilePath, sContent);
-
-            return;
-
+            content = sb.ToString();
+            content = content.Replace("Български", "Imported");
+            SaveTextFile(sFilePath, content);
         }
     }
 }

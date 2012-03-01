@@ -129,7 +129,7 @@ namespace Forex_Strategy_Builder
         private static void ShowStartingTips()
         {
             if (!Configs.ShowStartingTip) return;
-            var startingTips = new Starting_Tips();
+            var startingTips = new StartingTips();
             if (startingTips.TipsCount > 0)
                 startingTips.Show();
         }
@@ -273,7 +273,7 @@ namespace Forex_Strategy_Builder
             if (isSlotExist)
                 Data.StackStrategy.Push(Data.Strategy.Clone());
 
-            var indicatorDialog = new Indicator_Dialog(slot, slotType, isSlotExist);
+            var indicatorDialog = new IndicatorDialog(slot, slotType, isSlotExist);
             indicatorDialog.ShowDialog();
 
             if (indicatorDialog.DialogResult == DialogResult.OK)
@@ -470,7 +470,6 @@ namespace Forex_Strategy_Builder
             var instrument = new Instrument(instrProperties, (int) dataPeriod)
                                  {
                                      DataDir = Data.OfflineDataDir,
-                                     FormatDate = DateFormat.Unknown,
                                      MaxBars = Configs.MaxBars,
                                      StartTime = Configs.DataStartTime,
                                      EndTime = Configs.DataEndTime,
@@ -479,10 +478,9 @@ namespace Forex_Strategy_Builder
                                  };
 
             // Loads the data
+            int loadDataResult = useResource ? instrument.LoadResourceData() : instrument.LoadData();
 
-            int iLoadDataResult = useResource ? instrument.LoadResourceData() : instrument.LoadData();
-
-            if (instrument.Bars > 0 && iLoadDataResult == 0)
+            if (instrument.Bars > 0 && loadDataResult == 0)
             {
                 Data.InstrProperties = instrProperties.Clone();
 
@@ -531,7 +529,7 @@ namespace Forex_Strategy_Builder
                 InfoPanelAccountStatistics.Update(Backtester.AccountStatsParam, Backtester.AccountStatsValue,
                                                   Backtester.AccountStatsFlags, Language.T("Account Statistics"));
             }
-            else if (iLoadDataResult == -1)
+            else if (loadDataResult == -1)
             {
                 MessageBox.Show(Language.T("Error in the data file!"), Language.T("Data file loading"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -933,7 +931,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void EditTradingCharges()
         {
-            var tradingCharges = new Trading_Charges
+            var tradingCharges = new TradingCharges
                                      {
                                          Spread = Data.InstrProperties.Spread,
                                          SwapLong = Data.InstrProperties.SwapLong,
@@ -1060,7 +1058,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void PublishStrategy()
         {
-            var publisher = new Strategy_Publish();
+            var publisher = new StrategyPublish();
             publisher.Show();
         }
 
@@ -1069,7 +1067,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowAccountSettings()
         {
-            var accountSettings = new Account_Settings
+            var accountSettings = new AccountSettings
                                       {
                                           AccountCurrency = Configs.AccountCurrency,
                                           InitialAccount = Configs.InitialAccount,
@@ -1244,7 +1242,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowBarExplorer()
         {
-            var barExplorer = new Bar_Explorer(Data.FirstBar);
+            var barExplorer = new BarExplorer(Data.FirstBar);
             barExplorer.ShowDialog();
         }
 
@@ -1274,7 +1272,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowInstrumentEditor()
         {
-            var instrEditor = new Instrument_Editor();
+            var instrEditor = new InstrumentEditor();
             instrEditor.ShowDialog();
 
             if (instrEditor.NeedReset)

@@ -1,173 +1,169 @@
 // Forex Strategy Builder - Comparator
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
+using System.Media;
 using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder
 {
-    class Comparator : Form
+    internal sealed class Comparator : Form
     {
-        Panel         pnlOptions;
-        CheckBox[]    achboxMethods;
-        Label         lblAverageBalance;
-        Panel         pnlChart;
-        ProgressBar   progressBar;
-        NumericUpDown numRandom;
-        Label         lblRandomCycles;
-        Button        btnCalculate;
-        Button        btnClose;
-
-        bool     isPaintChart;
-        bool     isRandom;
-        int      countMethods;
-        int      checkedMethods;
-        int      lines;
-        float[,] afMethods;
-        float[,] afRandoms;
-        float[]  afBalance;
-        float[]  afMinRandom;
-        float[]  afMaxRandom;
-        float    minimumRandom;
-        float    maximumRandom;
-        float    minimum;
-        float    maximum;
-
-        Pen   penOptimistic;
-        Pen   penPessimistic;
-        Pen   penShortest;
-        Pen   penNearest;
-        Pen   penRandom;
-        Pen   penRandBands;
-        Pen   penBalance;
-        Brush brushRandArea;
-
-        BackgroundWorker bgWorker;
-        bool bIsWorking; // It is true when the comparator is running
-
-        bool bTradeUntilMC = Configs.TradeUntilMarginCall;
+        private readonly BackgroundWorker _bgWorker;
+        private readonly Brush _brushRandArea;
+        private readonly int _countMethods;
+        private readonly bool _isTradeUntilMC = Configs.TradeUntilMarginCall;
+        private readonly Pen _penBalance;
+        private readonly Pen _penNearest;
+        private readonly Pen _penOptimistic;
+        private readonly Pen _penPessimistic;
+        private readonly Pen _penRandBands;
+        private readonly Pen _penRandom;
+        private readonly Pen _penShortest;
+        private float[] _afBalance;
+        private float[] _afMaxRandom;
+        private float[,] _afMethods;
+        private float[] _afMinRandom;
+        private float[,] _afRandoms;
+        private int _checkedMethods;
+        private bool _isPaintChart;
+        private bool _isRandom;
+        private bool _isWorking; // It is true when the comparator is running
+        private int _lines;
+        private float _maximum;
+        private float _maximumRandom;
+        private float _minimum;
+        private float _minimumRandom;
 
         /// <summary>
         /// Initialize the form and controls
         /// </summary>
         public Comparator()
         {
-            pnlOptions        = new Panel();
-            pnlChart          = new Panel();
-            progressBar       = new ProgressBar();
-            lblAverageBalance = new Label();
-            numRandom         = new NumericUpDown();
-            lblRandomCycles   = new Label();
-            btnCalculate      = new Button();
-            btnClose          = new Button();
+            PnlOptions = new Panel();
+            PnlChart = new Panel();
+            ProgressBar = new ProgressBar();
+            LblAverageBalance = new Label();
+            NumRandom = new NumericUpDown();
+            LblRandomCycles = new Label();
+            BtnCalculate = new Button();
+            BtnClose = new Button();
 
-            Text            = Language.T("Comparator");
-            BackColor       = LayoutColors.ColorFormBack;
+            Text = Language.T("Comparator");
+            BackColor = LayoutColors.ColorFormBack;
             FormBorderStyle = FormBorderStyle.FixedDialog;
-            Icon            = Data.Icon;
-            MaximizeBox     = false;
-            MinimizeBox     = false;
-            ShowInTaskbar   = false;
-            FormClosing    += new FormClosingEventHandler(Actions_FormClosing);
+            Icon = Data.Icon;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            ShowInTaskbar = false;
+            FormClosing += ActionsFormClosing;
 
-            isPaintChart = false;
+            _isPaintChart = false;
 
             //Button Calculate
-            btnCalculate.Parent = this;
-            btnCalculate.Name   = "btnCalculate";
-            btnCalculate.Text   = Language.T("Calculate");
-            btnCalculate.Click += new EventHandler(BtnCalculate_Click);
-            btnCalculate.UseVisualStyleBackColor = true;
+            BtnCalculate.Parent = this;
+            BtnCalculate.Name = "btnCalculate";
+            BtnCalculate.Text = Language.T("Calculate");
+            BtnCalculate.Click += BtnCalculateClick;
+            BtnCalculate.UseVisualStyleBackColor = true;
 
             //Button Close
-            btnClose.Parent       = this;
-            btnClose.Name         = "btnClose";
-            btnClose.Text         = Language.T("Close");
-            btnClose.DialogResult = DialogResult.OK;
-            btnClose.UseVisualStyleBackColor = true;
+            BtnClose.Parent = this;
+            BtnClose.Name = "btnClose";
+            BtnClose.Text = Language.T("Close");
+            BtnClose.DialogResult = DialogResult.OK;
+            BtnClose.UseVisualStyleBackColor = true;
 
             // ProgressBar
-            progressBar.Parent  = this;
-            progressBar.Minimum = 1;
-            progressBar.Maximum = 100;
-            progressBar.Step    = 1;
+            ProgressBar.Parent = this;
+            ProgressBar.Minimum = 1;
+            ProgressBar.Maximum = 100;
+            ProgressBar.Step = 1;
 
-            pnlChart.Parent    = this;
-            pnlChart.ForeColor = LayoutColors.ColorControlText;
-            pnlChart.Paint    += new PaintEventHandler(PnlChart_Paint);
+            PnlChart.Parent = this;
+            PnlChart.ForeColor = LayoutColors.ColorControlText;
+            PnlChart.Paint += PnlChartPaint;
 
-            pnlOptions.Parent    = this;
-            pnlOptions.ForeColor = LayoutColors.ColorControlText;
-            pnlOptions.Paint    += new PaintEventHandler(PnlOptions_Paint);
+            PnlOptions.Parent = this;
+            PnlOptions.ForeColor = LayoutColors.ColorControlText;
+            PnlOptions.Paint += PnlOptionsPaint;
 
-            countMethods  = Enum.GetValues(typeof (InterpolationMethod)).Length;
-            achboxMethods = new CheckBox[countMethods];
-            for (int i = 0; i < countMethods; i++)
+            _countMethods = Enum.GetValues(typeof (InterpolationMethod)).Length;
+            AchboxMethods = new CheckBox[_countMethods];
+            for (int i = 0; i < _countMethods; i++)
             {
-                achboxMethods[i] = new CheckBox();
-                achboxMethods[i].Parent    = pnlOptions;
-                achboxMethods[i].Text      = Language.T(Enum.GetNames(typeof(InterpolationMethod))[i]);
-                achboxMethods[i].Tag       = Enum.GetValues(typeof(InterpolationMethod)).GetValue(i);
-                achboxMethods[i].Checked   = true;
-                achboxMethods[i].BackColor = Color.Transparent;
-                achboxMethods[i].AutoSize  = true;
-                achboxMethods[i].CheckedChanged += new EventHandler(Comparator_CheckedChanged);
+                AchboxMethods[i] = new CheckBox
+                                       {
+                                           Parent = PnlOptions,
+                                           Text = Language.T(Enum.GetNames(typeof (InterpolationMethod))[i]),
+                                           Tag = Enum.GetValues(typeof (InterpolationMethod)).GetValue(i),
+                                           Checked = true,
+                                           BackColor = Color.Transparent,
+                                           AutoSize = true
+                                       };
+                AchboxMethods[i].CheckedChanged += ComparatorCheckedChanged;
             }
 
             // Label Average Balance
-            lblAverageBalance.Parent    = pnlOptions;
-            lblAverageBalance.AutoSize  = true;
-            lblAverageBalance.Text      = Language.T("Average balance");
-            lblAverageBalance.ForeColor = LayoutColors.ColorControlText;
-            lblAverageBalance.BackColor = Color.Transparent;
-            lblAverageBalance.TextAlign = ContentAlignment.MiddleLeft;
+            LblAverageBalance.Parent = PnlOptions;
+            LblAverageBalance.AutoSize = true;
+            LblAverageBalance.Text = Language.T("Average balance");
+            LblAverageBalance.ForeColor = LayoutColors.ColorControlText;
+            LblAverageBalance.BackColor = Color.Transparent;
+            LblAverageBalance.TextAlign = ContentAlignment.MiddleLeft;
 
             // NumUpDown random cycles
-            numRandom.BeginInit();
-            numRandom.Parent    = this;
-            numRandom.Value     = 25;
-            numRandom.Minimum   = 3;
-            numRandom.Maximum   = 100;
-            numRandom.TextAlign = HorizontalAlignment.Center;
-            numRandom.EndInit();
+            NumRandom.BeginInit();
+            NumRandom.Parent = this;
+            NumRandom.Value = 25;
+            NumRandom.Minimum = 3;
+            NumRandom.Maximum = 100;
+            NumRandom.TextAlign = HorizontalAlignment.Center;
+            NumRandom.EndInit();
 
             // Label Random Cycles
-            lblRandomCycles.Parent    = this;
-            lblRandomCycles.AutoSize  = true;
-            lblRandomCycles.ForeColor = LayoutColors.ColorControlText;
-            lblRandomCycles.BackColor = Color.Transparent;
-            lblRandomCycles.Text      = Language.T("Random iterations");
-            lblRandomCycles.TextAlign = ContentAlignment.MiddleLeft;
+            LblRandomCycles.Parent = this;
+            LblRandomCycles.AutoSize = true;
+            LblRandomCycles.ForeColor = LayoutColors.ColorControlText;
+            LblRandomCycles.BackColor = Color.Transparent;
+            LblRandomCycles.Text = Language.T("Random iterations");
+            LblRandomCycles.TextAlign = ContentAlignment.MiddleLeft;
 
             // Colors
-            penOptimistic  = new Pen(LayoutColors.ComparatorChartOptimisticLine);
-            penPessimistic = new Pen(LayoutColors.ComparatorChartPessimisticLine);
-            penShortest    = new Pen(LayoutColors.ComparatorChartShortestLine);
-            penNearest     = new Pen(LayoutColors.ComparatorChartNearestLine);
-            penRandom      = new Pen(LayoutColors.ComparatorChartRandomLine);
-            penRandBands   = new Pen(LayoutColors.ComparatorChartRandomBands);
-            brushRandArea  = new SolidBrush(LayoutColors.ComparatorChartRandomArea);
-            penBalance     = new Pen(LayoutColors.ComparatorChartBalanceLine);
-            penBalance.Width = 2;
+            _penOptimistic = new Pen(LayoutColors.ComparatorChartOptimisticLine);
+            _penPessimistic = new Pen(LayoutColors.ComparatorChartPessimisticLine);
+            _penShortest = new Pen(LayoutColors.ComparatorChartShortestLine);
+            _penNearest = new Pen(LayoutColors.ComparatorChartNearestLine);
+            _penRandom = new Pen(LayoutColors.ComparatorChartRandomLine);
+            _penRandBands = new Pen(LayoutColors.ComparatorChartRandomBands);
+            _brushRandArea = new SolidBrush(LayoutColors.ComparatorChartRandomArea);
+            _penBalance = new Pen(LayoutColors.ComparatorChartBalanceLine) {Width = 2};
 
             // BackGroundWorker
-            bgWorker = new BackgroundWorker();
-            bgWorker.WorkerReportsProgress      = true;
-            bgWorker.WorkerSupportsCancellation = true;
-            bgWorker.DoWork             += new DoWorkEventHandler(bgWorker_DoWork);
-            bgWorker.ProgressChanged    += new ProgressChangedEventHandler(bgWorker_ProgressChanged);
-            bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgWorker_RunWorkerCompleted);
+            _bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            _bgWorker.DoWork += BgWorkerDoWork;
+            _bgWorker.ProgressChanged += BgWorkerProgressChanged;
+            _bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
 
             Configs.TradeUntilMarginCall = false;
-
-            return;
         }
+
+        private Panel PnlOptions { get; set; }
+        private CheckBox[] AchboxMethods { get; set; }
+        private Label LblAverageBalance { get; set; }
+        private Panel PnlChart { get; set; }
+        private ProgressBar ProgressBar { get; set; }
+        private NumericUpDown NumRandom { get; set; }
+        private Label LblRandomCycles { get; set; }
+        private Button BtnCalculate { get; set; }
+        private Button BtnClose { get; set; }
 
         /// <summary>
         /// Resizes the form
@@ -175,10 +171,8 @@ namespace Forex_Strategy_Builder
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            Width  = (int)(Data.HorizontalDLU * 290);
-            Height = (int)(Data.VerticalDLU   * 260);
-
-            return;
+            Width = (int) (Data.HorizontalDLU*290);
+            Height = (int) (Data.VerticalDLU*260);
         }
 
         /// <summary>
@@ -188,171 +182,157 @@ namespace Forex_Strategy_Builder
         {
             base.OnResize(e);
 
-            int buttonHeight = (int)(Data.VerticalDLU * 15.5);
-            int buttonWidth  = (int)(Data.HorizontalDLU * 60);
-            int btnVertSpace = (int)(Data.VerticalDLU * 5.5);
-            int btnHrzSpace  = (int)(Data.HorizontalDLU * 3);
-            int space        = btnHrzSpace;
-            int controlZoneH = buttonHeight + 2 * btnVertSpace;
+            var buttonHeight = (int) (Data.VerticalDLU*15.5);
+            var buttonWidth = (int) (Data.HorizontalDLU*60);
+            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            int space = btnHrzSpace;
+            int controlZoneH = buttonHeight + 2*btnVertSpace;
             int controlZoneY = ClientSize.Height - controlZoneH;
-            int buttonY      = controlZoneY + btnVertSpace;
+            int buttonY = controlZoneY + btnVertSpace;
 
-            int width = ClientSize.Width - 2 * space;
+            PnlOptions.Size = new Size(ClientSize.Width - 2*space, 90);
+            PnlOptions.Location = new Point(space, space);
 
-            pnlOptions.Size     = new Size(ClientSize.Width - 2 * space, 90);
-            pnlOptions.Location = new Point(space, space);
-
-            int lenght    = (int)(Data.HorizontalDLU * 60);
-            int positionX = (pnlOptions.ClientSize.Width - 10) / 3;
-            int positionY = 27;
+            int positionX = (PnlOptions.ClientSize.Width - 10)/3;
+            const int positionY = 27;
             int num = 0;
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    if (num < countMethods)
-                        achboxMethods[num].Location = new Point(j * positionX + 40, i * 30 + positionY);
+                    if (num < _countMethods)
+                        AchboxMethods[num].Location = new Point(j*positionX + 40, i*30 + positionY);
                     else
-                        lblAverageBalance.Location = new Point(j * positionX + 40, i * 30 + positionY + 1);
+                        LblAverageBalance.Location = new Point(j*positionX + 40, i*30 + positionY + 1);
 
                     num++;
                 }
             }
 
-            numRandom.Size           = new Size(50, buttonHeight);
-            numRandom.Location       = new Point(btnHrzSpace, controlZoneY + (controlZoneH - numRandom.Height) / 2);
-            lblRandomCycles.Location = new Point(numRandom.Right + 5, controlZoneY + (controlZoneH - lblRandomCycles.Height) / 2);
+            NumRandom.Size = new Size(50, buttonHeight);
+            NumRandom.Location = new Point(btnHrzSpace, controlZoneY + (controlZoneH - NumRandom.Height)/2);
+            LblRandomCycles.Location = new Point(NumRandom.Right + 5,
+                                                 controlZoneY + (controlZoneH - LblRandomCycles.Height)/2);
 
-            btnClose.Size     = new Size(buttonWidth, buttonHeight);
-            btnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace, buttonY);
+            BtnClose.Size = new Size(buttonWidth, buttonHeight);
+            BtnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace, buttonY);
 
-            btnCalculate.Size     = new Size(buttonWidth, buttonHeight);
-            btnCalculate.Location = new Point(btnClose.Left - buttonWidth - btnHrzSpace, buttonY);
+            BtnCalculate.Size = new Size(buttonWidth, buttonHeight);
+            BtnCalculate.Location = new Point(BtnClose.Left - buttonWidth - btnHrzSpace, buttonY);
 
-            progressBar.Size     = new Size(ClientSize.Width - 2 * space, (int)(Data.VerticalDLU * 9));
-            progressBar.Location = new Point(space, btnClose.Top - progressBar.Height - btnVertSpace);
-            pnlChart.Size     = new Size(ClientSize.Width - 2 * space, progressBar.Top - pnlOptions.Bottom - 2 * space);
-            pnlChart.Location = new Point(space, pnlOptions.Bottom + space);
-
-            return;
+            ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
+            ProgressBar.Location = new Point(space, BtnClose.Top - ProgressBar.Height - btnVertSpace);
+            PnlChart.Size = new Size(ClientSize.Width - 2*space, ProgressBar.Top - PnlOptions.Bottom - 2*space);
+            PnlChart.Location = new Point(space, PnlOptions.Bottom + space);
         }
 
         /// <summary>
         /// Check whether the strategy have been changed.
         /// </summary>
-        void Actions_FormClosing(object sender, FormClosingEventArgs e)
+        private void ActionsFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (bIsWorking)
-            {   // Cancel the asynchronous operation.
-                bgWorker.CancelAsync();
+            if (_isWorking)
+            {
+                // Cancel the asynchronous operation.
+                _bgWorker.CancelAsync();
                 e.Cancel = true;
             }
 
-            Configs.TradeUntilMarginCall = bTradeUntilMC;
-
-            return;
+            Configs.TradeUntilMarginCall = _isTradeUntilMC;
         }
 
         /// <summary>
         /// A check boxes status
         /// </summary>
-        void Comparator_CheckedChanged(object sender, EventArgs e)
+        private void ComparatorCheckedChanged(object sender, EventArgs e)
         {
-            CheckBox chbox = (CheckBox)sender;
-            InterpolationMethod interpMethod = (InterpolationMethod) chbox.Tag;
+            var chbox = (CheckBox) sender;
+            var interpMethod = (InterpolationMethod) chbox.Tag;
 
             if (interpMethod == InterpolationMethod.Random)
             {
-                numRandom.Enabled = chbox.Checked;
+                NumRandom.Enabled = chbox.Checked;
             }
-
-            return;
         }
 
         /// <summary>
         /// Calculate
         /// </summary>
-        void BtnCalculate_Click(object sender, EventArgs e)
+        private void BtnCalculateClick(object sender, EventArgs e)
         {
-            if (bIsWorking)
-            {   // Cancel the asynchronous operation.
-                bgWorker.CancelAsync();
+            if (_isWorking)
+            {
+                // Cancel the asynchronous operation.
+                _bgWorker.CancelAsync();
                 return;
             }
 
             Cursor = Cursors.WaitCursor;
-            progressBar.Value = 1;
-            bIsWorking        = true;
-            btnClose.Enabled  = false;
-            btnCalculate.Text = Language.T("Stop");
+            ProgressBar.Value = 1;
+            _isWorking = true;
+            BtnClose.Enabled = false;
+            BtnCalculate.Text = Language.T("Stop");
 
-            for (int m = 0; m < countMethods; m++)
+            for (int m = 0; m < _countMethods; m++)
             {
-                achboxMethods[m].Enabled = false;
+                AchboxMethods[m].Enabled = false;
             }
-            numRandom.Enabled = false;
+            NumRandom.Enabled = false;
 
             // Start the bgWorker
-            bgWorker.RunWorkerAsync();
-
-            return;
+            _bgWorker.RunWorkerAsync();
         }
 
         /// <summary>
         /// Does the job
         /// </summary>
-        private void bgWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void BgWorkerDoWork(object sender, DoWorkEventArgs e)
         {
             // Get the BackgroundWorker that raised this event.
-            BackgroundWorker worker = sender as BackgroundWorker;
+            var worker = sender as BackgroundWorker;
 
-            progressBar.Value = 1;
+            ProgressBar.Value = 1;
 
             // Optimize all Parameters
-            if (Calculate(worker, e) == 0)
+            if (Calculate(worker) == 0)
             {
-                isPaintChart = true;
-                pnlChart.Invalidate();
+                _isPaintChart = true;
+                PnlChart.Invalidate();
             }
-
-            return;
         }
 
         /// <summary>
         /// This event handler updates the progress bar.
         /// </summary>
-        private void bgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void BgWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.Value = e.ProgressPercentage;
-
-            return;
+            ProgressBar.Value = e.ProgressPercentage;
         }
 
         /// <summary>
         /// This event handler deals with the results of the background operation.
         /// </summary>
-        private void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            bIsWorking        = false;
-            btnClose.Enabled  = true;
-            btnCalculate.Text = Language.T("Calculate");
+            _isWorking = false;
+            BtnClose.Enabled = true;
+            BtnCalculate.Text = Language.T("Calculate");
 
-            for (int m = 0; m < countMethods; m++)
+            for (int m = 0; m < _countMethods; m++)
             {
-                achboxMethods[m].Enabled = true;
+                AchboxMethods[m].Enabled = true;
             }
-            numRandom.Enabled = true;
+            NumRandom.Enabled = true;
 
             Cursor = Cursors.Default;
-            btnClose.Focus();
-
-            return;
+            BtnClose.Focus();
         }
 
         /// <summary>
         /// Calculates the balance lines
         /// </summary>
-        int Calculate(BackgroundWorker worker, DoWorkEventArgs e)
+        private int Calculate(BackgroundWorker worker)
         {
             // Determine the number of lines
             // For each method per line
@@ -360,56 +340,56 @@ namespace Forex_Strategy_Builder
             // Also we have two border lines for the random method
             // Plus the average balance line
 
-            isRandom      = false;
-            minimum       = float.MaxValue;
-            maximum       = float.MinValue;
-            minimumRandom = float.MaxValue;
-            maximumRandom = float.MinValue;
-            int iRandomLines = (int) numRandom.Value;
+            _isRandom = false;
+            _minimum = float.MaxValue;
+            _maximum = float.MinValue;
+            _minimumRandom = float.MaxValue;
+            _maximumRandom = float.MinValue;
+            var randomLines = (int) NumRandom.Value;
 
-            checkedMethods = 0;
-            lines = 1;
-            for (int m = 0; m < countMethods; m++)
-                if (achboxMethods[m].Checked)
+            _checkedMethods = 0;
+            _lines = 1;
+            for (int m = 0; m < _countMethods; m++)
+                if (AchboxMethods[m].Checked)
                 {
-                    checkedMethods++;
-                    lines++;
-                    if ((InterpolationMethod)achboxMethods[m].Tag == InterpolationMethod.Random)
-                        isRandom = true;
+                    _checkedMethods++;
+                    _lines++;
+                    if ((InterpolationMethod) AchboxMethods[m].Tag == InterpolationMethod.Random)
+                        _isRandom = true;
                 }
 
-            if (checkedMethods == 0 && Configs.PlaySounds)
+            if (_checkedMethods == 0 && Configs.PlaySounds)
             {
-                System.Media.SystemSounds.Hand.Play();
+                SystemSounds.Hand.Play();
                 return -1;
             }
 
-            afBalance = new float[Data.Bars - Data.FirstBar];
-            afMethods = new float[countMethods, Data.Bars - Data.FirstBar];
-            if (isRandom)
+            _afBalance = new float[Data.Bars - Data.FirstBar];
+            _afMethods = new float[_countMethods,Data.Bars - Data.FirstBar];
+            if (_isRandom)
             {
-                afRandoms   = new float[iRandomLines, Data.Bars - Data.FirstBar];
-                afMinRandom = new float[Data.Bars - Data.FirstBar];
-                afMaxRandom = new float[Data.Bars - Data.FirstBar];
+                _afRandoms = new float[randomLines,Data.Bars - Data.FirstBar];
+                _afMinRandom = new float[Data.Bars - Data.FirstBar];
+                _afMaxRandom = new float[Data.Bars - Data.FirstBar];
             }
 
-            // Progress params
+            // Progress parameters
             int computedCycles = 0;
-            int cycles = lines + (isRandom ? iRandomLines : 0);
+            int cycles = _lines + (_isRandom ? randomLines : 0);
             int highestPercentageReached = 0;
-            int percentComplete = 0;
+            int percentComplete;
 
             // Calculates the lines
-            for (int m = 0; m < countMethods; m++)
+            for (int m = 0; m < _countMethods; m++)
             {
                 if (worker.CancellationPending) return -1;
-                if (!achboxMethods[m].Checked) continue;
+                if (!AchboxMethods[m].Checked) continue;
 
-                InterpolationMethod method = (InterpolationMethod)achboxMethods[m].Tag;
+                var method = (InterpolationMethod) AchboxMethods[m].Tag;
 
                 if (method == InterpolationMethod.Random)
                 {
-                    for (int r = 0; r < iRandomLines; r++)
+                    for (int r = 0; r < randomLines; r++)
                     {
                         if (worker.CancellationPending) return -1;
 
@@ -418,15 +398,15 @@ namespace Forex_Strategy_Builder
 
                         if (Configs.AccountInMoney)
                             for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
-                                afRandoms[r, iBar] = (float)Backtester.MoneyBalance(iBar + Data.FirstBar);
+                                _afRandoms[r, iBar] = (float) Backtester.MoneyBalance(iBar + Data.FirstBar);
                         else
                             for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
-                                afRandoms[r, iBar] = (float)Backtester.Balance(iBar + Data.FirstBar);
+                                _afRandoms[r, iBar] = Backtester.Balance(iBar + Data.FirstBar);
 
 
                         // Report progress as a percentage of the total task.
                         computedCycles++;
-                        percentComplete = 100 * computedCycles / cycles;
+                        percentComplete = 100*computedCycles/cycles;
                         percentComplete = percentComplete > 100 ? 100 : percentComplete;
                         if (percentComplete > highestPercentageReached)
                         {
@@ -438,33 +418,31 @@ namespace Forex_Strategy_Builder
                     for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
                     {
                         float randomSum = 0;
-                        float value;
                         float minRandom = float.MaxValue;
                         float maxRandom = float.MinValue;
-                        for (int r = 0; r < iRandomLines; r++)
+                        for (int r = 0; r < randomLines; r++)
                         {
-                            value = afRandoms[r, iBar];
+                            float value = _afRandoms[r, iBar];
                             randomSum += value;
                             minRandom = value < minRandom ? value : minRandom;
                             maxRandom = value > maxRandom ? value : maxRandom;
                         }
-                        afMethods[m, iBar] = randomSum / iRandomLines;
-                        afMinRandom[iBar]  = minRandom;
-                        afMaxRandom[iBar]  = maxRandom;
-                        minimumRandom = minRandom < minimumRandom ? minRandom : minimumRandom;
-                        maximumRandom = maxRandom > maximumRandom ? maxRandom : maximumRandom;
+                        _afMethods[m, iBar] = randomSum/randomLines;
+                        _afMinRandom[iBar] = minRandom;
+                        _afMaxRandom[iBar] = maxRandom;
+                        _minimumRandom = minRandom < _minimumRandom ? minRandom : _minimumRandom;
+                        _maximumRandom = maxRandom > _maximumRandom ? maxRandom : _maximumRandom;
                     }
 
                     // Report progress as a percentage of the total task.
                     computedCycles++;
-                    percentComplete = 100 * computedCycles / cycles;
+                    percentComplete = 100*computedCycles/cycles;
                     percentComplete = percentComplete > 100 ? 100 : percentComplete;
                     if (percentComplete > highestPercentageReached)
                     {
                         highestPercentageReached = percentComplete;
                         worker.ReportProgress(percentComplete);
                     }
-
                 }
                 else
                 {
@@ -473,14 +451,14 @@ namespace Forex_Strategy_Builder
 
                     if (Configs.AccountInMoney)
                         for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
-                            afMethods[m, iBar] = (float)Backtester.MoneyBalance(iBar + Data.FirstBar);
+                            _afMethods[m, iBar] = (float) Backtester.MoneyBalance(iBar + Data.FirstBar);
                     else
                         for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
-                            afMethods[m, iBar] = (float)Backtester.Balance(iBar + Data.FirstBar);
+                            _afMethods[m, iBar] = Backtester.Balance(iBar + Data.FirstBar);
 
                     // Report progress as a percentage of the total task.
                     computedCycles++;
-                    percentComplete = 100 * computedCycles / cycles;
+                    percentComplete = 100*computedCycles/cycles;
                     percentComplete = percentComplete > 100 ? 100 : percentComplete;
                     if (percentComplete > highestPercentageReached)
                     {
@@ -494,27 +472,26 @@ namespace Forex_Strategy_Builder
             for (int bar = 0; bar < Data.Bars - Data.FirstBar; bar++)
             {
                 float sum = 0;
-                for (int m = 0; m < countMethods; m++)
+                for (int m = 0; m < _countMethods; m++)
                 {
-                    if (!achboxMethods[m].Checked) continue;
+                    if (!AchboxMethods[m].Checked) continue;
 
-                    float value = afMethods[m, bar];
+                    float value = _afMethods[m, bar];
                     sum += value;
-                    if (value < minimum)
-                        minimum = value;
-                    if (value > maximum)
-                        maximum = value;
+                    if (value < _minimum)
+                        _minimum = value;
+                    if (value > _maximum)
+                        _maximum = value;
                 }
-                afBalance[bar] = sum / checkedMethods;
+                _afBalance[bar] = sum/_checkedMethods;
             }
 
             // Report progress as a percentage of the total task.
             computedCycles++;
-            percentComplete = 100 * computedCycles / cycles;
+            percentComplete = 100*computedCycles/cycles;
             percentComplete = percentComplete > 100 ? 100 : percentComplete;
             if (percentComplete > highestPercentageReached)
             {
-                highestPercentageReached = percentComplete;
                 worker.ReportProgress(percentComplete);
             }
 
@@ -524,45 +501,48 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Paints panel pnlOptions
         /// </summary>
-        void PnlOptions_Paint(object sender, PaintEventArgs e)
+        private void PnlOptionsPaint(object sender, PaintEventArgs e)
         {
-            Panel    pnl = (Panel)sender;
-            Graphics g   = e.Graphics;
-            int border = 2;
+            var pnl = (Panel) sender;
+            Graphics g = e.Graphics;
+            const int border = 2;
 
             // Chart Title
-            string str  = Language.T("Interpolation Methods");
-            Font   font = new Font(Font.FontFamily, 9);
-            float  fCaptionHeight  = (float)Math.Max(font.Height, 18);
-            RectangleF   rectfCaption = new RectangleF(0, 0, pnl.ClientSize.Width, fCaptionHeight);
-            StringFormat stringFormatCaption = new StringFormat();
-            stringFormatCaption.Alignment = StringAlignment.Center;
-            stringFormatCaption.LineAlignment = StringAlignment.Center;
+            string str = Language.T("Interpolation Methods");
+            var font = new Font(Font.FontFamily, 9);
+            var fCaptionHeight = (float) Math.Max(font.Height, 18);
+            var rectfCaption = new RectangleF(0, 0, pnl.ClientSize.Width, fCaptionHeight);
+            var stringFormatCaption = new StringFormat
+                                          {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
             Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
             g.DrawString(str, Font, new SolidBrush(LayoutColors.ColorCaptionText), rectfCaption, stringFormatCaption);
 
             // Paint the panel background
-            RectangleF rectClient = new RectangleF(border, fCaptionHeight, pnl.ClientSize.Width - 2 * border, pnl.Height - fCaptionHeight - border);
+            var rectClient = new RectangleF(border, fCaptionHeight, pnl.ClientSize.Width - 2*border,
+                                            pnl.Height - fCaptionHeight - border);
             Data.GradientPaint(g, rectClient, LayoutColors.ColorControlBack, LayoutColors.DepthControl);
 
-            Pen penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), border);
+            var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
+                                    border);
             g.DrawLine(penBorder, 1, fCaptionHeight, 1, pnl.ClientSize.Height);
-            g.DrawLine(penBorder, pnl.ClientSize.Width - border + 1, fCaptionHeight, pnl.ClientSize.Width - border + 1, pnl.ClientSize.Height);
-            g.DrawLine(penBorder, 0, pnl.ClientSize.Height - border + 1, pnl.ClientSize.Width, pnl.ClientSize.Height - border + 1);
+            g.DrawLine(penBorder, pnl.ClientSize.Width - border + 1, fCaptionHeight, pnl.ClientSize.Width - border + 1,
+                       pnl.ClientSize.Height);
+            g.DrawLine(penBorder, 0, pnl.ClientSize.Height - border + 1, pnl.ClientSize.Width,
+                       pnl.ClientSize.Height - border + 1);
 
-            int positionX = (pnlOptions.ClientSize.Width - 10) / 3;
-            int positionY = 35;
+            int positionX = (PnlOptions.ClientSize.Width - 10)/3;
+            const int positionY = 35;
             int num = 0;
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    if (num < countMethods)
+                    if (num < _countMethods)
                     {
-                        Point pt1 = new Point(j * positionX + 10, i * 30 + positionY);
-                        Point pt2 = new Point(j * positionX + 30, i * 30 + positionY);
-                        Pen pen = new Pen(Color.Red);
-                        switch ((InterpolationMethod)achboxMethods[num].Tag)
+                        var pt1 = new Point(j*positionX + 10, i*30 + positionY);
+                        var pt2 = new Point(j*positionX + 30, i*30 + positionY);
+                        var pen = new Pen(Color.Red);
+                        switch ((InterpolationMethod) AchboxMethods[num].Tag)
                         {
                             case InterpolationMethod.Pessimistic:
                                 pen = new Pen(LayoutColors.ComparatorChartPessimisticLine);
@@ -577,18 +557,18 @@ namespace Forex_Strategy_Builder
                                 pen = new Pen(LayoutColors.ComparatorChartOptimisticLine);
                                 break;
                             case InterpolationMethod.Random:
-                                Point pntRnd1 = new Point(j * positionX + 10, i * 30 + positionY - 6);
-                                Point pntRnd2 = new Point(j * positionX + 30, i * 30 + positionY - 6);
-                                Point pntRnd3 = new Point(j * positionX + 10, i * 30 + positionY + 6);
-                                Point pntRnd4 = new Point(j * positionX + 30, i * 30 + positionY + 6);
-                                Pen   penRnd   = new Pen(LayoutColors.ComparatorChartRandomBands, 2);
+                                var pntRnd1 = new Point(j*positionX + 10, i*30 + positionY - 6);
+                                var pntRnd2 = new Point(j*positionX + 30, i*30 + positionY - 6);
+                                var pntRnd3 = new Point(j*positionX + 10, i*30 + positionY + 6);
+                                var pntRnd4 = new Point(j*positionX + 30, i*30 + positionY + 6);
+                                var penRnd = new Pen(LayoutColors.ComparatorChartRandomBands, 2);
                                 Brush brushRnd = new SolidBrush(LayoutColors.ComparatorChartRandomArea);
-                                g.FillRectangle(brushRnd, new Rectangle(pntRnd1.X, pntRnd1.Y, pntRnd2.X - pntRnd1.X, pntRnd4.Y - pntRnd2.Y));
+                                g.FillRectangle(brushRnd,
+                                                new Rectangle(pntRnd1.X, pntRnd1.Y, pntRnd2.X - pntRnd1.X,
+                                                              pntRnd4.Y - pntRnd2.Y));
                                 g.DrawLine(penRnd, pntRnd1, pntRnd2);
                                 g.DrawLine(penRnd, pntRnd3, pntRnd4);
                                 pen = new Pen(LayoutColors.ComparatorChartRandomLine);
-                                break;
-                            default:
                                 break;
                         }
                         pen.Width = 2;
@@ -596,10 +576,9 @@ namespace Forex_Strategy_Builder
                     }
                     else
                     {
-                        Point pt1 = new Point(j * positionX + 10, i * 30 + positionY);
-                        Point pt2 = new Point(j * positionX + 30, i * 30 + positionY);
-                        Pen pen = new Pen(LayoutColors.ComparatorChartBalanceLine);
-                        pen.Width = 3;
+                        var pt1 = new Point(j*positionX + 10, i*30 + positionY);
+                        var pt2 = new Point(j*positionX + 30, i*30 + positionY);
+                        var pen = new Pen(LayoutColors.ComparatorChartBalanceLine) {Width = 3};
                         g.DrawLine(pen, pt1, pt2);
                     }
 
@@ -611,185 +590,194 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Paints the charts
         /// </summary>
-        void PnlChart_Paint(object sender, PaintEventArgs e)
+        private void PnlChartPaint(object sender, PaintEventArgs e)
         {
-            Panel    pnl = (Panel)sender;
-            Graphics g   = e.Graphics;
+            var pnl = (Panel) sender;
+            Graphics g = e.Graphics;
 
-            int space  = 5;
-            int border = 2;
+            const int space = 5;
+            const int border = 2;
 
             // Chart Title
             string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("pips")) + "]";
-            string str  = Language.T("Balance Chart") + unit;
-            Font   font = new Font(Font.FontFamily, 9);
-            float      fCaptionHeight = (float)Math.Max(font.Height, 18);
-            RectangleF rectfCaption   = new RectangleF(0, 0, pnl.ClientSize.Width, fCaptionHeight);
-            StringFormat stringFormatCaption = new StringFormat();
-            stringFormatCaption.Alignment = StringAlignment.Center;
-            stringFormatCaption.LineAlignment = StringAlignment.Center;
+            string str = Language.T("Balance Chart") + unit;
+            var font = new Font(Font.FontFamily, 9);
+            var fCaptionHeight = (float) Math.Max(font.Height, 18);
+            var rectfCaption = new RectangleF(0, 0, pnl.ClientSize.Width, fCaptionHeight);
+            var stringFormatCaption = new StringFormat
+                                          {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
             Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
             g.DrawString(str, Font, new SolidBrush(LayoutColors.ColorCaptionText), rectfCaption, stringFormatCaption);
 
             // Paint the panel background
-            RectangleF rectClient = new RectangleF(border, fCaptionHeight, pnl.ClientSize.Width - 2 * border, pnl.Height - fCaptionHeight - border);
+            var rectClient = new RectangleF(border, fCaptionHeight, pnl.ClientSize.Width - 2*border,
+                                            pnl.Height - fCaptionHeight - border);
             Data.GradientPaint(g, rectClient, LayoutColors.ColorChartBack, LayoutColors.DepthControl);
 
-            Pen penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), border);
+            var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
+                                    border);
             g.DrawLine(penBorder, 1, fCaptionHeight, 1, pnl.ClientSize.Height);
-            g.DrawLine(penBorder, pnl.ClientSize.Width - border + 1, fCaptionHeight, pnl.ClientSize.Width - border + 1, pnl.ClientSize.Height);
-            g.DrawLine(penBorder, 0, pnl.ClientSize.Height - border + 1, pnl.ClientSize.Width, pnl.ClientSize.Height - border + 1);
+            g.DrawLine(penBorder, pnl.ClientSize.Width - border + 1, fCaptionHeight, pnl.ClientSize.Width - border + 1,
+                       pnl.ClientSize.Height);
+            g.DrawLine(penBorder, 0, pnl.ClientSize.Height - border + 1, pnl.ClientSize.Width,
+                       pnl.ClientSize.Height - border + 1);
 
-            if (!isPaintChart)
+            if (!_isPaintChart)
             {
                 if (Backtester.AmbiguousBars == 0)
                 {
                     string sNote = Language.T("The Comparator is useful when the backtest shows ambiguous bars!");
-                    RectangleF rectfNote = new RectangleF(0, 30, pnl.ClientSize.Width, Font.Height);
-                    g.DrawString(sNote, Font, new SolidBrush(LayoutColors.ColorChartFore), rectfNote, stringFormatCaption);
-                } return;
+                    var rectfNote = new RectangleF(0, 30, pnl.ClientSize.Width, Font.Height);
+                    g.DrawString(sNote, Font, new SolidBrush(LayoutColors.ColorChartFore), rectfNote,
+                                 stringFormatCaption);
+                }
+                return;
             }
 
             int bars = Data.Bars - Data.FirstBar;
-            int max  = (int)Math.Max(maximum, maximumRandom) + 1;
-            int min  = (int)Math.Min(minimum, minimumRandom) - 1;
-            min      = (int)Math.Floor(min / 10f) * 10;
-            int YTop       = (int)fCaptionHeight + 2 * space + 1;
-            int YBottom    = (int)(pnl.ClientSize.Height - 2 * space - border);
-            int labelWidth = (int)Math.Max(g.MeasureString(min.ToString(), Font).Width, g.MeasureString(max.ToString(), Font).Width);
-            labelWidth = (int)Math.Max(labelWidth, 30);
-            int XRight = pnl.ClientSize.Width - border - space - labelWidth;
+            int max = (int) Math.Max(_maximum, _maximumRandom) + 1;
+            int min = (int) Math.Min(_minimum, _minimumRandom) - 1;
+            min = (int) Math.Floor(min/10f)*10;
+            int yTop = (int) fCaptionHeight + 2*space + 1;
+            int yBottom = (pnl.ClientSize.Height - 2*space - border);
+            var labelWidth =
+                (int)
+                Math.Max(g.MeasureString(min.ToString(CultureInfo.InvariantCulture), Font).Width,
+                         g.MeasureString(max.ToString(CultureInfo.InvariantCulture), Font).Width);
+            labelWidth = Math.Max(labelWidth, 30);
+            int xRight = pnl.ClientSize.Width - border - space - labelWidth;
 
             //
             // Grid
             //
-            int   cntLabels = (int)Math.Max((YBottom - YTop) / 20, 1);
-            float delta     = (float)Math.Max(Math.Round((max - min) / (float)cntLabels), 10);
-            int   step      = (int)Math.Ceiling(delta / 10) * 10;
-            cntLabels = (int)Math.Ceiling((max - min) / (float)step);
-            max   = min + cntLabels * step;
-            float scaleY = (YBottom - YTop) / (cntLabels * (float)step);
+            int cntLabels = Math.Max((yBottom - yTop)/20, 1);
+            var delta = (float) Math.Max(Math.Round((max - min)/(float) cntLabels), 10);
+            int step = (int) Math.Ceiling(delta/10)*10;
+            cntLabels = (int) Math.Ceiling((max - min)/(float) step);
+            max = min + cntLabels*step;
+            float scaleY = (yBottom - yTop)/(cntLabels*(float) step);
             Brush brushFore = new SolidBrush(LayoutColors.ColorChartFore);
-            Pen   penGrid   = new Pen(LayoutColors.ColorChartGrid);
-            penGrid.DashStyle   = DashStyle.Dash;
-            penGrid.DashPattern = new float[] { 4, 2 };
+            var penGrid = new Pen(LayoutColors.ColorChartGrid)
+                              {DashStyle = DashStyle.Dash, DashPattern = new float[] {4, 2}};
             // Price labels
             for (int label = min; label <= max; label += step)
             {
-                int labelY = (int)(YBottom - (label - min) * scaleY);
-                g.DrawString(label.ToString(), Font, brushFore, XRight, labelY - Font.Height / 2 - 1);
-                g.DrawLine(penGrid, border + space, labelY, XRight, labelY);
+                var labelY = (int) (yBottom - (label - min)*scaleY);
+                g.DrawString(label.ToString(CultureInfo.InvariantCulture), Font, brushFore, xRight,
+                             labelY - Font.Height/2 - 1);
+                g.DrawLine(penGrid, border + space, labelY, xRight, labelY);
             }
 
-            float fScaleX = (XRight - 2 * space - border) / (float)bars;
+            float fScaleX = (xRight - 2*space - border)/(float) bars;
 
-            if (isRandom)
+            if (_isRandom)
             {
                 // Draws the random area and Min Max lines
-                PointF[] apntMinRandom = new PointF[bars];
-                PointF[] apntMaxRandom = new PointF[bars];
+                var apntMinRandom = new PointF[bars];
+                var apntMaxRandom = new PointF[bars];
                 for (int iBar = 0; iBar < bars; iBar++)
                 {
-                    apntMinRandom[iBar].X = border + space + iBar * fScaleX;
-                    apntMinRandom[iBar].Y = YBottom - (afMinRandom[iBar] - min) * scaleY;
-                    apntMaxRandom[iBar].X = border + space + iBar * fScaleX;
-                    apntMaxRandom[iBar].Y = YBottom - (afMaxRandom[iBar] - min) * scaleY;
+                    apntMinRandom[iBar].X = border + space + iBar*fScaleX;
+                    apntMinRandom[iBar].Y = yBottom - (_afMinRandom[iBar] - min)*scaleY;
+                    apntMaxRandom[iBar].X = border + space + iBar*fScaleX;
+                    apntMaxRandom[iBar].Y = yBottom - (_afMaxRandom[iBar] - min)*scaleY;
                 }
                 apntMinRandom[0].Y = apntMaxRandom[0].Y;
-                GraphicsPath path = new GraphicsPath();
+                var path = new GraphicsPath();
                 path.AddLines(apntMinRandom);
                 path.AddLine(apntMinRandom[bars - 1], apntMaxRandom[bars - 1]);
                 path.AddLines(apntMaxRandom);
-                System.Drawing.Region region = new Region(path);
-                g.FillRegion(brushRandArea, region);
-                g.DrawLines(penRandBands, apntMinRandom);
-                g.DrawLines(penRandBands, apntMaxRandom);
+                var region = new Region(path);
+                g.FillRegion(_brushRandArea, region);
+                g.DrawLines(_penRandBands, apntMinRandom);
+                g.DrawLines(_penRandBands, apntMaxRandom);
             }
 
             // Draws the lines
-            for (int m = 0; m < countMethods; m++)
+            for (int m = 0; m < _countMethods; m++)
             {
-                if (!achboxMethods[m].Checked) continue;
+                if (!AchboxMethods[m].Checked) continue;
 
-                PointF[] apntLines = new PointF[bars];
+                var apntLines = new PointF[bars];
                 for (int iBar = 0; iBar < bars; iBar++)
                 {
-                    apntLines[iBar].X = border + space + iBar * fScaleX;
-                    apntLines[iBar].Y = YBottom - (afMethods[m, iBar] - min) * scaleY;
+                    apntLines[iBar].X = border + space + iBar*fScaleX;
+                    apntLines[iBar].Y = yBottom - (_afMethods[m, iBar] - min)*scaleY;
                 }
 
-                Pen pen = new Pen(LayoutColors.ColorSignalRed);
-                switch ((InterpolationMethod)achboxMethods[m].Tag)
+                var pen = new Pen(LayoutColors.ColorSignalRed);
+                switch ((InterpolationMethod) AchboxMethods[m].Tag)
                 {
                     case InterpolationMethod.Pessimistic:
-                        pen = penPessimistic;
+                        pen = _penPessimistic;
                         break;
                     case InterpolationMethod.Shortest:
-                        pen = penShortest;
+                        pen = _penShortest;
                         break;
                     case InterpolationMethod.Nearest:
-                        pen = penNearest;
+                        pen = _penNearest;
                         break;
                     case InterpolationMethod.Optimistic:
-                        pen = penOptimistic;
+                        pen = _penOptimistic;
                         break;
                     case InterpolationMethod.Random:
-                        pen = penRandom;
-                        break;
-                    default:
+                        pen = _penRandom;
                         break;
                 }
                 g.DrawLines(pen, apntLines);
             }
 
             // Draws the average balance
-            PointF[] apntBalance = new PointF[bars];
+            var apntBalance = new PointF[bars];
             for (int bar = 0; bar < bars; bar++)
             {
-                apntBalance[bar].X = border + space  + bar * fScaleX;
-                apntBalance[bar].Y = YBottom - (afBalance[bar] - min) * scaleY;
+                apntBalance[bar].X = border + space + bar*fScaleX;
+                apntBalance[bar].Y = yBottom - (_afBalance[bar] - min)*scaleY;
             }
-            g.DrawLines(penBalance, apntBalance);
+            g.DrawLines(_penBalance, apntBalance);
 
             // Coordinate axes
-            g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space - 1, YTop - space, border + space - 1, YBottom);
-            g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space, YBottom, XRight, YBottom);
+            g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space - 1, yTop - space, border + space - 1,
+                       yBottom);
+            g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space, yBottom, xRight, yBottom);
 
             // Balance label
-            float fBalanceY = YBottom - (afBalance[bars -1] - min) * scaleY;
-            g.DrawLine(new Pen(LayoutColors.ColorChartCross), border + space, fBalanceY, XRight - space, fBalanceY);
+            float fBalanceY = yBottom - (_afBalance[bars - 1] - min)*scaleY;
+            g.DrawLine(new Pen(LayoutColors.ColorChartCross), border + space, fBalanceY, xRight - space, fBalanceY);
 
-            Size      szBalance = new Size(labelWidth + space, Font.Height + 2);
-            Point     point     = new Point(XRight - space + 2, (int)(fBalanceY - Font.Height / 2 - 1));
-            Rectangle rec       = new Rectangle(point, szBalance);
-            string    sBalance  = ((int)afBalance[bars - 1]).ToString();
+            var szBalance = new Size(labelWidth + space, Font.Height + 2);
+            var point = new Point(xRight - space + 2, (int) (fBalanceY - Font.Height/2.0 - 1));
+            var rec = new Rectangle(point, szBalance);
+            string sBalance = ((int) _afBalance[bars - 1]).ToString(CultureInfo.InvariantCulture);
             g.FillRectangle(new SolidBrush(LayoutColors.ColorLabelBack), rec);
             g.DrawRectangle(new Pen(LayoutColors.ColorChartCross), rec);
             g.DrawString(sBalance, Font, new SolidBrush(LayoutColors.ColorLabelText), rec, stringFormatCaption);
 
             // Scanning note
-            Font fontNote = new Font(Font.FontFamily, Font.Size - 1);
+            var fontNote = new Font(Font.FontFamily, Font.Size - 1);
             if (Configs.Autoscan && !Data.IsIntrabarData)
-                    g.DrawString(Language.T("Load intrabar data"), fontNote, Brushes.Red, border + space, fCaptionHeight - 2);
+                g.DrawString(Language.T("Load intrabar data"), fontNote, Brushes.Red, border + space, fCaptionHeight - 2);
             else if (Backtester.IsScanPerformed)
-                g.DrawString(Language.T("Scanned") + " MQ " + Data.ModellingQuality.ToString("N2") + "%", fontNote, Brushes.LimeGreen, border + space, fCaptionHeight - 2);
+                g.DrawString(Language.T("Scanned") + " MQ " + Data.ModellingQuality.ToString("N2") + "%", fontNote,
+                             Brushes.LimeGreen, border + space, fCaptionHeight - 2);
 
             // Scanned bars
             if (Data.IntraBars != null && Data.IsIntrabarData && Backtester.IsScanPerformed)
             {
-                g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space - 1, YBottom, border + space - 1, YBottom + 8);
+                g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space - 1, yBottom, border + space - 1,
+                           yBottom + 8);
                 DataPeriods dataPeriod = Data.Period;
-                Color color    = Data.PeriodColor[Data.Period];
-                int   iFromBar = Data.FirstBar;
+                Color color = Data.PeriodColor[Data.Period];
+                int iFromBar = Data.FirstBar;
                 for (int bar = Data.FirstBar; bar < Data.Bars; bar++)
                 {
                     if (Data.IntraBarsPeriods[bar] != dataPeriod || bar == Data.Bars - 1)
                     {
-                        int xStart = (int)((iFromBar - Data.FirstBar) * fScaleX) + border + space;
-                        int xEnd   = (int)((bar     - Data.FirstBar) * fScaleX) + border + space;
-                        iFromBar   = bar;
+                        int xStart = (int) ((iFromBar - Data.FirstBar)*fScaleX) + border + space;
+                        int xEnd = (int) ((bar - Data.FirstBar)*fScaleX) + border + space;
+                        iFromBar = bar;
                         dataPeriod = Data.IntraBarsPeriods[bar];
-                        Data.GradientPaint(g, new RectangleF(xStart, YBottom + 3, xEnd - xStart + 2, 5), color, 60);
+                        Data.GradientPaint(g, new RectangleF(xStart, yBottom + 3, xEnd - xStart + 2, 5), color, 60);
                         color = Data.PeriodColor[Data.IntraBarsPeriods[bar]];
                     }
                 }
@@ -802,8 +790,6 @@ namespace Forex_Strategy_Builder
         protected override void OnPaint(PaintEventArgs e)
         {
             Data.GradientPaint(e.Graphics, ClientRectangle, LayoutColors.ColorFormBack, LayoutColors.DepthControl);
-
-            return;
         }
     }
 }

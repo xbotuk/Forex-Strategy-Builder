@@ -72,9 +72,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)
                     if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled)
-                    {
                         _parameters++;
-                    }
         }
 
         /// <summary>

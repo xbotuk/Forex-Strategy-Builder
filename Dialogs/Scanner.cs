@@ -655,7 +655,6 @@ namespace Forex_Strategy_Builder
             var instrument = new Instrument(Data.InstrProperties.Clone(), (int) period)
                                  {
                                      DataDir = Data.OfflineDataDir,
-                                     FormatDate = DateFormat.Unknown,
                                      MaxBars = Configs.MaxIntraBars
                                  };
 
@@ -939,8 +938,7 @@ namespace Forex_Strategy_Builder
                     }
                     else
                     {
-                        sw.Write((bar + 1) + "\t" +
-                                 Data.Time[bar].ToString("yyyy-MM-dd HH:mm") + "\t");
+                        sw.Write((bar + 1) + "\t" + Data.Time[bar].ToString("yyyy-MM-dd HH:mm") + "\t");
                         foreach (var tick in Data.TickData[bar])
                             sw.Write(tick.ToString("F5") + "\t");
                         sw.WriteLine();
