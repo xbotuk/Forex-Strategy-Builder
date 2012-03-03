@@ -19,6 +19,7 @@ namespace Forex_Strategy_Builder.CustomControls
             BackColor = Color.Transparent;
             ColorBack = LayoutColors.ColorCaptionBack;
             ColorFore = LayoutColors.ColorCaptionText;
+            Cursor = Cursors.Arrow;
         }
 
         public Color ColorBack { private get; set; }
