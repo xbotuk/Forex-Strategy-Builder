@@ -99,7 +99,7 @@ namespace Forex_Strategy_Builder
             var mi4 = new ToolStripMenuItem
             {
                 Image = Resources.bar_explorer,
-                Text = Language.T("Show Bar Explorer")
+                Text = Language.T("Bar Explorer") + "..."
             };
             mi4.Click += ContextMenuBarExplorerClick;
 

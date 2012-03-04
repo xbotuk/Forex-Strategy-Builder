@@ -1453,6 +1453,36 @@
     <main>Swap Short</main>
     <alt>Swap Short</alt>
   </str>
+  <!-- Trade Distribution Chart -->
+  <str>
+    <main>Trade Distribution Chart</main>
+    <alt>Trade Distribution Chart</alt>
+  </str>
+  <str>
+    <main>Count of Trades</main>
+    <alt>Count of Trades</alt>
+  </str>
+  <str>
+    <main>Accumulated Amount</main>
+    <alt>Accumulated Amount</alt>
+  </str>
+  <str>
+    <main>Toggle Chart Representation</main>
+    <alt>Toggle Chart Representation</alt>
+  </str>
+  <str>
+    <main>Export Data to CSV File</main>
+    <alt>Export Data to CSV File</alt>
+  </str>
+  <str>
+    <main>Copy Data to Clipboard</main>
+    <alt>Copy Data to Clipboard</alt>
+  </str>
+  <!-- Market Panel -->
+  <str>
+    <main>Full Indicator Chart</main>
+    <alt>Full Indicator Chart</alt>
+  </str>
   <!-- Strategy Panel -->
   <str>
     <main>Show the strategy description.</main>
@@ -1615,6 +1645,14 @@
     <main>Right click to detach chart.</main>
     <alt>Right click to detach chart.</alt>
   </str>
+  <str>
+    <main>Full Balance Chart</main>
+    <alt>Full Balance Chart</alt>
+  </str>
+  <str>
+    <main>Detach Balance Chart</main>
+    <alt>Detach Balance Chart</alt>
+  </str>
   <!-- Journals -->
   <str>
     <main>Click to select a bar.</main>
@@ -1629,12 +1667,8 @@
     <alt>Double click to view Bar Explorer.</alt>
   </str>
   <str>
-    <main>Hide the journal tables.</main>
-    <alt>Hide the journal tables.</alt>
-  </str>
-  <str>
-    <main>Toggle the journal type.</main>
-    <alt>Toggle the journal type.</alt>
+    <main>Close Journal</main>
+    <alt>Close Journal</alt>
   </str>
   <str>
     <main>Position</main>
@@ -2490,6 +2524,10 @@
     <alt>Optimize</alt>
   </str>
   <str>
+    <main>Initial</main>
+    <alt>Initial</alt>
+  </str>
+  <str>
     <main>Value</main>
     <alt>Value</alt>
   </str>
@@ -2538,16 +2576,12 @@
     <alt>Select a random number of parameters.</alt>
   </str>
   <str>
-    <main>Set Min / Max ± 5 steps.</main>
-    <alt>Set Min / Max ± 5 steps.</alt>
+    <main>Set Min / Max ± # steps.</main>
+    <alt>Set Min / Max ± # steps.</alt>
   </str>
   <str>
-    <main>Set Min / Max ± 10 steps.</main>
-    <alt>Set Min / Max ± 10 steps.</alt>
-  </str>
-  <str>
-    <main>Set Min / Max ± 15 steps.</main>
-    <alt>Set Min / Max ± 15 steps.</alt>
+    <main>Reset strategy parameters.</main>
+    <alt>Reset strategy parameters.</alt>
   </str>
   <str>
     <main>Show indicator parameters.</main>

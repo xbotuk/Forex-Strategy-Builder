@@ -527,7 +527,7 @@
   </str>
   <str>
     <main>without Transfers</main>
-    <alt>без трансферите</alt>
+    <alt>без трансфери</alt>
   </str>
   <str>
     <main>Testing</main>
@@ -1453,6 +1453,36 @@
     <main>Swap Short</main>
     <alt>Суап късa</alt>
   </str>
+  <!-- Trade Distribution Chart -->
+  <str>
+    <main>Trade Distribution Chart</main>
+    <alt>Графика на разпределение на сделките</alt>
+  </str>
+  <str>
+    <main>Count of Trades</main>
+    <alt>Брой на сделките</alt>
+  </str>
+  <str>
+    <main>Accumulated Amount</main>
+    <alt>Акумулирано количество</alt>
+  </str>
+  <str>
+    <main>Toggle Chart Representation</main>
+    <alt>Превключване на вида на графиката</alt>
+  </str>
+  <str>
+    <main>Export Data to CSV File</main>
+    <alt>Експорт на данните в CSV файл</alt>
+  </str>
+  <str>
+    <main>Copy Data to Clipboard</main>
+    <alt>Копиране на данните</alt>
+  </str>
+  <!-- Market Panel -->
+  <str>
+    <main>Full Indicator Chart</main>
+    <alt>Пълна индикаторна графика</alt>
+  </str>
   <!-- Strategy Panel -->
   <str>
     <main>Show the strategy description.</main>
@@ -1615,6 +1645,14 @@
     <main>Right click to detach chart.</main>
     <alt>Кликнете с десен клавиш за да отделите графиката.</alt>
   </str>
+  <str>
+    <main>Full Balance Chart</main>
+    <alt>Пълна графика на баланса</alt>
+  </str>
+  <str>
+    <main>Detach Balance Chart</main>
+    <alt>Отделяне на графиката на баланса.</alt>
+  </str>
   <!-- Journals -->
   <str>
     <main>Click to select a bar.</main>
@@ -1629,12 +1667,8 @@
     <alt>Кликнете два пъти, за да видите бар експлорер.</alt>
   </str>
   <str>
-    <main>Hide the journal tables.</main>
-    <alt>Скрийте таблиците на журнала.</alt>
-  </str>
-  <str>
-    <main>Toggle the journal type.</main>
-    <alt>Превключете типа на журнала.</alt>
+    <main>Close Journal</main>
+    <alt>Скриване на журнала</alt>
   </str>
   <str>
     <main>Position</main>
@@ -2490,6 +2524,10 @@
     <alt>Оптимизиране</alt>
   </str>
   <str>
+    <main>Initial</main>
+    <alt>Начало</alt>
+  </str>
+  <str>
     <main>Value</main>
     <alt>Стойност</alt>
   </str>
@@ -2538,16 +2576,12 @@
     <alt>Избиране на случаен брой параметри.</alt>
   </str>
   <str>
-    <main>Set Min / Max ± 5 steps.</main>
-    <alt>Поставяне на Min / Max на ± 5 стъпки.</alt>
+    <main>Set Min / Max ± # steps.</main>
+    <alt>Поставяне на Min / Max на ± # стъпки.</alt>
   </str>
   <str>
-    <main>Set Min / Max ± 10 steps.</main>
-    <alt>Поставяне на Min / Max на ± 10 стъпки.</alt>
-  </str>
-  <str>
-    <main>Set Min / Max ± 15 steps.</main>
-    <alt>Поставяне на Min / Max на ± 15 стъпки.</alt>
+    <main>Reset strategy parameters.</main>
+    <alt>Възстановяване на параметрите на стратегията.</alt>
   </str>
   <str>
     <main>Show indicator parameters.</main>

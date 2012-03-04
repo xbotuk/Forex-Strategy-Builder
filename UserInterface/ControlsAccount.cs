@@ -102,7 +102,7 @@ namespace Forex_Strategy_Builder
             var menuStripShowFullBalanceChart = new ToolStripMenuItem
             {
                 Image = Properties.Resources.balance_chart,
-                Text = Language.T("Show Full Balance Chart") + "..."
+                Text = Language.T("Full Balance Chart") + "..."
             };
             menuStripShowFullBalanceChart.Click += ContextMenuShowFullBalanceChartClick;
 

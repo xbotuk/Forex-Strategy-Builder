@@ -9,454 +9,414 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
+using System.Text;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Common;
 using Forex_Strategy_Builder.CustomControls;
+using Forex_Strategy_Builder.Properties;
 
-
-namespace Forex_Strategy_Builder {
+namespace Forex_Strategy_Builder
+{
     /// <summary>
     /// Draws a small histogram chart
     /// </summary>
     public class SmallHistogramChart : ContextPanel
     {
-        int space = 5;
-        int border = 2;
+        private const int Border = 2;
+        private const int Space = 5;
+        private static int[] _tradeCounts;  // count of how many trades resulted in that particular trade amount
+        private static int[] _tradeCumulatives; // pip value of trades that resulted in that amount (ie, result * count)
+        private static int[] _tradeIndexes;
+        private static int[] _tradeResults;
+        private Brush _brushFore;
+        private float _captionHeight;
+        private int _chartBars;
 
-        int XLeft;
-        int XRight;
-        int YTop;
-        int YBottom;
-        float XScale;
-        float YScale;
-        int XAxis_Y;
-        bool showPriceLine;
-        bool isNotPaint = false;
+        private int _countLabelsX;
+        private int _countLabelsY;
+        private float _deltaX;
+        private float _deltaY;
+        private int _firstBar;
+        private Font _font;
+        private bool _isCounts = true;
+        private bool _isNotPaint;
+        private bool _isShowDynamicInfo;
 
-        int countLabelsX;
-        float deltaX;
-        int stepX;
-        int countLabelsY;
-        float deltaY;
-        int stepY;
-
-        string strStatusBarText;
-        bool isShowDynamicInfo = false;
-
-        // bars -- 0-index for how many bars to draw on chart
-        int bars;
-        int chartBars;
-        // for Y Axis labels
-        int YAxisMax;
-        int YAxisMin;
-        // for X Axis labels
-        int XAxisMin;
-        int XAxisMin10;
-        int XAxisMax;
-
-        int labelWidthX;
-        int labelWidthY;
-        string strChartTitle;
-        Font font;
-        float captionHeight;
-        RectangleF rectfCaption;
-        StringFormat stringFormatCaption;
-        Brush brushFore;
-        Pen penGrid;
-        Pen penBorder;
-        Button btnToggleView;
-        Button btnClipboard;
-        Button btnExport;
-        ToolTip toolTip;
-        bool isCounts = true;
-
-        int firstBar;
-        bool isScanPerformed;
-
-        // array for all the result values from trades
-        int[] tradeResults;
-        // array to go from lowest result to highest with indexes for all values in between
-        int[] tradeIndexes;
-        // count of how many trades resulted in that particular trade amount
-        int[] tradeCounts;
-        // pip value of trades that resulted in that amount (ie, result * count)
-        int[] tradeCumulatives;
-
+        private int _labelWidthX;
+        private int _labelWidthY;
+        private Pen _penBorder;
+        private Pen _penGrid;
+        private RectangleF _rectSubHeader;
+        private RectangleF _rectfCaption;
+        private StringFormat _sfCaption;
+        private int _stepX;
+        private int _stepY;
+        private string _strChartTitle;
+      
+        private int _xAxisMax;
+        private int _xAxisMin;
+        private int _xAxisMin10;
+        private int _xAxisY;
+        private int _xLeft;
+        private int _xRight;
+        private float _xScale;
+        private int _yAxisMax;
+        private int _yAxisMin;
+        private int _yBottom;
+        private float _yScale;
+        private int _yTop;
 
         /// <summary>
         /// Whether to show dynamic info
         /// </summary>
-        public bool ShowDynamicInfo { get { return isShowDynamicInfo; } set { isShowDynamicInfo = value; } }
+        public bool ShowDynamicInfo
+        {
+            set { _isShowDynamicInfo = value; }
+        }
 
         /// <summary>
         /// Returns dynamic info
         /// </summary>
-        public string CurrentBarInfo { get { return strStatusBarText; } }
+        public string CurrentBarInfo { get; private set; }
 
         /// <summary>
-        /// Returns X Left
+        /// Calculates Data to draw in histogram
         /// </summary>
-        public int XLeftMargin { get { return border + space; } }
-
-        /// <summary>
-        /// Returns X Right
-        /// </summary>
-        public int XRightMargin { get { return XRight - space; } }
-
-        /// <summary>
-        /// Gets the Button Toggle View
-        /// </summary>
-        public Button BtnToggleView { get { return btnToggleView; } }
-
-        /// <summary>
-        /// Gets the Button Clipboard
-        /// </summary>
-        public Button BtnClipboard { get { return btnClipboard; } }
-
-        /// <summary>
-        /// Gets the Button Export
-        /// </summary>
-        public Button BtnExport { get { return btnExport; } }
-
-        /// <summary>
-        /// Returns Histogram Data as CSV string
-        /// </summary>
-        public string GetHistogramDataString { get { return getHistogramDataString(); } }
-
-
-        /// <summary>
-        /// Transforms input arrays into histogram data
-        /// </summary>
-        public static void GetHistogramDataInts(out int[] results, out int[] indexes, out int[] counts, out int[] cumulatives) {
-            getHistogramDataInts(out results, out indexes, out counts, out cumulatives);
-        }
-
-        /// <summary>
-        /// Get Data to draw in histogram
-        /// </summary>
-        private static void getHistogramDataInts(out int[] results, out int[] indexes, out int[] counts, out int[] cumulatives) {
+        private static void CalculateHistogramData()
+        {
             // crummy way to get number of trades for init array
             // TBD -- find better property
             int ctr = 0;
             for (int bar = 0; bar < Data.Bars; bar++)
             {
-                for (int pos = 0; pos < Backtester.Positions(bar); pos++)
+                for (int pos = 0; pos < StatsBuffer.Positions(bar); pos++)
                 {
-                    Transaction transaction = Backtester.PosTransaction(bar, pos);
-                    if (transaction == Transaction.Close  ||
+                    Transaction transaction = StatsBuffer.PosTransaction(bar, pos);
+                    if (transaction == Transaction.Close ||
                         transaction == Transaction.Reduce ||
                         transaction == Transaction.Reverse)
                         ctr++;
                 }
             }
 
-            results = new int[ctr];
+            _tradeResults = new int[ctr];
             ctr = 0;
             for (int bar = 0; bar < Data.Bars; bar++)
             {
-                for (int pos = 0; pos < Backtester.Positions(bar); pos++)
+                for (int pos = 0; pos < StatsBuffer.Positions(bar); pos++)
                 {
-                    Transaction transaction = Backtester.PosTransaction(bar, pos);
-                    if (transaction == Transaction.Close  ||
+                    Transaction transaction = StatsBuffer.PosTransaction(bar, pos);
+                    if (transaction == Transaction.Close ||
                         transaction == Transaction.Reduce ||
                         transaction == Transaction.Reverse)
                     {
-                        results[ctr] = (int)Backtester.PosProfitLoss(bar, pos);
+                        _tradeResults[ctr] = (int)StatsBuffer.PosProfitLoss(bar, pos);
                         ctr++;
                     }
                 }
             }
 
-            Array.Sort(results);
             int min = 0;
             int max = 0;
-            if (results.Length > 0) {
-                min = results[0];
-                max = results[results.Length - 1];
+            foreach (int result in _tradeResults)
+            {
+                if (min > result)
+                    min = result;
+                if (max < result)
+                    max = result;
             }
-            else {
-                min = 0;
-                max = 0;
-            }
-            indexes = new int[(max - min) + 1];
-            counts = new int[(max - min) + 1];
-            cumulatives = new int[(max - min) + 1];
+            _tradeIndexes = new int[(max - min) + 1];
+            _tradeCounts = new int[(max - min) + 1];
+            _tradeCumulatives = new int[(max - min) + 1];
 
-            // fill indexes with index values, then count how many in results
-            for (int ctr1 = 0; ctr1 < indexes.Length; ctr1++) {
-                indexes[ctr1] = min + ctr1;
-                int iCount = 0;
-                for (int ctr2 = 0; ctr2 < results.Length; ctr2++) {
-                    if (results[ctr2] == indexes[ctr1]) {
-                        iCount++;
+            // fill _tradeIndexes with index values, then count how many in _tradeResults
+            for (int ctr1 = 0; ctr1 < _tradeIndexes.Length; ctr1++)
+            {
+                _tradeIndexes[ctr1] = min + ctr1;
+                int count = 0;
+                for (int ctr2 = 0; ctr2 < _tradeResults.Length; ctr2++)
+                {
+                    if (_tradeResults[ctr2] == _tradeIndexes[ctr1])
+                    {
+                        count++;
                     }
                 }
-                counts[ctr1] = iCount;
-                cumulatives[ctr1] = indexes[ctr1] * iCount;
+                _tradeCounts[ctr1] = count;
+                _tradeCumulatives[ctr1] = _tradeIndexes[ctr1]*count;
             }
         }
 
         /// <summary>
-        /// Returns histogram data as a CSV string
+        /// Returns histogram data as a CSV string.
         /// </summary>
-        /// <returns>string</returns>
-        private string getHistogramDataString() {
-            string s = "";
-            if (tradeResults.Length > 0) {
-                for (int i = 0; i < tradeIndexes.Length; i++) {
-                    s += tradeIndexes[i].ToString() + "\t" + tradeCounts[i].ToString() + "\t" + tradeCumulatives[i].ToString() + Environment.NewLine;
+        private string GetHistogramDataString()
+        {
+            var sb = new StringBuilder();
+            if (_tradeResults.Length > 0)
+            {
+                for (int i = 0; i < _tradeIndexes.Length; i++)
+                {
+                    sb.AppendLine(_tradeIndexes[i] + "\t" + _tradeCounts[i] + "\t" + _tradeCumulatives[i]);
                 }
             }
-            return s;
+            return sb.ToString();
         }
 
 
         /// <summary>
         /// Sets chart's instrument and back testing data.
         /// </summary>
-        public void SetChartData() {
-            isNotPaint = !Data.IsData || !Data.IsResult || Data.Bars <= Data.FirstBar;
+        public void SetChartData()
+        {
+            _isNotPaint = !Data.IsData || !Data.IsResult || Data.Bars <= StatsBuffer.FirstBar;
 
-            if (isNotPaint) return;
+            if (_isNotPaint) return;
 
-            getHistogramDataInts(out tradeResults, out tradeIndexes, out tradeCounts, out tradeCumulatives);
-
-            showPriceLine = Configs.ShowPriceChartOnAccountChart && Backtester.ExecutedOrders > 0;
-            isScanPerformed = Backtester.IsScanPerformed;
+            CalculateHistogramData();
 
             // set to 0 and length for X Axis
-            firstBar  = 0;
-            bars      = tradeIndexes.Length;
-            chartBars = tradeIndexes.Length + 2;
+            _firstBar = 0;
+            _chartBars = _tradeIndexes.Length + 2;
 
             // Min set to 0 -- will always be 0 or higher
-            YAxisMin = 0;
-            YAxisMax = (isCounts) ? FindMax(tradeCounts, false) : FindMax(tradeCumulatives, true);
+            _yAxisMin = 0;
+            _yAxisMax = (_isCounts) ? FindMax(_tradeCounts, false) : FindMax(_tradeCumulatives, true);
 
             // for X Axis labels
             // set minimum and maximum to indexes, expanded by 1 for border above and under drawn line
-            XAxisMax = tradeIndexes[tradeIndexes.Length - 1] + 1;
-            XAxisMin = tradeIndexes[0] - 1;
+            _xAxisMax = _tradeIndexes[_tradeIndexes.Length - 1] + 1;
+            _xAxisMin = _tradeIndexes[0] - 1;
 
             // if there are no trades for histogram, set Maxes to arbitrary values so chart draws and avoid errors
-            if (chartBars == 3)
-                chartBars = 51;
-            if (XAxisMax == 0)
-                XAxisMax = 51;
-
+            if (_chartBars == 3)
+                _chartBars = 51;
+            if (_xAxisMax == 0)
+                _xAxisMax = 51;
 
             // way to sync all X labels to multiples of 10
-            XAxisMin10 = (XAxisMin < 0) ? (int)Math.Ceiling((double)(XAxisMin / 10)) * 10 : (int)Math.Floor((double)(XAxisMin / 10)) * 10;
-
-            return;
+            _xAxisMin10 = (_xAxisMin < 0) ? (int) Math.Ceiling(_xAxisMin/10f)*10 : (int) Math.Floor(_xAxisMin/10f)*10;
         }
 
         /// <summary>
-        /// Sets the chart params
+        /// Sets the chart parameters
         /// </summary>
-        public void InitChart() {
-            // Tool Tips
-            toolTip = new ToolTip();
-
+        public void InitChart()
+        {
             // Chart Title
-            strChartTitle                     = Language.T("Histogram Chart");
-            font                              = new Font(Font.FontFamily, 9);
-            captionHeight                     = (float)Math.Max(font.Height, 18);
-            rectfCaption                      = new RectangleF(0, 0, ClientSize.Width, captionHeight);
-            stringFormatCaption               = new StringFormat();
-            stringFormatCaption.Alignment     = StringAlignment.Center;
-            stringFormatCaption.LineAlignment = StringAlignment.Center;
-            stringFormatCaption.Trimming      = StringTrimming.EllipsisCharacter;
-            stringFormatCaption.FormatFlags   = StringFormatFlags.NoWrap;
+            _strChartTitle = Language.T("Trade Distribution Chart");
+            _font = new Font(Font.FontFamily, 9);
+            _captionHeight = Math.Max(_font.Height, 18);
+            _rectfCaption = new RectangleF(0, 0, ClientSize.Width, _captionHeight);
+            _rectSubHeader = new RectangleF(0, _captionHeight, ClientSize.Width, _captionHeight);
 
-            // Button Toggle View between counts and total cumulative amounts
-            btnToggleView                         = new Button();
-            btnToggleView.Parent                  = this;
-            btnToggleView.BackgroundImage         = Properties.Resources.toggle_journal;
-            btnToggleView.BackgroundImageLayout   = ImageLayout.Center;
-            btnToggleView.Cursor                  = Cursors.Hand;
-            btnToggleView.Size                    = new Size(20, font.Height);
-            btnToggleView.UseVisualStyleBackColor = true;
-            btnToggleView.Click                  += new EventHandler(BtnToggleView_Click);
-            toolTip.SetToolTip(btnToggleView, Language.T("Toggle between Trade Counts and Cumulative Amounts"));
+            _sfCaption = new StringFormat
+                             {
+                                 Alignment = StringAlignment.Center,
+                                 LineAlignment = StringAlignment.Center,
+                                 Trimming = StringTrimming.EllipsisCharacter,
+                                 FormatFlags = StringFormatFlags.NoWrap
+                             };
 
-            // Button Clipboard copies histogram data to clipboard
-            btnClipboard                          = new Button();
-            btnClipboard.Parent                   = this;
-            btnClipboard.BackgroundImage          = Properties.Resources.copy;
-            btnClipboard.BackgroundImageLayout    = ImageLayout.Center;
-            btnClipboard.Cursor                   = Cursors.Hand;
-            btnClipboard.Size                     = new Size(20, font.Height);
-            btnClipboard.Location                 = new Point(btnToggleView.Location.X + btnToggleView.Width + space, btnToggleView.Location.Y);
-            btnClipboard.UseVisualStyleBackColor  = true;
-            btnClipboard.Click                   += new EventHandler(BtnClipboard_Click);
-            toolTip.SetToolTip(btnClipboard, Language.T("Copy Histogram Data to Clipboard"));
+            _brushFore = new SolidBrush(LayoutColors.ColorChartFore);
+            _penGrid = new Pen(LayoutColors.ColorChartGrid) {DashStyle = DashStyle.Dash, DashPattern = new float[] {4, 2}};
+            _penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
 
-            // Button Export writes histogram data to csv file
-            btnExport                             = new Button();
-            btnExport.Parent                      = this;
-            btnExport.BackgroundImage             = Properties.Resources.export;
-            btnExport.BackgroundImageLayout       = ImageLayout.Center;
-            btnExport.Cursor                      = Cursors.Hand;
-            btnExport.Size                        = new Size(20, font.Height);
-            btnExport.Location                    = new Point(btnClipboard.Location.X + btnClipboard.Width + space, btnClipboard.Location.Y);
-            btnExport.UseVisualStyleBackColor     = true;
-            btnExport.Click                      += new EventHandler(BtnExport_Click);
-            toolTip.SetToolTip(btnExport, Language.T("Write Histogram Data to CSV File"));
+            if (_isNotPaint) return;
 
+            _yTop = (int) (2*_captionHeight + Space + 1);
+            _yBottom = ClientSize.Height - 2*Space - 1 - Border;
+            _xAxisY = _yBottom - 3 - _font.Height;
 
-            brushFore = new SolidBrush(LayoutColors.ColorChartFore);
-            penGrid             = new Pen(LayoutColors.ColorChartGrid);
-            penGrid.DashStyle   = DashStyle.Dash;
-            penGrid.DashPattern = new float[] { 4, 2 };
-            penBorder           = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), border);
-
-            if (isNotPaint) return;
-
-            YTop    = (int)captionHeight + 2 * space + 1;
-            YBottom = ClientSize.Height - 2 * space - 1 - border;
-            XAxis_Y = YBottom - 3 - font.Height;
-
-            Graphics g  = CreateGraphics();
-            labelWidthY = (int)Math.Max(g.MeasureString(YAxisMin.ToString(), Font).Width, g.MeasureString(YAxisMax.ToString(), Font).Width);
-            labelWidthX = (int)Math.Max(g.MeasureString(XAxisMin.ToString(), Font).Width, g.MeasureString(XAxisMax.ToString(), Font).Width);
+            Graphics g = CreateGraphics();
+            _labelWidthY = (int)
+                Math.Max(g.MeasureString(_yAxisMin.ToString(CultureInfo.InvariantCulture), Font).Width,
+                         g.MeasureString(_yAxisMax.ToString(CultureInfo.InvariantCulture), Font).Width);
+            _labelWidthX = (int)
+                Math.Max(g.MeasureString(_xAxisMin.ToString(CultureInfo.InvariantCulture), Font).Width,
+                         g.MeasureString(_xAxisMax.ToString(CultureInfo.InvariantCulture), Font).Width);
             g.Dispose();
-            labelWidthY = Math.Max(labelWidthY, 30);
-            labelWidthX += 3;
+            _labelWidthY = Math.Max(_labelWidthY, 30);
+            _labelWidthX += 3;
 
-            XLeft  = border + space;
-            XRight = ClientSize.Width - border - space - labelWidthY;
-            XScale = (XRight - 2 * space - border) / (float)chartBars;
+            _xLeft = Border + Space;
+            _xRight = ClientSize.Width - Border - Space - _labelWidthY;
+            _xScale = (_xRight - 2*Space - Border)/(float) _chartBars;
 
-            countLabelsX = (int)Math.Min((XRight - XLeft) / labelWidthX, 20);
-            deltaX       = (float)Math.Max(Math.Round((XAxisMax - XAxisMin) / (float)countLabelsX), 10);
-            stepX        = (int)Math.Ceiling(deltaX / 10) * 10;
-            countLabelsX = (int)Math.Ceiling((XAxisMax - XAxisMin) / (float)stepX);
-            XAxisMax     = XAxisMin + countLabelsX * stepX;
-
+            _countLabelsX = Math.Min((_xRight - _xLeft)/_labelWidthX, 20);
+            _deltaX = (float) Math.Max(Math.Round((_xAxisMax - _xAxisMin)/(float) _countLabelsX), 10);
+            _stepX = (int) Math.Ceiling(_deltaX/10)*10;
+            _countLabelsX = (int) Math.Ceiling((_xAxisMax - _xAxisMin)/(float) _stepX);
+            _xAxisMax = _xAxisMin + _countLabelsX*_stepX;
 
             // difference from Y Axis for Small_Balance_Chart:
             // prefer minimums because histogram counts are usually small, less than 10
-            countLabelsY = (int)Math.Min((XAxis_Y - YTop) / 20, 20);
-            deltaY       = (float)Math.Round((YAxisMax - YAxisMin) / (float)countLabelsY);
+            _countLabelsY = Math.Min((_xAxisY - _yTop)/20, 20);
+            _deltaY = (float) Math.Round((_yAxisMax - _yAxisMin)/(float) _countLabelsY);
             // protect against deltaY infinity and stepY = Number.min
-            stepY        = (float.IsInfinity(deltaY)) ? 20 : (int)deltaY;
+            _stepY = (float.IsInfinity(_deltaY)) ? 20 : (int) _deltaY;
             // protect against dividing by zero in case of no counts
-            stepY        = (stepY == 0) ? 1 : stepY;
-            countLabelsY = (int)Math.Ceiling((YAxisMax - YAxisMin) / (float)stepY);
+            _stepY = (_stepY == 0) ? 1 : _stepY;
+            _countLabelsY = (int) Math.Ceiling((_yAxisMax - _yAxisMin)/(float) _stepY);
             // protect against dividing by zero in case of no counts
-            countLabelsY = (countLabelsY == 0) ? 5 : countLabelsY;
+            _countLabelsY = (_countLabelsY == 0) ? 5 : _countLabelsY;
 
             // protect against dividing by zero in case of no counts
-            YAxisMax = (YAxisMax == 0) ? 5 : YAxisMax;
-            YScale   = (XAxis_Y - YTop) / (countLabelsY * (float)stepY);
-
-
+            _yAxisMax = (_yAxisMax == 0) ? 5 : _yAxisMax;
+            _yScale = (_xAxisY - _yTop)/(_countLabelsY*(float) _stepY);
         }
-
 
         /// <summary>
         /// Paints the chart
         /// </summary>
-        protected override void OnPaint(PaintEventArgs e) {
+        protected override void OnPaint(PaintEventArgs e)
+        {
             Graphics g = e.Graphics;
 
             // Caption bar
-            Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
-            g.DrawString(strChartTitle, Font, new SolidBrush(LayoutColors.ColorCaptionText), rectfCaption, stringFormatCaption);
+            Data.GradientPaint(g, _rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
+            g.DrawString(_strChartTitle, Font, new SolidBrush(LayoutColors.ColorCaptionText), _rectfCaption, _sfCaption);
 
             // Border
-            g.DrawLine(penBorder, 1, captionHeight, 1, ClientSize.Height);
-            g.DrawLine(penBorder, ClientSize.Width - border + 1, captionHeight, ClientSize.Width - border + 1, ClientSize.Height);
-            g.DrawLine(penBorder, 0, ClientSize.Height - border + 1, ClientSize.Width, ClientSize.Height - border + 1);
+            g.DrawLine(_penBorder, 1, _captionHeight, 1, ClientSize.Height);
+            g.DrawLine(_penBorder, ClientSize.Width - Border + 1, _captionHeight, ClientSize.Width - Border + 1, ClientSize.Height);
+            g.DrawLine(_penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
 
             // Paints the background by gradient
-            RectangleF rectField = new RectangleF(border, captionHeight, ClientSize.Width - 2 * border, ClientSize.Height - captionHeight - border);
+            var rectField = new RectangleF(Border, _captionHeight, ClientSize.Width - 2*Border, ClientSize.Height - _captionHeight - Border);
             Data.GradientPaint(g, rectField, LayoutColors.ColorChartBack, LayoutColors.DepthControl);
 
-            if (isNotPaint) return;
+            if (_isNotPaint) return;
+
+            string subHeader = _isCounts ? Language.T("Count of Trades") : Language.T("Accumulated Amount");
+            g.DrawString(subHeader, Font, new SolidBrush(LayoutColors.ColorChartFore), _rectSubHeader, _sfCaption);
 
             // Grid and Price labels
-            for (int label = XAxisMin10; label <= XAxisMax; label += stepX) {
-                float xPoint = XLeft + ((XAxisMin10 - XAxisMin) + (label - XAxisMin10)) * XScale;
-                float yPoint = YBottom - Font.Height;
-                if (xPoint < XRight - labelWidthX) {
-                    g.DrawString(label.ToString(), Font, brushFore, xPoint, yPoint);
+            for (int label = _xAxisMin10; label <= _xAxisMax; label += _stepX)
+            {
+                float xPoint = _xLeft + ((_xAxisMin10 - _xAxisMin) + (label - _xAxisMin10))*_xScale;
+                float yPoint = _yBottom - Font.Height;
+                if (xPoint < _xRight - _labelWidthX)
+                {
+                    g.DrawString(label.ToString(CultureInfo.InvariantCulture), Font, _brushFore, xPoint, yPoint);
                 }
             }
 
-            for (int label = YAxisMin; label <= YAxisMax; label += stepY) {
-                int labelY = (int)(XAxis_Y - (label - YAxisMin) * YScale);
-                if (label > -1) {
-                    g.DrawString(label.ToString(), Font, brushFore, XRight, labelY - Font.Height / 2 - 1);
+            for (int label = _yAxisMin; label <= _yAxisMax; label += _stepY)
+            {
+                var labelY = (int) (_xAxisY - (label - _yAxisMin)*_yScale);
+                if (label > -1)
+                {
+                    g.DrawString(label.ToString(CultureInfo.InvariantCulture), Font, _brushFore, _xRight, labelY - Font.Height/2 - 1);
                 }
-                g.DrawLine(penGrid, XLeft, labelY, XRight, labelY);
+                g.DrawLine(_penGrid, _xLeft, labelY, _xRight, labelY);
             }
 
-            for (int i = 0; i < tradeCounts.Length; i++) {
-                Single xPt = XLeft + (i + 1) * XScale;
-                Single yPtBottom = XAxis_Y;
-                Single yPtTop;
-                if (isCounts) {
-                    yPtTop = (XAxis_Y - (tradeCounts[i] - YAxisMin) * YScale);
-                    g.DrawLine(new Pen(Color.Blue), xPt, yPtBottom, xPt, yPtTop);
-                }
-                else {
-                    yPtTop = XAxis_Y - (Math.Abs(tradeCumulatives[i]) - YAxisMin) * YScale;
-                    // change Pen so red for losses, green for wins
-                    if (tradeIndexes[i] < 0) {
-                        g.DrawLine(new Pen(Color.Red), xPt, yPtBottom, xPt, yPtTop);
-                    }
-                    else {
-                        g.DrawLine(new Pen(Color.Green), xPt, yPtBottom, xPt, yPtTop);
-                    }
-                }
-            }
+            int lastXPt = -1;
+            int lastYPt = -1;
+            for (int i = 0; i < _tradeCounts.Length; i++)
+            {
+                float xPt = _xLeft + (i + 1)*_xScale;
+                float yPtBottom = _xAxisY;
+                int val = _isCounts ? _tradeCounts[i] : Math.Abs(_tradeCumulatives[i]);
+                float yPtTop = (_xAxisY - (val - _yAxisMin)*_yScale);
 
+                if ((int) yPtTop == (int) yPtBottom)
+                    continue;
+
+                if (lastXPt == (int) xPt && lastYPt == (int) yPtTop)
+                    continue;
+
+                Color color = _isCounts ? Color.Blue : _tradeIndexes[i] < 0 ? Color.Red : Color.Green;
+                g.DrawLine(new Pen(color), xPt, yPtBottom, xPt, yPtTop);
+
+                lastXPt = (int) xPt;
+                lastYPt = (int) yPtTop;
+            }
 
             // Coordinate axes
-            g.DrawLine(new Pen(LayoutColors.ColorChartFore), XLeft - 1, YTop - space, XLeft - 1, XAxis_Y);
-            g.DrawLine(new Pen(LayoutColors.ColorChartFore), XLeft - 1, XAxis_Y, XRight, XAxis_Y);
-
-            return;
+            g.DrawLine(new Pen(LayoutColors.ColorChartFore), _xLeft - 1, _yTop - Space, _xLeft - 1, _xAxisY);
+            g.DrawLine(new Pen(LayoutColors.ColorChartFore), _xLeft - 1, _xAxisY, _xRight, _xAxisY);
         }
 
         /// <summary>
         /// Generates dynamic info on the status bar
         /// when we are Moving the mouse over the SmallBalanceChart.
         /// </summary>
-        protected override void OnMouseMove(MouseEventArgs e) {
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
             base.OnMouseMove(e);
 
-            if (!isShowDynamicInfo || !Data.IsData || !Data.IsResult) return;
+            if (!_isShowDynamicInfo || !Data.IsData || !Data.IsResult) return;
 
-            int bar = (int)((e.X - XLeft) / XScale) + firstBar;
+            int bar = (int) ((e.X - _xLeft)/_xScale) + _firstBar;
 
-            bar = Math.Max(firstBar, bar);
-            bar = Math.Min(chartBars, bar);
+            bar = Math.Max(_firstBar, bar);
+            bar = Math.Min(_chartBars, bar);
 
-            if (tradeResults.Length == 0) {
-                strStatusBarText = Language.T("No trades counted");
+            if (_tradeResults.Length == 0)
+            {
+                CurrentBarInfo = Language.T("No trades counted");
             }
-            else {
-                if (bar > 0 && bar <= tradeIndexes.Length) {
-                    strStatusBarText = Language.T("Result") + ": " + tradeIndexes[bar - 1].ToString() +
-                                       "  " + Language.T("Count") + ": " + tradeCounts[bar - 1].ToString() +
-                                       "  " + Language.T("Total") + ": " + tradeCumulatives[bar - 1].ToString();
+            else
+            {
+                if (bar > 0 && bar <= _tradeIndexes.Length)
+                {
+                    CurrentBarInfo = Language.T("Result") + ": " + _tradeIndexes[bar - 1] +
+                                     "  " + Language.T("Count") + ": " + _tradeCounts[bar - 1] +
+                                     "  " + Language.T("Total") + ": " + _tradeCumulatives[bar - 1];
                 }
-                else {
-                    strStatusBarText = Language.T("Result") + ": " + (bar + tradeIndexes[0] - 1).ToString() +
-                                       "  " + Language.T("Count") + ": 0" +
-                                       "  " + Language.T("Total") + ": 0";
+                else
+                {
+                    CurrentBarInfo = Language.T("Result") + ": " + (bar + _tradeIndexes[0] - 1) +
+                                     "  " + Language.T("Count") + ": 0" +
+                                     "  " + Language.T("Total") + ": 0";
                 }
             }
         }
 
+        public void AddContextMenuItems()
+        {
+            var sep1 = new ToolStripSeparator();
+
+            var mi1 = new ToolStripMenuItem
+                          {
+                              Image = Resources.toggle,
+                              Text = Language.T("Toggle Chart Representation")
+                          };
+            mi1.Click += BtnToggleViewClick;
+
+            var sep2 = new ToolStripSeparator();
+
+            var mi2 = new ToolStripMenuItem
+                          {
+                              Image = Resources.export,
+                              Text = Language.T("Export Data to CSV File")
+                          };
+            mi2.Click += BtnExportClick;
+
+            var mi3 = new ToolStripMenuItem
+                          {
+                              Image = Resources.copy,
+                              Text = Language.T("Copy Data to Clipboard")
+                          };
+            mi3.Click += BtnClipboardClick;
+
+
+            var itemCollection = new ToolStripItem[]
+                                     {
+                                         sep1, mi1, sep2, mi2, mi3
+                                     };
+
+            PopUpContextMenu.Items.AddRange(itemCollection);
+        }
 
         /// <summary>
         ///  Handler to toggle between count and cumulative value views
         /// </summary>
-        void BtnToggleView_Click(object sender, EventArgs e) {
-            isCounts = (isCounts) ? false : true;
+        private void BtnToggleViewClick(object sender, EventArgs e)
+        {
+            _isCounts = !_isCounts;
             SetChartData();
             InitChart();
             Invalidate();
@@ -465,40 +425,47 @@ namespace Forex_Strategy_Builder {
         /// <summary>
         ///  Handler to copy histogram data to clipboard
         /// </summary>
-        void BtnClipboard_Click(object sender, EventArgs e) {
+        private void BtnClipboardClick(object sender, EventArgs e)
+        {
             Clipboard.Clear();
             // protect against null if no trades in strategy
-            if (tradeResults.Length > 0) {
-                string s = getHistogramDataString();
+            if (_tradeResults.Length > 0)
+            {
+                string s = GetHistogramDataString();
                 Clipboard.SetText(s);
             }
-            else {
-                string sInfo = Language.T("No trades in Strategy to copy to Clipboard.");
-                string sCaption = Language.T("No Trades");
-                MessageBox.Show(sInfo, sCaption, MessageBoxButtons.OK);
+            else
+            {
+                string info = Language.T("No trades in Strategy to copy to Clipboard.");
+                string caption = Language.T("No Trades");
+                MessageBox.Show(info, caption, MessageBoxButtons.OK);
             }
         }
 
         /// <summary>
         ///  Handler to write histogram data CSV file
         /// </summary>
-        void BtnExport_Click(object sender, EventArgs e) {
+        private void BtnExportClick(object sender, EventArgs e)
+        {
             // protect against null if no trades in strategy
-            if (tradeResults.Length > 0) {
-                Exporter exporter = new Exporter();
-                exporter.ExportHistogramData(getHistogramDataString());
+            if (_tradeResults.Length > 0)
+            {
+                var exporter = new Exporter();
+                exporter.ExportHistogramData(GetHistogramDataString());
             }
-            else {
-                string sInfo = Language.T("No trades in Strategy to Export to CSV.");
-                string sCaption = Language.T("No Trades");
-                MessageBox.Show(sInfo, sCaption, MessageBoxButtons.OK);
+            else
+            {
+                string info = Language.T("No trades in Strategy to Export to CSV.");
+                string caption = Language.T("No Trades");
+                MessageBox.Show(info, caption, MessageBoxButtons.OK);
             }
         }
 
         /// <summary>
         /// Invalidates the chart after resizing
         /// </summary>
-        protected override void OnResize(EventArgs eventargs) {
+        protected override void OnResize(EventArgs eventargs)
+        {
             InitChart();
             base.OnResize(eventargs);
             Invalidate();
@@ -507,32 +474,30 @@ namespace Forex_Strategy_Builder {
         /// <summary>
         /// Utility function for finding max value in an array
         /// </summary>
-        private int FindMax(int[] arr, bool abs) {
+        private int FindMax(int[] arr, bool abs)
+        {
             int max = int.MinValue;
-            if (abs) {
-                for (int i = 0; i < arr.Length; i++) {
-                    if (Math.Abs(arr[i]) > max) {
+            if (abs)
+            {
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    if (Math.Abs(arr[i]) > max)
+                    {
                         max = Math.Abs(arr[i]);
                     }
                 }
             }
-            else {
-                for (int i = 0; i < arr.Length; i++) {
-                    if (arr[i] > max) {
+            else
+            {
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    if (arr[i] > max)
+                    {
                         max = arr[i];
                     }
                 }
             }
             return max;
-        }
-
-        /// <summary>
-        /// Utility function for finding min value in an array
-        /// </summary>
-        private int FindMin(int[] arr) {
-            int[] arrCopy = (int[])arr.Clone();
-            Array.Sort(arrCopy);
-            return arrCopy[0];
         }
     }
 }

@@ -123,6 +123,7 @@ namespace Forex_Strategy_Builder
                                     IsContextButtonVisible = true
                                 };
             HistogramChart.PopUpContextMenu.Items.AddRange(GetHistogramChartContextMenuItems());
+            HistogramChart.AddContextMenuItems();
             HistogramChart.MouseMove += HistogramChartMouseMove;
             HistogramChart.MouseLeave += IndicatorChartMouseLeave;
 
@@ -152,7 +153,7 @@ namespace Forex_Strategy_Builder
             var mi1 = new ToolStripMenuItem
             {
                 Image = Properties.Resources.bar_chart,
-                Text = Language.T("Show full Indicator Chart") + "..."
+                Text = Language.T("Full Indicator Chart") + "..."
             };
             mi1.Click += ContextMenuShowFullIndicatorChartClick;
 

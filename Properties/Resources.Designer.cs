@@ -1081,6 +1081,13 @@ namespace Forex_Strategy_Builder.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap toggle {
+            get {
+                object obj = ResourceManager.GetObject("toggle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap toggle_journal {
             get {
                 object obj = ResourceManager.GetObject("toggle_journal", resourceCulture);

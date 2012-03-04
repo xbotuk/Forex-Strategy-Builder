@@ -173,9 +173,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                                        Parent = PnlLimitations,
                                        ForeColor = _colorText,
                                        BackColor = Color.Transparent,
-                                       Text =
-                                           Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency +
-                                           "]",
+                                       Text = Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency +"]",
                                        Checked = false,
                                        AutoSize = true
                                    };
@@ -320,8 +318,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                                                Parent = PnlSettings,
                                                ForeColor = _colorText,
                                                BackColor = Color.Transparent,
-                                               Text =
-                                                   Language.T("Optimizer writes a report for each optimized strategy"),
+                                               Text = Language.T("Optimizer writes a report for each optimized strategy"),
                                                Checked = false,
                                                AutoSize = true
                                            };
@@ -382,19 +379,19 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
             // Set step 5
             AOptimizerButtons[(int) OptimizerButtons.SetStep5].Text = "±5";
-            AOptimizerButtons[(int) OptimizerButtons.SetStep5].ToolTipText = Language.T("Set Min / Max ± 5 steps.");
+            AOptimizerButtons[(int) OptimizerButtons.SetStep5].ToolTipText = Language.T("Set Min / Max ± # steps.").Replace("#", "5");
 
             // Set step 10
             AOptimizerButtons[(int) OptimizerButtons.SetStep10].Text = "±10";
-            AOptimizerButtons[(int) OptimizerButtons.SetStep10].ToolTipText = Language.T("Set Min / Max ± 10 steps.");
+            AOptimizerButtons[(int) OptimizerButtons.SetStep10].ToolTipText = Language.T("Set Min / Max ± # steps.").Replace("#", "10");
 
             // Set step 15
             AOptimizerButtons[(int) OptimizerButtons.SetStep15].Text = "±15";
-            AOptimizerButtons[(int) OptimizerButtons.SetStep15].ToolTipText = Language.T("Set Min / Max ± 15 steps.");
+            AOptimizerButtons[(int) OptimizerButtons.SetStep15].ToolTipText = Language.T("Set Min / Max ± # steps.").Replace("#", "15");
 
             // Set step 20
             AOptimizerButtons[(int) OptimizerButtons.SetStep20].Text = "±20";
-            AOptimizerButtons[(int) OptimizerButtons.SetStep20].ToolTipText = Language.T("Set Min / Max ± 20 steps.");
+            AOptimizerButtons[(int) OptimizerButtons.SetStep20].ToolTipText = Language.T("Set Min / Max ± # steps.").Replace("#", "20");
 
             // Reset Strategy
             AOptimizerButtons[(int) OptimizerButtons.ResetStrategy].Image = Resources.refresh;
