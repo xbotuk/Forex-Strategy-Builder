@@ -1,8 +1,8 @@
 [Setup]
 AppName            = Forex Strategy Builder
-AppVersion         = 2.67.1.0
-VersionInfoVersion = 2.67.1.0
-AppVerName         = Forex Strategy Builder v2.67.1 Beta
+AppVersion         = 2.67.3.0
+VersionInfoVersion = 2.67.3.0
+AppVerName         = Forex Strategy Builder v2.67.3 Beta
 
 ArchitecturesInstallIn64BitMode = x64 ia64
 AppPublisher       = Forex Software Ltd.
@@ -62,7 +62,7 @@ Name: "{group}\Uninstall";                      Filename: "{uninstallexe}";
 Filename: "{app}\FSB Starter.exe"; Description: "Launch the application"; Flags: postinstall skipifsilent nowait;
 Filename: "{app}\ReadMe.html";     Description: "View the ReadMe file";   Flags: postinstall skipifsilent shellexec unchecked;
 
-[code]
+[Code]
 var
   OptionsPage: TInputOptionWizardPage;
   UsagePage:   TInputOptionWizardPage;
