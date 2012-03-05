@@ -1,7 +1,7 @@
 // Small Histogram Chart
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 //
 // Contributed by Krog.
@@ -264,6 +264,12 @@ namespace Forex_Strategy_Builder
             // protect against dividing by zero in case of no counts
             _yAxisMax = (_yAxisMax == 0) ? 5 : _yAxisMax;
             _yScale = (_xAxisY - _yTop)/(_countLabelsY*(float) _stepY);
+
+            // Context button colors.
+            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
+            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ContextMenuColorBack = LayoutColors.ColorControlBack;
+            ContextMenuColorFore = LayoutColors.ColorControlText;
         }
 
         /// <summary>
@@ -341,7 +347,7 @@ namespace Forex_Strategy_Builder
 
         /// <summary>
         /// Generates dynamic info on the status bar
-        /// when we are Moving the mouse over the SmallBalanceChart.
+        /// when we are Moving the mouse over the SmallHistogramChart.
         /// </summary>
         protected override void OnMouseMove(MouseEventArgs e)
         {
@@ -353,6 +359,7 @@ namespace Forex_Strategy_Builder
 
             bar = Math.Max(_firstBar, bar);
             bar = Math.Min(_chartBars, bar);
+            bar = FindNearestMeaningfulBar(bar);
 
             if (_tradeResults.Length == 0)
             {
@@ -360,19 +367,49 @@ namespace Forex_Strategy_Builder
             }
             else
             {
-                if (bar > 0 && bar <= _tradeIndexes.Length)
+                if (bar >= 0 && bar < _tradeIndexes.Length)
                 {
-                    CurrentBarInfo = Language.T("Result") + ": " + _tradeIndexes[bar - 1] +
-                                     "  " + Language.T("Count") + ": " + _tradeCounts[bar - 1] +
-                                     "  " + Language.T("Total") + ": " + _tradeCumulatives[bar - 1];
+                    CurrentBarInfo = Language.T("Result") + ": " + _tradeIndexes[bar] +
+                                     "  " + Language.T("Count") + ": " + _tradeCounts[bar] +
+                                     "  " + Language.T("Total") + ": " + _tradeCumulatives[bar];
                 }
                 else
                 {
-                    CurrentBarInfo = Language.T("Result") + ": " + (bar + _tradeIndexes[0] - 1) +
+                    CurrentBarInfo = Language.T("Result") + ": " + (bar + _tradeIndexes[0]) +
                                      "  " + Language.T("Count") + ": 0" +
                                      "  " + Language.T("Total") + ": 0";
                 }
             }
+        }
+
+        private int FindNearestMeaningfulBar(int bar)
+        {
+            var nearBars = (int) (5f/_xScale);
+            var meanBar = bar;
+
+            for (int d = 0; d < nearBars; d++)
+            {
+                var b1 = bar + d;
+                if (b1 >= _firstBar && b1 < _tradeIndexes.Length)
+                {
+                    if (_tradeCounts[b1] > 0)
+                    {
+                        meanBar = b1;
+                        break;
+                    }
+                }
+                var b2 = bar - d;
+                if (b2 >= _firstBar && b2 < _tradeIndexes.Length)
+                {
+                    if (_tradeCounts[b2] > 0)
+                    {
+                        meanBar = b2;
+                        break;
+                    }
+                }
+            }
+
+            return meanBar;
         }
 
         public void AddContextMenuItems()
