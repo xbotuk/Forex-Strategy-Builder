@@ -29,6 +29,8 @@ namespace Forex_Strategy_Builder.CustomControls
             _contextMenuTimer.Tick += ContextMenuTimerTick;
 
             _contextButton = new ContextButton {Parent = this, Visible = false};
+            _contextButton.MouseClick += ContextButtonOnMouseClick;
+            _contextButton.MouseDoubleClick += ContextButtonOnMouseClick;
             _contextButton.MouseEnter += ContextButtonMouseEnter;
             _contextButton.MouseLeave += ContextButtonMouseLeave;
         }
@@ -77,11 +79,21 @@ namespace Forex_Strategy_Builder.CustomControls
             _contextButton.Location = new Point(Width - _contextButton.Width - 2, 0);
         }
 
+        private void ContextButtonOnMouseClick(object sender, MouseEventArgs mouseEventArgs)
+        {
+            ActivateContextMenu();
+        }
+
         private void ContextButtonMouseEnter(object sender, EventArgs e)
+        {
+            ActivateContextMenu();
+        }
+
+        private void ActivateContextMenu()
         {
             _contextMenuTimer.Stop();
             if (PopUpContextMenu.Visible) return;
-            
+
             var position = new Point(_contextButton.Right, _contextButton.Bottom);
             PopUpContextMenu.Show(this, position, ToolStripDropDownDirection.BelowLeft);
         }
