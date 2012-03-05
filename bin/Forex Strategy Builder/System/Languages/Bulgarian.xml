@@ -1478,6 +1478,22 @@
     <main>Copy Data to Clipboard</main>
     <alt>Копиране на данните</alt>
   </str>
+  <str>
+    <main>No trades counted</main>
+    <alt>Няма преброени сделки</alt>
+  </str>
+  <str>
+    <main>Result</main>
+    <alt>Резултат</alt>
+  </str>
+  <str>
+    <main>Count</main>
+    <alt>Брой</alt>
+  </str>
+  <str>
+    <main>Total</main>
+    <alt>Общо</alt>
+  </str>
   <!-- Market Panel -->
   <str>
     <main>Full Indicator Chart</main>

@@ -1478,6 +1478,22 @@
     <main>Copy Data to Clipboard</main>
     <alt>Copy Data to Clipboard</alt>
   </str>
+  <str>
+    <main>No trades counted</main>
+    <alt>No trades counted</alt>
+  </str>
+  <str>
+    <main>Result</main>
+    <alt>Result</alt>
+  </str>
+  <str>
+    <main>Count</main>
+    <alt>Count</alt>
+  </str>
+  <str>
+    <main>Total</main>
+    <alt>Total</alt>
+  </str>
   <!-- Market Panel -->
   <str>
     <main>Full Indicator Chart</main>
