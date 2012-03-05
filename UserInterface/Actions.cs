@@ -54,7 +54,7 @@ namespace Forex_Strategy_Builder
             Icon = Data.Icon;
             Text = Data.ProgramName;
             FormClosing += ActionsFormClosing;
-            Application.Idle += Application_Idle;
+            Application.Idle += ApplicationIdle;
 
             PrepareInstruments();
             PrepareCustomIndicators();
@@ -148,12 +148,12 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Application idle
         /// </summary>
-        private void Application_Idle(object sender, EventArgs e)
+        private void ApplicationIdle(object sender, EventArgs e)
         {
-            Application.Idle -= Application_Idle;
-            string sLockFile = GetLockFile();
-            if (!string.IsNullOrEmpty(sLockFile))
-                File.Delete(sLockFile);
+            Application.Idle -= ApplicationIdle;
+            string lockFile = GetLockFile();
+            if (!string.IsNullOrEmpty(lockFile))
+                File.Delete(lockFile);
         }
 
         /// <summary>
@@ -333,10 +333,10 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Duplicates a Slot
         /// </summary>
-        private void DuplicateSlot(int iSlotToDuplicate)
+        private void DuplicateSlot(int slotToDuplicate)
         {
             Data.StackStrategy.Push(Data.Strategy.Clone());
-            Data.Strategy.DuplicateFilter(iSlotToDuplicate);
+            Data.Strategy.DuplicateFilter(slotToDuplicate);
 
             Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + "* - " + Data.ProgramName;
             Data.IsStrategyChanged = true;
@@ -885,7 +885,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the market according the strategy
+        /// Sets the market according to the strategy
         /// </summary>
         private void SetMarket(string symbol, DataPeriods dataPeriod)
         {
@@ -1147,7 +1147,7 @@ namespace Forex_Strategy_Builder
             // Put the Strategy into the Undo Stack
             Data.StackStrategy.Push(Data.Strategy.Clone());
 
-            string sOrginalDescription = Data.Strategy.Description;
+            string orginalDescription = Data.Strategy.Description;
 
             var generator = new Generator {ParrentForm = this};
             generator.ShowDialog();
@@ -1160,8 +1160,8 @@ namespace Forex_Strategy_Builder
 
                 if (generator.IsStrategyModified)
                 {
-                    Data.Strategy.Description = (sOrginalDescription != string.Empty
-                                                     ? sOrginalDescription + Environment.NewLine + Environment.NewLine +
+                    Data.Strategy.Description = (orginalDescription != string.Empty
+                                                     ? orginalDescription + Environment.NewLine + Environment.NewLine +
                                                        "-----------" + Environment.NewLine +
                                                        generator.GeneratedDescription
                                                      : generator.GeneratedDescription);
@@ -1299,21 +1299,19 @@ namespace Forex_Strategy_Builder
         {
             string colorFile = Path.Combine(Data.ColorDir, Configs.ColorScheme + ".xml");
 
-            if (File.Exists(colorFile))
-            {
-                LayoutColors.LoadColorScheme(colorFile);
+            if (!File.Exists(colorFile)) return;
+            LayoutColors.LoadColorScheme(colorFile);
 
-                PanelWorkspace.BackColor = LayoutColors.ColorFormBack;
-                InfoPanelAccountStatistics.SetColors();
-                InfoPanelMarketStatistics.SetColors();
-                IndicatorChart.InitChart();
-                BalanceChart.SetChartData();
-                BalanceChart.InitChart();
-                HistogramChart.SetChartData();
-                HistogramChart.InitChart();
-                SetupJournal();
-                PanelWorkspace.Invalidate(true);
-            }
+            PanelWorkspace.BackColor = LayoutColors.ColorFormBack;
+            InfoPanelAccountStatistics.SetColors();
+            InfoPanelMarketStatistics.SetColors();
+            IndicatorChart.InitChart();
+            BalanceChart.SetChartData();
+            BalanceChart.InitChart();
+            HistogramChart.SetChartData();
+            HistogramChart.InitChart();
+            SetupJournal();
+            PanelWorkspace.Invalidate(true);
         }
 
         /// <summary>

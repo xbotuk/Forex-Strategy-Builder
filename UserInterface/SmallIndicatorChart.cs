@@ -145,6 +145,12 @@ namespace Forex_Strategy_Builder
             _isValueChangedAktive = true;
 
             SetUpPaintData();
+
+            // Context button colors.
+            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
+            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ContextMenuColorBack = LayoutColors.ColorControlBack;
+            ContextMenuColorFore = LayoutColors.ColorControlText;
         }
 
 
