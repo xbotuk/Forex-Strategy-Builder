@@ -137,24 +137,21 @@ namespace Forex_Strategy_Builder
             PanelProperties.Resize += PnlSlotResize;
             toolTip.SetToolTip(PanelProperties, SlotPropertiesTipText);
 
+
             // Slot panels settings
             for (int slot = 0; slot < _slots; slot++)
             {
-                SlotPanelsList[slot] = new ContextPanel
-                                           {Cursor = Cursors.Hand, Tag = slot, Margin = new Padding(0, 0, 0, Space)};
+                SlotPanelsList[slot] = new ContextPanel {Cursor = Cursors.Hand, Tag = slot, Margin = new Padding(0, 0, 0, Space)};
                 SlotPanelsList[slot].Paint += PnlSlotPaint;
                 SlotPanelsList[slot].Resize += PnlSlotResize;
                 toolTip.SetToolTip(SlotPanelsList[slot], SlotToolTipText);
 
                 if (ShowRemoveSlotButtons && slot != _strategy.OpenSlot && slot != _strategy.CloseSlot)
                 {
-                    // RemoveSlot buttons
-                    SlotPanelsList[slot].CloseButton.Visible = true;
                     SlotPanelsList[slot].CloseButton.Tag = slot;
                     toolTip.SetToolTip(SlotPanelsList[slot].CloseButton, Language.T("Discard the logic condition."));
                 }
             }
-            SetButtonsColor();
 
             // Ads the controls to the flow layout
             FlowLayoutStrategy.Controls.Add(PanelProperties);
@@ -168,17 +165,6 @@ namespace Forex_Strategy_Builder
             {
                 FlowLayoutStrategy.Controls.Add(ButtonAddCloseFilter);
                 FlowLayoutStrategy.Controls.Add(BtnClosingFilterHelp);
-            }
-        }
-
-        private void SetButtonsColor()
-        {
-            for (int slot = 0; slot < _slots; slot++)
-            {
-                SlotPanelsList[slot].ButtonsColorBack = _strategy.GetSlotType(slot) == SlotTypes.OpenFilter
-                                                            ? LayoutColors.ColorSlotCaptionBackOpenFilter
-                                                            : LayoutColors.ColorSlotCaptionBackCloseFilter;
-                SlotPanelsList[slot].ButtonColorFore = LayoutColors.ColorSlotCaptionText;
             }
         }
 
@@ -298,10 +284,11 @@ namespace Forex_Strategy_Builder
         {
             _strategy = strategy;
             _slots = strategy.Slots;
-            SetButtonsColor();
+            FlowLayoutStrategy.SuspendLayout();
             foreach (ContextPanel pnl in SlotPanelsList)
                 pnl.Invalidate();
             PanelProperties.Invalidate();
+            FlowLayoutStrategy.ResumeLayout();
         }
 
         /// <summary>
@@ -415,7 +402,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void PnlSlotPaint(object sender, PaintEventArgs e)
         {
-            var pnl = (Panel) sender;
+            var pnl = (ContextPanel) sender;
             Graphics g = e.Graphics;
             var slot = (int) pnl.Tag;
             int width = pnl.ClientSize.Width;
@@ -518,7 +505,6 @@ namespace Forex_Strategy_Builder
                                                     FormatFlags = StringFormatFlags.NoWrap
                                                 };
 
-
             var fontIndicator = new Font(Font.FontFamily, 11f, FontStyle.Regular);
             Brush brushIndName = new SolidBrush(colorIndicatorNameText);
             float indNameHeight = fontIndicator.Height;
@@ -540,6 +526,14 @@ namespace Forex_Strategy_Builder
 
             g.DrawString(indicatorName, fontIndicator, brushIndName, rectIndName, stringFormatIndicatorName);
             vPosition += (int) indNameHeight;
+
+
+            if (slotType == SlotTypes.OpenFilter || slotType == SlotTypes.CloseFilter)
+            {
+                pnl.CloseButton.ColorBack = colorCaptionBack;
+                pnl.CloseButton.ColorFore = colorCaptionText;
+                pnl.CloseButton.Visible = ShowRemoveSlotButtons;
+            }
 
             if (SlotMinMidMax == SlotSizeMinMidMax.min)
                 return;
