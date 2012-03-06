@@ -8,6 +8,14 @@ namespace Forex_Strategy_Builder
 {
     public class WayPoint
     {
+        public WayPoint(double price, WayPointType wpType)
+        {
+            Price = price;
+            WPType = wpType;
+            OrdNumb = -1;
+            PosNumb = -1;
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>

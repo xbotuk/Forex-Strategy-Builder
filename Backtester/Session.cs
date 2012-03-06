@@ -93,7 +93,7 @@ namespace Forex_Strategy_Builder
             if (Positions > 0)
                 WayPoint[WayPoints] = new WayPoint(price, type, Summary.FormOrdNumb, Summary.PosNumb);
             else
-                WayPoint[WayPoints] = new WayPoint(price, type, -1, -1);
+                WayPoint[WayPoints] = new WayPoint(price, type);
 
             WayPoints++;
         }
