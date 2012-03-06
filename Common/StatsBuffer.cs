@@ -146,7 +146,7 @@ namespace Forex_Strategy_Builder.Common
         /// <summary>
         /// Returns the backtest safety evaluation
         /// </summary>
-        public static string BackTestEval(int bar)
+        public static string BackTestEvalToString(int bar)
         {
             return bar < FirstBar || _session[bar].BacktestEval == BacktestEval.None
                        ? ""

@@ -420,7 +420,7 @@ namespace Forex_Strategy_Builder
                     _journalData[row, p++] = position.Equity.ToString("F2");
                 }
 
-                _journalData[row, p] = Language.T(StatsBuffer.BackTestEval(bar));
+                _journalData[row, p] = Language.T(StatsBuffer.BackTestEvalToString(bar));
 
                 // Icons
                 _posIcons[row] = Position.PositionIconImage(position.PositionIcon);

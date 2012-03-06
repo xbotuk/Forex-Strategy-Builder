@@ -339,7 +339,7 @@ namespace Forex_Strategy_Builder
             {
                 case "< !":
                     for (int i = _barCurrent - 1; i >= Data.FirstBar; i--)
-                        if (Backtester.BackTestEval(i) == "Ambiguous")
+                        if (Backtester.BackTestEval(i) == BacktestEval.Ambiguous)
                         {
                             _barCurrent = i;
                             break;
@@ -347,7 +347,7 @@ namespace Forex_Strategy_Builder
                     break;
                 case "! >":
                     for (int i = _barCurrent + 1; i < Data.Bars; i++)
-                        if (Backtester.BackTestEval(i) == "Ambiguous")
+                        if (Backtester.BackTestEval(i) == BacktestEval.Ambiguous)
                         {
                             _barCurrent = i;
                             break;
@@ -435,7 +435,7 @@ namespace Forex_Strategy_Builder
             {
                 bool isButtonAmbiguous = false;
                 for (int i = Data.FirstBar; i < _barCurrent; i++)
-                    if (Backtester.BackTestEval(i) == "Ambiguous")
+                    if (Backtester.BackTestEval(i) == BacktestEval.Ambiguous)
                     {
                         isButtonAmbiguous = true;
                         break;
@@ -444,7 +444,7 @@ namespace Forex_Strategy_Builder
 
                 isButtonAmbiguous = false;
                 for (int i = _barCurrent + 1; i < Data.Bars; i++)
-                    if (Backtester.BackTestEval(i) == "Ambiguous")
+                    if (Backtester.BackTestEval(i) == BacktestEval.Ambiguous)
                     {
                         isButtonAmbiguous = true;
                         break;
@@ -623,9 +623,8 @@ namespace Forex_Strategy_Builder
             // Bar Number
             string barNumber = (_barCurrent + 1).ToString(CultureInfo.InvariantCulture);
             int stringX = x + barPixels/2 - 1 - g.MeasureString(barNumber, Font).ToSize().Width/2;
-            g.DrawString(barNumber, Font,
-                         Backtester.BackTestEval(_barCurrent) == "Ambiguous" ? _brushRed : _brushGridText, stringX,
-                         yBottom + 4);
+            Brush barBrush = Backtester.BackTestEval(_barCurrent) == BacktestEval.Ambiguous ? _brushRed : _brushGridText;
+            g.DrawString(barNumber, Font, barBrush, stringX, yBottom + 4);
 
             // Draw the bar
             g.DrawLine(_penBarBorder, x + barPixels/2 - 1, yLow, x + barPixels/2 - 1, yHigh);

@@ -251,7 +251,7 @@ namespace Forex_Strategy_Builder
                 sb.Append(Backtester.ChargedRollOver(bar) + "\t");
                 sb.Append(Backtester.Balance(bar) + "\t");
                 sb.Append(Backtester.Equity(bar) + "\t");
-                sb.Append(Backtester.BackTestEval(bar) + "\t");
+                sb.Append(Backtester.BackTestEvalToString(bar) + "\t");
                 sb.Append(Environment.NewLine);
             }
 

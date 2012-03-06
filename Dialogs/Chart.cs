@@ -1194,7 +1194,7 @@ namespace Forex_Strategy_Builder
                 }
 
                 // Ambiguous note
-                if (ShowAmbiguousBars && Backtester.BackTestEval(bar) == "Ambiguous")
+                if (ShowAmbiguousBars && Backtester.BackTestEval(bar) == BacktestEval.Ambiguous)
                     g.DrawString("!", Font, _brushSignalRed, x + BarPixels/2 - 4, yHigh - 20);
             }
 

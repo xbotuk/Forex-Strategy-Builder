@@ -476,11 +476,19 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Returns the backtest safety evaluation
         /// </summary>
-        public static string BackTestEval(int bar)
+        public static string BackTestEvalToString(int bar)
         {
             return bar < FirstBar || _session[bar].BacktestEval == BacktestEval.None
                        ? ""
                        : _session[bar].BacktestEval.ToString();
+        }
+
+        /// <summary>
+        /// Returns the backtest safety evaluation
+        /// </summary>
+        public static BacktestEval BackTestEval(int bar)
+        {
+            return _session[bar].BacktestEval;
         }
 
         /// <summary>

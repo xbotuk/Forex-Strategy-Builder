@@ -262,7 +262,7 @@ namespace Forex_Strategy_Builder
                                                : StatsBuffer.Equity(bar).ToString(CultureInfo.InvariantCulture);
                 _journalData[row, col++] = StatsBuffer.SummaryRequiredMargin(bar).ToString("F2");
                 _journalData[row, col++] = StatsBuffer.SummaryFreeMargin(bar).ToString("F2");
-                _journalData[row, col] = Language.T(StatsBuffer.BackTestEval(bar));
+                _journalData[row, col] = Language.T(StatsBuffer.BackTestEvalToString(bar));
 
                 _positionIcons[row] = isPos
                                           ? Position.PositionIconImage(StatsBuffer.SummaryPositionIcon(bar))
