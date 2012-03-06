@@ -162,8 +162,8 @@ namespace Forex_Strategy_Builder
             _penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
                                  Border);
 
-            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
-            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ButtonsColorBack = LayoutColors.ColorCaptionBack;
+            ButtonColorFore = LayoutColors.ColorCaptionText;
             ContextMenuColorBack = LayoutColors.ColorControlBack;
             ContextMenuColorFore = LayoutColors.ColorControlText;
         }
@@ -467,7 +467,7 @@ namespace Forex_Strategy_Builder
                 _hScrollBar.Visible = false;
             }
 
-            UpdateContextButtonLocation();
+            UpdateButtonsLocation();
             SetUpJournal();
             Invalidate();
         }

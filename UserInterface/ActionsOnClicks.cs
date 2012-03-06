@@ -381,7 +381,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void BtnRemoveSlotClick(object sender, EventArgs e)
         {
-            var slot = (int) ((Button) sender).Tag;
+            var slot = (int) ((Panel) sender).Tag;
             RemoveSlot(slot);
         }
 

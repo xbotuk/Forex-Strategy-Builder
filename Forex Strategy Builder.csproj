@@ -87,6 +87,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomControls\CloseButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Dialogs\JForex\JForexDataFiles.cs" />
     <Compile Include="Dialogs\JForex\JForexImport.cs">
       <SubType>Form</SubType>
@@ -135,6 +138,7 @@
     <Compile Include="Enumerations\PermanentProtectionType.cs" />
     <Compile Include="Enumerations\StrategySlotStatus.cs" />
     <Compile Include="UserInterface\SmallBalanceChartData.cs" />
+    <Compile Include="Utils\ColorMagic.cs" />
     <Compile Include="Utils\FileIconExtractor.cs" />
     <Compile Include="Dialogs\Analyzer\Analyzer.cs">
       <SubType>Form</SubType>

@@ -266,8 +266,8 @@ namespace Forex_Strategy_Builder
             _yScale = (_xAxisY - _yTop)/(_countLabelsY*(float) _stepY);
 
             // Context button colors.
-            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
-            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ButtonsColorBack = LayoutColors.ColorCaptionBack;
+            ButtonColorFore = LayoutColors.ColorCaptionText;
             ContextMenuColorBack = LayoutColors.ColorControlBack;
             ContextMenuColorFore = LayoutColors.ColorControlText;
         }

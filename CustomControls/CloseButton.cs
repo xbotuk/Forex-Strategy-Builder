@@ -1,4 +1,4 @@
-﻿// ContextButton class.
+﻿// CloseButton class.
 // Part of Forex Strategy Builder
 // Website http://forexsb.com/
 // Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
@@ -6,16 +6,17 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Forex_Strategy_Builder.Utils;
 
 namespace Forex_Strategy_Builder.CustomControls
 {
-    public sealed class ContextButton : Panel
+    public sealed class CloseButton : Panel
     {
         private bool _isHover;
 
-        public ContextButton()
+        public CloseButton()
         {
             Width = 16;
             Height = 16;
@@ -46,30 +47,17 @@ namespace Forex_Strategy_Builder.CustomControls
         {
             Graphics g = e.Graphics;
 
-            float factor1 = _isHover ? 0.40f : 0.20f;
-            float factor2 = _isHover ? 0.85f : 0.65f;
+            float factor1 = _isHover ? 0.55f : 0.25f;
+            float factor2 = _isHover ? 1.00f : 0.90f;
 
-            Brush brush1 = new SolidBrush(ColorMagic.GetIntermediateColor(ColorBack, ColorFore, factor1));
-            Brush brush2 = new SolidBrush(ColorMagic.GetIntermediateColor(ColorBack, ColorFore, factor2));
+            var pen1 = new Pen(ColorMagic.GetIntermediateColor(ColorBack, ColorFore, factor1))
+                           {Width = 3, StartCap = LineCap.Round, EndCap = LineCap.Round};
+            var pen2 = new Pen(ColorMagic.GetIntermediateColor(ColorBack, ColorFore, factor2));
 
-            var outside = new Rectangle(1, 3, 14, 3);
-            var inside = new Rectangle(2, 4, 12, 1);
-            var offset = new Point(0, 4);
-
-            g.FillRectangle(brush1, outside);
-            g.FillRectangle(brush2, inside);
-
-            outside.Offset(offset);
-            inside.Offset(offset);
-
-            g.FillRectangle(brush1, outside);
-            g.FillRectangle(brush2, inside);
-
-            outside.Offset(offset);
-            inside.Offset(offset);
-
-            g.FillRectangle(brush1, outside);
-            g.FillRectangle(brush2, inside);
+            g.DrawLine(pen1, 11, 12, 3, 4);
+            g.DrawLine(pen1, 3, 12, 11, 4);
+            g.DrawLine(pen2, 11, 12, 3, 4);
+            g.DrawLine(pen2, 3, 12, 11, 4);
         }
     }
 }

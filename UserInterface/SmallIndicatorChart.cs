@@ -147,8 +147,8 @@ namespace Forex_Strategy_Builder
             SetUpPaintData();
 
             // Context button colors.
-            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
-            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ButtonsColorBack = LayoutColors.ColorCaptionBack;
+            ButtonColorFore = LayoutColors.ColorCaptionText;
             ContextMenuColorBack = LayoutColors.ColorControlBack;
             ContextMenuColorFore = LayoutColors.ColorControlText;
         }

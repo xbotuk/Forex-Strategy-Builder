@@ -1303,6 +1303,7 @@ namespace Forex_Strategy_Builder
             LayoutColors.LoadColorScheme(colorFile);
 
             PanelWorkspace.BackColor = LayoutColors.ColorFormBack;
+            RepaintStrategyLayout(); 
             InfoPanelAccountStatistics.SetColors();
             InfoPanelMarketStatistics.SetColors();
             IndicatorChart.InitChart();

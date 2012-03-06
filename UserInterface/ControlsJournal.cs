@@ -37,9 +37,10 @@ namespace Forex_Strategy_Builder
             // Journal Orders
             JournalOrders = new JournalOrders {Parent = PanelJournalRight, Dock = DockStyle.Fill, Cursor = Cursors.Hand};
             JournalOrders.Click += PnlJournalMouseClick;
-            JournalOrders.PopUpContextMenu.Items.AddRange(GetJournalContextMenuItems());
-            JournalOrders.IsContextButtonVisible = true;
+            JournalOrders.CloseButton.Visible = true;
+            JournalOrders.CloseButton.Click += ContextMenuCloseJournalClick;
             toolTip.SetToolTip(JournalOrders, Language.T("Click to view Bar Explorer."));
+            toolTip.SetToolTip(JournalOrders.CloseButton, Language.T("Close Journal"));
 
             new Splitter {Parent = PanelJournalRight, Dock = DockStyle.Bottom, Height = Gap};
 
@@ -52,6 +53,8 @@ namespace Forex_Strategy_Builder
 
             // Journal by Bars
             JournalByBars = new JournalByBars {Name = "JournalByBars", Parent = PanelJournal, Dock = DockStyle.Left};
+            JournalByBars.PopUpContextMenu.Items.AddRange(GetJournalContextMenuItems());
+            JournalByBars.IsContextButtonVisible = true;
             JournalByBars.SelectedBarChange += PnlJournalSelectedBarChange;
             JournalByBars.MouseDoubleClick += PnlJournalMouseDoubleClick;
             toolTip.SetToolTip(JournalByBars, Language.T("Click to select a bar.") + Environment.NewLine + Language.T("Double click to view Bar Explorer."));
@@ -60,9 +63,12 @@ namespace Forex_Strategy_Builder
             JournalByPositions = new JournalByPositions {Name = "JournalByPositions", Parent = PanelJournal, Dock = DockStyle.Fill};
             JournalByPositions.PopUpContextMenu.Items.AddRange(GetJournalContextMenuItems());
             JournalByPositions.IsContextButtonVisible = true;
+            JournalByPositions.CloseButton.Visible = true;
+            JournalByPositions.CloseButton.Click += ContextMenuCloseJournalClick;
             JournalByPositions.SelectedBarChange += PnlJournalSelectedBarChange;
             JournalByPositions.MouseDoubleClick += PnlJournalMouseDoubleClick;
             toolTip.SetToolTip(JournalByPositions, Language.T("Click to select a bar.") + Environment.NewLine + Language.T("Double click to view Bar Explorer."));
+            toolTip.SetToolTip(JournalByPositions.CloseButton, Language.T("Close Journal"));
 
             PanelJournal.Resize += PnlJournalResize;
 
@@ -168,19 +174,20 @@ namespace Forex_Strategy_Builder
             var panel = sender as Panel;
             if (panel == null) return;
 
-            if (panel.Name == "JournalByBars")
+            switch (panel.Name)
             {
-                SelectedBarNumber = JournalByBars.SelectedBar;
-                JournalOrders.SelectedBar = SelectedBarNumber;
-                JournalOrders.SetUpJournal();
-                JournalOrders.Invalidate();
-                JournalPositions.SelectedBar = SelectedBarNumber;
-                JournalPositions.SetUpJournal();
-                JournalPositions.Invalidate();
-            }
-            else if (panel.Name == "JournalByPositions")
-            {
-                SelectedBarNumber = JournalByPositions.SelectedBar;
+                case "JournalByBars":
+                    SelectedBarNumber = JournalByBars.SelectedBar;
+                    JournalOrders.SelectedBar = SelectedBarNumber;
+                    JournalOrders.SetUpJournal();
+                    JournalOrders.Invalidate();
+                    JournalPositions.SelectedBar = SelectedBarNumber;
+                    JournalPositions.SetUpJournal();
+                    JournalPositions.Invalidate();
+                    break;
+                case "JournalByPositions":
+                    SelectedBarNumber = JournalByPositions.SelectedBar;
+                    break;
             }
         }
 

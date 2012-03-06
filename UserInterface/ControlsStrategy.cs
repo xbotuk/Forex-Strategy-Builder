@@ -172,7 +172,7 @@ namespace Forex_Strategy_Builder
                 StrategyField.SlotPanelsList[slot].ContextMenuStrip.Items.AddRange(GetStrategySlotContextMenuItems(slot));
                 StrategyField.SlotPanelsList[slot].MouseClick += PnlSlotMouseUp;
                 if (slot != Data.Strategy.OpenSlot && slot != Data.Strategy.CloseSlot)
-                    StrategyField.ButtonsRemoveSlotList[slot].Click += BtnRemoveSlotClick;
+                    StrategyField.SlotPanelsList[slot].CloseButton.Click += BtnRemoveSlotClick;
             }
 
             SetStrategyDescriptionButton();

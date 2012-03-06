@@ -46,7 +46,6 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public JournalOrders()
         {
-            IsContextButtonVisible = true;
             InitializeJournal();
             SetUpJournal();
         }
@@ -85,8 +84,8 @@ namespace Forex_Strategy_Builder
             _penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
                                  Border);
 
-            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
-            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ButtonsColorBack = LayoutColors.ColorCaptionBack;
+            ButtonColorFore = LayoutColors.ColorCaptionText;
             ContextMenuColorBack = LayoutColors.ColorControlBack;
             ContextMenuColorFore = LayoutColors.ColorControlText;
         }

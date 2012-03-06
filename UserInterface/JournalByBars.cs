@@ -9,11 +9,12 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Forex_Strategy_Builder.Common;
+using Forex_Strategy_Builder.CustomControls;
 using Forex_Strategy_Builder.Properties;
 
 namespace Forex_Strategy_Builder
 {
-    public sealed class JournalByBars : Panel
+    public sealed class JournalByBars : ContextPanel
     {
         private const int Border = 2; // The width of outside border of the panel
         private int _bars; // The total number of bars
@@ -223,6 +224,8 @@ namespace Forex_Strategy_Builder
 
             _selectedRow = Math.Min(_selectedRow, _shownBars - 1);
             _selectedRow = Math.Max(_selectedRow, 0);
+
+            SetButtonsColor();
         }
 
         /// <summary>
@@ -304,14 +307,21 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
-            base.OnResize(eventargs);
-
             SetCountOfRows();
             SetColumnsWidth();
             SetHScrollBar();
             SetUpJournal();
             UpdateJournalData();
+            base.OnResize(eventargs);
             Invalidate();
+        }
+
+        private void SetButtonsColor()
+        {
+            ButtonsColorBack = LayoutColors.ColorCaptionBack;
+            ButtonColorFore = LayoutColors.ColorCaptionText;
+            ContextMenuColorBack = LayoutColors.ColorControlBack;
+            ContextMenuColorFore = LayoutColors.ColorControlText;
         }
 
         private void SetCountOfRows()

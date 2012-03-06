@@ -311,8 +311,8 @@ namespace Forex_Strategy_Builder
             _isHideScanningLine = false;
             _data.ModellingQuolity = " MQ " + Data.ModellingQuality.ToString("N2") + "%";
 
-            ContextButtonColorBack = LayoutColors.ColorCaptionBack;
-            ContextButtonColorFore = LayoutColors.ColorCaptionText;
+            ButtonsColorBack = LayoutColors.ColorCaptionBack;
+            ButtonColorFore = LayoutColors.ColorCaptionText;
             ContextMenuColorBack = LayoutColors.ColorControlBack;
             ContextMenuColorFore = LayoutColors.ColorControlText;
         }
@@ -541,7 +541,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
-            UpdateContextButtonLocation();
+            UpdateButtonsLocation();
             InitChart();
             Invalidate();
         }

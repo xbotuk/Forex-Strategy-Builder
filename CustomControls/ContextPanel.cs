@@ -12,10 +12,11 @@ namespace Forex_Strategy_Builder.CustomControls
 {
     public class ContextPanel : Panel
     {
+        private readonly CloseButton _closeButton;
         private readonly ContextButton _contextButton;
         private readonly Timer _contextMenuTimer;
 
-        protected ContextPanel()
+        public ContextPanel()
         {
             PopUpContextMenu = new ContextMenuStrip
                                    {
@@ -33,6 +34,8 @@ namespace Forex_Strategy_Builder.CustomControls
             _contextButton.MouseDoubleClick += ContextButtonOnMouseClick;
             _contextButton.MouseEnter += ContextButtonMouseEnter;
             _contextButton.MouseLeave += ContextButtonMouseLeave;
+
+            _closeButton = new CloseButton { Parent = this, Visible = false };
         }
 
         public ContextMenuStrip PopUpContextMenu { get; private set; }
@@ -43,14 +46,22 @@ namespace Forex_Strategy_Builder.CustomControls
             get { return _contextButton.Visible; }
         }
 
-        protected Color ContextButtonColorBack
+        public Color ButtonsColorBack
         {
-            set { _contextButton.ColorBack = value; }
+            set
+            {
+                _contextButton.ColorBack = value;
+                _closeButton.ColorBack = value;
+            }
         }
 
-        protected Color ContextButtonColorFore
+        public Color ButtonColorFore
         {
-            set { _contextButton.ColorFore = value; }
+            set
+            {
+                _contextButton.ColorFore = value;
+                _closeButton.ColorFore = value;
+            }
         }
 
         protected Color ContextMenuColorBack
@@ -68,15 +79,21 @@ namespace Forex_Strategy_Builder.CustomControls
             get { return _contextButton.Location; }
         }
 
+        public CloseButton CloseButton
+        {
+            get { return _closeButton; }
+        }
+
         protected override void OnResize(EventArgs eventargs)
         {
             base.OnResize(eventargs);
-            UpdateContextButtonLocation();
+            UpdateButtonsLocation();
         }
 
-        protected void UpdateContextButtonLocation()
+        protected void UpdateButtonsLocation()
         {
-            _contextButton.Location = new Point(Width - _contextButton.Width - 2, 0);
+            CloseButton.Location = new Point(Width - CloseButton.Width - 2, 0);
+            _contextButton.Location = new Point(2, 0);
         }
 
         private void ContextButtonOnMouseClick(object sender, MouseEventArgs mouseEventArgs)
@@ -94,8 +111,8 @@ namespace Forex_Strategy_Builder.CustomControls
             _contextMenuTimer.Stop();
             if (PopUpContextMenu.Visible) return;
 
-            var position = new Point(_contextButton.Right, _contextButton.Bottom);
-            PopUpContextMenu.Show(this, position, ToolStripDropDownDirection.BelowLeft);
+            var position = new Point(_contextButton.Left, _contextButton.Bottom);
+            PopUpContextMenu.Show(this, position, ToolStripDropDownDirection.BelowRight);
         }
 
         private void ContextButtonMouseLeave(object sender, EventArgs e)
