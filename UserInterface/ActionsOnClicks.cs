@@ -19,7 +19,7 @@ namespace Forex_Strategy_Builder
     /// <summary>
     /// Class Actions : Controls
     /// </summary>
-    public partial class Actions
+    public sealed partial class Actions
     {
         /// <summary>
         /// Changes the Full Screen mode.
@@ -97,7 +97,7 @@ namespace Forex_Strategy_Builder
 
         /// <summary>
         /// Performs actions after selecting a new ComboBox item.
-        /// Handler for: cbxMode, cbxSymbol, cbxPeriod, tscbInterpolationMethod
+        /// Handler for: ComboBoxSymbol, ComboBoxPeriod, ComboBoxInterpolationMethod
         /// </summary>
         protected override void SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -106,12 +106,7 @@ namespace Forex_Strategy_Builder
 
             var cbx = (ToolStripComboBox) sender;
 
-            if (cbx.Name == "tscbMode")
-            {
-                Configs.UseTickData = cbx.SelectedIndex == 1;
-            }
-
-            if (cbx.Name == "tscbInterpolationMethod")
+            if (cbx.Name == "ComboBoxInterpolationMethod")
             {
                 Backtester.InterpolationMethod =
                     (InterpolationMethod)

@@ -41,7 +41,7 @@ namespace Forex_Strategy_Builder
             // ComboBox Interpolation Methods
             ComboBoxInterpolationMethod = new ToolStripComboBox
             {
-                Name = "tscbInterpolationMethod",
+                Name = "ComboBoxInterpolationMethod",
                 AutoSize = false,
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Width = maxWidth + (int) (18*Data.HorizontalDLU),

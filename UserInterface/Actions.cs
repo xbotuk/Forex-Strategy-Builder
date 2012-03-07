@@ -19,7 +19,7 @@ namespace Forex_Strategy_Builder
     /// <summary>
     /// Class Actions : Controls
     /// </summary>
-    public partial class Actions : Controls
+    public sealed partial class Actions : Controls
     {
         /// <summary>
         /// The starting point of the application.
@@ -29,7 +29,6 @@ namespace Forex_Strategy_Builder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
             UpdateStatusLabel("Loading...");
             Data.Start();
             Instruments.LoadInstruments();
@@ -48,6 +47,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private Actions()
         {
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             StartPosition = FormStartPosition.CenterScreen;
             Size = GetFormSize();
             MinimumSize = new Size(500, 375);
@@ -65,18 +65,6 @@ namespace Forex_Strategy_Builder
             UpdateStatusLabel("Loading user interface...");
         }
 
-        public override sealed string Text
-        {
-            get { return base.Text; }
-            set { base.Text = value; }
-        }
-
-        public override sealed Size MinimumSize
-        {
-            get { return base.MinimumSize; }
-            set { base.MinimumSize = value; }
-        }
-
         private bool IsDiscardSelectedIndexChange { get; set; }
 
         private void PrepareInstruments()
@@ -85,8 +73,8 @@ namespace Forex_Strategy_Builder
             if (LoadInstrument(false) != 0)
             {
                 LoadInstrument(true);
-                string messageText = Language.T("Forex Strategy Builder cannot load a historical data file and is going to use integrated data!");
-                MessageBox.Show(messageText, Language.T("Data File Loading"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string message = Language.T("Forex Strategy Builder cannot load a historical data file and is going to use integrated data!");
+                MessageBox.Show(message, Language.T("Data File Loading"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -222,7 +210,7 @@ namespace Forex_Strategy_Builder
                 Configs.SaveConfigs();
                 Instruments.SaveInstruments();
 #if !DEBUG
-                this.Hide();
+                Hide();
                 Data.SendStats();
 #endif
             }
@@ -408,8 +396,8 @@ namespace Forex_Strategy_Builder
             if (MiStrategyAUPBV.Checked == false)
             {
                 // Confirmation Message
-                string sMessageText = Language.T("Are you sure you want to control \"Use previous bar value\" manually?");
-                DialogResult dialogResult = MessageBox.Show(sMessageText, Language.T("Use previous bar value"),
+                string message = Language.T("Are you sure you want to control \"Use previous bar value\" manually?");
+                DialogResult dialogResult = MessageBox.Show(message, Language.T("Use previous bar value"),
                                                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dialogResult == DialogResult.Yes)
@@ -445,10 +433,8 @@ namespace Forex_Strategy_Builder
             DialogResult dr = DialogResult.No;
             if (Data.IsStrategyChanged)
             {
-                string sMessageText = Language.T("Do you want to save the current strategy?") + Environment.NewLine +
-                                      Data.StrategyName;
-                dr = MessageBox.Show(sMessageText, Data.ProgramName, MessageBoxButtons.YesNoCancel,
-                                     MessageBoxIcon.Question);
+                string message = Language.T("Do you want to save the current strategy?") + Environment.NewLine + Data.StrategyName;
+                dr = MessageBox.Show(message, Data.ProgramName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             }
 
             return dr;
@@ -757,9 +743,8 @@ namespace Forex_Strategy_Builder
             catch
             {
                 Strategy.GenerateNew();
-                string sMessageText = Language.T("The strategy could not be loaded correctly!");
-                MessageBox.Show(sMessageText, Language.T("Strategy Loading"), MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation);
+                string message = Language.T("The strategy could not be loaded correctly!");
+                MessageBox.Show(message, Language.T("Strategy Loading"), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Data.LoadedSavedStrategy = "";
                 Text = Data.ProgramName;
                 RebuildStrategyLayout();
