@@ -402,8 +402,9 @@ namespace Forex_Strategy_Builder
             sb.Append("Histogram Data");
             sb.Append(Environment.NewLine);
 
-            sb.Append("Result" + "\t");
+            sb.Append("Index" + "\t");
             sb.Append("Count" + "\t");
+            sb.Append("Result" + "\t");
             sb.Append("Total" + Environment.NewLine);
 
             sb.Append(s);

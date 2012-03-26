@@ -25,10 +25,9 @@ namespace Forex_Strategy_Builder
     {
         private const int Border = 2;
         private const int Space = 5;
-        private static int[] _tradeCounts;  // count of how many trades resulted in that particular trade amount
-        private static int[] _tradeCumulatives; // pip value of trades that resulted in that amount (ie, result * count)
-        private static int[] _tradeIndexes;
-        private static int[] _tradeResults;
+
+        private SortableDictionary<int, HistogramData> _chartData;
+
         private Brush _brushFore;
         private float _captionHeight;
         private int _chartBars;
@@ -37,7 +36,6 @@ namespace Forex_Strategy_Builder
         private int _countLabelsY;
         private float _deltaX;
         private float _deltaY;
-        private int _firstBar;
         private Font _font;
         private bool _isCounts = true;
         private bool _isNotPaint;
@@ -67,6 +65,12 @@ namespace Forex_Strategy_Builder
         private float _yScale;
         private int _yTop;
 
+        private int _minIndex;
+        private int _maxIndex;
+        private int _maxCount;
+        private double _maxTotal;
+        private double _maxAbsTotal;
+
         /// <summary>
         /// Whether to show dynamic info
         /// </summary>
@@ -83,68 +87,72 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Calculates Data to draw in histogram
         /// </summary>
-        private static void CalculateHistogramData()
+        private void CalculateHistogramData()
         {
-            // crummy way to get number of trades for init array
-            // TBD -- find better property
-            int ctr = 0;
+            InitChartData();
+
             for (int bar = 0; bar < Data.Bars; bar++)
             {
-                for (int pos = 0; pos < StatsBuffer.Positions(bar); pos++)
+                int positions = StatsBuffer.Positions(bar);
+                for (int pos = 0; pos < positions; pos++)
                 {
-                    Transaction transaction = StatsBuffer.PosTransaction(bar, pos);
-                    if (transaction == Transaction.Close ||
-                        transaction == Transaction.Reduce ||
-                        transaction == Transaction.Reverse)
-                        ctr++;
+                    if (!IsTrade(StatsBuffer.PosTransaction(bar, pos))) continue;
+
+                    double result = GetProfit(bar, pos);
+                    var index = (int) Math.Round(result);
+                    bool isIndex = _chartData.ContainsKey(index);
+                    int count = isIndex ? _chartData[index].TradesCount + 1 : 1;
+                    double total = isIndex ? _chartData[index].TotalResult + result : result;
+                    var data = new HistogramData {TradesCount = count, Result = result, TotalResult = total};
+
+                    if (isIndex)
+                        _chartData[index] = data;
+                    else
+                        _chartData.Add(index, data);
+
+                    SetMinMaxValues(index, count, total);
                 }
             }
 
-            _tradeResults = new int[ctr];
-            ctr = 0;
-            for (int bar = 0; bar < Data.Bars; bar++)
-            {
-                for (int pos = 0; pos < StatsBuffer.Positions(bar); pos++)
-                {
-                    Transaction transaction = StatsBuffer.PosTransaction(bar, pos);
-                    if (transaction == Transaction.Close ||
-                        transaction == Transaction.Reduce ||
-                        transaction == Transaction.Reverse)
-                    {
-                        _tradeResults[ctr] = (int)StatsBuffer.PosProfitLoss(bar, pos);
-                        ctr++;
-                    }
-                }
-            }
+            _chartData.Sort();
+        }
 
-            int min = 0;
-            int max = 0;
-            foreach (int result in _tradeResults)
-            {
-                if (min > result)
-                    min = result;
-                if (max < result)
-                    max = result;
-            }
-            _tradeIndexes = new int[(max - min) + 1];
-            _tradeCounts = new int[(max - min) + 1];
-            _tradeCumulatives = new int[(max - min) + 1];
+        private void InitChartData()
+        {
+            _chartData = new SortableDictionary<int, HistogramData>();
+            _minIndex = int.MaxValue;
+            _maxIndex = int.MinValue;
+            _maxCount = 0;
+            _maxAbsTotal = 0;
+            _maxTotal = double.MinValue;
+        }
 
-            // fill _tradeIndexes with index values, then count how many in _tradeResults
-            for (int ctr1 = 0; ctr1 < _tradeIndexes.Length; ctr1++)
-            {
-                _tradeIndexes[ctr1] = min + ctr1;
-                int count = 0;
-                for (int ctr2 = 0; ctr2 < _tradeResults.Length; ctr2++)
-                {
-                    if (_tradeResults[ctr2] == _tradeIndexes[ctr1])
-                    {
-                        count++;
-                    }
-                }
-                _tradeCounts[ctr1] = count;
-                _tradeCumulatives[ctr1] = _tradeIndexes[ctr1]*count;
-            }
+        private static bool IsTrade(Transaction transaction)
+        {
+            return transaction == Transaction.Close ||
+                   transaction == Transaction.Reduce ||
+                   transaction == Transaction.Reverse;
+        }
+
+        private static double GetProfit(int bar, int pos)
+        {
+            return Configs.AccountInMoney
+                       ? StatsBuffer.PosMoneyProfitLoss(bar, pos)
+                       : StatsBuffer.PosProfitLoss(bar, pos);
+        }
+
+        private void SetMinMaxValues(int index, int count, double total)
+        {
+            if (_minIndex > index)
+                _minIndex = index;
+            if (_maxIndex < index)
+                _maxIndex = index;
+            if (_maxCount < count)
+                _maxCount = count;
+            if (_maxTotal < total)
+                _maxTotal = total;
+            if (_maxAbsTotal < Math.Abs(total))
+                _maxAbsTotal = Math.Abs(total);
         }
 
         /// <summary>
@@ -153,13 +161,11 @@ namespace Forex_Strategy_Builder
         private string GetHistogramDataString()
         {
             var sb = new StringBuilder();
-            if (_tradeResults.Length > 0)
-            {
-                for (int i = 0; i < _tradeIndexes.Length; i++)
-                {
-                    sb.AppendLine(_tradeIndexes[i] + "\t" + _tradeCounts[i] + "\t" + _tradeCumulatives[i]);
-                }
-            }
+
+            foreach (var data in _chartData)
+                sb.AppendLine(data.Key + "\t" + data.Value.TradesCount + "\t" + data.Value.Result.ToString("F2") + "\t" +
+                              data.Value.TotalResult.ToString("F2"));
+
             return sb.ToString();
         }
 
@@ -176,17 +182,16 @@ namespace Forex_Strategy_Builder
             CalculateHistogramData();
 
             // set to 0 and length for X Axis
-            _firstBar = 0;
-            _chartBars = _tradeIndexes.Length + 2;
+            _chartBars = _maxIndex - _minIndex + 2;
 
             // Min set to 0 -- will always be 0 or higher
             _yAxisMin = 0;
-            _yAxisMax = (_isCounts) ? FindMax(_tradeCounts, false) : FindMax(_tradeCumulatives, true);
+            _yAxisMax = _isCounts ? _maxCount : (int)_maxAbsTotal;
 
             // for X Axis labels
             // set minimum and maximum to indexes, expanded by 1 for border above and under drawn line
-            _xAxisMax = _tradeIndexes[_tradeIndexes.Length - 1] + 1;
-            _xAxisMin = _tradeIndexes[0] - 1;
+            _xAxisMax = _maxIndex + 1;
+            _xAxisMin = _minIndex - 1;
 
             // if there are no trades for histogram, set Maxes to arbitrary values so chart draws and avoid errors
             if (_chartBars == 3)
@@ -294,50 +299,36 @@ namespace Forex_Strategy_Builder
 
             if (_isNotPaint) return;
 
-            string subHeader = _isCounts ? Language.T("Count of Trades") : Language.T("Accumulated Amount");
+            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("pips")) + "]";
+            string subHeader = _isCounts ? Language.T("Count of Trades") : Language.T("Accumulated Amount") + unit;
             g.DrawString(subHeader, Font, new SolidBrush(LayoutColors.ColorChartFore), _rectSubHeader, _sfCaption);
-
+            var formatCenter = new StringFormat {Alignment = StringAlignment.Center};
             // Grid and Price labels
             for (int label = _xAxisMin10; label <= _xAxisMax; label += _stepX)
             {
                 float xPoint = _xLeft + ((_xAxisMin10 - _xAxisMin) + (label - _xAxisMin10))*_xScale;
                 float yPoint = _yBottom - Font.Height;
-                if (xPoint < _xRight - _labelWidthX)
-                {
-                    g.DrawString(label.ToString(CultureInfo.InvariantCulture), Font, _brushFore, xPoint, yPoint);
-                }
+                if (xPoint <= _xRight - _labelWidthX / 2)
+                    g.DrawString(label.ToString(CultureInfo.InvariantCulture), Font, _brushFore, xPoint, yPoint, formatCenter);
             }
 
             for (int label = _yAxisMin; label <= _yAxisMax; label += _stepY)
             {
                 var labelY = (int) (_xAxisY - (label - _yAxisMin)*_yScale);
                 if (label > -1)
-                {
                     g.DrawString(label.ToString(CultureInfo.InvariantCulture), Font, _brushFore, _xRight, labelY - Font.Height/2 - 1);
-                }
                 g.DrawLine(_penGrid, _xLeft, labelY, _xRight, labelY);
             }
 
-            int lastXPt = -1;
-            int lastYPt = -1;
-            for (int i = 0; i < _tradeCounts.Length; i++)
+            foreach (var data in _chartData)
             {
-                float xPt = _xLeft + (i + 1)*_xScale;
+                double val = _isCounts ? data.Value.TradesCount : Math.Abs(data.Value.TotalResult);
+                float xPt = _xLeft + (data.Key - _minIndex + 1)*_xScale;
                 float yPtBottom = _xAxisY;
-                int val = _isCounts ? _tradeCounts[i] : Math.Abs(_tradeCumulatives[i]);
-                float yPtTop = (_xAxisY - (val - _yAxisMin)*_yScale);
+                var yPtTop = (float) (_xAxisY - (val - _yAxisMin)*_yScale);
 
-                if ((int) yPtTop == (int) yPtBottom)
-                    continue;
-
-                if (lastXPt == (int) xPt && lastYPt == (int) yPtTop)
-                    continue;
-
-                Color color = _isCounts ? Color.Blue : _tradeIndexes[i] < 0 ? Color.Red : Color.Green;
+                Color color = _isCounts ? Color.Blue : data.Value.TotalResult < 0 ? Color.Red : Color.Green;
                 g.DrawLine(new Pen(color), xPt, yPtBottom, xPt, yPtTop);
-
-                lastXPt = (int) xPt;
-                lastYPt = (int) yPtTop;
             }
 
             // Coordinate axes
@@ -355,61 +346,55 @@ namespace Forex_Strategy_Builder
 
             if (!_isShowDynamicInfo || !Data.IsData || !Data.IsResult) return;
 
-            int bar = (int) ((e.X - _xLeft)/_xScale) + _firstBar;
+            var index = FindNearestMeaningfulX(e.X);
+            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("pips")) + "]";
 
-            bar = Math.Max(_firstBar, bar);
-            bar = Math.Min(_chartBars, bar);
-            bar = FindNearestMeaningfulBar(bar);
-
-            if (_tradeResults.Length == 0)
+            if (_chartData.Count == 0)
             {
                 CurrentBarInfo = Language.T("No trades counted");
+                return;
+            }
+
+            if (_chartData.ContainsKey(index))
+            {
+                CurrentBarInfo = Language.T("Result") + ": " + _chartData[index].Result.ToString("F2") + unit +
+                                 "  " + Language.T("Count") + ": " + _chartData[index].TradesCount +
+                                 "  " + Language.T("Total") + ": " + _chartData[index].TotalResult.ToString("F2") + unit;
             }
             else
             {
-                if (bar >= 0 && bar < _tradeIndexes.Length)
-                {
-                    CurrentBarInfo = Language.T("Result") + ": " + _tradeIndexes[bar] +
-                                     "  " + Language.T("Count") + ": " + _tradeCounts[bar] +
-                                     "  " + Language.T("Total") + ": " + _tradeCumulatives[bar];
-                }
-                else
-                {
-                    CurrentBarInfo = Language.T("Result") + ": " + (bar + _tradeIndexes[0]) +
-                                     "  " + Language.T("Count") + ": 0" +
-                                     "  " + Language.T("Total") + ": 0";
-                }
+                CurrentBarInfo = Language.T("Result") + ": " + index +
+                                 "  " + Language.T("Count") + ": 0" +
+                                 "  " + Language.T("Total") + ": 0";
             }
         }
 
-        private int FindNearestMeaningfulBar(int bar)
+        private int FindNearestMeaningfulX(int x)
         {
-            var nearBars = (int) (5f/_xScale);
-            var meanBar = bar;
+            int index = GetIndexFromX(x);
 
-            for (int d = 0; d < nearBars; d++)
+            for (int dX = 0; dX < 6; dX++)
             {
-                var b1 = bar + d;
-                if (b1 >= _firstBar && b1 < _tradeIndexes.Length)
-                {
-                    if (_tradeCounts[b1] > 0)
-                    {
-                        meanBar = b1;
-                        break;
-                    }
-                }
-                var b2 = bar - d;
-                if (b2 >= _firstBar && b2 < _tradeIndexes.Length)
-                {
-                    if (_tradeCounts[b2] > 0)
-                    {
-                        meanBar = b2;
-                        break;
-                    }
-                }
+                int oldIndex = index;
+                index = GetIndexFromX(x + dX);
+                for(int i = oldIndex; i <= index; i++)
+                    if (_chartData.ContainsKey(i))
+                        return i;
+
+
+                oldIndex = index;
+                index = GetIndexFromX(x - dX);
+                for (int i = index; i <= oldIndex; i++)
+                    if (_chartData.ContainsKey(i))
+                        return i;
             }
 
-            return meanBar;
+            return index;
+        }
+
+        private int GetIndexFromX(int x)
+        {
+             return (int)Math.Round(_minIndex - 1 + (x - _xLeft) / _xScale);
         }
 
         public void AddContextMenuItems()
@@ -466,7 +451,7 @@ namespace Forex_Strategy_Builder
         {
             Clipboard.Clear();
             // protect against null if no trades in strategy
-            if (_tradeResults.Length > 0)
+            if (_chartData.Count > 0)
             {
                 string s = GetHistogramDataString();
                 Clipboard.SetText(s);
@@ -485,7 +470,7 @@ namespace Forex_Strategy_Builder
         private void BtnExportClick(object sender, EventArgs e)
         {
             // protect against null if no trades in strategy
-            if (_tradeResults.Length > 0)
+            if (_chartData.Count > 0)
             {
                 var exporter = new Exporter();
                 exporter.ExportHistogramData(GetHistogramDataString());
@@ -508,33 +493,11 @@ namespace Forex_Strategy_Builder
             Invalidate();
         }
 
-        /// <summary>
-        /// Utility function for finding max value in an array
-        /// </summary>
-        private int FindMax(int[] arr, bool abs)
+        private struct HistogramData
         {
-            int max = int.MinValue;
-            if (abs)
-            {
-                for (int i = 0; i < arr.Length; i++)
-                {
-                    if (Math.Abs(arr[i]) > max)
-                    {
-                        max = Math.Abs(arr[i]);
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < arr.Length; i++)
-                {
-                    if (arr[i] > max)
-                    {
-                        max = arr[i];
-                    }
-                }
-            }
-            return max;
+            public int TradesCount { get; set; }
+            public double Result { get; set; }
+            public double TotalResult { get; set; }
         }
     }
 }
