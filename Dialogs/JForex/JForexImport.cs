@@ -432,10 +432,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             int count1MinBars = 1;
             int totalVolume = 0;
 
-            const string dateFormat = "yyyy.MM.dd HH:mm:ss";
             const char fieldSplitter = ',';
-
-            IFormatProvider formatProvider = CultureInfo.InvariantCulture;
 
             try
             {
@@ -447,7 +444,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
                     if (line != null)
                     {
                         string[] data = line.Split(new[] {fieldSplitter});
-                        DateTime t = DateTime.ParseExact(data[0], dateFormat, formatProvider);
+                        DateTime t = ParseDateWithoutSeconds(data[0]);
                         var tickTime = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, 0);
                         double bid = StringToDouble(data[2]);
 
@@ -496,6 +493,15 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             SetInfoText(file.Symbol + " " + Language.T("Ticks") + " - " + (Language.T("Ticks")).ToLower() + ": " +
                         totalVolume + " - 1M " + (Language.T("Bars")).ToLower() + ": " + count1MinBars +
                         Environment.NewLine);
+        }
+
+        private DateTime ParseDateWithoutSeconds(string input)
+        {
+            string stripped = input.Remove(input.LastIndexOf(':'));
+            const string dateFormat = "yyyy.MM.dd HH:mm";
+            IFormatProvider formatProvider = CultureInfo.InvariantCulture;
+            DateTime time = DateTime.ParseExact(stripped, dateFormat, formatProvider);
+            return time;
         }
 
         private bool IsWeekend(DateTime time)

@@ -21,7 +21,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             {
                 string[] fields = _fileName.Split(new[] {'_'});
 
-                if (fields.Length != 5)
+                if (fields.Length < 4)
                     return;
 
                 switch (fields[1])
