@@ -1,13 +1,13 @@
 [Setup]
 AppName            = Forex Strategy Builder
-AppVersion         = 2.67.3.0
-VersionInfoVersion = 2.67.3.0
-AppVerName         = Forex Strategy Builder v2.67.3 Beta
+AppVersion         = 2.68.0.0
+VersionInfoVersion = 2.68.0.0
+AppVerName         = Forex Strategy Builder v2.68
 
 ArchitecturesInstallIn64BitMode = x64 ia64
 AppPublisher       = Forex Software Ltd.
 AppPublisherURL    = http://forexsb.com/
-AppCopyright       = Copyright (C) 2006-2011 Miroslav Popov
+AppCopyright       = Copyright © 2006-2012 Miroslav Popov
 AppComments        = Freeware forex strategy back tester, generator and optimizer.
 DefaultDirName     = {pf}\Forex Strategy Builder
 DefaultGroupName   = Forex Strategy Builder

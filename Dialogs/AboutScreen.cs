@@ -62,7 +62,7 @@ namespace Forex_Strategy_Builder
             Label3.Font = new Font("Microsoft Sans Serif", 10F);
             Label3.ForeColor = LayoutColors.ColorControlText;
             Label3.BackColor = Color.Transparent;
-            Label3.Text = "Copyright (c) 2006 - 2011 Miroslav Popov" + Environment.NewLine + Language.T("Distributor") +
+            Label3.Text = "Copyright © 2006 - 2012 Miroslav Popov" + Environment.NewLine + Language.T("Distributor") +
                           " - Forex Software Ltd." + Environment.NewLine + Environment.NewLine +
                           Language.T("This is a freeware program!");
 
