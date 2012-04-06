@@ -1,9 +1,9 @@
 // Vidya Moving Average Indicator
-// Last changed on 2010-01-28
+// Last changed on 2012-04-07
 // Part of Forex Strategy Builder & Forex Strategy Trader
 // Website http://forexsb.com/
 // This code or any part of it cannot be used in other applications without a permission.
-// Copyright (c) 2006 - 2010 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 
 using System;
 using System.Drawing;
@@ -11,19 +11,19 @@ using System.Drawing;
 namespace Forex_Strategy_Builder
 {
     /// <summary>
-    /// Vidya Moving Average Indicator 
+    /// Vidya Moving Average Indicator
     /// </summary>
-    public class Moving_Average : Indicator
+    public class Vidya_Moving_Average : Indicator
     {
         /// <summary>
         /// Sets the default indicator parameters for the designated slot type
         /// </summary>
-        public Moving_Average(SlotTypes slotType)
+        public Vidya_Moving_Average(SlotTypes slotType)
         {
             // General properties
             IndicatorName   = "Vidya Moving Average";
             PossibleSlots   = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close | SlotTypes.CloseFilter;
-			CustomIndicator = true;
+            CustomIndicator = true;
 
             // Setting up the indicator parameters
             IndParam = new IndicatorParam();
@@ -50,10 +50,10 @@ namespace Forex_Strategy_Builder
                     "The position opens below the Vidya Moving Average",
                 };
             else if (slotType == SlotTypes.Close)
-				IndParam.ListParam[0].ItemList = new string[]
-				{
-					"Exit the market at the Vidya Moving Average"
-				};
+                IndParam.ListParam[0].ItemList = new string[]
+                {
+                    "Exit the market at the Vidya Moving Average"
+                };
             else if (slotType == SlotTypes.CloseFilter)
                 IndParam.ListParam[0].ItemList = new string[]
                 {
@@ -119,7 +119,7 @@ namespace Forex_Strategy_Builder
             double[] adMA = new double[Bars];
             int iFirstBar = iPeriod + iSmooth + 1 + iPrvs;
 
-			// Calculating Chande Momentum Oscillator
+            // Calculating Chande Momentum Oscillator
             double[] adCMO1      = new double[Bars];
             double[] adCMO2      = new double[Bars];
             double[] adCMO1Sum   = new double[Bars];
@@ -128,12 +128,12 @@ namespace Forex_Strategy_Builder
 
             for (int iBar = 1; iBar < Bars; iBar++)
             {
-				adCMO1[iBar] = 0;
-				adCMO2[iBar] = 0;
+                adCMO1[iBar] = 0;
+                adCMO2[iBar] = 0;
                 if (adBasePrice[iBar] > adBasePrice[iBar - 1])
-					adCMO1[iBar] = adBasePrice[iBar] - adBasePrice[iBar - 1];
+                    adCMO1[iBar] = adBasePrice[iBar] - adBasePrice[iBar - 1];
                 if (adBasePrice[iBar] < adBasePrice[iBar - 1])
-					adCMO2[iBar] = adBasePrice[iBar - 1] - adBasePrice[iBar];
+                    adCMO2[iBar] = adBasePrice[iBar - 1] - adBasePrice[iBar];
             }
 
             for (int iBar = 0; iBar < iPeriod; iBar++)
@@ -152,17 +152,17 @@ namespace Forex_Strategy_Builder
                 else
                     adCMO[iBar] = 100 * (adCMO1Sum[iBar] - adCMO2Sum[iBar]) / (adCMO1Sum[iBar] + adCMO2Sum[iBar]);
             }
-			
-			double SC = 2.0 / (iSmooth + 1);
-			
-			for (int iBar = 0; iBar < iPeriod; iBar++)
-				adMA[iBar] = adBasePrice[iBar];
+
+            double SC = 2.0 / (iSmooth + 1);
+
+            for (int iBar = 0; iBar < iPeriod; iBar++)
+                adMA[iBar] = adBasePrice[iBar];
 
             for (int iBar = iPeriod; iBar < Bars; iBar++)
-			{
-				double dAbsCMO = Math.Abs(adCMO[iBar]) / 100;
-				adMA[iBar] = SC * dAbsCMO * adBasePrice[iBar] + (1 - SC * dAbsCMO) * adMA[iBar - 1];
-			}
+            {
+                double dAbsCMO = Math.Abs(adCMO[iBar]) / 100;
+                adMA[iBar] = SC * dAbsCMO * adBasePrice[iBar] + (1 - SC * dAbsCMO) * adMA[iBar - 1];
+            }
 
             // Saving the components
             if (slotType == SlotTypes.Open || slotType == SlotTypes.Close)
@@ -171,7 +171,7 @@ namespace Forex_Strategy_Builder
 
                 Component[1] = new IndicatorComp();
                 Component[1].Value = new double[Bars];
-                
+
                 for (int iBar = 2; iBar < Bars; iBar++)
                 {   // Covers the cases when the price can pass through the MA without a signal
                     double dValue   = adMA[iBar - iPrvs];     // Current value
@@ -373,7 +373,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName + 
+            string sString = IndicatorName +
                 (IndParam.CheckParam[0].Checked ? "* (" : " (") +
                 IndParam.ListParam[2].Text         + ", " + // Price
                 IndParam.NumParam[0].ValueToString + ", " + // MA period
