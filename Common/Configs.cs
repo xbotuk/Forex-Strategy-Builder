@@ -1592,10 +1592,29 @@ namespace Forex_Strategy_Builder
         /// </summary>
         static void CreateElement(string node, string value)
         {
-            XmlElement newElem = _xmlConfig.CreateElement(node.Replace("config/", ""));
+            string nodeToAdd = node.Replace("config/", "");
+            if (nodeToAdd.Contains("/"))
+            {
+                CreateSubElement(node, value);
+                return;
+            }
+            XmlElement newElem = _xmlConfig.CreateElement(nodeToAdd);
             newElem.InnerText = value;
             if (_xmlConfig.DocumentElement != null)
                 _xmlConfig.DocumentElement.AppendChild(newElem);
+        }
+
+        private static void CreateSubElement(string node, string value)
+        {
+            string lastNode = node.Substring(node.LastIndexOf("/", StringComparison.Ordinal) + 1);
+            XmlNode newElement = _xmlConfig.CreateElement(lastNode);
+            string path = node.Substring(0, node.LastIndexOf("/", StringComparison.Ordinal));
+            XmlNodeList list = _xmlConfig.SelectNodes(path);
+            if (list == null || list.Count <= 0) return;
+            var xmlNode = list.Item(0);
+            if (xmlNode == null) return;
+            xmlNode.AppendChild(newElement);
+            newElement.InnerText = value;
         }
 
         /// <summary>
