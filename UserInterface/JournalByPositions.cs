@@ -469,7 +469,8 @@ namespace Forex_Strategy_Builder
 
             UpdateButtonsLocation();
             SetUpJournal();
-            Invalidate();
+            if (Data.IsResult)
+                Invalidate();
         }
 
         /// <summary>

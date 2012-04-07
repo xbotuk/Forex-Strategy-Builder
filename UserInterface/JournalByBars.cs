@@ -311,9 +311,11 @@ namespace Forex_Strategy_Builder
             SetColumnsWidth();
             SetHScrollBar();
             SetUpJournal();
-            UpdateJournalData();
+            if (Data.IsResult)
+                UpdateJournalData();
             base.OnResize(eventargs);
-            Invalidate();
+            if (Data.IsResult)
+                Invalidate();
         }
 
         private void SetButtonsColor()
