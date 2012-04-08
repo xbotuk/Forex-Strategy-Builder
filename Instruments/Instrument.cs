@@ -211,7 +211,7 @@ namespace Forex_Strategy_Builder
                 if (firstBar == 1)
                     firstBar = 0;
 
-                if (firstBar > 0)
+                if (firstBar > 0 && Bars - firstBar > Configs.MinBars)
                 {
                     var aBarCopy = new Bar[Bars];
                     _aBar.CopyTo(aBarCopy, 0);
