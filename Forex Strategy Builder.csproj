@@ -529,6 +529,7 @@
     <Content Include="Images\ind_chart.png" />
     <Content Include="Images\info_panel.png" />
     <Content Include="Images\metatrader4.png" />
+    <Content Include="Images\open_data_directory.png" />
     <Content Include="Images\pushpin-detach.png" />
     <Content Include="Images\refresh.png" />
     <Content Include="Images\toggle.png" />

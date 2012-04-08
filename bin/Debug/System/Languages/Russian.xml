@@ -350,6 +350,10 @@
     <alt>Перезагрузить котировки.</alt>
   </str>
   <str>
+    <main>Open Data Directory</main>
+    <alt>Открытие каталог файлов</alt>
+  </str>
+  <str>
     <main>Charges</main>
     <alt>Тарифы</alt>
   </str>

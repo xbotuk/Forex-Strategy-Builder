@@ -169,7 +169,7 @@ namespace Forex_Strategy_Builder
             miNextGenHistory.Click += MenuNextHistoryOnClick;
             miEdit.DropDownItems.Add(miNextGenHistory);
 
-            //View
+            // View
             var miView = new ToolStripMenuItem(Language.T("View"));
 
             var miLanguage = new ToolStripMenuItem {Text = "Language", Image = Resources.lang};
@@ -377,6 +377,14 @@ namespace Forex_Strategy_Builder
                                    };
             miReLoadData.Click += MenuLoadDataOnClick;
             miMarket.DropDownItems.Add(miReLoadData);
+
+            var miOpenDataDir = new ToolStripMenuItem
+                                   {
+                                       Text = Language.T("Open Data Directory") + "...",
+                                       Image = Resources.open_data_directory,
+                                   };
+            miOpenDataDir.Click += MenuOpenDataDirClick;
+            miMarket.DropDownItems.Add(miOpenDataDir);
 
             miMarket.DropDownItems.Add(new ToolStripSeparator());
 
@@ -1285,6 +1293,21 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected virtual void MenuAccountSettingsOnClick(object sender, EventArgs e)
         {
+        }
+
+        /// <summary>
+        /// Opens data directory.
+        /// </summary>
+        private void MenuOpenDataDirClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(Data.OfflineDataDir);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
         }
 
         /// <summary>
