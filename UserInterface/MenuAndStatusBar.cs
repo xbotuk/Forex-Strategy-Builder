@@ -448,6 +448,16 @@ namespace Forex_Strategy_Builder
             miCutBadData.Click += MenuRefineDataOnClick;
             miMarket.DropDownItems.Add(miCutBadData);
 
+            var miCutSatSunData = new ToolStripMenuItem
+                                   {
+                                       Name = "miCutSatSunData",
+                                       Text = Language.T("Cut Off Sat Sun Data"),
+                                       CheckOnClick = true,
+                                       Checked = Configs.CutSatSunData
+                                   };
+            miCutSatSunData.Click += MenuRefineDataOnClick;
+            miMarket.DropDownItems.Add(miCutSatSunData);
+
             var miFillDataGaps = new ToolStripMenuItem
                                      {
                                          Name = "miFillDataGaps",

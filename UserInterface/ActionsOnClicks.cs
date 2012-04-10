@@ -276,6 +276,9 @@ namespace Forex_Strategy_Builder
             if (toolStripMenuItem.Name == "miCutBadData")
                 Configs.CutBadData = toolStripMenuItem.Checked;
 
+            if (toolStripMenuItem.Name == "miCutSatSunData")
+                Configs.CutSatSunData = toolStripMenuItem.Checked;
+
             if (toolStripMenuItem.Name == "miFillDataGaps")
                 Configs.FillInDataGaps = toolStripMenuItem.Checked;
 

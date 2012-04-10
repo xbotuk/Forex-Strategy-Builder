@@ -398,6 +398,10 @@
     <alt>Удалить Неверные Данные</alt>
   </str>
   <str>
+    <main>Cut Off Sat Sun Data</main>
+    <alt>Удалетъ данных из субботы и воскресенья</alt>
+  </str>
+  <str>
     <main>Fill In Data Gaps</main>
     <alt>Заполнить пробел данных</alt>
   </str>

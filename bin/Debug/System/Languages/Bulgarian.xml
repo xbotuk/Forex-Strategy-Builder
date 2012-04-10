@@ -398,6 +398,10 @@
     <alt>Изрязване на лошите данни</alt>
   </str>
   <str>
+    <main>Cut Off Sat Sun Data</main>
+    <alt>Изрязване на съботни и неделни данни</alt>
+  </str>
+  <str>
     <main>Fill In Data Gaps</main>
     <alt>Запълване на празнината</alt>
   </str>

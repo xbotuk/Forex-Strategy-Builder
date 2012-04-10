@@ -399,6 +399,10 @@
     <alt>Hibás adat kivágása</alt>
   </str>
   <str>
+    <main>Cut Off Sat Sun Data</main>
+    <alt>Cut Off Sat Sun Data</alt>
+  </str>
+  <str>
     <main>Fill In Data Gaps</main>
     <alt>Adatrések kitöltése</alt>
   </str>

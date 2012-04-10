@@ -28,6 +28,7 @@
   <checkData>True</checkData>
   <fillDataGaps>False</fillDataGaps>
   <cutBadData>False</cutBadData>
+  <cutSatSunData>False</cutSatSunData>
   <loadCustomIndicators>True</loadCustomIndicators>
   <showCustomIndicators>False</showCustomIndicators>
   <playSounds>True</playSounds>

@@ -110,11 +110,11 @@ namespace Forex_Strategy_Builder
             var dp = new DataParser();
 
             int respond = -1;
-            int parsedBars = dp.Parse(sData);
+            int parsedBars = dp.Parse(sData, Period);
 
             if (parsedBars > 0)
             {
-                _aBar = dp.Bar;
+                _aBar = dp.Bar.ToArray();
                 Bars = parsedBars;
                 RefineData();
                 DataHorizon();
@@ -135,11 +135,11 @@ namespace Forex_Strategy_Builder
         {
             var dataParser = new DataParser();
             int respond = -1;
-            int parsedBars = dataParser.Parse(Resources.EURUSD1440);
+            int parsedBars = dataParser.Parse(Resources.EURUSD1440, 1440);
 
             if (parsedBars > 0)
             {
-                _aBar = dataParser.Bar;
+                _aBar = dataParser.Bar.ToArray();
                 Bars = parsedBars;
                 RefineData();
                 DataHorizon();

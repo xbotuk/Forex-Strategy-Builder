@@ -5,6 +5,7 @@
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -28,7 +29,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Gets the the data array
         /// </summary>
-        public Bar[] Bar { get; private set; }
+        public List<Bar> Bar { get; private set; }
 
         /// <summary>
         /// Gets a compiled general data file regex.
@@ -96,16 +97,17 @@ namespace Forex_Strategy_Builder
         /// Parses the input data string.
         /// </summary>
         /// <param name="dataString">The input data string.</param>
+        /// <param name="period">Data file period.</param>
         /// <returns>The number of parsed bars.</returns>
-        public int Parse(string dataString)
+        public int Parse(string dataString, int period)
         {
             int bars = 0;
 
             try
             {
                 Regex regexDataString = AnalyseInput(dataString);
-                bars = CountDataBars(dataString, regexDataString);
-                Bar  = ParseInput(dataString, regexDataString, bars);
+                Bar = ParseInput(dataString, regexDataString, period);
+                bars = Bar.Count;
             }
             catch (Exception exception)
             {
@@ -488,40 +490,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Counts the valid data lines.
-        /// </summary>
-        /// <param name="dataFile">The data file.</param>
-        /// <param name="regexDataFile">The data file regex.</param>
-        /// <returns>Count of matched lines as bars.</returns>
-        private static int CountDataBars(string dataFile, Regex regexDataFile)
-        {
-            string line;
-            int bars = 0;
-            var stringReader = new StringReader(dataFile);
-            while ((line = stringReader.ReadLine()) != null)
-                if (regexDataFile.IsMatch(line))
-                    bars++;
-            stringReader.Close();
-
-            if (bars == 0)
-                throw new Exception(Language.T("Could not count the data bars!"));
-
-            return bars;
-        }
-
-        /// <summary>
         /// Parses the input data file.
         /// </summary>
         /// <param name="dataFile">The data file as string.</param>
         /// <param name="regexDataFile">The compiled regex.</param>
-        /// <param name="barsCount">The count of bars of the data file.</param>
+        /// <param name="period">The period of data file.</param>
         /// <returns>Returns a parsed bar array.</returns>
-        private Bar[] ParseInput(string dataFile, Regex regexDataFile, int barsCount)
+        private List<Bar> ParseInput(string dataFile, Regex regexDataFile, int period)
         {
-            var barList = new Bar[barsCount];
+            var barList = new List<Bar>();
 
             string line;
-            int bar = 0;
             var stringReader = new StringReader(dataFile);
 
             while ((line = stringReader.ReadLine()) != null)
@@ -543,19 +522,51 @@ namespace Forex_Strategy_Builder
                     string seconds = match.Groups["sec"].Value;
                     sec  = (seconds == "" ? 0 : int.Parse(seconds));
                 }
-                barList[bar].Time   = new DateTime(year, month, day, hour, min, sec);
-                barList[bar].Open   = ParseDouble(match.Groups["open"].Value);
-                barList[bar].High   = ParseDouble(match.Groups["high"].Value);
-                barList[bar].Low    = ParseDouble(match.Groups["low"].Value);
-                barList[bar].Close  = ParseDouble(match.Groups["close"].Value);
-                barList[bar].Volume = int.Parse(match.Groups["volume"].Value);
+                var time = new DateTime(year, month, day, hour, min, sec);
 
-                bar++;
+                if (Configs.CutSatSunData && IsSatSun(time))
+                    continue;
+                if(!CheckTimePeriod(time, period))
+                    continue;
+
+                var bar = new Bar
+                              {
+                                  Time = time,
+                                  Open = ParseDouble(match.Groups["open"].Value),
+                                  High = ParseDouble(match.Groups["high"].Value),
+                                  Low = ParseDouble(match.Groups["low"].Value),
+                                  Close = ParseDouble(match.Groups["close"].Value),
+                                  Volume = int.Parse(match.Groups["volume"].Value)
+                              };
+                barList.Add(bar);
             }
 
             stringReader.Close();
 
+            if (barList.Count == 0)
+                throw new Exception(Language.T("Could not count the data bars!"));
+
             return barList;
+        }
+
+        private bool CheckTimePeriod(DateTime time, int period)
+        {
+            if (period == 1)
+                return true;
+            if (period < 60)
+                return time.Minute % period == 0;
+            if (time.Minute != 0)
+                return false;
+            if (period == 240)
+                return time.Hour % 4 == 0;
+            if (period >= 1440)
+                return time.Hour == 0;
+            return true;
+        }
+
+        private bool IsSatSun(DateTime time)
+        {
+            return time.DayOfWeek == DayOfWeek.Sunday || time.DayOfWeek == DayOfWeek.Saturday;
         }
 
         /// <summary>

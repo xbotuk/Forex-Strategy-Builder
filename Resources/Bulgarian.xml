@@ -114,6 +114,7 @@
   <str><main>Check the Data</main><alt>Проверка на данните</alt></str>
   <str><main>Check the data during loading.</main><alt>Проверка на данните по време на зареждане.</alt></str>
   <str><main>Cut Off Bad Data</main><alt>Изрязване на лошите данни</alt></str>
+  <str><main>Cut Off Sat Sun Data</main><alt>Изрязване на съботни и неделни данни</alt></str>
   <str><main>Fill In Data Gaps</main><alt>Запълване на празнината</alt></str>
   <str><main>Download Forex Rates</main><alt>Изтегляне на форекс котировки</alt></str>
   <str><main>Download historical data from the program's website.</main><alt>Изтегляне на исторически данни от интернет сайта на програмата.</alt></str>

@@ -41,6 +41,7 @@ namespace Forex_Strategy_Builder
         private const bool IsCheckDataDefault = true;
         private const bool IsFillDataGapsDefault = false;
         private const bool IsCutBadDataDefault = false;
+        private const bool IsCutSatSunDataDefault = false;
         private const bool IsLoadCustIndDefault = true;
         private const bool IsShowCustIndDefault = false;
         private const int MaxBarsDefault = 20000;
@@ -415,6 +416,21 @@ namespace Forex_Strategy_Builder
             {
                 _isCutBadData = value;
                 SetNode("config/cutBadData", value);
+            }
+        }
+        // -------------------------------------------------------------
+        // Cuts Saturday and Sunday data
+        static bool _isCutSatSunData = IsCutSatSunDataDefault;
+        /// <summary>
+        /// Whether to cut off Sat and Sun data
+        /// </summary>
+        public static bool CutSatSunData
+        {
+            get { return _isCutSatSunData; }
+            set
+            {
+                _isCutSatSunData = value;
+                SetNode("config/cutSatSunData", value);
             }
         }
         // -------------------------------------------------------------
@@ -1280,6 +1296,7 @@ namespace Forex_Strategy_Builder
             CheckData                  = IsCheckDataDefault;
             FillInDataGaps             = IsFillDataGapsDefault;
             CutBadData                 = IsCutBadDataDefault;
+            CutSatSunData                 = IsCutSatSunDataDefault;
             LoadCustomIndicators       = IsLoadCustIndDefault;
             ShowCustomIndicators       = IsShowCustIndDefault;
             MaxBars                    = MaxBarsDefault;
@@ -1389,6 +1406,7 @@ namespace Forex_Strategy_Builder
             _isCheckData                  = ParseNode("config/checkData", IsCheckDataDefault);
             _isFillDataGaps               = ParseNode("config/fillDataGaps", IsFillDataGapsDefault);
             _isCutBadData                 = ParseNode("config/cutBadData", IsCutBadDataDefault);
+            _isCutSatSunData              = ParseNode("config/cutSatSunData", IsCutSatSunDataDefault);
             _isLoadCustomIndicators       = ParseNode("config/loadCustomIndicators", IsLoadCustIndDefault);
             _isShowCustomIndicators       = ParseNode("config/showCustomIndicators", IsShowCustIndDefault);
             _isPlaySounds                 = ParseNode("config/playSounds", IsPlaySoundsDefault);
