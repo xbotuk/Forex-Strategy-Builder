@@ -370,10 +370,8 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
         {
             var streamReader = new StreamReader(file.FilePath);
             var streamWriter = new StreamWriter(file.FileTargetPath);
-            const string dateFormat = "yyyy.MM.dd HH:mm:ss";
-
-            const char fieldSplitter = ',';
-            IFormatProvider formatProvider = CultureInfo.InvariantCulture;
+            string dateFormat = "#";
+            char delimiter = '#';
             int bars = 0;
 
             try
@@ -384,29 +382,32 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
                     if (line == null) continue;
                     if (line.StartsWith("Time"))
                         continue; // Skips annotation line.
-                    string[] data = line.Split(new[] {fieldSplitter});
 
-                    DateTime time = DateTime.ParseExact(data[0], dateFormat, formatProvider);
-                    double open = StringToDouble(data[1]);
-                    double high = StringToDouble(data[2]);
-                    double low = StringToDouble(data[3]);
-                    double close = StringToDouble(data[4]);
-                    var volume = (int) StringToDouble(data[5]);
+                    if (delimiter == '#')
+                        delimiter = FindDelimiter(line);
+                    
+                    string[] data = line.Split(new[] {delimiter});
 
-                    if (volume > 0 &&
-                        !(Math.Abs(open - high) < 0.000001 && Math.Abs(open - low) < 0.000001 &&
-                          Math.Abs(open - close) < 0.000001))
-                    {
-                        streamWriter.WriteLine(
-                            time.ToString("yyyy-MM-dd\tHH:mm") + "\t" +
-                            open + "\t" +
-                            high + "\t" +
-                            low + "\t" +
-                            close + "\t" +
-                            volume
-                            );
-                        bars++;
-                    }
+                    string timeInput = data.Length == 6 ? data[0] : data[0] + " " + data[1];
+
+                    if (dateFormat == "#")
+                        dateFormat = FindDateFormat(timeInput);
+
+
+                    DateTime time = ParseDateWithoutSeconds(timeInput, dateFormat);
+                    double open = StringToDouble(data[data.Length - 5]);
+                    double high = StringToDouble(data[data.Length - 4]);
+                    double low = StringToDouble(data[data.Length - 3]);
+                    double close = StringToDouble(data[data.Length - 2]);
+                    var volume = (int) StringToDouble(data[data.Length - 1]);
+
+                    if (Math.Abs(open - high) < 0.000001 &&
+                        Math.Abs(open - low) < 0.000001 &&
+                        Math.Abs(open - close) < 0.000001) continue;
+
+                    streamWriter.WriteLine(time.ToString("yyyy-MM-dd\tHH:mm") + "\t" +
+                        open + "\t" + high + "\t" + low + "\t" + close + "\t" + volume);
+                    bars++;
                 }
             }
             catch (Exception exception)
@@ -418,6 +419,48 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             streamReader.Close();
             SetInfoText(file.Symbol + " " + Data.DataPeriodToString((DataPeriods) file.Period) + " - " +
                         (Language.T("Bars")).ToLower() + ": " + bars + Environment.NewLine);
+        }
+
+        private char FindDelimiter(string line)
+        {
+            var delimiters = new[] { ' ', '.', ',', '/' };
+            string decimalSeparator = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
+
+            foreach (char delimiter in delimiters)
+            {
+                if(delimiter.ToString(CultureInfo.InvariantCulture) == decimalSeparator)
+                    continue;
+                string[] data = line.Split(delimiter);
+                if (data.Length <= 4) continue;
+                return delimiter;
+            }
+
+            return ',';
+        }
+
+        private string FindDateFormat(string timeString)
+        {
+            string stripped = timeString.Remove(timeString.LastIndexOf(':'));
+            var dateFormats = new[]
+                                  {
+                                      "yyyy.MM.dd HH:mm",
+                                      "yyyy-MM-dd HH:mm",
+                                      "yyyy/MM/dd HH:mm",
+                                      "dd.MM.yyyy HH:mm",
+                                      "dd-MM-yyyy HH:mm",
+                                      "dd/MM/yyyy HH:mm"
+                                  };
+
+            foreach (string format in dateFormats)
+            {
+                IFormatProvider formatProvider = CultureInfo.InvariantCulture;
+                DateTime time;
+                bool status = DateTime.TryParseExact(stripped, format, formatProvider, DateTimeStyles.None, out time);
+                if (status)
+                    return format;
+            }
+
+            return "yyyy.MM.dd HH:mm";
         }
 
         private void ImportTicks(JForexDataFiles file)
@@ -432,7 +475,8 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             int count1MinBars = 1;
             int totalVolume = 0;
 
-            const char fieldSplitter = ',';
+            string dateFormat = "#";
+            char delimiter = '#';
 
             try
             {
@@ -443,8 +487,15 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
                         continue; // Skips annotation line.
                     if (line != null)
                     {
-                        string[] data = line.Split(new[] {fieldSplitter});
-                        DateTime t = ParseDateWithoutSeconds(data[0]);
+                        if (delimiter == '#')
+                            delimiter = FindDelimiter(line);
+
+                        string[] data = line.Split(new[] { delimiter });
+
+                        if (dateFormat == "#")
+                            dateFormat = FindDateFormat(data[0]);
+
+                        DateTime t = ParseDateWithoutSeconds(data[0], dateFormat);
                         var tickTime = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, 0);
                         double bid = StringToDouble(data[2]);
 
@@ -495,10 +546,9 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
                         Environment.NewLine);
         }
 
-        private DateTime ParseDateWithoutSeconds(string input)
+        private DateTime ParseDateWithoutSeconds(string input, string dateFormat)
         {
             string stripped = input.Remove(input.LastIndexOf(':'));
-            const string dateFormat = "yyyy.MM.dd HH:mm";
             IFormatProvider formatProvider = CultureInfo.InvariantCulture;
             DateTime time = DateTime.ParseExact(stripped, dateFormat, formatProvider);
             return time;
@@ -569,12 +619,12 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
         /// </summary>
         private static double StringToDouble(string input)
         {
-            string sDecimalPoint = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
+            string decimalSeparator = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
 
-            if (!input.Contains(sDecimalPoint))
+            if (!input.Contains(decimalSeparator))
             {
-                input = input.Replace(".", sDecimalPoint);
-                input = input.Replace(",", sDecimalPoint);
+                input = input.Replace(".", decimalSeparator);
+                input = input.Replace(",", decimalSeparator);
             }
 
             double number = double.Parse(input);
