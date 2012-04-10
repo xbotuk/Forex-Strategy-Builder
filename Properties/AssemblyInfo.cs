@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Forex Software Ltd.")]
 [assembly: AssemblyProduct("Forex Strategy Builder")]
-[assembly: AssemblyCopyright("Copyright © 2006 - 2011 Miroslav Popov")]
+[assembly: AssemblyCopyright("Copyright © 2006 - 2012 Miroslav Popov")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,6 +29,6 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.68.0.0")]
-[assembly: AssemblyFileVersion("2.68.0.0")]
+[assembly: AssemblyVersion("2.68.2.0")]
+[assembly: AssemblyFileVersion("2.68.2.0")]
 [assembly: NeutralResourcesLanguageAttribute("en")]

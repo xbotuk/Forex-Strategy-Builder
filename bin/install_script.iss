@@ -1,8 +1,8 @@
 [Setup]
 AppName            = Forex Strategy Builder
-AppVersion         = 2.68.0.0
-VersionInfoVersion = 2.68.0.0
-AppVerName         = Forex Strategy Builder v2.68
+AppVersion         = 2.68.2.0
+VersionInfoVersion = 2.68.2.0
+AppVerName         = Forex Strategy Builder v2.68.2
 
 ArchitecturesInstallIn64BitMode = x64 ia64
 AppPublisher       = Forex Software Ltd.
@@ -109,12 +109,12 @@ begin
     if OptionsPage.Values[0] = false then
     begin
       DeleteFile(ExpandConstant('{app}\System\config.xml'));
-    end
+    end;
     if OptionsPage.Values[1] = false then
     begin
       DeleteFile(ExpandConstant('{app}\System\instruments.xml'));
-    end
-  end
+    end;
+  end;
 
   if CurPageID = UsagePage.ID then
   begin
