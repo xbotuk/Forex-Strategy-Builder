@@ -500,6 +500,15 @@ namespace Forex_Strategy_Builder
             miJForexImport.Click += MenuToolsOnClick;
             miMarket.DropDownItems.Add(miJForexImport);
 
+            var miOandaDataImport = new ToolStripMenuItem
+                                     {
+                                         Name = "miOandaDataImport",
+                                         Text = Language.T("Import Oanda Data Files") + "...",
+                                         Image = Resources.oanda_icon
+                                     };
+            miOandaDataImport.Click += MenuToolsOnClick;
+            miMarket.DropDownItems.Add(miOandaDataImport);
+
             // Strategy
             var miStrategy = new ToolStripMenuItem(Language.T("Strategy"));
 

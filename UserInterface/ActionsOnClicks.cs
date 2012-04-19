@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using Forex_Strategy_Builder.Dialogs;
 using Forex_Strategy_Builder.Dialogs.Analyzer;
 using Forex_Strategy_Builder.Dialogs.JForex;
 
@@ -559,6 +560,9 @@ namespace Forex_Strategy_Builder
                 case "miJForexImport":
                     JForexImport();
                     break;
+                case "miOandaDataImport":
+                    OandaDataImport();
+                    break;
                 case "tsmiOverOptimization": // Analyzer
                     ShowAnalyzer("tsmiOverOptimization");
                     break;
@@ -775,6 +779,15 @@ namespace Forex_Strategy_Builder
         {
             var jForexImport = new JForexImport();
             jForexImport.ShowDialog();
+        }
+
+        /// <summary>
+        /// Starts OandaTickDataImport.
+        /// </summary>
+        private void OandaDataImport()
+        {
+            var oandaTickDataImport = new OandaTickDataImport();
+            oandaTickDataImport.ShowDialog();
         }
 
         /// <summary>

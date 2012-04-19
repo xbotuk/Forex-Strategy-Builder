@@ -94,6 +94,9 @@
     <Compile Include="Dialogs\JForex\JForexImport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Dialogs\OandaTickDataImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Enumerations\ChartButtons.cs" />
     <Compile Include="Enumerations\BacktestEval.cs" />
     <Compile Include="Enumerations\InterpolationMethod.cs" />
@@ -529,6 +532,7 @@
     <Content Include="Images\ind_chart.png" />
     <Content Include="Images\info_panel.png" />
     <Content Include="Images\metatrader4.png" />
+    <Content Include="Images\oanda_icon.png" />
     <Content Include="Images\open_data_directory.png" />
     <Content Include="Images\pushpin-detach.png" />
     <Content Include="Images\refresh.png" />
