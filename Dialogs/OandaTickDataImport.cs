@@ -488,12 +488,9 @@ namespace Forex_Strategy_Builder.Dialogs
         private char FindDelimiter(string line)
         {
             var delimiters = new[] { ',', ' ', '\t', ';' };
-            string decimalSeparator = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
 
             foreach (char delimiter in delimiters)
             {
-                if (delimiter.ToString(CultureInfo.InvariantCulture) == decimalSeparator)
-                    continue;
                 string[] data = line.Split(delimiter);
                 if (data.Length < 3) continue;
                 return delimiter;

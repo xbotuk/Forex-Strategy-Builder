@@ -423,13 +423,10 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
 
         private char FindDelimiter(string line)
         {
-            var delimiters = new[] { ' ', '.', ',', '/' };
-            string decimalSeparator = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
+            var delimiters = new[] { ' ', ',', '.', '/' };
 
             foreach (char delimiter in delimiters)
             {
-                if(delimiter.ToString(CultureInfo.InvariantCulture) == decimalSeparator)
-                    continue;
                 string[] data = line.Split(delimiter);
                 if (data.Length <= 4) continue;
                 return delimiter;
