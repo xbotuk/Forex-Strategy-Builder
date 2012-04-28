@@ -269,7 +269,7 @@ namespace Forex_Strategy_Builder.Dialogs
             BtnDestFolder.Size = new Size(buttonWidth, buttonHeight);
             BtnDestFolder.Location = new Point(PnlSettings.Width - buttonWidth - btnHrzSpace, LblDestFolder.Bottom + border);
             TxbDestFolder.Width = BtnDestFolder.Left - 2 * btnHrzSpace - border;
-            TxbDestFolder.Location = new Point(btnHrzSpace + border, BtnDestFolder.Top + (buttonHeight - TxbFileName.Height) / 2);
+            TxbDestFolder.Location = new Point(btnHrzSpace + border, BtnDestFolder.Top + (buttonHeight - TxbDestFolder.Height) / 2);
         }
 
         /// <summary>
@@ -318,7 +318,7 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Button Browse Click
+        /// BtnDestFolderClick
         /// </summary>
         private void BtnDestFolderClick(object sender, EventArgs e)
         {
@@ -327,10 +327,8 @@ namespace Forex_Strategy_Builder.Dialogs
                              SelectedPath = TxbDestFolder.Text,
                              Description = Language.T("Select a destination folder") + "."
                          };
-            if (fd.ShowDialog() == DialogResult.OK)
-            {
-                TxbDestFolder.Text = fd.SelectedPath;
-            }
+            if (fd.ShowDialog() != DialogResult.OK) return;
+            TxbDestFolder.Text = fd.SelectedPath;
         }
 
         /// <summary>

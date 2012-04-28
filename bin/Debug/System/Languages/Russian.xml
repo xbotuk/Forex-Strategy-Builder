@@ -1934,7 +1934,7 @@
   </str>
   <str>
     <main>Margin Call</main>
-    <alt>Margin Call</alt>
+    <alt>Марджин Кол</alt>
   </str>
   <str>
     <main>Load intrabar data</main>
@@ -3028,35 +3028,35 @@
   <!-- Oanda Import -->
   <str>
     <main>Imported Data</main>
-    <alt>Imported Data</alt>
+    <alt>Импортированные данные</alt>
   </str>
   <str>
     <main>Import Oanda Data Files</main>
-    <alt>Import Oanda Data Files</alt>
+    <alt>Импорт файлов данных Oanda</alt>
   </str>
   <str>
     <main>Oanda Import</main>
-    <alt>Oanda Import</alt>
+    <alt>Oanda Импорт</alt>
   </str>
   <str>
     <main>Select an Oanda file for import</main>
-    <alt>Select an Oanda file for import</alt>
+    <alt>Выберите Oanda файл для импорт</alt>
   </str>
   <str>
     <main>Enter Symbol</main>
-    <alt>Enter Symbol</alt>
+    <alt>Введите символ</alt>
   </str>
   <str>
     <main>Minimum bars in bar files</main>
-    <alt>Minimum bars in bar files</alt>
+    <alt>Минимальная баров в бар файлы</alt>
   </str>
   <str>
     <main>Select a destination folder</main>
-    <alt>Select a destination folder</alt>
+    <alt>Выберите папку назначения</alt>
   </str>
   <str>
     <main>Saved</main>
-    <alt>Saved</alt>
+    <alt>Сохраненные</alt>
   </str>
   <!-- Error and Warning Messages -->
   <str>
@@ -3324,11 +3324,11 @@
   <!-- Pivot Points Calculator -->
   <str>
     <main>Pivot Point</main>
-    <alt>Pivot Point</alt>
+    <alt>Пивот Поинт</alt>
   </str>
   <str>
     <main>Pivot Points</main>
-    <alt>Pivot Points</alt>
+    <alt>Пивот Поинтс</alt>
   </str>
   <str>
     <main>Support</main>

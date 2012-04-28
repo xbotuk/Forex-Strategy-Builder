@@ -67,11 +67,13 @@ namespace Forex_Strategy_Builder
         private const string DecimalSeparatorDefault = ".";
         private const bool UseTickDataDefault = false;
         private const string JforexDataPathDefault = "";
-        private const string Metatrader4DataPathDefault = "";
+        private const string JForexImportDestFolderDefault = "";
         private const int MarketClosingHourDefault = 21;
         private const int MarketOpeningHourDefault = 21;
+        private const string Metatrader4DataPathDefault = "";
         private const string ImportStartingDateDefault = "";
         private const string ImportEndingDateDefault = "";
+        private const string MT4ImportDestFolderDefault = "";
         private const int MinBarsInBarFileDefault = 3000;
         private const string OandaImportDestFolderDefault = "";
         private const string BannedIndicatorsDefault = "";
@@ -834,6 +836,28 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        static string _mt4ImportDestFolder = MT4ImportDestFolderDefault;
+        public static string MT4ImportDestFolder
+        {
+            get { return _mt4ImportDestFolder; }
+            set
+            {
+                _mt4ImportDestFolder = value;
+                SetNode("config/mt4ImportDestFolder", value);
+            }
+        }
+
+        static string _jForexImportDestFolder = JForexImportDestFolderDefault;
+        public static string JForexImportDestFolder
+        {
+            get { return _jForexImportDestFolder; }
+            set
+            {
+                _jForexImportDestFolder = value;
+                SetNode("config/jForexImportDestFolder", value);
+            }
+        }
+
         static int _minBarsInBarFile = MinBarsInBarFileDefault;
         public static int MinBarsInBarFile
         {
@@ -1345,11 +1369,13 @@ namespace Forex_Strategy_Builder
             DecimalSeparator           = DecimalSeparatorDefault;
             UseTickData                = UseTickDataDefault;
             JForexDataPath             = JforexDataPathDefault;
+            JForexImportDestFolder     = JForexImportDestFolderDefault;
             MetaTrader4DataPath        = Metatrader4DataPathDefault;
             MarketClosingHour          = MarketClosingHourDefault;
             MarketOpeningHour          = MarketOpeningHourDefault;
             ImportStartingDate         = ImportStartingDateDefault;
             ImportEndingDate           = ImportEndingDateDefault;
+            MT4ImportDestFolder        = MT4ImportDestFolderDefault;
             MinBarsInBarFile           = MinBarsInBarFileDefault;
             OandaImportDestFolder      = OandaImportDestFolderDefault;
             BannedIndicators           = BannedIndicatorsDefault;
@@ -1442,11 +1468,13 @@ namespace Forex_Strategy_Builder
             _decimalSeparator             = ParseNode("config/decimalSeparator", DecimalSeparatorDefault);
             _useTickData                  = ParseNode("config/useTickData",  UseTickDataDefault);
             _jforexDataPath               = ParseNode("config/jforexDataPath",  JforexDataPathDefault);
+            _jForexImportDestFolder       = ParseNode("config/jForexImportDestFolder", OandaImportDestFolderDefault);
             _metatrader4DataPath          = ParseNode("config/metatrader4DataPath", Metatrader4DataPathDefault);
             _marketClosingHour            = ParseNode("config/marketClosingHour", MarketClosingHourDefault);
             _marketOpeningHour            = ParseNode("config/marketOpeningHour", MarketOpeningHourDefault);
             _importStartingDate           = ParseNode("config/importStartingDate", ImportStartingDateDefault);
             _importEndingDate             = ParseNode("config/importEndingDate", ImportEndingDateDefault);
+            _mt4ImportDestFolder          = ParseNode("config/mt4ImportDestFolder", MT4ImportDestFolderDefault);
             _minBarsInBarFile             = ParseNode("config/minBarsInBarFile", MinBarsInBarFileDefault);
             _oandaImportDestFolder        = ParseNode("config/oandaImportDestFolder", OandaImportDestFolderDefault);
             _bannedIndicators             = ParseNode("config/bannedIndicators", BannedIndicatorsDefault);

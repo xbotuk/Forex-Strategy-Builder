@@ -43,6 +43,9 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             LblMarketOpen = new Label();
             NUDMarketClose = new NumericUpDown();
             NUDMarketOpen = new NumericUpDown();
+            LblDestFolder = new Label();
+            TxbDestFolder = new TextBox();
+            BtnDestFolder = new Button();
 
             _colorText = LayoutColors.ColorControlText;
 
@@ -109,6 +112,26 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             NUDMarketOpen.Value = Configs.MarketOpeningHour;
             NUDMarketOpen.EndInit();
 
+            // LblDestFolder
+            LblDestFolder.Parent = PnlSettings;
+            LblDestFolder.ForeColor = LayoutColors.ColorControlText;
+            LblDestFolder.BackColor = Color.Transparent;
+            LblDestFolder.AutoSize = true;
+            LblDestFolder.Text = Language.T("Select a destination folder") + ":";
+
+            // TxbDestFolder
+            TxbDestFolder.Parent = PnlSettings;
+            TxbDestFolder.BackColor = LayoutColors.ColorControlBack;
+            TxbDestFolder.ForeColor = LayoutColors.ColorControlText;
+            TxbDestFolder.Text = String.IsNullOrEmpty(Configs.JForexImportDestFolder) ? Data.OfflineDataDir : Configs.JForexImportDestFolder;
+
+            // BtnDestFolder
+            BtnDestFolder.Parent = PnlSettings;
+            BtnDestFolder.Name = "BtnDestFolder";
+            BtnDestFolder.Text = Language.T("Browse");
+            BtnDestFolder.Click += BtnDestFolderClick;
+            BtnDestFolder.UseVisualStyleBackColor = true;
+
             // pnlSettings
             PnlSettings.Parent = this;
 
@@ -165,6 +188,9 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
         private Label LblMarketOpen { get; set; }
         private NumericUpDown NUDMarketClose { get; set; }
         private NumericUpDown NUDMarketOpen { get; set; }
+        private Label LblDestFolder { get; set; }
+        private TextBox TxbDestFolder { get; set; }
+        private Button BtnDestFolder { get; set; }
 
         private FancyPanel PnlInfoBase { get; set; }
         private FancyPanel PnlSettings { get; set; }
@@ -218,7 +244,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             ProgressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDLU*9));
             ProgressBar.Location = new Point(border, BtnClose.Top - ProgressBar.Height - btnVertSpace);
 
-            PnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 110);
+            PnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 160);
             PnlSettings.Location = new Point(btnHrzSpace, border);
 
             PnlInfoBase.Size = new Size(ClientSize.Width - 2*btnHrzSpace,
@@ -246,6 +272,13 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             // Labels
             LblMarketClose.Location = new Point(btnHrzSpace + border, NUDMarketClose.Top + 2);
             LblMarketOpen.Location = new Point(btnHrzSpace + border, NUDMarketOpen.Top + 2);
+
+            // Destination folder
+            LblDestFolder.Location = new Point(btnHrzSpace + border, NUDMarketOpen.Bottom + 2 * border);
+            BtnDestFolder.Size = new Size(buttonWidth, buttonHeight);
+            BtnDestFolder.Location = new Point(PnlSettings.Width - buttonWidth - btnHrzSpace, LblDestFolder.Bottom + border);
+            TxbDestFolder.Width = BtnDestFolder.Left - 2 * btnHrzSpace - border;
+            TxbDestFolder.Location = new Point(btnHrzSpace + border, BtnDestFolder.Top + (buttonHeight - TxbDestFolder.Height) / 2);
         }
 
         /// <summary>
@@ -277,6 +310,21 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             if (fd.ShowDialog() != DialogResult.OK) return;
             Configs.JForexDataPath = fd.SelectedPath;
             TxbDataDirectory.Text = fd.SelectedPath;
+        }
+
+        /// <summary>
+        /// BtnDestFolderClick
+        /// </summary>
+        private void BtnDestFolderClick(object sender, EventArgs e)
+        {
+            var fd = new FolderBrowserDialog
+            {
+                SelectedPath = TxbDestFolder.Text,
+                Description = Language.T("Select a destination folder") + "."
+            };
+            if (fd.ShowDialog() != DialogResult.OK) return;
+            Configs.JForexImportDestFolder = fd.SelectedPath;
+            TxbDestFolder.Text = fd.SelectedPath;
         }
 
         /// <summary>
@@ -360,7 +408,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             foreach (string filePath in dataFiles)
             {
                 if (Path.GetExtension(filePath) != ".csv") continue;
-                var file = new JForexDataFiles(filePath);
+                var file = new JForexDataFiles(filePath, TxbDestFolder.Text);
                 if (file.IsCorrect)
                     _files.Add(file);
             }

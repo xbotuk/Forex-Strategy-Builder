@@ -12,7 +12,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
     {
         private readonly string _fileName;
 
-        public JForexDataFiles(string filePath)
+        public JForexDataFiles(string filePath, string targetPath)
         {
             IsCorrect = false;
             FilePath = filePath;
@@ -59,7 +59,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
 
                 Symbol = fields[0];
             }
-            FileTargetPath = Data.OfflineDataDir + Symbol + Period + (Period == 0 ? ".bin" : ".csv");
+            FileTargetPath = Path.Combine(targetPath, Symbol + Period + (Period == 0 ? ".bin" : ".csv"));
             IsCorrect = true;
         }
 

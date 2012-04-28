@@ -7,9 +7,9 @@
   <MAX_EXIT_FILTERS>2</MAX_EXIT_FILTERS>
   <SIGMA_MODE_MAIN_CHART>1</SIGMA_MODE_MAIN_CHART>
   <SIGMA_MODE_SEPARATED_CHART>5</SIGMA_MODE_SEPARATED_CHART>
-  <installed>False</installed>
-  <showStartingTip>True</showStartingTip>
-  <currentTipNumber>-1</currentTipNumber>
+  <installed>True</installed>
+  <showStartingTip>False</showStartingTip>
+  <currentTipNumber>0</currentTipNumber>
   <language>English</language>
   <showJournal>True</showJournal>
   <gradientView>True</gradientView>
@@ -22,7 +22,7 @@
   <dataDirectory></dataDirectory>
   <colorScheme>Light Blue</colorScheme>
   <rememberLastStrategy>True</rememberLastStrategy>
-  <lastStrategy></lastStrategy>
+  <lastStrategy>New.xml</lastStrategy>
   <checkForUpdates>True</checkForUpdates>
   <checkForNewBeta>False</checkForNewBeta>
   <checkData>True</checkData>
@@ -38,12 +38,16 @@
   <columnSeparator>,</columnSeparator>
   <decimalSeparator>.</decimalSeparator>
   <useTickData>False</useTickData>
-  <jforexDataPath></jforexDataPath>
-  <marketClosingHour>21</marketClosingHour>
-  <marketOpeningHour>21</marketOpeningHour>
   <metatrader4DataPath></metatrader4DataPath>
   <importStartingDate></importStartingDate>
   <importEndingDate></importEndingDate>
+  <mt4ImportDestFolder></mt4ImportDestFolder>
+  <jforexDataPath></jforexDataPath>
+  <marketClosingHour>21</marketClosingHour>
+  <marketOpeningHour>21</marketOpeningHour>
+  <jForexImportDestFolder></jForexImportDestFolder>
+  <minBarsInBarFile>3000</minBarsInBarFile>
+  <oandaImportDestFolder></oandaImportDestFolder>
   <bannedIndicators></bannedIndicators>
   <showPriceChartOnAccountChart>False</showPriceChartOnAccountChart>
   <analyzerHideFSB>True</analyzerHideFSB>
