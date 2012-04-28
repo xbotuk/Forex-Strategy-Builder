@@ -288,7 +288,6 @@ namespace Forex_Strategy_Builder.Dialogs
             base.OnClosing(e);
 
             Configs.MinBarsInBarFile = (int)NudMinBars.Value;
-            Configs.OandaImportDestFolder = TxbDestFolder.Text;
         }
 
         private void SetInfoText(string text)
@@ -329,6 +328,7 @@ namespace Forex_Strategy_Builder.Dialogs
                          };
             if (fd.ShowDialog() != DialogResult.OK) return;
             TxbDestFolder.Text = fd.SelectedPath;
+            Configs.OandaImportDestFolder = fd.SelectedPath;
         }
 
         /// <summary>
