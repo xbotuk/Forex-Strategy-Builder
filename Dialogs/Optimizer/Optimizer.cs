@@ -280,8 +280,10 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 // Cancel the asynchronous operation.
                 BgWorker.CancelAsync();
                 e.Cancel = true;
+                return;
             }
-            else if (DialogResult == DialogResult.Cancel && _isStartegyChanged)
+
+            if (DialogResult == DialogResult.Cancel && _isStartegyChanged)
             {
                 DialogResult dr = MessageBox.Show(Language.T("Do you want to accept changes to the strategy?"),
                                                   Language.T("Optimizer"), MessageBoxButtons.YesNoCancel,
@@ -291,7 +293,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 {
                     case DialogResult.Cancel:
                         e.Cancel = true;
-                        break;
+                        return;
                     case DialogResult.Yes:
                         DialogResult = DialogResult.OK;
                         break;
