@@ -72,6 +72,8 @@ namespace Forex_Strategy_Builder
         private const int MarketOpeningHourDefault = 21;
         private const string ImportStartingDateDefault = "";
         private const string ImportEndingDateDefault = "";
+        private const int MinBarsInBarFileDefault = 3000;
+        private const string OandaImportDestFolderDefault = "";
         private const string BannedIndicatorsDefault = "";
         private const bool ShowPriceChartOnAccountChartDefault = false;
         private const bool AnalyzerHideFSBDefault = true;
@@ -832,6 +834,28 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        static int _minBarsInBarFile = MinBarsInBarFileDefault;
+        public static int MinBarsInBarFile
+        {
+            get { return _minBarsInBarFile; }
+            set
+            {
+                _minBarsInBarFile = value;
+                SetNode("config/minBarsInBarFile", value);
+            }
+        }
+
+        static string _oandaImportDestFolder = OandaImportDestFolderDefault;
+        public static string OandaImportDestFolder
+        {
+            get { return _oandaImportDestFolder; }
+            set
+            {
+                _oandaImportDestFolder = value;
+                SetNode("config/oandaImportDestFolder", value);
+            }
+        }
+
         static string _bannedIndicators = BannedIndicatorsDefault;
         public static string BannedIndicators
         {
@@ -1326,6 +1350,8 @@ namespace Forex_Strategy_Builder
             MarketOpeningHour          = MarketOpeningHourDefault;
             ImportStartingDate         = ImportStartingDateDefault;
             ImportEndingDate           = ImportEndingDateDefault;
+            MinBarsInBarFile           = MinBarsInBarFileDefault;
+            OandaImportDestFolder      = OandaImportDestFolderDefault;
             BannedIndicators           = BannedIndicatorsDefault;
             ShowPriceChartOnAccountChart = ShowPriceChartOnAccountChartDefault;
             AnalyzerHideFSB            = AnalyzerHideFSBDefault;
@@ -1420,7 +1446,9 @@ namespace Forex_Strategy_Builder
             _marketClosingHour            = ParseNode("config/marketClosingHour", MarketClosingHourDefault);
             _marketOpeningHour            = ParseNode("config/marketOpeningHour", MarketOpeningHourDefault);
             _importStartingDate           = ParseNode("config/importStartingDate", ImportStartingDateDefault);
-            _importEndingDate             = ParseNode("config/importEndingDate", ImportEndingDateDefault); 
+            _importEndingDate             = ParseNode("config/importEndingDate", ImportEndingDateDefault);
+            _minBarsInBarFile             = ParseNode("config/minBarsInBarFile", MinBarsInBarFileDefault);
+            _oandaImportDestFolder        = ParseNode("config/oandaImportDestFolder", OandaImportDestFolderDefault);
             _bannedIndicators             = ParseNode("config/bannedIndicators", BannedIndicatorsDefault);
             _showPriceChartOnAccountChart = ParseNode("config/showPriceChartOnAccountChart", ShowPriceChartOnAccountChartDefault);
             _analyzerHideFSB              = ParseNode("config/analyzerHideFSB", AnalyzerHideFSBDefault);

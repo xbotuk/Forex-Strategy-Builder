@@ -835,6 +835,16 @@
   <str><main>Market opening hour on Sunday:</main><alt>Час на отваряне на пазара в неделя:</alt></str>
   <str><main>Import</main><alt>Вмъкване</alt></str>
 
+  <!-- Oanda Import -->
+  <str><main>Imported Data</main><alt>Вмъкнати данни</alt></str>
+  <str><main>Import Oanda Data Files</main><alt>Вмъкване на данни от Oanda файлове</alt></str>
+  <str><main>Oanda Import</main><alt>Oanda вмъкване</alt></str>
+  <str><main>Select an Oanda file for import</main><alt>Изберете Oanda файл за вмъкване</alt></str>
+  <str><main>Enter Symbol</main><alt>Въведете символ</alt></str>
+  <str><main>Minimum bars in bar files</main><alt>Минимум барове в бар файл</alt></str>
+  <str><main>Select a destination folder</main><alt>Изберете целева папка</alt></str>
+  <str><main>Saved</main><alt>Записани</alt></str>
+
   <!-- Error and Warning Messages -->
   <str><main>Forex Strategy Builder cannot load a historical data file and is going to use integrated data!</main><alt>Forex Strategy Builder не може да зареди файл с исторически данни и ще използва интегрирани данни!</alt></str>
   <str><main>Are you sure you want to control "Use previous bar value" manually?</main><alt>Сигурни ли сте, че искате да управлявате "Use previous bar value" ръчно?</alt></str>
