@@ -446,6 +446,10 @@ namespace Forex_Strategy_Builder
                     }
                     int xStart = (int) ((firstBarWithTicks - _data.FirstBar)*_xScale) + _xLeft;
                     int xEnd = (int) ((lastBarWithTicks - _data.FirstBar)*_xScale) + _xLeft;
+                    if (xStart < _xLeft)
+                        xStart = _xLeft;
+                    if (xEnd < xStart)
+                        xEnd = xStart;
                     Data.GradientPaint(g, new RectangleF(xStart, _yBottom + 4, xEnd - xStart + 2, 5), color, 60);
 
                     var rectf = new RectangleF(xStart, _yBottom + 4, xEnd - xStart + 2, 5);
