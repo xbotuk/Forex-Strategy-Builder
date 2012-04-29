@@ -164,7 +164,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void BtnBrowseClick(object sender, EventArgs e)
         {
-            var fd = new FolderBrowserDialog();
+            var fd = new FolderBrowserDialog {SelectedPath = Data.OfflineDataDir, Description = Language.T("Offline data directory:")};
             if (fd.ShowDialog() != DialogResult.OK) return;
             TxbDataDirectory.Text = fd.SelectedPath;
         }
