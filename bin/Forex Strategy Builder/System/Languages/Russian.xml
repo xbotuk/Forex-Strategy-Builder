@@ -1934,7 +1934,7 @@
   </str>
   <str>
     <main>Margin Call</main>
-    <alt>Margin Call</alt>
+    <alt>Марджин Кол</alt>
   </str>
   <str>
     <main>Load intrabar data</main>
@@ -3025,6 +3025,39 @@
     <main>Import</main>
     <alt>Импорт</alt>
   </str>
+  <!-- Oanda Import -->
+  <str>
+    <main>Imported Data</main>
+    <alt>Импортированные данные</alt>
+  </str>
+  <str>
+    <main>Import Oanda Data Files</main>
+    <alt>Импорт файлов данных Oanda</alt>
+  </str>
+  <str>
+    <main>Oanda Import</main>
+    <alt>Oanda Импорт</alt>
+  </str>
+  <str>
+    <main>Select an Oanda file for import</main>
+    <alt>Выберите Oanda файл для импорт</alt>
+  </str>
+  <str>
+    <main>Enter Symbol</main>
+    <alt>Введите символ</alt>
+  </str>
+  <str>
+    <main>Minimum bars in bar files</main>
+    <alt>Минимальная баров в бар файлы</alt>
+  </str>
+  <str>
+    <main>Select a destination folder</main>
+    <alt>Выберите папку назначения</alt>
+  </str>
+  <str>
+    <main>Saved</main>
+    <alt>Сохраненные</alt>
+  </str>
   <!-- Error and Warning Messages -->
   <str>
     <main>Forex Strategy Builder cannot load a historical data file and is going to use integrated data!</main>
@@ -3291,11 +3324,11 @@
   <!-- Pivot Points Calculator -->
   <str>
     <main>Pivot Point</main>
-    <alt>Pivot Point</alt>
+    <alt>Пивот Поинт</alt>
   </str>
   <str>
     <main>Pivot Points</main>
-    <alt>Pivot Points</alt>
+    <alt>Пивот Поинтс</alt>
   </str>
   <str>
     <main>Support</main>

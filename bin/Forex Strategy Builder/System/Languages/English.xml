@@ -3025,6 +3025,39 @@
     <main>Import</main>
     <alt>Import</alt>
   </str>
+  <!-- Oanda Import -->
+  <str>
+    <main>Imported Data</main>
+    <alt>Imported Data</alt>
+  </str>
+  <str>
+    <main>Import Oanda Data Files</main>
+    <alt>Import Oanda Data Files</alt>
+  </str>
+  <str>
+    <main>Oanda Import</main>
+    <alt>Oanda Import</alt>
+  </str>
+  <str>
+    <main>Select an Oanda file for import</main>
+    <alt>Select an Oanda file for import</alt>
+  </str>
+  <str>
+    <main>Enter Symbol</main>
+    <alt>Enter Symbol</alt>
+  </str>
+  <str>
+    <main>Minimum bars in bar files</main>
+    <alt>Minimum bars in bar files</alt>
+  </str>
+  <str>
+    <main>Select a destination folder</main>
+    <alt>Select a destination folder</alt>
+  </str>
+  <str>
+    <main>Saved</main>
+    <alt>Saved</alt>
+  </str>
   <!-- Error and Warning Messages -->
   <str>
     <main>Forex Strategy Builder cannot load a historical data file and is going to use integrated data!</main>
