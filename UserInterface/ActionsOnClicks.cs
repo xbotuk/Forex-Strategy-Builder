@@ -805,23 +805,23 @@ namespace Forex_Strategy_Builder
             }
 
             // Check if the current strategy uses logical groups
-            bool usefroup = false;
-            var closegroup = new List<string>();
+            bool useGroups = false;
+            var closeGroup = new List<string>();
             foreach (IndicatorSlot slot in Data.Strategy.Slot)
             {
                 if (slot.SlotType == SlotTypes.OpenFilter && slot.LogicalGroup != "A")
-                    usefroup = true;
+                    useGroups = true;
 
                 if (slot.SlotType == SlotTypes.CloseFilter)
                 {
-                    if (closegroup.Contains(slot.LogicalGroup) || slot.LogicalGroup == "all")
-                        usefroup = true;
+                    if (closeGroup.Contains(slot.LogicalGroup) || slot.LogicalGroup == "all")
+                        useGroups = true;
                     else
-                        closegroup.Add(slot.LogicalGroup);
+                        closeGroup.Add(slot.LogicalGroup);
                 }
             }
 
-            if (!usefroup)
+            if (!useGroups)
             {
                 Configs.UseLogicalGroups = false;
                 RebuildStrategyLayout();

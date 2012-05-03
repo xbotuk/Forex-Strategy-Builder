@@ -302,18 +302,18 @@ namespace Forex_Strategy_Builder
         public string GetDefaultGroup(int slot)
         {
             string group = "";
-            string sIndicatorName = Slot[slot].IndicatorName;
+            string indicatorName = Slot[slot].IndicatorName;
             SlotTypes slotType = GetSlotType(slot);
             if (slotType == SlotTypes.OpenFilter)
             {
-                if (sIndicatorName == "Data Bars Filter" ||
-                    sIndicatorName == "Date Filter" ||
-                    sIndicatorName == "Day of Month" ||
-                    sIndicatorName == "Enter Once" ||
-                    sIndicatorName == "Entry Time" ||
-                    sIndicatorName == "Long or Short" ||
-                    sIndicatorName == "Lot Limiter" ||
-                    sIndicatorName == "Random Filter")
+                if (indicatorName == "Data Bars Filter" ||
+                    indicatorName == "Date Filter" ||
+                    indicatorName == "Day of Month" ||
+                    indicatorName == "Enter Once" ||
+                    indicatorName == "Entry Time" ||
+                    indicatorName == "Long or Short" ||
+                    indicatorName == "Lot Limiter" ||
+                    indicatorName == "Random Filter")
                     group = "All";
                 else
                     group = "A";
