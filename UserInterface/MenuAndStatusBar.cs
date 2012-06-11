@@ -104,6 +104,18 @@ namespace Forex_Strategy_Builder
 
             miFile.DropDownItems.Add(new ToolStripSeparator());
 
+            var miFileDirWatch = new ToolStripMenuItem
+            {
+                Text = Language.T("Monitor \"Strategies\" Directory for New Files"),
+                ToolTipText = Language.T("Monitor the \"Strategies\" directory and automatically load strategy files."),
+                Checked = Configs.StrategyDirWatch,
+                CheckOnClick = true
+            };
+            miFileDirWatch.Click += MenuFileDirWatch;
+            miFile.DropDownItems.Add(miFileDirWatch);
+
+            miFile.DropDownItems.Add(new ToolStripSeparator());
+
             var miClose = new ToolStripMenuItem
                               {
                                   Text = Language.T("Exit"),
@@ -1375,6 +1387,13 @@ namespace Forex_Strategy_Builder
         ///   Opens the strategy settings dialogue
         /// </summary>
         protected virtual void MenuStrategyAUPBVOnClick(object sender, EventArgs e)
+        {
+        }
+
+        /// <summary>
+        ///   Monitor the "Strategies" directory and automatically load new strategy files
+        /// </summary>
+        protected virtual void MenuFileDirWatch(object sender, EventArgs e)
         {
         }
 

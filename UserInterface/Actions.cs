@@ -63,6 +63,7 @@ namespace Forex_Strategy_Builder
             CheckUpdate.CheckForUpdate(Data.SystemDir, MiLiveContent, MiForex);
             ShowStartingTips();
             UpdateStatusLabel("Loading user interface...");
+            SetStrategyDirWatcher();
         }
 
         private bool IsDiscardSelectedIndexChange { get; set; }

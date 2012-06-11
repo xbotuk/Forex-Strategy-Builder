@@ -213,20 +213,34 @@ namespace Forex_Strategy_Builder
             Calculate(false);
         }
 
+        private delegate void DelegateLoadDroppedStrategy(string filePath);
+
         protected override void LoadDroppedStrategy(string filePath)
         {
-            try
+            if (filePath == Data.StrategyPath)
+                return; // Prevents reloading of current strategy.
+
+            if (Application.OpenForms.Count > 1)
+                return; // Prevents loading a strategy when some tool is running.
+
+            if (BalanceChart.InvokeRequired)
             {
-                OpenStrategy(filePath);
-                AfterStrategyOpening(true);
-                Calculate(false);
+                Invoke(new DelegateLoadDroppedStrategy(LoadDroppedStrategy), new object[] { filePath });
             }
-            catch (Exception exc)
+            else
             {
-                MessageBox.Show(exc.Message, Text);
+                try
+                {
+                    OpenStrategy(filePath);
+                    AfterStrategyOpening(true);
+                    Calculate(false);
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show(exc.Message, Text);
+                }
             }
         }
-
         /// <summary>
         /// Load a color scheme.
         /// </summary>
@@ -365,6 +379,16 @@ namespace Forex_Strategy_Builder
         protected override void MenuStrategyAUPBVOnClick(object sender, EventArgs e)
         {
             UsePreviousBarValueChange();
+        }
+
+        /// <summary>
+        ///  Monitor the "Strategies" directory and automatically load new strategy files
+        /// </summary>
+        protected override void MenuFileDirWatch(object sender, EventArgs e)
+        {
+            var toolStripMenuItem = (ToolStripMenuItem)sender;
+            Configs.StrategyDirWatch = toolStripMenuItem.Checked;
+            SetStrategyDirWatcher();
         }
 
         /// <summary>

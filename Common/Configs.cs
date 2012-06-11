@@ -83,6 +83,7 @@ namespace Forex_Strategy_Builder
         private const int MainScreenWidthDefault = 790;
         private const int MainScreenHeightDefault = 590;
         private const bool ShowStatusBarDefault = true;
+        private const bool StrategyDirWatchDefault = false;
 
         // Indicator Chart
         private const int IndicatorChartZoomDefault = 8;
@@ -957,6 +958,17 @@ namespace Forex_Strategy_Builder
             }
         }
 
+	
+        static bool _strategyDirWatch = StrategyDirWatchDefault;
+        public static bool StrategyDirWatch
+        {
+            get { return _strategyDirWatch; }
+            set
+            {
+                _strategyDirWatch = value;
+                SetNode("config/strategyDirWatch", value);
+            }
+        }
 
         // -------------------------------------------------------------
 
@@ -1344,7 +1356,7 @@ namespace Forex_Strategy_Builder
             CheckData                  = IsCheckDataDefault;
             FillInDataGaps             = IsFillDataGapsDefault;
             CutBadData                 = IsCutBadDataDefault;
-            CutSatSunData                 = IsCutSatSunDataDefault;
+            CutSatSunData              = IsCutSatSunDataDefault;
             LoadCustomIndicators       = IsLoadCustIndDefault;
             ShowCustomIndicators       = IsShowCustIndDefault;
             MaxBars                    = MaxBarsDefault;
@@ -1384,6 +1396,7 @@ namespace Forex_Strategy_Builder
             MainScreenWidth            = MainScreenWidthDefault;
             MainScreenHeight           = MainScreenHeightDefault;
             ShowStatusBar              = ShowStatusBarDefault;
+            StrategyDirWatch           = StrategyDirWatchDefault;
 
             // Indicator Chart
             IndicatorChartZoom                   = IndicatorChartZoomDefault;
@@ -1484,6 +1497,7 @@ namespace Forex_Strategy_Builder
             _mainScreenWidth              = ParseNode("config/mainScreenWidth", MainScreenWidthDefault);
             _mainScreenHeight             = ParseNode("config/mainScreenHeight", MainScreenHeightDefault);
             _showStatusBar                = ParseNode("config/showStatusBar", ShowStatusBarDefault);
+            _strategyDirWatch             = ParseNode("config/strategyDirWatch", StrategyDirWatchDefault);
 
             // Data Horizon
             _maxBars                      = ParseNode("config/dataMaxBars", MaxBarsDefault);

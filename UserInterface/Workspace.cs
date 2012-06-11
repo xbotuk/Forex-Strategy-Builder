@@ -6,6 +6,8 @@
 
 using System;
 using System.Drawing;
+using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Forex_Strategy_Builder
@@ -31,6 +33,7 @@ namespace Forex_Strategy_Builder
         private Panel PanelMarketBase { get; set; }
         private Panel PanelStrategyBase { get; set; }
         private Splitter SplitterJournal { get; set; }
+        private FileSystemWatcher _strategyDirWatcher;
 
         /// <summary>
         /// The default constructor
@@ -73,6 +76,8 @@ namespace Forex_Strategy_Builder
             PanelAccountBase = new Panel();
             PanelJournalBase = new Panel();
             SplitterJournal = new Splitter();
+
+            _strategyDirWatcher = new FileSystemWatcher();
         }
 
         private void InitializeControls()
@@ -153,6 +158,10 @@ namespace Forex_Strategy_Builder
             // Journal panel
             PanelJournal.Parent = PanelJournalBase;
             PanelJournal.Dock = DockStyle.Fill;
+
+            // Strategy Directory FileSystemWatcher
+            _strategyDirWatcher.Path = Data.StrategyDir;
+            _strategyDirWatcher.Created += StrategyDirWatcherCreated;
         }
 
         /// <summary>
@@ -185,6 +194,25 @@ namespace Forex_Strategy_Builder
 
         protected virtual void LoadDroppedStrategy(string filePath)
         {
+        }
+
+        /// <summary>
+        /// Set the status of the Strategy Directory FileSystemWatcher
+        /// </summary>
+        internal void SetStrategyDirWatcher()
+        {
+            _strategyDirWatcher.EnableRaisingEvents = Configs.StrategyDirWatch;
+        }
+
+        /// <summary>
+        /// Strategy Directory FileSystemWatcher Event Handler
+        /// </summary>
+        private void StrategyDirWatcherCreated(object sender, FileSystemEventArgs e)
+        {
+            _strategyDirWatcher.EnableRaisingEvents = false;
+            Thread.Sleep(1000);
+            LoadDroppedStrategy(e.FullPath);
+            _strategyDirWatcher.EnableRaisingEvents = Configs.StrategyDirWatch;
         }
     }
 }
