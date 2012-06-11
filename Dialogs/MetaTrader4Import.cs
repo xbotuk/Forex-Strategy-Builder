@@ -614,6 +614,7 @@ namespace Forex_Strategy_Builder
             catch (Exception ex)
             {
                 SetInfoText("Error (" + ex.Message + ")");
+                SetInfoText(Environment.NewLine);
             }
         }
 
