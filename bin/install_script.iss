@@ -1,8 +1,8 @@
 [Setup]
 AppName            = Forex Strategy Builder
-AppVersion         = 2.70.0.0
-VersionInfoVersion = 2.70.0.0
-AppVerName         = Forex Strategy Builder v2.70
+AppVersion         = 2.71.1.0
+VersionInfoVersion = 2.71.1.0
+AppVerName         = Forex Strategy Builder v2.71.1
 
 ArchitecturesInstallIn64BitMode = x64 ia64
 AppPublisher       = Forex Software Ltd.
