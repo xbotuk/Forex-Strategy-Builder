@@ -97,6 +97,9 @@
     <Compile Include="Dialogs\OandaTickDataImport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Dialogs\TrueForexTickDataImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Enumerations\ChartButtons.cs" />
     <Compile Include="Enumerations\BacktestEval.cs" />
     <Compile Include="Enumerations\InterpolationMethod.cs" />
@@ -537,6 +540,7 @@
     <Content Include="Images\pushpin-detach.png" />
     <Content Include="Images\refresh.png" />
     <Content Include="Images\toggle.png" />
+    <Content Include="Images\truefx_ico.png" />
     <Content Include="Resources\config.xml" />
     <Content Include="Resources\fsb-update.xml" />
     <EmbeddedResource Include="Properties\Resources.resx">

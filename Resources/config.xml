@@ -56,6 +56,7 @@
   <mainScreenHeight>590</mainScreenHeight>
   <showStatusBar>True</showStatusBar>
   <strategyDirWatch>False</strategyDirWatch>
+  <truefxImportDestFolder></truefxImportDestFolder>
   <dataMaxBars>20000</dataMaxBars>
   <dataStartTime>1990-01-01 00:00:00</dataStartTime>
   <dataEndTime>2020-01-01 00:00:00</dataEndTime>

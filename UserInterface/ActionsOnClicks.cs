@@ -587,6 +587,9 @@ namespace Forex_Strategy_Builder
                 case "miOandaDataImport":
                     OandaDataImport();
                     break;
+                case "miTrueFxDataImport":
+                    TrueFxDataImport();
+                    break;
                 case "tsmiOverOptimization": // Analyzer
                     ShowAnalyzer("tsmiOverOptimization");
                     break;
@@ -812,6 +815,15 @@ namespace Forex_Strategy_Builder
         {
             var oandaTickDataImport = new OandaTickDataImport();
             oandaTickDataImport.ShowDialog();
+        }
+
+        /// <summary>
+        /// Starts TrueForexTickDataImport.
+        /// </summary>
+        private void TrueFxDataImport()
+        {
+            var trueFxTickDataImport = new TrueForexTickDataImport();
+            trueFxTickDataImport.ShowDialog();
         }
 
         /// <summary>

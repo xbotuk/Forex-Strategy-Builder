@@ -84,6 +84,7 @@ namespace Forex_Strategy_Builder
         private const int MainScreenHeightDefault = 590;
         private const bool ShowStatusBarDefault = true;
         private const bool StrategyDirWatchDefault = false;
+        private const string TrueFxImportDestFolderDefault = "";
 
         // Indicator Chart
         private const int IndicatorChartZoomDefault = 8;
@@ -970,6 +971,17 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        static string _truefxImportDestFolder = TrueFxImportDestFolderDefault;
+        public static string TrueFxImportDestFolder
+        {
+            get { return _truefxImportDestFolder; }
+            set
+            {
+                _oandaImportDestFolder = value;
+                SetNode("config/truefxImportDestFolder", value);
+            }
+        }
+
         // -------------------------------------------------------------
 
 
@@ -1397,6 +1409,7 @@ namespace Forex_Strategy_Builder
             MainScreenHeight           = MainScreenHeightDefault;
             ShowStatusBar              = ShowStatusBarDefault;
             StrategyDirWatch           = StrategyDirWatchDefault;
+            TrueFxImportDestFolder     = TrueFxImportDestFolderDefault;
 
             // Indicator Chart
             IndicatorChartZoom                   = IndicatorChartZoomDefault;
@@ -1481,7 +1494,7 @@ namespace Forex_Strategy_Builder
             _decimalSeparator             = ParseNode("config/decimalSeparator", DecimalSeparatorDefault);
             _useTickData                  = ParseNode("config/useTickData",  UseTickDataDefault);
             _jforexDataPath               = ParseNode("config/jforexDataPath",  JforexDataPathDefault);
-            _jForexImportDestFolder       = ParseNode("config/jForexImportDestFolder", OandaImportDestFolderDefault);
+            _jForexImportDestFolder       = ParseNode("config/jForexImportDestFolder", JForexImportDestFolderDefault);
             _metatrader4DataPath          = ParseNode("config/metatrader4DataPath", Metatrader4DataPathDefault);
             _marketClosingHour            = ParseNode("config/marketClosingHour", MarketClosingHourDefault);
             _marketOpeningHour            = ParseNode("config/marketOpeningHour", MarketOpeningHourDefault);
@@ -1498,6 +1511,7 @@ namespace Forex_Strategy_Builder
             _mainScreenHeight             = ParseNode("config/mainScreenHeight", MainScreenHeightDefault);
             _showStatusBar                = ParseNode("config/showStatusBar", ShowStatusBarDefault);
             _strategyDirWatch             = ParseNode("config/strategyDirWatch", StrategyDirWatchDefault);
+            _truefxImportDestFolder       = ParseNode("config/truefxImportDestFolder", TrueFxImportDestFolderDefault);
 
             // Data Horizon
             _maxBars                      = ParseNode("config/dataMaxBars", MaxBarsDefault);

@@ -521,6 +521,15 @@ namespace Forex_Strategy_Builder
             miOandaDataImport.Click += MenuToolsOnClick;
             miMarket.DropDownItems.Add(miOandaDataImport);
 
+            var miTrueFxDataImport = new ToolStripMenuItem
+                                     {
+                                         Name = "miTrueFxDataImport",
+                                         Text = Language.T("Import TrueFX Data Files") + "...",
+                                         Image = Resources.truefx_ico
+                                     };
+            miTrueFxDataImport.Click += MenuToolsOnClick;
+            miMarket.DropDownItems.Add(miTrueFxDataImport);
+
             // Strategy
             var miStrategy = new ToolStripMenuItem(Language.T("Strategy"));
 
