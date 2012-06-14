@@ -5,6 +5,7 @@
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -17,7 +18,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         /// <summary>
         /// Constructor
         /// </summary>
-        public OverOptimizationChartsForm(OverOptimizationDataTable[] tableReport)
+        public OverOptimizationChartsForm(OverOptimizationDataTable[] tableReport, List<string> paramNames)
         {
             TableReport = tableReport;
 
@@ -45,6 +46,9 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 
             CurrentChart = new OverOptimizationCharts {Parent = this};
             CurrentChart.InitChart(tableReport[_currentChartNumber]);
+
+            ChartLegend = new OverOptimizationChartLegend { Parent = this };
+            ChartLegend.InitChart(paramNames);
         }
 
         private Button BtnClose { get; set; }
@@ -53,6 +57,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         private OverOptimizationDataTable[] TableReport { get; set; }
 
         private OverOptimizationCharts CurrentChart { get; set; }
+        private OverOptimizationChartLegend ChartLegend { get; set; }
 
         /// <summary>
         /// Perform initializing
@@ -61,8 +66,8 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         {
             base.OnLoad(e);
 
-            ClientSize = new Size(500, 400);
-            MinimumSize = new Size(300, 200);
+            ClientSize = new Size(650, 400);
+            MinimumSize = new Size(450, 200);
         }
 
         /// <summary>
@@ -93,8 +98,12 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             BtnNextCharts.Size = new Size((int) (1.5*buttonWidth), buttonHeight);
             BtnNextCharts.Location = new Point(btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
 
+            // Legend
+            ChartLegend.Size = new Size(160, BtnClose.Top - space - btnVertSpace);
+            ChartLegend.Location = new Point(ClientSize.Width - space - ChartLegend.Width, space);
+
             // Chart
-            CurrentChart.Size = new Size(ClientSize.Width - 2*space, BtnClose.Top - space - btnVertSpace);
+            CurrentChart.Size = new Size(ClientSize.Width - 3*space - ChartLegend.Width, BtnClose.Top - space - btnVertSpace);
             CurrentChart.Location = new Point(space, space);
         }
 

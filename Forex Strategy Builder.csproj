@@ -90,6 +90,9 @@
     <Compile Include="CustomControls\CloseButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Dialogs\Analyzer\OverOptimizationChartLegend.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Dialogs\JForex\JForexDataFiles.cs" />
     <Compile Include="Dialogs\JForex\JForexImport.cs">
       <SubType>Form</SubType>

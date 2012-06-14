@@ -283,7 +283,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         /// </summary>
         private void ViewChartsClick(object sender, EventArgs e)
         {
-            var chartForm = new OverOptimizationChartsForm(_tableReport);
+            var chartForm = new OverOptimizationChartsForm(_tableReport, _paramNames);
             chartForm.ShowDialog();
         }
 

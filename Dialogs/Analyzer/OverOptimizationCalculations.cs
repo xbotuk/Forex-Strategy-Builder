@@ -5,6 +5,7 @@
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -18,6 +19,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         private int _deviationSteps;
 
         private string _listParametersName;
+        private List<string> _paramNames;
 
         private string _pathReportFile;
 
@@ -43,6 +45,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         /// </summary>
         private void SetParametersValues(int percentDeviation, int countParam)
         {
+            _paramNames = new List<string>();
             _listParametersName = "Index" + Configs.ColumnSeparator + "Parameter name" + Environment.NewLine;
             _countStratParams = 0;
             _cycles = 0;
@@ -79,6 +82,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                             _cycles++;
                         }
 
+                        _paramNames.Add(currentParam.Caption);
                         _listParametersName += (_countStratParams + 1) + Configs.ColumnSeparator + currentParam.Caption +
                                                Environment.NewLine;
                         _countStratParams++;
