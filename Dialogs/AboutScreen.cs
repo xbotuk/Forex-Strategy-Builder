@@ -27,6 +27,7 @@ namespace Forex_Strategy_Builder
             LlWebsite = new LinkLabel();
             LlForum = new LinkLabel();
             LlEmail = new LinkLabel();
+            LlCredits = new LinkLabel();
             BtnOk = new Button();
 
             // Panel Base
@@ -108,6 +109,14 @@ namespace Forex_Strategy_Builder
             LlEmail.Tag = "mailto:info@forexsb.com";
             LlEmail.LinkClicked += WebsiteLinkClicked;
 
+            // LlCredits
+            LlCredits.AutoSize = true;
+            LlCredits.TabStop = true;
+            LlCredits.BackColor = Color.Transparent;
+            LlCredits.Text = Language.T("Credits and Contributors");
+            LlCredits.Tag = "http://forexsb.com/wiki/credits";
+            LlCredits.LinkClicked += WebsiteLinkClicked;
+
             // Button Base
             BtnOk.Parent = this;
             BtnOk.Text = Language.T("Ok");
@@ -124,6 +133,7 @@ namespace Forex_Strategy_Builder
             PnlBase.Controls.Add(LlEmail);
             PnlBase.Controls.Add(LlForum);
             PnlBase.Controls.Add(LlWebsite);
+            PnlBase.Controls.Add(LlCredits);
             PnlBase.Controls.Add(PictureBox1);
 
             StartPosition = FormStartPosition.CenterScreen;
@@ -133,7 +143,7 @@ namespace Forex_Strategy_Builder
             MaximizeBox = false;
             MinimizeBox = false;
             ShowInTaskbar = false;
-            ClientSize = new Size(360, 280);
+            ClientSize = new Size(360, 310);
         }
 
         private FancyPanel PnlBase { get; set; }
@@ -148,6 +158,7 @@ namespace Forex_Strategy_Builder
         private LinkLabel LlWebsite { get; set; }
         private LinkLabel LlForum { get; set; }
         private LinkLabel LlEmail { get; set; }
+        private LinkLabel LlCredits { get; set; }
 
         /// <summary>
         /// Form On Resize
@@ -179,6 +190,7 @@ namespace Forex_Strategy_Builder
             LlWebsite.Location = new Point(Label5.Right + 5, Label4.Top);
             LlForum.Location = new Point(Label5.Right + 5, Label5.Top);
             LlEmail.Location = new Point(Label5.Right + 5, Label6.Top);
+            LlCredits.Location = new Point((PnlBase.Width - LlCredits.Width) / 2, 230);
 
             PnlBase.Invalidate();
         }
