@@ -59,6 +59,8 @@
   <str><main>Save the strategy.</main><alt>Записване на стратегия.</alt></str>
   <str><main>Save As</main><alt>Записване като</alt></str>
   <str><main>Save a copy of the strategy.</main><alt>Записване на копие на стратегията.</alt></str>
+  <str><main>Monitor "Strategies" Directory for New Files</main><alt>Наблюдаване на папката "Strategy" за нови файлове.</alt></str>
+  <str><main>Monitor the "Strategies" directory and automatically load strategy files.</main><alt>Наблюдава папката "Strategy" и автоматично зарежда нови файлове.</alt></str>
   <str><main>Exit</main><alt>Изход</alt></str>
   <str><main>Close the program.</main><alt>Затваряне на програмата.</alt></str>
 
@@ -228,6 +230,7 @@
   <str><main>Website</main><alt>Интернет сайт</alt></str>
   <str><main>Support forum</main><alt>Форум за поддръжка</alt></str>
   <str><main>Contacts</main><alt>За контакти</alt></str>
+  <str><main>Credits and Contributors</main><alt>Заслуги и Помощници</alt></str>
 
   <!-- Account Settings -->
   <str><main>Account currency</main><alt>Валута на сметката</alt></str>
@@ -796,6 +799,7 @@
   <str><main>Open Report</main><alt>Отвори рапорта</alt></str>
   <str><main>Deviation</main><alt>Отклонение</alt></str>
   <str><main>Next Chart</main><alt>Следваща графика</alt></str>
+  <str><main>Legend</main><alt>Легенда</alt></str>
 
   <!-- Strategy Properties -->
   <str><main>Handling of Additional Entry Signals</main><alt>Обработка на допълнителни входящи сигнали</alt></str>
@@ -844,6 +848,11 @@
   <str><main>Minimum bars in bar files</main><alt>Минимум барове в бар файл</alt></str>
   <str><main>Select a destination folder</main><alt>Изберете целева папка</alt></str>
   <str><main>Saved</main><alt>Записани</alt></str>
+
+  <!-- TrueFX Import -->
+  <str><main>TrueFX Import</main><alt>TrueFX вмъкване</alt></str>
+  <str><main>Import TrueFX Data Files</main><alt>Вмъкване на данни от TrueFX файлове</alt></str>
+  <str><main>Select a TrueFX file for import</main><alt>Изберете TrueFX файл за вмъкване</alt></str>
 
   <!-- Error and Warning Messages -->
   <str><main>Forex Strategy Builder cannot load a historical data file and is going to use integrated data!</main><alt>Forex Strategy Builder не може да зареди файл с исторически данни и ще използва интегрирани данни!</alt></str>

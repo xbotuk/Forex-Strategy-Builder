@@ -194,6 +194,14 @@
     <alt>Kopie der Strategie speichern.</alt>
   </str>
   <str>
+    <main>Monitor "Strategies" Directory for New Files</main>
+    <alt>Monitor "Strategies" Directory for New Files</alt>
+  </str>
+  <str>
+    <main>Monitor the "Strategies" directory and automatically load strategy files.</main>
+    <alt>Monitor the "Strategies" directory and automatically load strategy files.</alt>
+  </str>
+  <str>
     <main>Exit</main>
     <alt>Verlassen</alt>
   </str>
@@ -810,6 +818,10 @@
   <str>
     <main>Contacts</main>
     <alt>Kontakte</alt>
+  </str>
+  <str>
+    <main>Credits and Contributors</main>
+    <alt>Credits and Contributors</alt>
   </str>
   <!-- Account Settings -->
   <str>
@@ -2894,6 +2906,10 @@
     <main>Next Chart</main>
     <alt>Next Chart</alt>
   </str>
+  <str>
+    <main>Legend</main>
+    <alt>Legend</alt>
+  </str>
   <!-- Strategy Properties -->
   <str>
     <main>Handling of Additional Entry Signals</main>
@@ -3057,6 +3073,19 @@
   <str>
     <main>Saved</main>
     <alt>Saved</alt>
+  </str>
+  <!-- TrueFX Import -->
+  <str>
+    <main>TrueFX Import</main>
+    <alt>TrueFX Import</alt>
+  </str>
+  <str>
+    <main>Import TrueFX Data Files</main>
+    <alt>Import TrueFX Data Files</alt>
+  </str>
+  <str>
+    <main>Select a TrueFX file for import</main>
+    <alt>Select a TrueFX file for import</alt>
   </str>
   <!-- Error and Warning Messages -->
   <str>

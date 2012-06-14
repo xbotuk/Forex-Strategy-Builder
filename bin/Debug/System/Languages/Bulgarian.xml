@@ -194,6 +194,14 @@
     <alt>Записване на копие на стратегията.</alt>
   </str>
   <str>
+    <main>Monitor "Strategies" Directory for New Files</main>
+    <alt>Наблюдаване на папката "Strategy" за нови файлове.</alt>
+  </str>
+  <str>
+    <main>Monitor the "Strategies" directory and automatically load strategy files.</main>
+    <alt>Наблюдава папката "Strategy" и автоматично зарежда нови файлове.</alt>
+  </str>
+  <str>
     <main>Exit</main>
     <alt>Изход</alt>
   </str>
@@ -810,6 +818,10 @@
   <str>
     <main>Contacts</main>
     <alt>За контакти</alt>
+  </str>
+  <str>
+    <main>Credits and Contributors</main>
+    <alt>Заслуги и Помощници</alt>
   </str>
   <!-- Account Settings -->
   <str>
@@ -2894,6 +2906,10 @@
     <main>Next Chart</main>
     <alt>Следваща графика</alt>
   </str>
+  <str>
+    <main>Legend</main>
+    <alt>Легенда</alt>
+  </str>
   <!-- Strategy Properties -->
   <str>
     <main>Handling of Additional Entry Signals</main>
@@ -3057,6 +3073,19 @@
   <str>
     <main>Saved</main>
     <alt>Записани</alt>
+  </str>
+  <!-- TrueFX Import -->
+  <str>
+    <main>TrueFX Import</main>
+    <alt>TrueFX вмъкване</alt>
+  </str>
+  <str>
+    <main>Import TrueFX Data Files</main>
+    <alt>Вмъкване на данни от TrueFX файлове</alt>
+  </str>
+  <str>
+    <main>Select a TrueFX file for import</main>
+    <alt>Изберете TrueFX файл за вмъкване</alt>
   </str>
   <!-- Error and Warning Messages -->
   <str>
