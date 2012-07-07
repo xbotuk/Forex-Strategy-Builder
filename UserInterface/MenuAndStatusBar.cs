@@ -1176,7 +1176,7 @@ namespace Forex_Strategy_Builder
                                      {
                                          Text = Language.T("Forex Brokers") + "...",
                                          Image = Resources.forex_brokers,
-                                         Tag = "http://forexsb.com/forex-brokers/"
+                                         Tag = "http://forexsb.com/wiki/brokers"
                                      };
             miForexBrokers.Click += MenuForexContentsOnClick;
 
