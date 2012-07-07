@@ -85,7 +85,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                 double max = double.MinValue;
                 for (int dev = 0; dev < _devSteps; dev++)
                 {
-                    int index = _percentDev - dev;
+                    int index = dev - _percentDev;
                     double value = table.GetData(index, param);
                     if (min > value) min = value;
                     if (max < value) max = value;
@@ -130,7 +130,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                 _apntParameters[param] = new PointF[_devSteps];
                 for (int dev = 0; dev < _devSteps; dev++)
                 {
-                    int index = _percentDev - dev;
+                    int index = dev - _percentDev;
                     _apntParameters[param][dev].X = _xLeft + dev*_xScale;
                     _apntParameters[param][dev].Y =
                         (float) (_yBottom - (table.GetData(index, param) - _minimum)*_yScale);
@@ -178,7 +178,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             int xLabelRight = 0;
             for (int dev = 0; dev < _devSteps; dev++)
             {
-                int index = _percentDev - dev;
+                int index = dev - _percentDev;
                 var xVertLine = (int) (_xLeft + dev*_xScale);
                 g.DrawLine(_penGrid, xVertLine, _yTop, xVertLine, _yBottom + 2);
                 string devLabel = index + (index != 0 ? "%" : "");

@@ -67,7 +67,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 
                         for (int p = 0; p < _deviationSteps; p++)
                         {
-                            int index = percentDeviation - p;
+                            int index = p - percentDeviation;
                             double value = originalValue + index*deltaStep;
                             value = Math.Round(value, point);
 

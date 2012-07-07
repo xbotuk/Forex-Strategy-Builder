@@ -76,7 +76,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             sb.AppendLine(Language.T("Deviation"));
             for (int p = 0; p < _percentDeviationSteps; p++)
             {
-                int index = _percentDeviation - p;
+                int index = p - _percentDeviation;
                 sb.Append(index + _columnSeparator);
                 for (int i = 0; i < _countAllParams; i++)
                     sb.Append(NumberToString(GetData(index, i)) + _columnSeparator);
