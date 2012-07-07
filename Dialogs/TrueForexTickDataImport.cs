@@ -15,18 +15,21 @@ using System.IO;
 using System.Media;
 using System.Text;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Forex_Strategy_Builder.Dialogs
 {
-    public sealed class TrueForexTickDataImport : Form, ITrueForexTickDataImport
+    public sealed class TrueForexTickDataImport : Form
     {
         private readonly BackgroundWorker _bgWorker;
         private bool _isImporting;
         private List<Bar> _minuteBarList;
         private string _lastFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _outFolder = string.Empty; 
-        private string _trrueforexFile;
-        private string Symbol { get; set; }
+        private string _trueFxSourceDir;
+        private string _symbol;
+        private const string FilePattern = @"^\w{6}-\d{4}-\d{2}$";
+
 
         /// <summary>
         /// Constructor.
@@ -65,7 +68,7 @@ namespace Forex_Strategy_Builder.Dialogs
             LblIntro.ForeColor = LayoutColors.ColorControlText;
             LblIntro.BackColor = Color.Transparent;
             LblIntro.AutoSize = true;
-            LblIntro.Text = Language.T("Select a TrueFX file for import") + ":";
+            LblIntro.Text = Language.T("Select TrueFX source folder") + ":";
 
             // File Name
             TxbFileName.Parent = PnlSettings;
@@ -290,15 +293,30 @@ namespace Forex_Strategy_Builder.Dialogs
         /// </summary>
         private void BtnBrowseClick(object sender, EventArgs e)
         {
-            var fd = new FolderBrowserDialog {SelectedPath = _lastFolder};
+            var fd = new FolderBrowserDialog { SelectedPath = _lastFolder };
 
             if (fd.ShowDialog() != DialogResult.OK) return;
-            _trrueforexFile = fd.SelectedPath;
-            _lastFolder = _trrueforexFile;
-            TxbFileName.Text = Path.GetFileNameWithoutExtension(_trrueforexFile);
+            _trueFxSourceDir = fd.SelectedPath;
+            _lastFolder = _trueFxSourceDir;
+            TxbFileName.Text = _trueFxSourceDir;
             TxbFileName.Focus();
 
-            Symbol = TxbFileName.Text; //folder needs to have the same names as pair
+            _symbol = GetSymbolFromDirectoryFiles(_trueFxSourceDir);
+        }
+
+        string GetSymbolFromDirectoryFiles(string directory)
+        {
+            string symbol = "";
+            string[] files = Directory.GetFiles(directory);
+            foreach (var file in files)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(file);
+                if (fileName == null) continue;
+                if(!Regex.IsMatch(fileName, FilePattern)) continue;
+                symbol = fileName.Split('-')[0];
+            }
+
+            return symbol;
         }
 
         /// <summary>
@@ -336,6 +354,9 @@ namespace Forex_Strategy_Builder.Dialogs
         /// </summary>
         private void BtnImportClick(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_trueFxSourceDir))
+                return;
+
             if (_isImporting)
             {
                 // Cancel the asynchronous operation.
@@ -344,7 +365,7 @@ namespace Forex_Strategy_Builder.Dialogs
             }
 
             ProgressBar.Minimum = 0;
-            ProgressBar.Maximum = GetSortedCsvFiles(_trrueforexFile).Length;
+            ProgressBar.Maximum = GetSortedCsvFiles(_trueFxSourceDir).Length;
             ProgressBar.Value = 0;
             ProgressBar.Style = ProgressBarStyle.Blocks;
 
@@ -366,7 +387,7 @@ namespace Forex_Strategy_Builder.Dialogs
             var worker = sender as BackgroundWorker;
             if (worker == null) return;
 
-            int count1MinBars = ImportTicks(_trrueforexFile, worker);
+            int count1MinBars = ImportTicks(_trueFxSourceDir, worker);
 
             foreach (DataPeriods period in Enum.GetValues(typeof(DataPeriods)))
             {
@@ -401,15 +422,14 @@ namespace Forex_Strategy_Builder.Dialogs
             ProgressBar.Value = ProgressBar.Maximum;
         }
 
-        public int ImportTicks(string directory, BackgroundWorker worker)
+        private int ImportTicks(string directory, BackgroundWorker worker)
         {
-            Symbol = directory.Split('\\')[directory.Split('\\').Length - 1];
-            if(string.IsNullOrEmpty(Symbol))
+            if(string.IsNullOrEmpty(_symbol))
                 return 0;
 
             int totalVolume = 0;
             int count1MinBars = 1;
-            using (var outStream = new FileStream(Path.Combine(_outFolder, Symbol + "0.bin"), FileMode.Create))
+            using (var outStream = new FileStream(Path.Combine(_outFolder, _symbol + "0.bin"), FileMode.Create))
             {
                 using (var binaryWriter = new BinaryWriter(outStream))
                 {
@@ -428,7 +448,7 @@ namespace Forex_Strategy_Builder.Dialogs
             totalVolume--;
             count1MinBars--;
 
-            SetInfoText(Symbol + Environment.NewLine);
+            SetInfoText(_symbol + Environment.NewLine);
             SetInfoText(Language.T("Directory") + ": " + Path.GetFileNameWithoutExtension(directory) + Environment.NewLine);
             SetInfoText(Language.T("Saved") + " " + Language.T("Ticks") + " - " + totalVolume + Environment.NewLine);
             return count1MinBars;
@@ -437,7 +457,7 @@ namespace Forex_Strategy_Builder.Dialogs
         private FileInfo[] GetSortedCsvFiles(string directory)
         {
             var taskDirectory = new DirectoryInfo(directory);
-            FileInfo[] taskFiles = taskDirectory.GetFiles(Symbol + "*.csv");
+            FileInfo[] taskFiles = taskDirectory.GetFiles(_symbol + "-????-??.csv");
             Array.Sort(taskFiles, (f1, f2) => String.CompareOrdinal(f1.Name, f2.Name));
             return taskFiles;
         }
@@ -507,8 +527,6 @@ namespace Forex_Strategy_Builder.Dialogs
                     MessageBox.Show(exception.Message);
                 }
             }
-
-            //return count1MinBars;
         }
 
         private static void FilterReccord(IList<double> reccord)
@@ -615,7 +633,7 @@ namespace Forex_Strategy_Builder.Dialogs
                                   bar.Time.Year, bar.Time.Month, bar.Time.Day, bar.Time.Hour, bar.Time.Minute, bar.Open,
                                   bar.High, bar.Low, bar.Close, bar.Volume));
 
-            string fileName = Symbol + (int)period + ".csv";
+            string fileName = _symbol + (int)period + ".csv";
             string path = Path.Combine(_outFolder, fileName);
 
             try
@@ -638,7 +656,7 @@ namespace Forex_Strategy_Builder.Dialogs
         private void CompileMinuteBars()
         {
             _minuteBarList = new List<Bar>();
-            var fileStream = new FileStream(Path.Combine(_outFolder, Symbol + "0.bin"), FileMode.Open);
+            var fileStream = new FileStream(Path.Combine(_outFolder, _symbol + "0.bin"), FileMode.Open);
             var binaryReader = new BinaryReader(fileStream);
 
             long pos = 0;
@@ -765,9 +783,7 @@ namespace Forex_Strategy_Builder.Dialogs
         #region Delegates
 
         private delegate void SetInfoTextDelegate(string text);
-        private delegate void SetupProgressBarFileDelegate(long maximum);
         private delegate void UpdateProgressBarDelegate(int increment);
-        private delegate void UpdateProgressBarFileDelegate(long position);
 
         #endregion
 
@@ -782,12 +798,5 @@ namespace Forex_Strategy_Builder.Dialogs
                 ProgressBar.Value = ProgressBar.Value + increment;
             }
         }
-
-
-    }
-
-    public interface ITrueForexTickDataImport
-    {
-        int ImportTicks(string file, BackgroundWorker worker);
     }
 }
