@@ -195,11 +195,11 @@
   </str>
   <str>
     <main>Monitor "Strategies" Directory for New Files</main>
-    <alt>Monitor "Strategies" Directory for New Files</alt>
+    <alt>Смотреть "Strategies" kаталог для новых файлов</alt>
   </str>
   <str>
     <main>Monitor the "Strategies" directory and automatically load strategy files.</main>
-    <alt>Monitor the "Strategies" directory and automatically load strategy files.</alt>
+    <alt>Мониторинг  "Strategies" каталог и автоматически загружать файлы стратегия.</alt>
   </str>
   <str>
     <main>Exit</main>
@@ -3084,8 +3084,8 @@
     <alt>Импорт файлов данных TrueFX</alt>
   </str>
   <str>
-    <main>Select a TrueFX file for import</main>
-    <alt>Выберите TrueFX файл для импорт</alt>
+    <main>Select TrueFX source folder</main>
+    <alt>Выберите TrueFx исходной папки.</alt>
   </str>
   <!-- Error and Warning Messages -->
   <str>

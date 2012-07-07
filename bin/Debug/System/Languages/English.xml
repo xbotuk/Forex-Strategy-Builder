@@ -3084,8 +3084,8 @@
     <alt>Import TrueFX Data Files</alt>
   </str>
   <str>
-    <main>Select a TrueFX file for import</main>
-    <alt>Select a TrueFX file for import</alt>
+    <main>Select TrueFX source folder</main>
+    <alt>Select TrueFX source folder</alt>
   </str>
   <!-- Error and Warning Messages -->
   <str>

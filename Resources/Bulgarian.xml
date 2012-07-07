@@ -852,7 +852,7 @@
   <!-- TrueFX Import -->
   <str><main>TrueFX Import</main><alt>TrueFX вмъкване</alt></str>
   <str><main>Import TrueFX Data Files</main><alt>Вмъкване на данни от TrueFX файлове</alt></str>
-  <str><main>Select a TrueFX file for import</main><alt>Изберете TrueFX файл за вмъкване</alt></str>
+  <str><main>Select TrueFX source folder</main><alt>Изберете TrueFX папка с файлове</alt></str>
 
   <!-- Error and Warning Messages -->
   <str><main>Forex Strategy Builder cannot load a historical data file and is going to use integrated data!</main><alt>Forex Strategy Builder не може да зареди файл с исторически данни и ще използва интегрирани данни!</alt></str>

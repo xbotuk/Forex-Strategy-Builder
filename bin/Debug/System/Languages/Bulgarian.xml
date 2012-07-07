@@ -3084,8 +3084,8 @@
     <alt>Вмъкване на данни от TrueFX файлове</alt>
   </str>
   <str>
-    <main>Select a TrueFX file for import</main>
-    <alt>Изберете TrueFX файл за вмъкване</alt>
+    <main>Select TrueFX source folder</main>
+    <alt>Изберете TrueFX папка с файлове</alt>
   </str>
   <!-- Error and Warning Messages -->
   <str>
