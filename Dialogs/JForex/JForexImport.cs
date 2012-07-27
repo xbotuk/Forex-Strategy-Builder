@@ -538,9 +538,9 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
                         string[] data = line.Split(new[] { delimiter });
 
                         if (dateFormat == "#")
-                            dateFormat = FindDateFormat(data[0]);
+                            dateFormat = FindDateFormat(data[0] + " " + data[1]);
 
-                        DateTime t = ParseDateWithoutSeconds(data[0], dateFormat);
+                        DateTime t = ParseDateWithoutSeconds(data[0] + " " + data[1], dateFormat);
                         var tickTime = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, 0);
                         double bid = StringToDouble(data[2]);
 
