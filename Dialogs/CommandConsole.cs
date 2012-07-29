@@ -6,9 +6,11 @@
 
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Forex_Strategy_Builder
 {
@@ -108,7 +110,8 @@ namespace Forex_Strategy_Builder
                 "resetinstrum   - Resets the instruments list.",
                 "speedtest      - Performs a speed test.",
                 "reloadtips     - Reloads the starting tips.",
-                "showalltips    - Shows all the starting tips."
+                "showalltips    - Shows all the starting tips.",
+                "loadsavedata   - Loads, filters and saves all data files."
             };
 
             if (input.StartsWith("help") || input.StartsWith("?"))
@@ -198,6 +201,10 @@ namespace Forex_Strategy_Builder
             {
                 var startingTips = new StartingTips {ShowAllTips = true};
                 startingTips.Show();
+            }
+            else if (input.StartsWith("loadsavedata"))
+            {
+                LoadSaveData();
             }
 
             TbxOutput.Focus();
@@ -353,6 +360,95 @@ namespace Forex_Strategy_Builder
                 TbxOutput.Text += Environment.NewLine + "Indicators for bar " + (bar + 1) + Environment.NewLine +
                                   "-----------------" + Environment.NewLine + sb;
             }
+        }
+
+        /// <summary>
+        /// Loads, filters and saves all data files.
+        /// </summary>
+        private void LoadSaveData()
+        {
+            var files = Directory.GetFiles(Data.OfflineDataDir, "*.csv");
+            foreach (var file in files)
+            {
+                var symbol = GetSymbolFromFileName(file);
+                var period = GetPeriodFromFileName(file);
+                if (string.IsNullOrEmpty(symbol) || period == 0)
+                    continue;
+
+                InstrumentProperties instrProperties = Instruments.InstrumentList[symbol].Clone();
+                var instrument = new Instrument(instrProperties, period)
+                                     {
+                                         DataDir = Data.OfflineDataDir,
+                                         MaxBars = Configs.MaxBars,
+                                         StartTime = Configs.DataStartTime,
+                                         EndTime = Configs.DataEndTime,
+                                         UseStartTime = Configs.UseStartTime,
+                                         UseEndTime = Configs.UseEndTime
+                                     };
+
+                int loadDataResult = instrument.LoadData();
+
+                if (instrument.Bars > 0 && loadDataResult == 0)
+                {
+                    var stringBuilder = new StringBuilder(instrument.Bars);
+                    for (int bar = 0; bar < instrument.Bars; bar++)
+                    {
+                        stringBuilder.AppendLine(
+                            instrument.Time(bar).ToString("yyyy-MM-dd") + "\t" +
+                            instrument.Time(bar).ToString("HH:mm") + "\t" +
+                            instrument.Open(bar).ToString(CultureInfo.InvariantCulture) + "\t" +
+                            instrument.High(bar).ToString(CultureInfo.InvariantCulture) + "\t" +
+                            instrument.Low(bar).ToString(CultureInfo.InvariantCulture) + "\t" +
+                            instrument.Close(bar).ToString(CultureInfo.InvariantCulture) + "\t" +
+                            instrument.Volume(bar).ToString(CultureInfo.InvariantCulture)
+                            );
+                    }
+                    try
+                    {
+                        var sw = new StreamWriter(file);
+                        sw.Write(stringBuilder.ToString());
+                        sw.Close();
+
+                        TbxOutput.Text += symbol + period + " bars: " + instrument.Bars + Environment.NewLine;
+                    }
+                    catch (Exception exc)
+                    {
+                        MessageBox.Show(exc.Message);
+                    }
+
+                }
+
+            }
+        }
+
+        private string GetSymbolFromFileName(string file)
+        {
+            string symbol = string.Empty;
+            var fileName = Path.GetFileNameWithoutExtension(file);
+            const string pattern = @"^(?<symbol>[A-Za-z]+)\d+$";
+            var expression = new Regex(pattern, RegexOptions.Compiled);
+            if (fileName != null)
+            {
+                Match match = expression.Match(fileName);
+                if (match.Success)
+                    symbol = match.Groups["symbol"].Value;
+            }
+            return symbol;
+        }
+
+        private int GetPeriodFromFileName(string file)
+        {
+            int period = 0;
+            var fileName = Path.GetFileNameWithoutExtension(file);
+            const string pattern = @"(?<period>\d+)$";
+            var expression = new Regex(pattern, RegexOptions.Compiled);
+            if (fileName != null)
+            {
+                Match match = expression.Match(fileName);
+                if (match.Success)
+                    int.TryParse(match.Groups["period"].Value, out period);
+            }
+            return period;
         }
     }
 }
