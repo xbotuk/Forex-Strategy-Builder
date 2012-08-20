@@ -1,6 +1,6 @@
 // ATR Stop Indicator
 // Last changed on 2010-07-15
-// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
+// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
 // Part of Forex Strategy Builder & Forex Strategy Trader
 // Website http://forexsb.com/
 // This code or any part of it cannot be used in other applications without a permission.
@@ -92,7 +92,6 @@ namespace Forex_Strategy_Builder
 
             // Calculation
             int firstBar = period + 2;
-
             double[] ATR = new double[Bars];
 
             for (int bar = 1; bar < Bars; bar++)
@@ -101,7 +100,8 @@ namespace Forex_Strategy_Builder
             ATR = MovingAverage(period, 0, maMethod, ATR);
 
             double[] ATRStop = new double[Bars];
-            double minStop = 5 * Point;
+            double pip = (Digits == 5 || Digits == 3) ? 10 * Point : Point;
+            double minStop = 5 * pip;
 
             for (int bar = firstBar; bar < Bars - prev; bar++)
                 ATRStop[bar + prev] = Math.Max(ATR[bar] * multipl, minStop);
@@ -118,10 +118,10 @@ namespace Forex_Strategy_Builder
 
             Component[1]               = new IndicatorComp();
             Component[1].CompName      = "ATR Stop for the transferred position";
-            Component[1].DataType	   = IndComponentType.Other;
+            Component[1].DataType      = IndComponentType.Other;
             Component[1].ShowInDynInfo = false;
-            Component[1].FirstBar	   = firstBar;
-            Component[1].Value	       = new double[Bars];
+            Component[1].FirstBar      = firstBar;
+            Component[1].Value         = new double[Bars];
 
             return;
         }
