@@ -16,7 +16,7 @@ namespace Forex_Strategy_Builder
         private Bar[] _aBar; // An array containing the data
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Instrument(InstrumentProperties instrProperties, int period)
         {
@@ -42,10 +42,19 @@ namespace Forex_Strategy_Builder
 
 
         // General instrument info
-        public string Symbol { get { return _instrProperties.Symbol; } }
+        public string Symbol
+        {
+            get { return _instrProperties.Symbol; }
+        }
+
         private int Period { get; set; }
         public int Bars { get; private set; }
-        private double Point { get { return _instrProperties.Point; } }
+
+        private double Point
+        {
+            get { return _instrProperties.Point; }
+        }
+
         public DateTime Update { get; private set; }
 
         // -------------------------------------------------------------
@@ -91,7 +100,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the data file
+        ///     Loads the data file
         /// </summary>
         /// <returns>0 - success</returns>
         public int LoadData()
@@ -128,7 +137,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the data file
+        ///     Loads the data file
         /// </summary>
         /// <returns>0 - success</returns>
         public int LoadResourceData()
@@ -153,7 +162,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Refines the market data
+        ///     Refines the market data
         /// </summary>
         private void RefineData()
         {
@@ -162,6 +171,9 @@ namespace Forex_Strategy_Builder
             {
                 for (int bar = 1; bar < Bars; bar++)
                 {
+                    if (_aBar[bar - 1].Time.DayOfWeek > DayOfWeek.Wednesday &&
+                        _aBar[bar].Time.DayOfWeek < DayOfWeek.Wednesday)
+                        continue;
                     _aBar[bar].Open = _aBar[bar - 1].Close;
                     if (_aBar[bar].Open > _aBar[bar].High || _aBar[bar].Close > _aBar[bar].High)
                         _aBar[bar].High = _aBar[bar].Open > _aBar[bar].Close ? _aBar[bar].Open : _aBar[bar].Close;
@@ -227,7 +239,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Data Horizon - Cuts some data
+        ///     Data Horizon - Cuts some data
         /// </summary>
         private void DataHorizon()
         {
@@ -297,7 +309,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Checks the loaded data
+        ///     Checks the loaded data
         /// </summary>
         private void CheckMarketData()
         {
@@ -316,7 +328,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculate statistics for the loaded data.
+        ///     Calculate statistics for the loaded data.
         /// </summary>
         private void SetDataStats()
         {
