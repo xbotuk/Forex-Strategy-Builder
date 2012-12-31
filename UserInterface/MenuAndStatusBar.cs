@@ -571,7 +571,7 @@ namespace Forex_Strategy_Builder
                                             Image = Resources.publish_strategy,
                                             ToolTipText = Language.T("Publish the strategy in the program's forum.")
                                         };
-            miStrategyPublish.Click += MenuStrategyBBcodeOnClick;
+            miStrategyPublish.Click += MenuStrategyBBCodeOnClick;
             miStrategy.DropDownItems.Add(miStrategyPublish);
 
             miStrategy.DropDownItems.Add(new ToolStripSeparator());
@@ -643,7 +643,7 @@ namespace Forex_Strategy_Builder
                                       Checked = true,
                                       CheckOnClick = true
                                   };
-            MiStrategyAUPBV.Click += MenuStrategyAUPBVOnClick;
+            MiStrategyAUPBV.Click += MenuStrategyAupbvOnClick;
             miStrategy.DropDownItems.Add(MiStrategyAUPBV);
 
             // Export
@@ -659,15 +659,15 @@ namespace Forex_Strategy_Builder
             miExpDataOnly.Click += ExportOnClick;
             miExport.DropDownItems.Add(miExpDataOnly);
 
-            var miExpCSVData = new ToolStripMenuItem
+            var miExpCsvData = new ToolStripMenuItem
                                    {
                                        Name = "CSVData",
                                        Image = Resources.export,
                                        Text = Language.T("Data File") + "...",
                                        ToolTipText = Language.T("Export market data as a CSV file.")
                                    };
-            miExpCSVData.Click += ExportOnClick;
-            miExport.DropDownItems.Add(miExpCSVData);
+            miExpCsvData.Click += ExportOnClick;
+            miExport.DropDownItems.Add(miExpCsvData);
 
             var miExpIndicators = new ToolStripMenuItem
                                       {
@@ -1004,6 +1004,15 @@ namespace Forex_Strategy_Builder
             miCommandConsole.Click += MenuToolsOnClick;
             miAdditional.DropDownItems.Add(miCommandConsole);
 
+            var miBenchmark = new ToolStripMenuItem
+                                       {
+                                           Name = "Benchmark",
+                                           Text = Language.T("Run performance test") + "...",
+                                           Image = Resources.clock
+                                       };
+            miBenchmark.Click += MenuToolsOnClick;
+            miAdditional.DropDownItems.Add(miBenchmark);
+
             if (Directory.Exists(Data.AdditionalFolder))
             {
                 var files = new List<string>();
@@ -1013,7 +1022,7 @@ namespace Forex_Strategy_Builder
                     files.Sort();
                     miAdditional.DropDownItems.Add(new ToolStripSeparator());
                 }
-                Keys key = Keys.F1;
+                var key = Keys.F1;
                 foreach (string file in files)
                 {
                     var miAdditionalSubMenu = new ToolStripMenuItem();
@@ -1395,7 +1404,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Opens the strategy settings dialogue
         /// </summary>
-        protected virtual void MenuStrategyAUPBVOnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyAupbvOnClick(object sender, EventArgs e)
         {
         }
 
@@ -1464,7 +1473,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         ///   Export the strategy in BBCode format - ready to post in the forum
         /// </summary>
-        protected virtual void MenuStrategyBBcodeOnClick(object sender, EventArgs e)
+        protected virtual void MenuStrategyBBCodeOnClick(object sender, EventArgs e)
         {
         }
 

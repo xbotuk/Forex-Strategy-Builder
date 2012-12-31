@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using Forex_Strategy_Builder.Common;
 using Forex_Strategy_Builder.Dialogs.Generator;
 using Forex_Strategy_Builder.Dialogs.Optimizer;
+using Forex_Strategy_Builder.Properties;
 
 namespace Forex_Strategy_Builder
 {
@@ -361,11 +362,9 @@ namespace Forex_Strategy_Builder
         {
             Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + "* - " + Data.ProgramName;
             Data.IsStrategyChanged = true;
-
             Data.StackStrategy.Push(Data.Strategy.Clone());
             Data.Strategy.RemoveFilter(slotNumber);
             RebuildStrategyLayout();
-
             Calculate(false);
         }
 
@@ -383,7 +382,6 @@ namespace Forex_Strategy_Builder
             if (Data.StackStrategy.Count > 0)
             {
                 Data.Strategy = Data.StackStrategy.Pop();
-
                 RebuildStrategyLayout();
                 Calculate(true);
             }
@@ -465,7 +463,9 @@ namespace Forex_Strategy_Builder
                                  };
 
             // Loads the data
-            int loadDataResult = useResource ? instrument.LoadResourceData() : instrument.LoadData();
+            int loadDataResult = useResource
+                ? instrument.LoadResourceData(Resources.EURUSD1440, DataPeriods.day)
+                : instrument.LoadData();
 
             if (instrument.Bars > 0 && loadDataResult == 0)
             {
@@ -820,9 +820,8 @@ namespace Forex_Strategy_Builder
         /// <param name="recalcIndicators">true - to recalculate all the indicators.</param>
         private void Calculate(bool recalcIndicators)
         {
-            bool isUPBVChanged = Data.Strategy.AdjustUsePreviousBarValue();
+            bool isUpbvChanged = Data.Strategy.AdjustUsePreviousBarValue();
 
-            // Calculates the indicators by slots if it's necessary
             if (recalcIndicators)
                 foreach (IndicatorSlot indSlot in Data.Strategy.Slot)
                 {
@@ -854,7 +853,7 @@ namespace Forex_Strategy_Builder
             Data.IsResult = true;
             StatsBuffer.UpdateStatsBuffer();
 
-            if (isUPBVChanged) RebuildStrategyLayout();
+            if (isUpbvChanged) RebuildStrategyLayout();
             IndicatorChart.InitChart();
             IndicatorChart.Invalidate();
             BalanceChart.SetChartData();

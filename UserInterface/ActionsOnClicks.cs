@@ -1,29 +1,33 @@
-// Actions OnClick
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// Part of Forex Strategy Builder
-// Website http://forexsb.com
+// Forex Strategy Builder
+// Copyright (c) Miroslav Popov - All rights reserved.
 // This code or any part of it cannot be used in other applications without a permission.
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Forex_Strategy_Builder.Dialogs;
 using Forex_Strategy_Builder.Dialogs.Analyzer;
 using Forex_Strategy_Builder.Dialogs.JForex;
+using Forex_Strategy_Builder.Utils;
 
 namespace Forex_Strategy_Builder
 {
     /// <summary>
-    /// Class Actions : Controls
+    ///     Class Actions : Controls
     /// </summary>
     public sealed partial class Actions
     {
+        private Benchmark benchmark;
+
         /// <summary>
-        /// Changes the Full Screen mode.
+        ///     Changes the Full Screen mode.
         /// </summary>
         protected override void MenuViewFullScreenOnClick(object sender, EventArgs e)
         {
@@ -35,7 +39,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Opens the averaging parameters dialog.
+        ///     Opens the averaging parameters dialog.
         /// </summary>
         protected override void PnlAveragingClick(object sender, EventArgs e)
         {
@@ -43,7 +47,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Opens the indicator parameters dialog.
+        ///     Opens the indicator parameters dialog.
         /// </summary>
         protected override void PnlSlotMouseUp(object sender, MouseEventArgs e)
         {
@@ -54,7 +58,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Strategy panel menu items clicked
+        ///     Strategy panel menu items clicked
         /// </summary>
         protected override void SlotContextMenuClick(object sender, EventArgs e)
         {
@@ -81,7 +85,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs actions after the button add open filter was clicked.
+        ///     Performs actions after the button add open filter was clicked.
         /// </summary>
         protected override void BtnAddOpenFilterClick(object sender, EventArgs e)
         {
@@ -89,7 +93,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs actions after the button add close filter was clicked.
+        ///     Performs actions after the button add close filter was clicked.
         /// </summary>
         protected override void BtnAddCloseFilterClick(object sender, EventArgs e)
         {
@@ -97,8 +101,8 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs actions after selecting a new ComboBox item.
-        /// Handler for: ComboBoxSymbol, ComboBoxPeriod, ComboBoxInterpolationMethod
+        ///     Performs actions after selecting a new ComboBox item.
+        ///     Handler for: ComboBoxSymbol, ComboBoxPeriod, ComboBoxInterpolationMethod
         /// </summary>
         protected override void SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -133,7 +137,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Whether to express account in pips or in currency
+        ///     Whether to express account in pips or in currency
         /// </summary>
         protected override void AccountShowInMoneyOnClick(object sender, EventArgs e)
         {
@@ -155,7 +159,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Opens the account setting dialog
+        ///     Opens the account setting dialog
         /// </summary>
         protected override void MenuAccountSettingsOnClick(object sender, EventArgs e)
         {
@@ -163,7 +167,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Copies the strategy to clipboard.
+        ///     Copies the strategy to clipboard.
         /// </summary>
         protected override void MenuStrategyCopyOnClick(object sender, EventArgs e)
         {
@@ -172,7 +176,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Pastes a strategy from clipboard.
+        ///     Pastes a strategy from clipboard.
         /// </summary>
         protected override void MenuStrategyPasteOnClick(object sender, EventArgs e)
         {
@@ -184,13 +188,13 @@ namespace Forex_Strategy_Builder
                 return;
 
             var xmlDoc = new XmlDocument();
-            var strategyXML = new StrategyXML();
+            var strategyXml = new StrategyXML();
             Strategy tempStrategy;
 
             try
             {
                 xmlDoc.InnerXml = Clipboard.GetText();
-                tempStrategy = strategyXML.ParseXmlStrategy(xmlDoc);
+                tempStrategy = strategyXml.ParseXmlStrategy(xmlDoc);
             }
             catch (Exception exception)
             {
@@ -213,8 +217,6 @@ namespace Forex_Strategy_Builder
             Calculate(false);
         }
 
-        private delegate void DelegateLoadDroppedStrategy(string filePath);
-
         protected override void LoadDroppedStrategy(string filePath)
         {
             if (filePath == Data.StrategyPath)
@@ -225,7 +227,7 @@ namespace Forex_Strategy_Builder
 
             if (BalanceChart.InvokeRequired)
             {
-                Invoke(new DelegateLoadDroppedStrategy(LoadDroppedStrategy), new object[] { filePath });
+                Invoke(new DelegateLoadDroppedStrategy(LoadDroppedStrategy), new object[] {filePath});
             }
             else
             {
@@ -241,8 +243,9 @@ namespace Forex_Strategy_Builder
                 }
             }
         }
+
         /// <summary>
-        /// Load a color scheme.
+        ///     Load a color scheme.
         /// </summary>
         protected override void MenuLoadColorOnClick(object sender, EventArgs e)
         {
@@ -261,7 +264,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs actions corresponding on the menu item Load.
+        ///     Performs actions corresponding on the menu item Load.
         /// </summary>
         protected override void MenuLoadDataOnClick(object sender, EventArgs e)
         {
@@ -272,7 +275,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Check the data.
+        ///     Check the data.
         /// </summary>
         protected override void MenuCheckDataOnClick(object sender, EventArgs e)
         {
@@ -283,7 +286,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Refine the data
+        ///     Refine the data
         /// </summary>
         protected override void MenuRefineDataOnClick(object sender, EventArgs e)
         {
@@ -302,7 +305,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Data Horizon
+        ///     Data Horizon
         /// </summary>
         protected override void MenuDataHorizonOnClick(object sender, EventArgs e)
         {
@@ -310,7 +313,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Data Directory
+        ///     Data Directory
         /// </summary>
         protected override void MenuDataDirectoryOnClick(object sender, EventArgs e)
         {
@@ -341,7 +344,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Autos can
+        ///     Autos can
         /// </summary>
         protected override void MenuStrategyAutoscanOnClick(object sender, EventArgs e)
         {
@@ -354,7 +357,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// TradeUntillMC
+        ///     TradeUntilMC
         /// </summary>
         protected override void TradeUntilMCOnClick(object sender, EventArgs e)
         {
@@ -364,7 +367,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// AdditionalStatsOnClick
+        ///     AdditionalStatsOnClick
         /// </summary>
         protected override void AdditionalStatsOnClick(object sender, EventArgs e)
         {
@@ -374,33 +377,33 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Opens the strategy settings dialogue.
+        ///     Opens the strategy settings dialogue.
         /// </summary>
-        protected override void MenuStrategyAUPBVOnClick(object sender, EventArgs e)
+        protected override void MenuStrategyAupbvOnClick(object sender, EventArgs e)
         {
             UsePreviousBarValueChange();
         }
 
         /// <summary>
-        ///  Monitor the "Strategies" directory and automatically load new strategy files
+        ///     Monitor the "Strategies" directory and automatically load new strategy files
         /// </summary>
         protected override void MenuFileDirWatch(object sender, EventArgs e)
         {
-            var toolStripMenuItem = (ToolStripMenuItem)sender;
+            var toolStripMenuItem = (ToolStripMenuItem) sender;
             Configs.StrategyDirWatch = toolStripMenuItem.Checked;
             SetStrategyDirWatcher();
         }
 
         /// <summary>
-        /// Export the strategy in BBCode format - ready to post in the forum
+        ///     Export the strategy in BBCode format - ready to post in the forum
         /// </summary>
-        protected override void MenuStrategyBBcodeOnClick(object sender, EventArgs e)
+        protected override void MenuStrategyBBCodeOnClick(object sender, EventArgs e)
         {
             PublishStrategy();
         }
 
         /// <summary>
-        /// Remove the corresponding indicator slot.
+        ///     Remove the corresponding indicator slot.
         /// </summary>
         protected override void BtnRemoveSlotClick(object sender, EventArgs e)
         {
@@ -409,7 +412,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Forces the calculation of the strategy.
+        ///     Forces the calculation of the strategy.
         /// </summary>
         protected override void MenuAnalysisCalculateOnClick(object sender, EventArgs e)
         {
@@ -417,7 +420,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Forces the intrabar scanning of the strategy.
+        ///     Forces the intrabar scanning of the strategy.
         /// </summary>
         protected override void MenuQuickScanOnClick(object sender, EventArgs e)
         {
@@ -425,7 +428,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the default strategy.
+        ///     Loads the default strategy.
         /// </summary>
         protected override void MenuStrategyNewOnClick(object sender, EventArgs e)
         {
@@ -433,7 +436,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Opens the dialog form OpenFileDialog.
+        ///     Opens the dialog form OpenFileDialog.
         /// </summary>
         protected override void MenuFileOpenOnClick(object sender, EventArgs e)
         {
@@ -441,7 +444,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Saves the strategy.
+        ///     Saves the strategy.
         /// </summary>
         protected override void MenuFileSaveOnClick(object sender, EventArgs e)
         {
@@ -449,7 +452,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Opens the dialog form SaveFileDialog.
+        ///     Opens the dialog form SaveFileDialog.
         /// </summary>
         protected override void MenuFileSaveAsOnClick(object sender, EventArgs e)
         {
@@ -457,7 +460,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Undoes the strategy.
+        ///     Undoes the strategy.
         /// </summary>
         protected override void MenuStrategyUndoOnClick(object sender, EventArgs e)
         {
@@ -465,7 +468,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the previously generated strategy
+        ///     Loads the previously generated strategy
         /// </summary>
         protected override void MenuPrevHistoryOnClick(object sender, EventArgs e)
         {
@@ -477,7 +480,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the next generated strategy
+        ///     Loads the next generated strategy
         /// </summary>
         protected override void MenuNextHistoryOnClick(object sender, EventArgs e)
         {
@@ -489,7 +492,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Tools menu
+        ///     Tools menu
         /// </summary>
         protected override void MenuToolsOnClick(object sender, EventArgs e)
         {
@@ -578,6 +581,9 @@ namespace Forex_Strategy_Builder
                 case "CommandConsole":
                     ShowCommandConsole();
                     break;
+                case "Benchmark":
+                    ShowBenchmark();
+                    break;
                 case "miMetaTrader4Import":
                     MetaTrader4Import();
                     break;
@@ -599,8 +605,56 @@ namespace Forex_Strategy_Builder
             }
         }
 
+        private void ShowBenchmark()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Benchmark test will continue about 1 minute.");
+            sb.AppendLine("During the test you do not have to touch FSB.");
+            sb.AppendLine("Base benchmark score is 100 points.");
+            sb.AppendLine();
+            sb.AppendLine("Run benchmark?");
+
+            DialogResult dialogResult = MessageBox.Show(sb.ToString(), "Benchmark", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.No) return;
+
+            PanelWorkspace.Visible = false;
+
+            benchmark = new Benchmark();
+
+            var benchmarkWorker = new BackgroundWorker();
+            benchmarkWorker.DoWork += BackgroundWorker_DoWork;
+            benchmarkWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            benchmarkWorker.RunWorkerAsync();
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Thread.Sleep(5000);
+
+            benchmark.InitializeBenchmark();
+            Data.GenerateMarketStats();
+
+            double score = benchmark.RunLoadFilesTest(5);
+            var rateDataParse = (int) (100*6500.0/score);
+
+            score = benchmark.RunStrategyTest(30);
+            var rateStrategy = (int) (100*29100.0/score);
+
+            e.Result = (100*rateStrategy + 2*rateDataParse)/102;
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            benchmark.FinishBenchmark();
+            AfterStrategyOpening(false);
+            Calculate(true);
+
+            PanelWorkspace.Visible = true;
+            MessageBox.Show("Benchmark score: " + e.Result);
+        }
+
         /// <summary>
-        /// Tools button
+        ///     Tools button
         /// </summary>
         protected override void BtnToolsOnClick(object sender, EventArgs e)
         {
@@ -633,7 +687,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Reset settings
+        ///     Reset settings
         /// </summary>
         private void ResetSettings()
         {
@@ -647,7 +701,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Menu Journal
+        ///     Menu Journal
         /// </summary>
         protected override void MenuJournalOnClick(object sender, EventArgs e)
         {
@@ -719,7 +773,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts the Analyzer.
+        ///     Starts the Analyzer.
         /// </summary>
         private void ShowAnalyzer(string menuItem)
         {
@@ -728,7 +782,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts the Calculator.
+        ///     Starts the Calculator.
         /// </summary>
         private void ShowCalculator()
         {
@@ -737,7 +791,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts the Profit Calculator.
+        ///     Starts the Profit Calculator.
         /// </summary>
         private void ShowProfitCalculator()
         {
@@ -746,7 +800,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts the Pivot Points Calculator.
+        ///     Starts the Pivot Points Calculator.
         /// </summary>
         private void ShowPivotPoints()
         {
@@ -755,7 +809,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts the Fibonacci Levels Calculator.
+        ///     Starts the Fibonacci Levels Calculator.
         /// </summary>
         private void ShowFibonacciLevels()
         {
@@ -764,7 +818,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts the Calculator.
+        ///     Starts the Calculator.
         /// </summary>
         private void ShowCommandConsole()
         {
@@ -773,7 +827,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Makes new language file.
+        ///     Makes new language file.
         /// </summary>
         private void MakeNewTranslation()
         {
@@ -782,7 +836,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Edit translation.
+        ///     Edit translation.
         /// </summary>
         private void EditTranslation()
         {
@@ -791,7 +845,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts MetaTrader4Import.
+        ///     Starts MetaTrader4Import.
         /// </summary>
         private void MetaTrader4Import()
         {
@@ -800,7 +854,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts JForexImport.
+        ///     Starts JForexImport.
         /// </summary>
         private void JForexImport()
         {
@@ -809,7 +863,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts OandaTickDataImport.
+        ///     Starts OandaTickDataImport.
         /// </summary>
         private void OandaDataImport()
         {
@@ -818,7 +872,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Starts TrueForexTickDataImport.
+        ///     Starts TrueForexTickDataImport.
         /// </summary>
         private void TrueFxDataImport()
         {
@@ -827,7 +881,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Use logical groups menu item.
+        ///     Use logical groups menu item.
         /// </summary>
         protected override void MenuUseLogicalGroupsOnClick(object sender, EventArgs e)
         {
@@ -876,7 +930,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Menu MenuOpeningLogicSlotsOnClick.
+        ///     Menu MenuOpeningLogicSlotsOnClick.
         /// </summary>
         protected override void MenuOpeningLogicSlotsOnClick(object sender, EventArgs e)
         {
@@ -890,7 +944,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Menu MenuClosingLogicSlotsOnClick.
+        ///     Menu MenuClosingLogicSlotsOnClick.
         /// </summary>
         protected override void MenuClosingLogicSlotsOnClick(object sender, EventArgs e)
         {
@@ -904,7 +958,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Menu ShowPriceLineOnClick.
+        ///     Menu ShowPriceLineOnClick.
         /// </summary>
         protected override void ShowPriceLineOnClick(object sender, EventArgs e)
         {
@@ -917,7 +971,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the program's language.
+        ///     Sets the program's language.
         /// </summary>
         protected override void LanguageClick(object sender, EventArgs e)
         {
@@ -950,5 +1004,7 @@ namespace Forex_Strategy_Builder
             }
             toolStripMenuItem.Checked = true;
         }
+
+        private delegate void DelegateLoadDroppedStrategy(string filePath);
     }
 }
