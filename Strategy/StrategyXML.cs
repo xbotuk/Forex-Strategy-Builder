@@ -8,6 +8,8 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
+using Forex_Strategy_Builder.Common;
+using Forex_Strategy_Builder.Utils;
 
 namespace Forex_Strategy_Builder
 {
@@ -29,43 +31,16 @@ namespace Forex_Strategy_Builder
             XmlElement root = xmlDocStrategy.DocumentElement;
             xmlDocStrategy.InsertBefore(xmldecl, root);
 
-            // Add the program name.
-            XmlElement newElem = xmlDocStrategy.CreateElement("programName");
-            newElem.InnerText = Data.ProgramName;
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the program version.
-            newElem = xmlDocStrategy.CreateElement("programVersion");
-            newElem.InnerText = Data.ProgramVersion;
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the strategy name.
-            newElem = xmlDocStrategy.CreateElement("strategyName");
-            newElem.InnerText = strategy.StrategyName;
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the Symbol.
-            newElem = xmlDocStrategy.CreateElement("instrumentSymbol");
-            newElem.InnerText = strategy.Symbol;
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the Period.
-            newElem = xmlDocStrategy.CreateElement("instrumentPeriod");
-            newElem.InnerText = strategy.DataPeriod.ToString();
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the same direction signal action.
-            newElem = xmlDocStrategy.CreateElement("sameDirSignalAction");
-            newElem.InnerText = strategy.SameSignalAction.ToString();
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the opposite direction signal action.
-            newElem = xmlDocStrategy.CreateElement("oppDirSignalAction");
-            newElem.InnerText = strategy.OppSignalAction.ToString();
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
+            AppendStringElement(xmlDocStrategy, "programName", Data.ProgramName);
+            AppendStringElement(xmlDocStrategy, "programVersion", Data.ProgramVersion);
+            AppendStringElement(xmlDocStrategy, "strategyName", strategy.StrategyName);
+            AppendStringElement(xmlDocStrategy, "instrumentSymbol", strategy.Symbol);
+            AppendStringElement(xmlDocStrategy, "instrumentPeriod", (int)strategy.DataPeriod);
+            AppendStringElement(xmlDocStrategy, "sameDirSignalAction", strategy.SameSignalAction.ToString());
+            AppendStringElement(xmlDocStrategy, "oppDirSignalAction", strategy.OppSignalAction.ToString());
 
             // Add the Permanent Stop Loss
-            newElem = xmlDocStrategy.CreateElement("permanentStopLoss");
+            XmlElement newElem = xmlDocStrategy.CreateElement("permanentStopLoss");
             newElem.InnerText = strategy.PermanentSL.ToString(CultureInfo.InvariantCulture);
             newElem.SetAttribute("usePermanentSL", strategy.UsePermanentSL.ToString(CultureInfo.InvariantCulture));
             newElem.SetAttribute("permanentSLType", strategy.PermanentSLType.ToString());
@@ -84,60 +59,22 @@ namespace Forex_Strategy_Builder
             newElem.SetAttribute("useBreakEven", strategy.UseBreakEven.ToString(CultureInfo.InvariantCulture));
             if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
 
-            // Add the max open lots
-            newElem = xmlDocStrategy.CreateElement("maxOpenLots");
-            newElem.InnerText = strategy.MaxOpenLots.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add Use Account Percent Entry
-            newElem = xmlDocStrategy.CreateElement("useAccountPercentEntry");
-            newElem.InnerText = strategy.UseAccountPercentEntry.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the Entry lots
-            newElem = xmlDocStrategy.CreateElement("entryLots");
-            newElem.InnerText = strategy.EntryLots.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the Adding lots
-            newElem = xmlDocStrategy.CreateElement("addingLots");
-            newElem.InnerText = strategy.AddingLots.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the Reducing lots
-            newElem = xmlDocStrategy.CreateElement("reducingLots");
-            newElem.InnerText = strategy.ReducingLots.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add Use Martingale MM
-            newElem = xmlDocStrategy.CreateElement("useMartingale");
-            newElem.InnerText = strategy.UseMartingale.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the Martingale Multiplier
-            newElem = xmlDocStrategy.CreateElement("martingaleMultiplier");
-            newElem.InnerText = strategy.MartingaleMultiplier.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Description
-            newElem = xmlDocStrategy.CreateElement("description");
-            newElem.InnerText = strategy.Description;
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the number of open filters.
-            newElem = xmlDocStrategy.CreateElement("openFilters");
-            newElem.InnerText = strategy.OpenFilters.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
-
-            // Add the number of close filters.
-            newElem = xmlDocStrategy.CreateElement("closeFilters");
-            newElem.InnerText = strategy.CloseFilters.ToString(CultureInfo.InvariantCulture);
-            if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newElem);
+            AppendStringElement(xmlDocStrategy, "maxOpenLots", strategy.MaxOpenLots);
+            AppendStringElement(xmlDocStrategy, "useAccountPercentEntry", strategy.UseAccountPercentEntry);
+            AppendStringElement(xmlDocStrategy, "entryLots", strategy.EntryLots);
+            AppendStringElement(xmlDocStrategy, "addingLots", strategy.AddingLots);
+            AppendStringElement(xmlDocStrategy, "reducingLots", strategy.ReducingLots);
+            AppendStringElement(xmlDocStrategy, "useMartingale", strategy.UseMartingale);
+            AppendStringElement(xmlDocStrategy, "martingaleMultiplier", strategy.MartingaleMultiplier);
+            AppendStringElement(xmlDocStrategy, "description", strategy.Description);
 
             // Add the slots.
+            AppendStringElement(xmlDocStrategy, "openFilters", strategy.OpenFilters);
+            AppendStringElement(xmlDocStrategy, "closeFilters", strategy.CloseFilters);
             for (int slot = 0; slot < strategy.Slots; slot++)
             {
-                SlotTypes slType = strategy.Slot[slot].SlotType;
+                IndicatorSlot stratSlot = strategy.Slot[slot];
+                SlotTypes slType = stratSlot.SlotType;
 
                 // Add a slot element.
                 XmlElement newSlot = xmlDocStrategy.CreateElement("slot");
@@ -145,94 +82,116 @@ namespace Forex_Strategy_Builder
                 newSlot.SetAttribute("slotType", slType.ToString());
 
                 if (slType == SlotTypes.OpenFilter || slType == SlotTypes.CloseFilter)
-                    newSlot.SetAttribute("logicalGroup", strategy.Slot[slot].LogicalGroup);
+                    newSlot.SetAttribute("logicalGroup", stratSlot.LogicalGroup);
 
                 // Add an element.
                 newElem = xmlDocStrategy.CreateElement("indicatorName");
-                newElem.InnerText = strategy.Slot[slot].IndicatorName;
+                newElem.InnerText = stratSlot.IndicatorName;
                 newSlot.AppendChild(newElem);
 
                 // Add the list parameters.
-                for (int param = 0; param < strategy.Slot[slot].IndParam.ListParam.Length; param++)
+                for (int param = 0; param < stratSlot.IndParam.ListParam.Length; param++)
                 {
-                    if (strategy.Slot[slot].IndParam.ListParam[param].Enabled)
-                    {
-                        // Add an element.
-                        XmlElement newListElem = xmlDocStrategy.CreateElement("listParam");
-                        newListElem.SetAttribute("paramNumber", param.ToString(CultureInfo.InvariantCulture));
+                    if (!stratSlot.IndParam.ListParam[param].Enabled) continue;
 
-                        // Add an element.
-                        newElem = xmlDocStrategy.CreateElement("caption");
-                        newElem.InnerText = strategy.Slot[slot].IndParam.ListParam[param].Caption;
-                        newListElem.AppendChild(newElem);
+                    // Add an element.
+                    XmlElement newListElem = xmlDocStrategy.CreateElement("listParam");
+                    newListElem.SetAttribute("paramNumber", param.ToString(CultureInfo.InvariantCulture));
 
-                        // Add an element.
-                        newElem = xmlDocStrategy.CreateElement("index");
-                        newElem.InnerText =
-                            strategy.Slot[slot].IndParam.ListParam[param].Index.ToString(CultureInfo.InvariantCulture);
-                        newListElem.AppendChild(newElem);
+                    // Add an element.
+                    newElem = xmlDocStrategy.CreateElement("caption");
+                    newElem.InnerText = stratSlot.IndParam.ListParam[param].Caption;
+                    newListElem.AppendChild(newElem);
 
-                        // Add an element.
-                        newElem = xmlDocStrategy.CreateElement("value");
-                        newElem.InnerText = strategy.Slot[slot].IndParam.ListParam[param].Text;
-                        newListElem.AppendChild(newElem);
+                    // Add an element.
+                    newElem = xmlDocStrategy.CreateElement("index");
+                    newElem.InnerText = stratSlot.IndParam.ListParam[param].Index.ToString(CultureInfo.InvariantCulture);
+                    newListElem.AppendChild(newElem);
 
-                        newSlot.AppendChild(newListElem);
-                    }
+                    // Add an element.
+                    newElem = xmlDocStrategy.CreateElement("value");
+                    newElem.InnerText = stratSlot.IndParam.ListParam[param].Text;
+                    newListElem.AppendChild(newElem);
+
+                    newSlot.AppendChild(newListElem);
                 }
 
                 // Add the num parameters.
-                for (int param = 0; param < strategy.Slot[slot].IndParam.NumParam.Length; param++)
+                for (int param = 0; param < stratSlot.IndParam.NumParam.Length; param++)
                 {
-                    if (strategy.Slot[slot].IndParam.NumParam[param].Enabled)
-                    {
-                        // Add an element.
-                        XmlElement newNumElem = xmlDocStrategy.CreateElement("numParam");
-                        newNumElem.SetAttribute("paramNumber", param.ToString(CultureInfo.InvariantCulture));
+                    if (!stratSlot.IndParam.NumParam[param].Enabled) continue;
 
-                        // Add an element.
-                        newElem = xmlDocStrategy.CreateElement("caption");
-                        newElem.InnerText = strategy.Slot[slot].IndParam.NumParam[param].Caption;
-                        newNumElem.AppendChild(newElem);
+                    // Add an element.
+                    XmlElement newNumElem = xmlDocStrategy.CreateElement("numParam");
+                    newNumElem.SetAttribute("paramNumber", param.ToString(CultureInfo.InvariantCulture));
 
-                        // Add an element.
-                        newElem = xmlDocStrategy.CreateElement("value");
-                        newElem.InnerText = strategy.Slot[slot].IndParam.NumParam[param].ValueToString;
-                        newNumElem.AppendChild(newElem);
+                    // Add an element.
+                    newElem = xmlDocStrategy.CreateElement("caption");
+                    newElem.InnerText = stratSlot.IndParam.NumParam[param].Caption;
+                    newNumElem.AppendChild(newElem);
 
-                        newSlot.AppendChild(newNumElem);
-                    }
+                    // Add an element.
+                    newElem = xmlDocStrategy.CreateElement("value");
+                    newElem.InnerText = stratSlot.IndParam.NumParam[param].ValueToString;
+                    newNumElem.AppendChild(newElem);
+
+                    newSlot.AppendChild(newNumElem);
                 }
 
                 // Add the check parameters.
-                for (int param = 0; param < strategy.Slot[slot].IndParam.CheckParam.Length; param++)
+                for (int param = 0; param < stratSlot.IndParam.CheckParam.Length; param++)
                 {
-                    if (strategy.Slot[slot].IndParam.CheckParam[param].Enabled)
-                    {
-                        // Add an element.
-                        XmlElement newCheckElem = xmlDocStrategy.CreateElement("checkParam");
-                        newCheckElem.SetAttribute("paramNumber", param.ToString(CultureInfo.InvariantCulture));
+                    if (!stratSlot.IndParam.CheckParam[param].Enabled) continue;
 
-                        // Add an element.
-                        newElem = xmlDocStrategy.CreateElement("caption");
-                        newElem.InnerText = strategy.Slot[slot].IndParam.CheckParam[param].Caption;
-                        newCheckElem.AppendChild(newElem);
+                    // Add an element.
+                    XmlElement newCheckElem = xmlDocStrategy.CreateElement("checkParam");
+                    newCheckElem.SetAttribute("paramNumber", param.ToString(CultureInfo.InvariantCulture));
 
-                        // Add an element.
-                        newElem = xmlDocStrategy.CreateElement("value");
-                        newElem.InnerText =
-                            strategy.Slot[slot].IndParam.CheckParam[param].Checked.ToString(CultureInfo.InvariantCulture);
-                        newCheckElem.AppendChild(newElem);
+                    // Add an element.
+                    newElem = xmlDocStrategy.CreateElement("caption");
+                    newElem.InnerText = stratSlot.IndParam.CheckParam[param].Caption;
+                    newCheckElem.AppendChild(newElem);
 
-                        newSlot.AppendChild(newCheckElem);
-                    }
+                    // Add an element.
+                    newElem = xmlDocStrategy.CreateElement("value");
+                    newElem.InnerText = stratSlot.IndParam.CheckParam[param].Checked.ToString(CultureInfo.InvariantCulture);
+                    newCheckElem.AppendChild(newElem);
+
+                    newSlot.AppendChild(newCheckElem);
                 }
 
-                if (xmlDocStrategy.DocumentElement != null) xmlDocStrategy.DocumentElement.AppendChild(newSlot);
+                if (xmlDocStrategy.DocumentElement != null)
+                    xmlDocStrategy.DocumentElement.AppendChild(newSlot);
             }
+
+            // Add statistics meta data.
+            string unit = " " + Configs.AccountCurrency;
+            AppendStringElement(xmlDocStrategy, "AccountBalance", Backtester.NetMoneyBalance.ToString("F2") + unit);
+            AppendStringElement(xmlDocStrategy, "ProfitPerDay", Backtester.MoneyProfitPerDay.ToString("F2") + unit);
+            AppendStringElement(xmlDocStrategy, "WinLossRatio", Backtester.WinLossRatio.ToString("F2"));
+            AppendStringElement(xmlDocStrategy, "AccountStatsParam", String.Join(";", Backtester.AccountStatsParam));
+            AppendStringElement(xmlDocStrategy, "AccountStatsValue", String.Join(";", Backtester.AccountStatsValue));
+            AppendStringElement(xmlDocStrategy, "MarketStatsParam", String.Join(";", Data.MarketStatsParam));
+            AppendStringElement(xmlDocStrategy, "MarketStatsValue", String.Join(";", Data.MarketStatsValue));
+
+            // Add chart data
+            int length = Data.Bars - StatsBuffer.FirstBar;
+            var balanceLine = new double[length];
+            var equityLine = new double[length];
+            for (int bar = 0; bar < length; bar++)
+            {
+                balanceLine[bar] = Backtester.MoneyBalance(bar);
+                equityLine[bar] = Backtester.MoneyEquity(bar);
+            }
+            int size = Math.Min(600, length);
+            var balanceList = MathUtils.ArrayToStringArray(MathUtils.ArrayResize(balanceLine, size));
+            var equityList = MathUtils.ArrayToStringArray(MathUtils.ArrayResize(equityLine, size));
+            AppendStringElement(xmlDocStrategy, "BalanceLine", String.Join(";", balanceList));
+            AppendStringElement(xmlDocStrategy, "EquityLine", String.Join(";", equityList));
 
             return xmlDocStrategy;
         }
+
 
         /// <summary>
         /// Pareses a strategy from a xml document.
@@ -511,5 +470,35 @@ namespace Forex_Strategy_Builder
 
             return group;
         }
+
+
+        private static void AppendStringElement(XmlDocument xmlDocument, string element, string value)
+        {
+            AppendString(xmlDocument, element, value);
+        }
+
+        private static void AppendStringElement(XmlDocument xmlDocument, string element, int value)
+        {
+            AppendString(xmlDocument, element, value.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static void AppendStringElement(XmlDocument xmlDocument, string element, double value)
+        {
+            AppendString(xmlDocument, element, value.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static void AppendStringElement(XmlDocument xmlDocument, string element, bool value)
+        {
+            AppendString(xmlDocument, element, value.ToString());
+        }
+
+        private static void AppendString(XmlDocument xmlDocument, string element, string text)
+        {
+            XmlElement newElem = xmlDocument.CreateElement(element);
+            newElem.InnerText = text;
+            if (xmlDocument.DocumentElement != null)
+                xmlDocument.DocumentElement.AppendChild(newElem);
+        }
+
     }
 }

@@ -247,6 +247,7 @@
     <Compile Include="CustomControls\InfoPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Utils\MathUtils.cs" />
     <Compile Include="Utils\SortableDictionary.cs" />
     <Compile Include="Strategy\StrategyXML.cs" />
     <Compile Include="Dialogs\CommandConsole.cs">
