@@ -269,7 +269,7 @@ namespace Forex_Strategy_Builder
         /// <summary>
         /// Rearranges all controls in panel Strategy
         /// </summary>
-        public void RearangeStrategyControls()
+        public void RearrangeStrategyControls()
         {
             FlowLayoutStrategy.SuspendLayout();
             ArrangeStrategyControls();

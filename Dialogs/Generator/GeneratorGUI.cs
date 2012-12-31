@@ -1122,6 +1122,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             else
             {
                 StrategyField.RebuildStrategyControls(strategy);
+
                 StrategyField.PanelProperties.Click += PnlPropertiesClick;
                 StrategyField.PanelProperties.DoubleClick += PnlPropertiesClick;
                 for (int slot = 0; slot < strategy.Slots; slot++)
@@ -1538,7 +1539,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 }
             }
 
-            StrategyField.RearangeStrategyControls();
+            StrategyField.RearrangeStrategyControls();
         }
 
         /// <summary>

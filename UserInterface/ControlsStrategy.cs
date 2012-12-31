@@ -165,6 +165,7 @@ namespace Forex_Strategy_Builder
         protected void RebuildStrategyLayout()
         {
             StrategyField.RebuildStrategyControls(Data.Strategy.Clone());
+
             StrategyField.PanelProperties.Click += PnlAveragingClick;
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
             {
@@ -252,7 +253,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void RearangeStrategyLayout()
         {
-            StrategyField.RearangeStrategyControls();
+            StrategyField.RearrangeStrategyControls();
         }
 
         /// <summary>
