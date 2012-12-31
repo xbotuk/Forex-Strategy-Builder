@@ -140,11 +140,11 @@ namespace Forex_Strategy_Builder
         ///     Loads the data file
         /// </summary>
         /// <returns>0 - success</returns>
-        public int LoadResourceData()
+        public int LoadResourceData(string data, DataPeriods period)
         {
             var dataParser = new DataParser();
             int respond = -1;
-            int parsedBars = dataParser.Parse(Resources.EURUSD1440, 1440);
+            int parsedBars = dataParser.Parse(data, (int) period);
 
             if (parsedBars > 0)
             {

@@ -147,6 +147,7 @@
     <Compile Include="Enumerations\PermanentProtectionType.cs" />
     <Compile Include="Enumerations\StrategySlotStatus.cs" />
     <Compile Include="UserInterface\SmallBalanceChartData.cs" />
+    <Compile Include="Utils\Benchmark.cs" />
     <Compile Include="Utils\ColorMagic.cs" />
     <Compile Include="Utils\FileIconExtractor.cs" />
     <Compile Include="Dialogs\Analyzer\Analyzer.cs">
