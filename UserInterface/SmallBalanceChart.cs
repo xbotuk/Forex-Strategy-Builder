@@ -205,6 +205,8 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public void InitChart()
         {
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque, true);
+
             // Chart Title
             _chartTitle = Language.T("Balance / Equity Chart") + " [" + (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]");
             _font = new Font(Font.FontFamily, 9);
@@ -322,7 +324,13 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            //Graphics g = e.Graphics;
+            //------------------------------------------------------------------------------------------
+            base.OnPaint(e);
+            if (ClientSize.Width == 0 || ClientSize.Height == 0) return; // Для восстановления из минимизации.
+            var bitmap = new Bitmap(ClientSize.Width, ClientSize.Height);
+            Graphics g = Graphics.FromImage(bitmap);
+            //------------------------------------------------------------------------------------------
 
             // Caption bar
             Data.GradientPaint(g, _rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
@@ -477,6 +485,8 @@ namespace Forex_Strategy_Builder
             g.DrawRectangle(new Pen(LayoutColors.ColorChartCross), labelRect);
             g.DrawString((Math.Round(_data.NetBalance)).ToString(CultureInfo.InvariantCulture), Font,
                          new SolidBrush(LayoutColors.ColorLabelText), labelRect, _stringFormatCaption);
+
+            DIBSection.DIBSection.DrawOnPaint(e.Graphics, bitmap, Width, Height);            
         }
 
         /// <summary>
