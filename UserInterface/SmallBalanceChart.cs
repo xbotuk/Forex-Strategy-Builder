@@ -10,6 +10,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
 using Forex_Strategy_Builder.CustomControls;
+using Forex_Strategy_Builder.Utils;
 
 namespace Forex_Strategy_Builder
 {
@@ -205,7 +206,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public void InitChart()
         {
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque, true);
 
             // Chart Title
             _chartTitle = Language.T("Balance / Equity Chart") + " [" + (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]");
@@ -324,13 +325,10 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
-            //Graphics g = e.Graphics;
-            //------------------------------------------------------------------------------------------
             base.OnPaint(e);
-            if (ClientSize.Width == 0 || ClientSize.Height == 0) return; // Для восстановления из минимизации.
+            if (ClientSize.Width == 0 || ClientSize.Height == 0) return;
             var bitmap = new Bitmap(ClientSize.Width, ClientSize.Height);
             Graphics g = Graphics.FromImage(bitmap);
-            //------------------------------------------------------------------------------------------
 
             // Caption bar
             Data.GradientPaint(g, _rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
@@ -460,10 +458,10 @@ namespace Forex_Strategy_Builder
                         xEnd = xStart;
                     Data.GradientPaint(g, new RectangleF(xStart, _yBottom + 4, xEnd - xStart + 2, 5), color, 60);
 
-                    var rectf = new RectangleF(xStart, _yBottom + 4, xEnd - xStart + 2, 5);
-                    Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriods.min1], 60);
-                    rectf = new RectangleF(xStart, _yBottom + 6, xEnd - xStart + 2, 1);
-                    Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriods.day], 60);
+                    var rect = new RectangleF(xStart, _yBottom + 4, xEnd - xStart + 2, 5);
+                    Data.GradientPaint(g, rect, Data.PeriodColor[DataPeriods.min1], 60);
+                    rect = new RectangleF(xStart, _yBottom + 6, xEnd - xStart + 2, 1);
+                    Data.GradientPaint(g, rect, Data.PeriodColor[DataPeriods.day], 60);
                 }
 
                 // Vertical coordinate axes
@@ -486,7 +484,7 @@ namespace Forex_Strategy_Builder
             g.DrawString((Math.Round(_data.NetBalance)).ToString(CultureInfo.InvariantCulture), Font,
                          new SolidBrush(LayoutColors.ColorLabelText), labelRect, _stringFormatCaption);
 
-            DIBSection.DIBSection.DrawOnPaint(e.Graphics, bitmap, Width, Height);            
+            DIBSection.DrawOnPaint(e.Graphics, bitmap, Width, Height);            
         }
 
         /// <summary>

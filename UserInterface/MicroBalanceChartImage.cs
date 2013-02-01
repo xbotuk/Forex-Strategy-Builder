@@ -52,11 +52,11 @@ namespace Forex_Strategy_Builder
                 int minLongBalance = Configs.AccountInMoney ? (int) Backtester.MinLongMoneyBalance : Backtester.MinLongBalance;
                 int maxShortBalance = Configs.AccountInMoney ? (int) Backtester.MaxShortMoneyBalance : Backtester.MaxShortBalance;
                 int minShortBalance = Configs.AccountInMoney ? (int) Backtester.MinShortMoneyBalance : Backtester.MinShortBalance;
-                int maxLSBalance = Math.Max(maxLongBalance, maxShortBalance);
-                int minLSBalance = Math.Min(minLongBalance, minShortBalance);
+                int maxLsBalance = Math.Max(maxLongBalance, maxShortBalance);
+                int minLsBalance = Math.Min(minLongBalance, minShortBalance);
 
-                maximum = Math.Max(Math.Max(maxBalance, maxEquity), maxLSBalance) + 1;
-                minimum = Math.Min(Math.Min(minBalance, minEquity), minLSBalance) - 1;
+                maximum = Math.Max(Math.Max(maxBalance, maxEquity), maxLsBalance) + 1;
+                minimum = Math.Min(Math.Min(minBalance, minEquity), minLsBalance) - 1;
             }
             else
             {

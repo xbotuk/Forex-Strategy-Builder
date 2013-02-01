@@ -6,7 +6,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace DIBSection
+namespace Forex_Strategy_Builder.Utils
 {       
         #region Работа с Bitmap
         public class DIBSection
@@ -19,13 +19,13 @@ namespace DIBSection
             [DllImport("gdi32.dll")]
             public static extern bool DeleteObject(IntPtr hObject);
             public const int SRCCOPY = 0x00CC0020;
-            [DllImportAttribute("gdi32.dll")]
+            [DllImport("gdi32.dll")]
             public static extern IntPtr CreateCompatibleDC(IntPtr hdc);
-            [DllImportAttribute("gdi32.dll")]
+            [DllImport("gdi32.dll")]
             public static extern bool DeleteDC(IntPtr hdc);
-            [DllImportAttribute("gdi32.dll")]
+            [DllImport("gdi32.dll")]
             public static extern bool BitBlt(IntPtr hdcDest, int destX, int destY, int destWidth, int destHeight, IntPtr hdcSource, int sourceX, int sourceY, uint rasterOp);
-            [DllImportAttribute("gdi32.dll")]
+            [DllImport("gdi32.dll")]
             public static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
             private const int DIB_RGB_COLORS = 0;
             [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]

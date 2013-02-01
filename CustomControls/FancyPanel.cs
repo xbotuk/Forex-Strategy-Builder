@@ -7,129 +7,138 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Forex_Strategy_Builder.Utils;
 
 namespace Forex_Strategy_Builder
 {
     public class FancyPanel : Panel
     {
-        private readonly string _caption;
-        private readonly bool _showCaption = true;
         private const int Border = 2;
-        private Brush _brushCaption;
-        private Color _colorCaptionBack;
-        private Font _fontCaption;
-        private Pen _penBorder;
-        private RectangleF _rectfCaption;
-        private StringFormat _stringFormatCaption;
-        private float _height;
-        private float _width;
+        private readonly string captionText;
+        private readonly bool showCaption = true;
+        private Brush brushCaption;
+        private Color colorCaptionBack;
+        private Font fontCaption;
+        private float height;
+        private Pen penBorder;
+        private RectangleF rectCaption;
+        private StringFormat stringFormatCaption;
+        private float width;
 
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
         public FancyPanel()
         {
-            _caption = "";
-            _showCaption = false;
+            captionText = "";
+            showCaption = false;
             InitializeParameters();
             SetColors();
             Padding = new Padding(Border, 2*Border, Border, Border);
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public FancyPanel(string captionText)
         {
-            _caption = captionText;
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque,
+                     true);
+
+            this.captionText = captionText;
             InitializeParameters();
             SetColors();
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public FancyPanel(string captionText, Color borderColor)
         {
-            _caption = captionText;
-            _colorCaptionBack = borderColor;
-            _brushCaption = new SolidBrush(LayoutColors.ColorCaptionText);
-            _penBorder = new Pen(Data.GetGradientColor(borderColor, -LayoutColors.DepthCaption), Border);
+            this.captionText = captionText;
+            colorCaptionBack = borderColor;
+            brushCaption = new SolidBrush(LayoutColors.ColorCaptionText);
+            penBorder = new Pen(Data.GetGradientColor(borderColor, -LayoutColors.DepthCaption), Border);
 
             InitializeParameters();
         }
 
         /// <summary>
-        /// Gets the caption height.
+        ///     Gets the caption height.
         /// </summary>
         public float CaptionHeight { get; private set; }
 
         /// <summary>
-        /// Sets the panel colors
+        ///     Sets the panel colors
         /// </summary>
         private void SetColors()
         {
-            _colorCaptionBack = LayoutColors.ColorCaptionBack;
-            _brushCaption = new SolidBrush(LayoutColors.ColorCaptionText);
-            _penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
+            colorCaptionBack = LayoutColors.ColorCaptionBack;
+            brushCaption = new SolidBrush(LayoutColors.ColorCaptionText);
+            penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
         }
 
         /// <summary>
-        /// Initialize Parameters
+        ///     Initialize Parameters
         /// </summary>
         private void InitializeParameters()
         {
-            _fontCaption = new Font(Font.FontFamily, 9);
-            _stringFormatCaption = new StringFormat
-                                      {
-                                          Alignment = StringAlignment.Center,
-                                          LineAlignment = StringAlignment.Center,
-                                          Trimming = StringTrimming.EllipsisCharacter,
-                                          FormatFlags = StringFormatFlags.NoWrap
-                                      };
+            fontCaption = new Font(Font.FontFamily, 9);
+            stringFormatCaption = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center,
+                    Trimming = StringTrimming.EllipsisCharacter,
+                    FormatFlags = StringFormatFlags.NoWrap
+                };
 
-            CaptionHeight = _showCaption ? Math.Max(_fontCaption.Height, 18) : 2*Border;
+            CaptionHeight = showCaption ? Math.Max(fontCaption.Height, 18) : 2*Border;
         }
 
         /// <summary>
-        /// On Paint
+        ///     On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            base.OnPaint(e);
+            if (ClientSize.Width == 0 || ClientSize.Height == 0) return;
+            var bitmap = new Bitmap(ClientSize.Width, ClientSize.Height);
+            Graphics g = Graphics.FromImage(bitmap);
 
             // Caption
-            Data.GradientPaint(g, _rectfCaption, _colorCaptionBack, LayoutColors.DepthCaption);
-            if (_showCaption)
-                g.DrawString(_caption, _fontCaption, _brushCaption, _rectfCaption, _stringFormatCaption);
+            Data.GradientPaint(g, rectCaption, colorCaptionBack, LayoutColors.DepthCaption);
+            if (showCaption)
+                g.DrawString(captionText, fontCaption, brushCaption, rectCaption, stringFormatCaption);
 
-            g.DrawLine(_penBorder, 1, CaptionHeight, 1, ClientSize.Height);
-            g.DrawLine(_penBorder, ClientSize.Width - Border + 1, CaptionHeight, ClientSize.Width - Border + 1,
+            g.DrawLine(penBorder, 1, CaptionHeight, 1, ClientSize.Height);
+            g.DrawLine(penBorder, ClientSize.Width - Border + 1, CaptionHeight, ClientSize.Width - Border + 1,
                        ClientSize.Height);
-            g.DrawLine(_penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
+            g.DrawLine(penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
 
             // Paint the panel background
-            var rectClient = new RectangleF(Border, CaptionHeight, _width, _height);
+            var rectClient = new RectangleF(Border, CaptionHeight, width, height);
             Data.GradientPaint(g, rectClient, LayoutColors.ColorControlBack, LayoutColors.DepthControl);
+
+            DIBSection.DrawOnPaint(e.Graphics, bitmap, Width, Height);
         }
 
         /// <summary>
-        /// On Resize
+        ///     On Resize
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
             base.OnResize(eventargs);
-            if (_showCaption)
+            if (showCaption)
             {
-                _width = ClientSize.Width - 2*Border;
-                _height = ClientSize.Height - CaptionHeight - Border;
-                _rectfCaption = new RectangleF(0, 0, ClientSize.Width, CaptionHeight);
+                width = ClientSize.Width - 2*Border;
+                height = ClientSize.Height - CaptionHeight - Border;
+                rectCaption = new RectangleF(0, 0, ClientSize.Width, CaptionHeight);
             }
             else
             {
-                _width = ClientSize.Width - 2*Border;
-                _height = ClientSize.Height - CaptionHeight - Border;
-                _rectfCaption = new RectangleF(0, 0, ClientSize.Width, CaptionHeight);
+                width = ClientSize.Width - 2*Border;
+                height = ClientSize.Height - CaptionHeight - Border;
+                rectCaption = new RectangleF(0, 0, ClientSize.Width, CaptionHeight);
             }
 
             Invalidate();

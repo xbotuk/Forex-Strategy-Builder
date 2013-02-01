@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Forex_Strategy_Builder.Common;
 using Forex_Strategy_Builder.CustomControls;
+using Forex_Strategy_Builder.Utils;
 
 namespace Forex_Strategy_Builder
 {
@@ -175,6 +176,9 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void InitializeJournal()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque,
+                     true);
+
             // Horizontal ScrollBar
             hScrollBar = new HScrollBar {Parent = this, Dock = DockStyle.Bottom, SmallChange = 100, LargeChange = 300};
             hScrollBar.ValueChanged += HScrollBarValueChanged;
@@ -480,7 +484,10 @@ namespace Forex_Strategy_Builder
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            base.OnPaint(e);
+            if (ClientSize.Width == 0 || ClientSize.Height == 0) return;
+            var bitmap = new Bitmap(ClientSize.Width, ClientSize.Height);
+            Graphics g = Graphics.FromImage(bitmap);
 
             int scroll = -hScrollBar.Value;
             var size = new Size(ClientSize.Width, rowHeight);
@@ -575,6 +582,8 @@ namespace Forex_Strategy_Builder
             g.DrawLine(penBorder, ClientSize.Width - Border + 1, 2*rowHeight, ClientSize.Width - Border + 1,
                        ClientSize.Height);
             g.DrawLine(penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
+
+            DIBSection.DrawOnPaint(e.Graphics, bitmap, Width, Height);
 
             OnSelectedBarChange(new EventArgs());
         }

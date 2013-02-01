@@ -13,11 +13,26 @@ using System.Windows.Forms;
 namespace Forex_Strategy_Builder
 {
     /// <summary>
-    /// This is the base application form.
+    ///     This is the base application form.
     /// </summary>
     public class Workspace : Form
     {
         protected const int Gap = 4;
+        private FileSystemWatcher strategyDirWatcher;
+
+        /// <summary>
+        ///     The default constructor
+        /// </summary>
+        protected Workspace()
+        {
+            Graphics g = CreateGraphics();
+            SetGraphicalMeasures(g);
+            g.Dispose();
+
+            CreateControls();
+            InitializeControls();
+        }
+
         protected Panel PanelAccount { get; private set; }
         protected Panel PanelJournal { get; private set; }
         protected Panel PanelMarket { get; private set; }
@@ -33,26 +48,12 @@ namespace Forex_Strategy_Builder
         private Panel PanelMarketBase { get; set; }
         private Panel PanelStrategyBase { get; set; }
         private Splitter SplitterJournal { get; set; }
-        private FileSystemWatcher _strategyDirWatcher;
-
-        /// <summary>
-        /// The default constructor
-        /// </summary>
-        protected Workspace()
-        {
-            Graphics g = CreateGraphics();
-            SetGraphicalMeasures(g);
-            g.Dispose();
-
-            CreateControls();
-            InitializeControls();
-        }
 
         private void SetGraphicalMeasures(Graphics g)
         {
             SizeF sizeString = g.MeasureString("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890", Font);
-            Data.HorizontalDLU = (sizeString.Width / 62) / 4;
-            Data.VerticalDLU = sizeString.Height / 8;
+            Data.HorizontalDLU = (sizeString.Width/62)/4;
+            Data.VerticalDLU = sizeString.Height/8;
         }
 
         private void CreateControls()
@@ -77,7 +78,7 @@ namespace Forex_Strategy_Builder
             PanelJournalBase = new Panel();
             SplitterJournal = new Splitter();
 
-            _strategyDirWatcher = new FileSystemWatcher();
+            strategyDirWatcher = new FileSystemWatcher();
         }
 
         private void InitializeControls()
@@ -160,12 +161,12 @@ namespace Forex_Strategy_Builder
             PanelJournal.Dock = DockStyle.Fill;
 
             // Strategy Directory FileSystemWatcher
-            _strategyDirWatcher.Path = Data.StrategyDir;
-            _strategyDirWatcher.Created += StrategyDirWatcherCreated;
+            strategyDirWatcher.Path = Data.StrategyDir;
+            strategyDirWatcher.Created += StrategyDirWatcherCreated;
         }
 
         /// <summary>
-        /// Calculates the size of base panels.
+        ///     Calculates the size of base panels.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
@@ -174,7 +175,9 @@ namespace Forex_Strategy_Builder
             base.OnResize(e);
 
             PanelJournalBase.Visible = Configs.ShowJournal;
-            PanelDataBase.Height = Configs.ShowJournal ? (int) (PanelWorkspace.ClientSize.Height*0.630) : PanelWorkspace.ClientSize.Height - Gap;
+            PanelDataBase.Height = Configs.ShowJournal
+                                       ? (int) (PanelWorkspace.ClientSize.Height*0.630)
+                                       : PanelWorkspace.ClientSize.Height - Gap;
             SplitterJournal.Enabled = Configs.ShowJournal;
             PanelMarketBase.Width = PanelDataBase.ClientSize.Width/3;
             PanelStrategyBase.Width = PanelDataBase.ClientSize.Width/3;
@@ -197,22 +200,22 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Set the status of the Strategy Directory FileSystemWatcher
+        ///     Set the status of the Strategy Directory FileSystemWatcher
         /// </summary>
         internal void SetStrategyDirWatcher()
         {
-            _strategyDirWatcher.EnableRaisingEvents = Configs.StrategyDirWatch;
+            strategyDirWatcher.EnableRaisingEvents = Configs.StrategyDirWatch;
         }
 
         /// <summary>
-        /// Strategy Directory FileSystemWatcher Event Handler
+        ///     Strategy Directory FileSystemWatcher Event Handler
         /// </summary>
         private void StrategyDirWatcherCreated(object sender, FileSystemEventArgs e)
         {
-            _strategyDirWatcher.EnableRaisingEvents = false;
+            strategyDirWatcher.EnableRaisingEvents = false;
             Thread.Sleep(1000);
             LoadDroppedStrategy(e.FullPath);
-            _strategyDirWatcher.EnableRaisingEvents = Configs.StrategyDirWatch;
+            strategyDirWatcher.EnableRaisingEvents = Configs.StrategyDirWatch;
         }
     }
 }

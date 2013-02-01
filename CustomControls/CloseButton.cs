@@ -14,7 +14,7 @@ namespace Forex_Strategy_Builder.CustomControls
 {
     public sealed class CloseButton : Panel
     {
-        private bool _isHover;
+        private bool isHover;
 
         public CloseButton()
         {
@@ -32,14 +32,14 @@ namespace Forex_Strategy_Builder.CustomControls
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
-            _isHover = true;
+            isHover = true;
             Invalidate();
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
-            _isHover = false;
+            isHover = false;
             Invalidate();
         }
 
@@ -47,11 +47,11 @@ namespace Forex_Strategy_Builder.CustomControls
         {
             Graphics g = e.Graphics;
 
-            float factor1 = _isHover ? 0.55f : 0.25f;
-            float factor2 = _isHover ? 1.00f : 0.90f;
+            float factor1 = isHover ? 0.55f : 0.25f;
+            float factor2 = isHover ? 1.00f : 0.90f;
 
             var pen1 = new Pen(ColorMagic.GetIntermediateColor(ColorBack, ColorFore, factor1))
-                           {Width = 3, StartCap = LineCap.Round, EndCap = LineCap.Round};
+                {Width = 3, StartCap = LineCap.Round, EndCap = LineCap.Round};
             var pen2 = new Pen(ColorMagic.GetIntermediateColor(ColorBack, ColorFore, factor2));
 
             g.DrawLine(pen1, 11, 12, 3, 4);

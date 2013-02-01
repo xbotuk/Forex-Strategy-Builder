@@ -10,39 +10,40 @@ using System.Globalization;
 using System.Windows.Forms;
 using Forex_Strategy_Builder.Common;
 using Forex_Strategy_Builder.CustomControls;
+using Forex_Strategy_Builder.Utils;
 
 namespace Forex_Strategy_Builder
 {
     public class JournalOrders : ContextPanel
     {
         private const int Border = 2; // The width of outside border of the panel
-        private Brush _brushCaptionText;
-        private Brush _brushEvenRowBack;
-        private Brush _brushRowText;
-        private Color _colorBack;
+        private Brush brushCaptionText;
+        private Brush brushEvenRowBack;
+        private Brush brushRowText;
+        private Color colorBack;
 
-        private int _columns; // The number of the columns
-        private int _firstOrd; // The number of the first shown orders
-        private Font _font;
-        private string[,] _journalData; // The text journal data
-        private int _lastOrd; // The number of the last shown orders
-        private Image[] _orderIcons; // Shows the position's type and transaction
-        private int _orders; // The total number of the orders during the bar
-        private Pen _penBorder;
-        private Pen _penLines;
-        private int _rowHeight; // The journal row height
-        private int _rows; // The number of rows can be shown (without the caption bar)
-        private int _selectedBar; // The selected bar
-        private int _selectedBarOld; // The old selected bar
-        private int _shownOrd; // How many orders are shown
-        private string[] _titlesMoney; // Journal title
-        private string[] _titlesPips; // Journal title
-        private int _visibleWidth; // The width of the panel visible part
-        private int[] _xColumns; // The horizontal position of the column
-        private int[] _xScaled; // The scaled horizontal position of the column
+        private int columns; // The number of the columns
+        private int firstOrd; // The number of the first shown orders
+        private Font font;
+        private string[,] journalData; // The text journal data
+        private int lastOrd; // The number of the last shown orders
+        private Image[] orderIcons; // Shows the position's type and transaction
+        private int orders; // The total number of the orders during the bar
+        private Pen penBorder;
+        private Pen penLines;
+        private int rowHeight; // The journal row height
+        private int rows; // The number of rows can be shown (without the caption bar)
+        private int selectedBar; // The selected bar
+        private int selectedBarOld; // The old selected bar
+        private int shownOrd; // How many orders are shown
+        private string[] titlesMoney; // Journal title
+        private string[] titlesPips; // Journal title
+        private int visibleWidth; // The width of the panel visible part
+        private int[] xColumns; // The horizontal position of the column
+        private int[] xScaled; // The scaled horizontal position of the column
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public JournalOrders()
         {
@@ -54,15 +55,15 @@ namespace Forex_Strategy_Builder
         private HScrollBar HScrollBar { get; set; }
 
         /// <summary>
-        /// Sets the selected bar
+        ///     Sets the selected bar
         /// </summary>
         public int SelectedBar
         {
-            set { _selectedBar = value; }
+            set { selectedBar = value; }
         }
 
         /// <summary>
-        /// Sets the journal's current data
+        ///     Sets the journal's current data
         /// </summary>
         public void SetUpJournal()
         {
@@ -72,17 +73,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the journal colors
+        ///     Sets the journal colors
         /// </summary>
         private void SetJournalColors()
         {
-            _colorBack = LayoutColors.ColorControlBack;
-            _brushCaptionText = new SolidBrush(LayoutColors.ColorCaptionText);
-            _brushEvenRowBack = new SolidBrush(LayoutColors.ColorEvenRowBack);
-            _brushRowText = new SolidBrush(LayoutColors.ColorControlText);
-            _penLines = new Pen(LayoutColors.ColorJournalLines);
-            _penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
-                                 Border);
+            colorBack = LayoutColors.ColorControlBack;
+            brushCaptionText = new SolidBrush(LayoutColors.ColorCaptionText);
+            brushEvenRowBack = new SolidBrush(LayoutColors.ColorEvenRowBack);
+            brushRowText = new SolidBrush(LayoutColors.ColorControlText);
+            penLines = new Pen(LayoutColors.ColorJournalLines);
+            penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
+                                Border);
 
             ButtonsColorBack = LayoutColors.ColorCaptionBack;
             ButtonColorFore = LayoutColors.ColorCaptionText;
@@ -91,16 +92,19 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Initializes the Journal
+        ///     Initializes the Journal
         /// </summary>
         private void InitializeJournal()
         {
-            _columns = 8;
-            _xColumns = new int[9];
-            _xScaled = new int[9];
-            _font = new Font(Font.FontFamily, 9);
-            _rowHeight = Math.Max(_font.Height, 18);
-            Padding = new Padding(Border, 2*_rowHeight, Border, Border);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque,
+                     true);
+
+            columns = 8;
+            xColumns = new int[9];
+            xScaled = new int[9];
+            font = new Font(Font.FontFamily, 9);
+            rowHeight = Math.Max(font.Height, 18);
+            Padding = new Padding(Border, 2*rowHeight, Border, Border);
 
             // Horizontal ScrollBar
             HScrollBar = new HScrollBar {Parent = this, Dock = DockStyle.Bottom, SmallChange = 50, LargeChange = 200};
@@ -108,143 +112,143 @@ namespace Forex_Strategy_Builder
 
             // Vertical ScrollBar
             VScrollBar = new VScrollBar
-                             {Parent = this, Dock = DockStyle.Right, TabStop = true, SmallChange = 1, LargeChange = 2};
+                {Parent = this, Dock = DockStyle.Right, TabStop = true, SmallChange = 1, LargeChange = 2};
             VScrollBar.ValueChanged += VScrollBarValueChanged;
 
             var asComments = new[]
-                                 {
-                                     "Exit Order to position",
-                                     "Exit Order to order",
-                                     "Take Profit to position",
-                                     "Take Profit to order",
-                                     "Trailing Stop to position",
-                                     "Trailing Stop to order",
-                                     "Permanent S/L to position",
-                                     "Permanent S/L to order",
-                                     "Permanent T/P to position",
-                                     "Permanent T/P to order"
-                                 };
+                {
+                    "Exit Order to position",
+                    "Exit Order to order",
+                    "Take Profit to position",
+                    "Take Profit to order",
+                    "Trailing Stop to position",
+                    "Trailing Stop to order",
+                    "Permanent S/L to position",
+                    "Permanent S/L to order",
+                    "Permanent T/P to position",
+                    "Permanent T/P to order"
+                };
 
             Graphics g = CreateGraphics();
 
             string longestDirection = "";
             foreach (OrderDirection ordDir in Enum.GetValues(typeof (OrderDirection)))
-                if (g.MeasureString(Language.T(ordDir.ToString()), _font).Width >
-                    g.MeasureString(longestDirection, _font).Width)
+                if (g.MeasureString(Language.T(ordDir.ToString()), font).Width >
+                    g.MeasureString(longestDirection, font).Width)
                     longestDirection = Language.T(ordDir.ToString());
 
             string longestType = "";
             foreach (OrderType ordType in Enum.GetValues(typeof (OrderType)))
-                if (g.MeasureString(Language.T(ordType.ToString()), _font).Width >
-                    g.MeasureString(longestType, _font).Width)
+                if (g.MeasureString(Language.T(ordType.ToString()), font).Width >
+                    g.MeasureString(longestType, font).Width)
                     longestType = Language.T(ordType.ToString());
 
             string longestStatus = "";
             foreach (OrderStatus ordStatus in Enum.GetValues(typeof (OrderStatus)))
-                if (g.MeasureString(Language.T(ordStatus.ToString()), _font).Width >
-                    g.MeasureString(longestStatus, _font).Width)
+                if (g.MeasureString(Language.T(ordStatus.ToString()), font).Width >
+                    g.MeasureString(longestStatus, font).Width)
                     longestStatus = Language.T(ordStatus.ToString());
 
             string longestComment = "";
             foreach (string ordComment in asComments)
-                if (g.MeasureString(Language.T(ordComment) + " 99999", _font).Width >
-                    g.MeasureString(longestComment, _font).Width)
+                if (g.MeasureString(Language.T(ordComment) + " 99999", font).Width >
+                    g.MeasureString(longestComment, font).Width)
                     longestComment = Language.T(ordComment) + " 99999";
 
-            _titlesPips = new[]
-                              {
-                                  Language.T("Order"),
-                                  Language.T("Direction"),
-                                  Language.T("Type"),
-                                  Language.T("Lots"),
-                                  Language.T("Price 1"),
-                                  Language.T("Price 2"),
-                                  Language.T("Status"),
-                                  Language.T("Comment")
-                              };
+            titlesPips = new[]
+                {
+                    Language.T("Order"),
+                    Language.T("Direction"),
+                    Language.T("Type"),
+                    Language.T("Lots"),
+                    Language.T("Price 1"),
+                    Language.T("Price 2"),
+                    Language.T("Status"),
+                    Language.T("Comment")
+                };
 
-            _titlesMoney = new[]
-                               {
-                                   Language.T("Order"),
-                                   Language.T("Direction"),
-                                   Language.T("Type"),
-                                   Language.T("Amount"),
-                                   Language.T("Price 1"),
-                                   Language.T("Price 2"),
-                                   Language.T("Status"),
-                                   Language.T("Comment")
-                               };
+            titlesMoney = new[]
+                {
+                    Language.T("Order"),
+                    Language.T("Direction"),
+                    Language.T("Type"),
+                    Language.T("Amount"),
+                    Language.T("Price 1"),
+                    Language.T("Price 2"),
+                    Language.T("Status"),
+                    Language.T("Comment")
+                };
 
             var asColumContent = new[]
-                                     {
-                                         "99999",
-                                         longestDirection,
-                                         longestType,
-                                         "-9999999",
-                                         "99.99999",
-                                         "99.99999",
-                                         longestStatus,
-                                         longestComment
-                                     };
+                {
+                    "99999",
+                    longestDirection,
+                    longestType,
+                    "-9999999",
+                    "99.99999",
+                    "99.99999",
+                    longestStatus,
+                    longestComment
+                };
 
-            _xColumns[0] = Border;
-            _xColumns[1] = _xColumns[0] +
-                           (int)
-                           Math.Max(g.MeasureString(asColumContent[0], _font).Width + 16,
-                                    g.MeasureString(_titlesMoney[0], _font).Width) + 4;
-            for (int i = 1; i < _columns; i++)
-                _xColumns[i + 1] = _xColumns[i] +
-                                   (int)
-                                   Math.Max(g.MeasureString(asColumContent[i], _font).Width,
-                                            g.MeasureString(_titlesMoney[i], _font).Width) + 4;
+            xColumns[0] = Border;
+            xColumns[1] = xColumns[0] +
+                          (int)
+                          Math.Max(g.MeasureString(asColumContent[0], font).Width + 16,
+                                   g.MeasureString(titlesMoney[0], font).Width) + 4;
+            for (int i = 1; i < columns; i++)
+                xColumns[i + 1] = xColumns[i] +
+                                  (int)
+                                  Math.Max(g.MeasureString(asColumContent[i], font).Width,
+                                           g.MeasureString(titlesMoney[i], font).Width) + 4;
             g.Dispose();
         }
 
         /// <summary>
-        /// Updates the journal data from the StatsBuffer.
+        ///     Updates the journal data from the StatsBuffer.
         /// </summary>
         private void UpdateJournalData()
         {
             if (!Data.IsResult)
                 return;
 
-            _journalData = new string[_orders,_columns];
-            _orderIcons = new Image[_orders];
+            journalData = new string[orders,columns];
+            orderIcons = new Image[orders];
             int[] ordNumbers = ArrangeOrderNumbers();
 
-            for (int ord = _firstOrd; ord < _firstOrd + _shownOrd; ord++)
+            for (int ord = firstOrd; ord < firstOrd + shownOrd; ord++)
             {
-                int row = ord - _firstOrd;
+                int row = ord - firstOrd;
                 Order order = StatsBuffer.OrdFromNumb(ordNumbers[ord]);
 
-                _journalData[row, 0] = (order.OrdNumb + 1).ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 1] = Language.T(order.OrdDir.ToString());
-                _journalData[row, 2] = Language.T(order.OrdType.ToString());
-                _journalData[row, 3] = Configs.AccountInMoney
-                                           ? (order.OrdDir == OrderDirection.Sell ? "-" : "") +
-                                             (order.OrdLots*Data.InstrProperties.LotSize)
-                                           : order.OrdLots.ToString(CultureInfo.InvariantCulture);
-                _journalData[row, 4] = order.OrdPrice.ToString(Data.FF);
-                _journalData[row, 5] = (order.OrdPrice2 > 0 ? order.OrdPrice2.ToString(Data.FF) : "-");
-                _journalData[row, 6] = Language.T(order.OrdStatus.ToString());
-                _journalData[row, 7] = order.OrdNote;
+                journalData[row, 0] = (order.OrdNumb + 1).ToString(CultureInfo.InvariantCulture);
+                journalData[row, 1] = Language.T(order.OrdDir.ToString());
+                journalData[row, 2] = Language.T(order.OrdType.ToString());
+                journalData[row, 3] = Configs.AccountInMoney
+                                          ? (order.OrdDir == OrderDirection.Sell ? "-" : "") +
+                                            (order.OrdLots*Data.InstrProperties.LotSize)
+                                          : order.OrdLots.ToString(CultureInfo.InvariantCulture);
+                journalData[row, 4] = order.OrdPrice.ToString(Data.FF);
+                journalData[row, 5] = (order.OrdPrice2 > 0 ? order.OrdPrice2.ToString(Data.FF) : "-");
+                journalData[row, 6] = Language.T(order.OrdStatus.ToString());
+                journalData[row, 7] = order.OrdNote;
 
                 // Icons
-                _orderIcons[row] = Order.OrderIconImage(order.OrderIcon);
+                orderIcons[row] = Order.OrderIconImage(order.OrderIcon);
             }
         }
 
         private int[] ArrangeOrderNumbers()
         {
-            var ordNumbers = new int[_orders];
+            var ordNumbers = new int[orders];
             int index = 0;
-            for (int wayPoint = 0; wayPoint < StatsBuffer.WayPoints(_selectedBar); wayPoint++)
+            for (int wayPoint = 0; wayPoint < StatsBuffer.WayPoints(selectedBar); wayPoint++)
             {
-                int ordNumb = StatsBuffer.WayPoint(_selectedBar, wayPoint).OrdNumb;
-                WayPointType wpType = StatsBuffer.WayPoint(_selectedBar, wayPoint).WPType;
+                int ordNumb = StatsBuffer.WayPoint(selectedBar, wayPoint).OrdNumb;
+                WayPointType wpType = StatsBuffer.WayPoint(selectedBar, wayPoint).WPType;
 
                 if (ordNumb == -1) continue; // There is no order
-                if (ordNumb < StatsBuffer.OrdNumb(_selectedBar, 0)) continue; // For a transferred position
+                if (ordNumb < StatsBuffer.OrdNumb(selectedBar, 0)) continue; // For a transferred position
 
                 if (wpType == WayPointType.Add || wpType == WayPointType.Cancel ||
                     wpType == WayPointType.Entry || wpType == WayPointType.Exit ||
@@ -255,9 +259,9 @@ namespace Forex_Strategy_Builder
                 }
             }
 
-            for (int ord = 0; ord < _orders; ord++)
+            for (int ord = 0; ord < orders; ord++)
             {
-                int ordNumb = StatsBuffer.OrdNumb(_selectedBar, ord);
+                int ordNumb = StatsBuffer.OrdNumb(selectedBar, ord);
                 bool toIncluded = true;
                 for (int i = 0; i < index; i++)
                 {
@@ -274,71 +278,71 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the size and position of the controls
+        ///     Sets the size and position of the controls
         /// </summary>
         private void SetSizes()
         {
-            _orders = Data.IsResult ? StatsBuffer.Orders(_selectedBar) : 0;
-            _rows = ClientSize.Height > 2*_rowHeight + Border
-                        ? (ClientSize.Height - 2*_rowHeight - Border)/_rowHeight
-                        : 0;
+            orders = Data.IsResult ? StatsBuffer.Orders(selectedBar) : 0;
+            rows = ClientSize.Height > 2*rowHeight + Border
+                       ? (ClientSize.Height - 2*rowHeight - Border)/rowHeight
+                       : 0;
 
-            if (_orders == 0)
+            if (orders == 0)
             {
-                _firstOrd = 0;
-                _lastOrd = 0;
-                _shownOrd = 0;
+                firstOrd = 0;
+                lastOrd = 0;
+                shownOrd = 0;
 
                 VScrollBar.Visible = false;
-                _visibleWidth = ClientSize.Width;
+                visibleWidth = ClientSize.Width;
             }
-            else if (_orders < _rows)
+            else if (orders < rows)
             {
-                _firstOrd = 0;
-                _lastOrd = _rows;
-                _shownOrd = _orders;
+                firstOrd = 0;
+                lastOrd = rows;
+                shownOrd = orders;
 
                 VScrollBar.Visible = false;
-                _visibleWidth = ClientSize.Width;
+                visibleWidth = ClientSize.Width;
             }
             else
             {
                 VScrollBar.Visible = true;
-                if (_selectedBar != _selectedBarOld)
+                if (selectedBar != selectedBarOld)
                     VScrollBar.Value = 0;
-                VScrollBar.Maximum = _orders - 1;
-                _visibleWidth = VScrollBar.Left;
+                VScrollBar.Maximum = orders - 1;
+                visibleWidth = VScrollBar.Left;
 
-                _firstOrd = VScrollBar.Value;
-                if (_firstOrd + _rows > _orders)
+                firstOrd = VScrollBar.Value;
+                if (firstOrd + rows > orders)
                 {
-                    _lastOrd = _orders - 1;
-                    _shownOrd = _lastOrd - _firstOrd + 1;
+                    lastOrd = orders - 1;
+                    shownOrd = lastOrd - firstOrd + 1;
                 }
                 else
                 {
-                    _shownOrd = _rows;
-                    _lastOrd = _firstOrd + _shownOrd - 1;
+                    shownOrd = rows;
+                    lastOrd = firstOrd + shownOrd - 1;
                 }
             }
 
-            if (_visibleWidth <= _xColumns[_columns])
-                _xColumns.CopyTo(_xScaled, 0);
+            if (visibleWidth <= xColumns[columns])
+                xColumns.CopyTo(xScaled, 0);
             else
             {
                 // Scales the columns position
-                float scale = (float) _visibleWidth/_xColumns[_columns];
-                for (int i = 0; i <= _columns; i++)
-                    _xScaled[i] = (int) (_xColumns[i]*scale);
+                float scale = (float) visibleWidth/xColumns[columns];
+                for (int i = 0; i <= columns; i++)
+                    xScaled[i] = (int) (xColumns[i]*scale);
             }
 
-            if (_visibleWidth < _xColumns[_columns])
+            if (visibleWidth < xColumns[columns])
             {
                 HScrollBar.Visible = true;
-                int poinShort = _xColumns[_columns] - _visibleWidth;
-                if (HScrollBar.Value > poinShort)
-                    HScrollBar.Value = poinShort;
-                HScrollBar.Maximum = poinShort + HScrollBar.LargeChange - 2;
+                int pointShort = xColumns[columns] - visibleWidth;
+                if (HScrollBar.Value > pointShort)
+                    HScrollBar.Value = pointShort;
+                HScrollBar.Maximum = pointShort + HScrollBar.LargeChange - 2;
             }
             else
             {
@@ -346,11 +350,11 @@ namespace Forex_Strategy_Builder
                 HScrollBar.Visible = false;
             }
 
-            _selectedBarOld = _selectedBar;
+            selectedBarOld = selectedBar;
         }
 
         /// <summary>
-        /// Set parameters on resize.
+        ///     Set parameters on resize.
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
@@ -360,19 +364,22 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Paints the journal
+        ///     Paints the journal
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            base.OnPaint(e);
+            if (ClientSize.Width == 0 || ClientSize.Height == 0) return;
+            var bitmap = new Bitmap(ClientSize.Width, ClientSize.Height);
+            Graphics g = Graphics.FromImage(bitmap);
 
             // Caption background
-            var rectfCaption = new RectangleF(0, 0, ClientSize.Width, 2*_rowHeight);
-            Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
+            var rectCaption = new RectangleF(0, 0, ClientSize.Width, 2*rowHeight);
+            Data.GradientPaint(g, rectCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
 
-            int hScrll = -HScrollBar.Value;
-            //var size = new Size(ContextButtonLocation.X, _rowHeight);
-            var size = new Size(ClientSize.Width, _rowHeight);
+            int hScroll = -HScrollBar.Value;
+            //var size = new Size(ContextButtonLocation.X, rowHeight);
+            var size = new Size(ClientSize.Width, rowHeight);
             var sf = new StringFormat {Alignment = StringAlignment.Center};
 
             // Print the journal caption
@@ -380,90 +387,92 @@ namespace Forex_Strategy_Builder
                                        (Configs.AccountInMoney
                                             ? " [" + Configs.AccountCurrency + "]"
                                             : " [" + Language.T("pips") + "]");
-            g.DrawString(stringCaptionText, _font, _brushCaptionText, new RectangleF(Point.Empty, size), sf);
-            g.SetClip(new RectangleF(Border, _rowHeight, ClientSize.Width - 2*Border, _rowHeight));
+            g.DrawString(stringCaptionText, font, brushCaptionText, new RectangleF(Point.Empty, size), sf);
+            g.SetClip(new RectangleF(Border, rowHeight, ClientSize.Width - 2*Border, rowHeight));
             if (Configs.AccountInMoney)
-                for (int i = 0; i < _columns; i++)
-                    g.DrawString(_titlesMoney[i], _font, _brushCaptionText, hScrll + (_xScaled[i] + _xScaled[i + 1])/2,
-                                 _rowHeight, sf);
+                for (int i = 0; i < columns; i++)
+                    g.DrawString(titlesMoney[i], font, brushCaptionText, hScroll + (xScaled[i] + xScaled[i + 1])/2,
+                                 rowHeight, sf);
             else
-                for (int i = 0; i < _columns; i++)
-                    g.DrawString(_titlesPips[i], _font, _brushCaptionText, hScrll + (_xScaled[i] + _xScaled[i + 1])/2,
-                                 _rowHeight, sf);
+                for (int i = 0; i < columns; i++)
+                    g.DrawString(titlesPips[i], font, brushCaptionText, hScroll + (xScaled[i] + xScaled[i + 1])/2,
+                                 rowHeight, sf);
             g.ResetClip();
 
             // Paints the journal's data field
-            var rectField = new RectangleF(Border, 2*_rowHeight, ClientSize.Width - 2*Border,
-                                           ClientSize.Height - 2*_rowHeight - Border);
-            g.FillRectangle(new SolidBrush(_colorBack), rectField);
+            var rectField = new RectangleF(Border, 2*rowHeight, ClientSize.Width - 2*Border,
+                                           ClientSize.Height - 2*rowHeight - Border);
+            g.FillRectangle(new SolidBrush(colorBack), rectField);
 
-            size = new Size(ClientSize.Width - VScrollBar.Width - 2*Border, _rowHeight);
+            size = new Size(ClientSize.Width - VScrollBar.Width - 2*Border, rowHeight);
 
             // Prints the journal data
-            for (int ord = _firstOrd; ord < _firstOrd + _shownOrd; ord++)
+            for (int ord = firstOrd; ord < firstOrd + shownOrd; ord++)
             {
-                int row = ord - _firstOrd;
-                if (_journalData == null || _journalData[row, 0] == null)
+                int row = ord - firstOrd;
+                if (journalData == null || journalData[row, 0] == null)
                 {
                     Console.WriteLine("Break");
                     break;
                 }
 
-                int y = (row + 2)*_rowHeight;
+                int y = (row + 2)*rowHeight;
                 var point = new Point(Border, y);
 
                 // Even row
                 if (Math.Abs(row%2f - 0) > 0.0001)
-                    g.FillRectangle(_brushEvenRowBack, new Rectangle(point, size));
+                    g.FillRectangle(brushEvenRowBack, new Rectangle(point, size));
 
                 // Draw the position icon
-                int iImgY = y + (int) Math.Floor((_rowHeight - 16)/2.0);
-                g.DrawImage(_orderIcons[row], hScrll + 2, iImgY, 16, 16);
+                int iImgY = y + (int) Math.Floor((rowHeight - 16)/2.0);
+                g.DrawImage(orderIcons[row], hScroll + 2, iImgY, 16, 16);
 
                 // Prints the data
-                g.DrawString(_journalData[row, 0], _font, _brushRowText, hScrll + (16 + _xScaled[1])/2,
-                             (row + 2)*_rowHeight, sf);
-                for (int i = 1; i < _columns; i++)
+                g.DrawString(journalData[row, 0], font, brushRowText, hScroll + (16 + xScaled[1])/2,
+                             (row + 2)*rowHeight, sf);
+                for (int i = 1; i < columns; i++)
                 {
-                    if (i == _columns - 1)
-                        g.DrawString(_journalData[row, i], _font, _brushRowText, hScrll + _xScaled[i],
-                                     (row + 2)*_rowHeight);
+                    if (i == columns - 1)
+                        g.DrawString(journalData[row, i], font, brushRowText, hScroll + xScaled[i],
+                                     (row + 2)*rowHeight);
                     else
-                        g.DrawString(_journalData[row, i], _font, _brushRowText,
-                                     hScrll + (_xScaled[i] + _xScaled[i + 1])/2, (row + 2)*_rowHeight, sf);
+                        g.DrawString(journalData[row, i], font, brushRowText,
+                                     hScroll + (xScaled[i] + xScaled[i + 1])/2, (row + 2)*rowHeight, sf);
                 }
             }
 
-            for (int i = 1; i < _columns; i++)
-                g.DrawLine(_penLines, _xScaled[i] + hScrll, 2*_rowHeight, _xScaled[i] + hScrll, ClientSize.Height);
+            for (int i = 1; i < columns; i++)
+                g.DrawLine(penLines, xScaled[i] + hScroll, 2*rowHeight, xScaled[i] + hScroll, ClientSize.Height);
 
             // Border
-            g.DrawLine(_penBorder, 1, 2*_rowHeight, 1, ClientSize.Height);
-            g.DrawLine(_penBorder, ClientSize.Width - Border + 1, 2*_rowHeight, ClientSize.Width - Border + 1,
+            g.DrawLine(penBorder, 1, 2*rowHeight, 1, ClientSize.Height);
+            g.DrawLine(penBorder, ClientSize.Width - Border + 1, 2*rowHeight, ClientSize.Width - Border + 1,
                        ClientSize.Height);
-            g.DrawLine(_penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
+            g.DrawLine(penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
+
+            DIBSection.DrawOnPaint(e.Graphics, bitmap, Width, Height);
         }
 
         /// <summary>
-        /// Invalidates the sender after scrolling
+        ///     Invalidates the sender after scrolling
         /// </summary>
         private void HScrollBarValueChanged(object sender, EventArgs e)
         {
             int height = HScrollBar.Visible ? HScrollBar.Height : 0;
-            var rect = new Rectangle(Border, _rowHeight + 1, ClientSize.Width - 2*Border,
-                                     ClientSize.Height - _rowHeight - height - Border - 1);
+            var rect = new Rectangle(Border, rowHeight + 1, ClientSize.Width - 2*Border,
+                                     ClientSize.Height - rowHeight - height - Border - 1);
             Invalidate(rect);
         }
 
         /// <summary>
-        /// Invalidates the sender after scrolling
+        ///     Invalidates the sender after scrolling
         /// </summary>
         private void VScrollBarValueChanged(object sender, EventArgs e)
         {
             SetUpJournal();
             int height = HScrollBar.Visible ? HScrollBar.Height : 0;
-            var rect = new Rectangle(Border, 2*_rowHeight, ClientSize.Width - 2*Border,
-                                     ClientSize.Height - 2*_rowHeight - height - Border);
+            var rect = new Rectangle(Border, 2*rowHeight, ClientSize.Width - 2*Border,
+                                     ClientSize.Height - 2*rowHeight - height - Border);
             Invalidate(rect);
         }
     }

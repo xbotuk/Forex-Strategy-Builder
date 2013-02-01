@@ -8,6 +8,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Forex_Strategy_Builder.CustomControls;
+using Forex_Strategy_Builder.Utils;
 
 namespace Forex_Strategy_Builder
 {
@@ -15,40 +16,40 @@ namespace Forex_Strategy_Builder
     {
         private const int Border = 2;
         private const float PaddingParamData = 4;
-        private Brush _brushCaption;
-        private Brush _brushData;
-        private Brush _brushParams;
-        private string _caption;
-        private float _captionHeight;
-        private Color _colorBackroundEvenRows;
-        private Color _colorBackroundOddRows;
-        private Color _colorBackroundWarningRow;
-        private Color _colorCaptionBack;
-        private Color _colorTextWarningRow;
-        private Font _fontCaption;
-        private Font _fontData;
-        private HScrollBar _hScrollBar;
-        private float _height;
-        private float _maxParamWidth;
-        private float _maxValueWidth;
-        private float _paramTab;
-        private Pen _penBorder;
-        private RectangleF _rectfCaption;
-        private float _requiredHeight;
-        private float _rowHeight;
-        private int _rows;
-        private StringFormat _stringFormatCaption;
-        private StringFormat _stringFormatData;
-        private VScrollBar _vScrollBar;
-        private float _valueTab;
-        private int _visibleRows;
-        private float _width;
-        private bool[] _flagsList;
-        private string[] _paramsList;
-        private string[] _valuesList;
+        private Brush brushCaption;
+        private Brush brushData;
+        private Brush brushParams;
+        private float captionHeight;
+        private string captionText;
+        private Color colorBackroundEvenRows;
+        private Color colorBackroundOddRows;
+        private Color colorBackroundWarningRow;
+        private Color colorCaptionBack;
+        private Color colorTextWarningRow;
+        private bool[] flagsList;
+        private Font fontCaption;
+        private Font fontData;
+        private HScrollBar hScrollBar;
+        private float height;
+        private float maxParamWidth;
+        private float maxValueWidth;
+        private float paramTab;
+        private string[] paramsList;
+        private Pen penBorder;
+        private RectangleF rectCaption;
+        private float requiredHeight;
+        private float rowHeight;
+        private int rows;
+        private StringFormat stringFormatCaption;
+        private StringFormat stringFormatData;
+        private VScrollBar vScrollBar;
+        private float valueTab;
+        private string[] valuesList;
+        private int visibleRows;
+        private float width;
 
         /// <summary>
-        /// Default Constructor
+        ///     Default Constructor
         /// </summary>
         public InfoPanel()
         {
@@ -57,101 +58,104 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the panel colors
+        ///     Sets the panel colors
         /// </summary>
         public void SetColors()
         {
-            _colorCaptionBack = LayoutColors.ColorCaptionBack;
-            _colorBackroundEvenRows = LayoutColors.ColorEvenRowBack;
-            _colorBackroundWarningRow = LayoutColors.ColorWarningRowBack;
-            _colorTextWarningRow = LayoutColors.ColorWarningRowText;
-            _colorBackroundOddRows = LayoutColors.ColorOddRowBack;
+            colorCaptionBack = LayoutColors.ColorCaptionBack;
+            colorBackroundEvenRows = LayoutColors.ColorEvenRowBack;
+            colorBackroundWarningRow = LayoutColors.ColorWarningRowBack;
+            colorTextWarningRow = LayoutColors.ColorWarningRowText;
+            colorBackroundOddRows = LayoutColors.ColorOddRowBack;
 
-            _brushCaption = new SolidBrush(LayoutColors.ColorCaptionText);
-            _brushParams = new SolidBrush(LayoutColors.ColorControlText);
-            _brushData = new SolidBrush(LayoutColors.ColorControlText);
+            brushCaption = new SolidBrush(LayoutColors.ColorCaptionText);
+            brushParams = new SolidBrush(LayoutColors.ColorControlText);
+            brushData = new SolidBrush(LayoutColors.ColorControlText);
 
-            _penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
+            penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
         }
 
         /// <summary>
-        /// Initialize Parameters
+        ///     Initialize Parameters
         /// </summary>
         private void InitializeParameters()
         {
-            // Caption
-            _stringFormatCaption = new StringFormat
-                                       {
-                                           Alignment = StringAlignment.Center,
-                                           LineAlignment = StringAlignment.Center,
-                                           Trimming = StringTrimming.EllipsisCharacter,
-                                           FormatFlags = StringFormatFlags.NoWrap
-                                       };
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque,
+                     true);
 
-            _fontCaption = new Font(Font.FontFamily, 9);
-            _captionHeight = Math.Max(_fontCaption.Height, 18);
-            _rectfCaption = new RectangleF(0, 0, ClientSize.Width, _captionHeight);
+            // Caption
+            stringFormatCaption = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center,
+                    Trimming = StringTrimming.EllipsisCharacter,
+                    FormatFlags = StringFormatFlags.NoWrap
+                };
+
+            fontCaption = new Font(Font.FontFamily, 9);
+            captionHeight = Math.Max(fontCaption.Height, 18);
+            rectCaption = new RectangleF(0, 0, ClientSize.Width, captionHeight);
 
             // Data row
-            _stringFormatData = new StringFormat {Trimming = StringTrimming.EllipsisCharacter};
-            _fontData = new Font(Font.FontFamily, 9);
-            _rowHeight = _fontData.Height + 4;
+            stringFormatData = new StringFormat {Trimming = StringTrimming.EllipsisCharacter};
+            fontData = new Font(Font.FontFamily, 9);
+            rowHeight = fontData.Height + 4;
 
-            Padding = new Padding(Border, (int) _captionHeight, Border, Border);
+            Padding = new Padding(Border, (int) captionHeight, Border, Border);
 
-            _hScrollBar = new HScrollBar
-                              {
-                                  Parent = this,
-                                  Dock = DockStyle.Bottom,
-                                  Enabled = false,
-                                  Visible = false,
-                                  SmallChange = 10,
-                                  LargeChange = 30
-                              };
-            _hScrollBar.Scroll += ScrollBarScroll;
+            hScrollBar = new HScrollBar
+                {
+                    Parent = this,
+                    Dock = DockStyle.Bottom,
+                    Enabled = false,
+                    Visible = false,
+                    SmallChange = 10,
+                    LargeChange = 30
+                };
+            hScrollBar.Scroll += ScrollBarScroll;
 
-            _vScrollBar = new VScrollBar
-                              {
-                                  Parent = this,
-                                  Dock = DockStyle.Right,
-                                  TabStop = true,
-                                  Enabled = false,
-                                  Visible = false,
-                                  SmallChange = 1,
-                                  LargeChange = 3,
-                                  Maximum = 20
-                              };
-            _vScrollBar.Scroll += ScrollBarScroll;
+            vScrollBar = new VScrollBar
+                {
+                    Parent = this,
+                    Dock = DockStyle.Right,
+                    TabStop = true,
+                    Enabled = false,
+                    Visible = false,
+                    SmallChange = 1,
+                    LargeChange = 3,
+                    Maximum = 20
+                };
+            vScrollBar.Scroll += ScrollBarScroll;
 
             MouseUp += InfoPanelMouseUp;
         }
 
         /// <summary>
-        /// Update
+        ///     Update
         /// </summary>
         public void Update(string[] asParams, string[] asValues, bool[] abFlags, string caption)
         {
-            _paramsList = asParams;
-            _valuesList = asValues;
-            _flagsList = abFlags;
-            _caption = caption;
+            paramsList = asParams;
+            valuesList = asValues;
+            flagsList = abFlags;
+            captionText = caption;
 
-            _rows = _paramsList.Length;
-            _requiredHeight = _captionHeight + _rows*_rowHeight + Border;
+            rows = paramsList.Length;
+            requiredHeight = captionHeight + rows*rowHeight + Border;
 
             // Maximum width
-            _maxParamWidth = 0;
-            _maxValueWidth = 0;
+            maxParamWidth = 0;
+            maxValueWidth = 0;
             Graphics g = CreateGraphics();
-            for (int i = 0; i < _rows; i++)
+            for (int i = 0; i < rows; i++)
             {
-                float fWidthParam = g.MeasureString(_paramsList[i], _fontData).Width;
-                if (fWidthParam > _maxParamWidth)
-                    _maxParamWidth = fWidthParam;
+                float fWidthParam = g.MeasureString(paramsList[i], fontData).Width;
+                if (fWidthParam > maxParamWidth)
+                    maxParamWidth = fWidthParam;
 
-                float fValueWidth = g.MeasureString(_valuesList[i], _fontData).Width;
-                if (fValueWidth > _maxValueWidth)
-                    _maxValueWidth = fValueWidth;
+                float fValueWidth = g.MeasureString(valuesList[i], fontData).Width;
+                if (fValueWidth > maxValueWidth)
+                    maxValueWidth = fValueWidth;
             }
             g.Dispose();
 
@@ -161,58 +165,63 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// On Paint
+        ///     On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            base.OnPaint(e);
+            if (ClientSize.Width == 0 || ClientSize.Height == 0) return;
+            var bitmap = new Bitmap(ClientSize.Width, ClientSize.Height);
+            Graphics g = Graphics.FromImage(bitmap);
 
             // Caption
-            Data.GradientPaint(g, _rectfCaption, _colorCaptionBack, LayoutColors.DepthCaption);
-            g.DrawString(_caption, _fontCaption, _brushCaption, _rectfCaption, _stringFormatCaption);
+            Data.GradientPaint(g, rectCaption, colorCaptionBack, LayoutColors.DepthCaption);
+            g.DrawString(captionText, fontCaption, brushCaption, rectCaption, stringFormatCaption);
 
-            for (int i = 0; i*_rowHeight + _captionHeight < _height; i++)
+            for (int i = 0; i*rowHeight + captionHeight < height; i++)
             {
-                float fVerticalPosition = i*_rowHeight + _captionHeight;
-                var pointFParam = new PointF(_paramTab + 2, fVerticalPosition);
-                var pointFValue = new PointF(_valueTab + 2, fVerticalPosition);
-                var rectRow = new RectangleF(Border, fVerticalPosition, _width, _rowHeight);
+                float fVerticalPosition = i*rowHeight + captionHeight;
+                var pointFParam = new PointF(paramTab + 2, fVerticalPosition);
+                var pointFValue = new PointF(valueTab + 2, fVerticalPosition);
+                var rectRow = new RectangleF(Border, fVerticalPosition, width, rowHeight);
 
                 // Row background
-                if (i + _vScrollBar.Value < _rows && _flagsList[i + _vScrollBar.Value])
-                    g.FillRectangle(new SolidBrush(_colorBackroundWarningRow), rectRow);
+                if (i + vScrollBar.Value < rows && flagsList[i + vScrollBar.Value])
+                    g.FillRectangle(new SolidBrush(colorBackroundWarningRow), rectRow);
                 else if (Math.Abs(i%2f - 0) > 0.001)
-                    g.FillRectangle(new SolidBrush(_colorBackroundEvenRows), rectRow);
+                    g.FillRectangle(new SolidBrush(colorBackroundEvenRows), rectRow);
                 else
-                    g.FillRectangle(new SolidBrush(_colorBackroundOddRows), rectRow);
+                    g.FillRectangle(new SolidBrush(colorBackroundOddRows), rectRow);
 
-                if (i + _vScrollBar.Value >= _rows)
+                if (i + vScrollBar.Value >= rows)
                     continue;
 
-                if (i + _vScrollBar.Value < _rows && _flagsList[i + _vScrollBar.Value])
+                if (i + vScrollBar.Value < rows && flagsList[i + vScrollBar.Value])
                 {
-                    Brush brush = new SolidBrush(_colorTextWarningRow);
-                    g.DrawString(_paramsList[i + _vScrollBar.Value], _fontData, brush, pointFParam, _stringFormatData);
-                    g.DrawString(_valuesList[i + _vScrollBar.Value], _fontData, brush, pointFValue, _stringFormatData);
+                    Brush brush = new SolidBrush(colorTextWarningRow);
+                    g.DrawString(paramsList[i + vScrollBar.Value], fontData, brush, pointFParam, stringFormatData);
+                    g.DrawString(valuesList[i + vScrollBar.Value], fontData, brush, pointFValue, stringFormatData);
                 }
                 else
                 {
-                    g.DrawString(_paramsList[i + _vScrollBar.Value], _fontData, _brushParams, pointFParam,
-                                 _stringFormatData);
-                    g.DrawString(_valuesList[i + _vScrollBar.Value], _fontData, _brushData, pointFValue,
-                                 _stringFormatData);
+                    g.DrawString(paramsList[i + vScrollBar.Value], fontData, brushParams, pointFParam,
+                                 stringFormatData);
+                    g.DrawString(valuesList[i + vScrollBar.Value], fontData, brushData, pointFValue,
+                                 stringFormatData);
                 }
             }
 
             // Border
-            g.DrawLine(_penBorder, 1, _captionHeight, 1, ClientSize.Height);
-            g.DrawLine(_penBorder, ClientSize.Width - Border + 1, _captionHeight, ClientSize.Width - Border + 1,
+            g.DrawLine(penBorder, 1, captionHeight, 1, ClientSize.Height);
+            g.DrawLine(penBorder, ClientSize.Width - Border + 1, captionHeight, ClientSize.Width - Border + 1,
                        ClientSize.Height);
-            g.DrawLine(_penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
+            g.DrawLine(penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
+
+            DIBSection.DrawOnPaint(e.Graphics, bitmap, Width, Height);
         }
 
         /// <summary>
-        /// On Resize
+        ///     On Resize
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
@@ -223,91 +232,91 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Scroll Bars status
+        ///     Scroll Bars status
         /// </summary>
         private void CalculateScrollBarStatus()
         {
-            _width = ClientSize.Width - 2*Border;
-            _height = ClientSize.Height - Border;
+            width = ClientSize.Width - 2*Border;
+            height = ClientSize.Height - Border;
 
-            bool needHorisontal = _width < _maxParamWidth + PaddingParamData + _maxValueWidth - 2;
-            bool needVertical = _height < _requiredHeight;
-            bool isHorisontal = needHorisontal;
+            bool needHorizontal = width < maxParamWidth + PaddingParamData + maxValueWidth - 2;
+            bool needVertical = height < requiredHeight;
+            bool isHorizontal = needHorizontal;
             bool isVertical = needVertical;
 
-            if (needHorisontal && !needVertical)
+            if (needHorizontal && !needVertical)
             {
-                _height = ClientSize.Height - _hScrollBar.Height - Border;
-                isVertical = _height < _requiredHeight;
+                height = ClientSize.Height - hScrollBar.Height - Border;
+                isVertical = height < requiredHeight;
             }
-            else if (needVertical && !needHorisontal)
+            else if (needVertical && !needHorizontal)
             {
-                _width = ClientSize.Width - _vScrollBar.Width - 2*Border;
-                isHorisontal = _width < _maxParamWidth + PaddingParamData + _maxValueWidth - 2;
+                width = ClientSize.Width - vScrollBar.Width - 2*Border;
+                isHorizontal = width < maxParamWidth + PaddingParamData + maxValueWidth - 2;
             }
 
-            if (isHorisontal)
-                _height = ClientSize.Height - _hScrollBar.Height - Border;
+            if (isHorizontal)
+                height = ClientSize.Height - hScrollBar.Height - Border;
 
             if (isVertical)
-                _width = ClientSize.Width - _vScrollBar.Width - 2*Border;
+                width = ClientSize.Width - vScrollBar.Width - 2*Border;
 
-            _vScrollBar.Enabled = isVertical;
-            _vScrollBar.Visible = isVertical;
-            _hScrollBar.Enabled = isHorisontal;
-            _hScrollBar.Visible = isHorisontal;
+            vScrollBar.Enabled = isVertical;
+            vScrollBar.Visible = isVertical;
+            hScrollBar.Enabled = isHorizontal;
+            hScrollBar.Visible = isHorizontal;
 
-            _hScrollBar.Value = 0;
-            if (isHorisontal)
+            hScrollBar.Value = 0;
+            if (isHorizontal)
             {
-                var iPoinShort = (int) (_maxParamWidth + PaddingParamData + _maxValueWidth - _width);
-                _hScrollBar.Maximum = iPoinShort + _hScrollBar.LargeChange - 2;
+                var iPoinShort = (int) (maxParamWidth + PaddingParamData + maxValueWidth - width);
+                hScrollBar.Maximum = iPoinShort + hScrollBar.LargeChange - 2;
             }
 
-            _rectfCaption = new RectangleF(0, 0, ClientSize.Width, _captionHeight);
-            _visibleRows = (int) Math.Min(((_height - _captionHeight)/_rowHeight), _rows);
+            rectCaption = new RectangleF(0, 0, ClientSize.Width, captionHeight);
+            visibleRows = (int) Math.Min(((height - captionHeight)/rowHeight), rows);
 
-            _vScrollBar.Value = 0;
-            _vScrollBar.Maximum = _rows - _visibleRows + _vScrollBar.LargeChange - 1;
+            vScrollBar.Value = 0;
+            vScrollBar.Maximum = rows - visibleRows + vScrollBar.LargeChange - 1;
         }
 
         /// <summary>
-        /// Tabs
+        ///     Tabs
         /// </summary>
         private void CalculateTabs()
         {
-            if (_width < _maxParamWidth + PaddingParamData + _maxValueWidth)
+            if (width < maxParamWidth + PaddingParamData + maxValueWidth)
             {
-                _paramTab = -_hScrollBar.Value + Border;
-                _valueTab = _paramTab + _maxParamWidth;
+                paramTab = -hScrollBar.Value + Border;
+                valueTab = paramTab + maxParamWidth;
             }
             else
             {
-                float fSpace = (_width - (_maxParamWidth + _maxValueWidth))/5;
-                _paramTab = 2*fSpace;
-                _valueTab = _paramTab + _maxParamWidth + fSpace;
+                float fSpace = (width - (maxParamWidth + maxValueWidth))/5;
+                paramTab = 2*fSpace;
+                valueTab = paramTab + maxParamWidth + fSpace;
             }
         }
 
         /// <summary>
-        /// ScrollBar_Scroll
+        ///     ScrollBarScroll
         /// </summary>
         private void ScrollBarScroll(object sender, ScrollEventArgs e)
         {
             CalculateTabs();
-            int horizontal = _hScrollBar.Visible ? _hScrollBar.Height : 0;
-            int vertical = _vScrollBar.Visible ? _vScrollBar.Width : 0;
-            var rect = new Rectangle(Border, (int) _captionHeight, ClientSize.Width - vertical - 2*Border,
-                                     ClientSize.Height - (int) _captionHeight - horizontal - Border);
+            int horizontal = hScrollBar.Visible ? hScrollBar.Height : 0;
+            int vertical = vScrollBar.Visible ? vScrollBar.Width : 0;
+            var rect = new Rectangle(Border, (int) captionHeight, ClientSize.Width - vertical - 2*Border,
+                                     ClientSize.Height - (int) captionHeight - horizontal - Border);
             Invalidate(rect);
         }
 
         /// <summary>
-        /// Selects the vertical scrollbar
+        ///     Selects the vertical scrollbar
         /// </summary>
         private void InfoPanelMouseUp(object sender, MouseEventArgs e)
         {
-            _vScrollBar.Select();
+            vScrollBar.Select();
         }
     }
 }
