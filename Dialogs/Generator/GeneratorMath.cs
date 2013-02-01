@@ -73,7 +73,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
                 Cursor = Cursors.WaitCursor;
 
-                _minutes = (int) NUDWorkingMinutes.Value;
+                _minutes = (int) NudWorkingMinutes.Value;
                 ProgressBar.Style = _minutes > 0 ? ProgressBarStyle.Blocks : ProgressBarStyle.Marquee;
 
                 GeneratedDescription = String.Empty;
@@ -95,7 +95,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
                 LblCalcStrInfo.Enabled = true;
                 LblCalcStrNumb.Enabled = true;
-                ChbHideFSB.Enabled = true;
+                ChbHideFsb.Enabled = true;
 
                 BtnAccept.Enabled = false;
                 BtnCancel.Enabled = false;
@@ -416,12 +416,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     GeneratePermanentSL();
                     GeneratePermanentTP();
                     GenerateBreakEven();
+                    GenerateMartingale();
 
                     // Calculates the back test.
                     bool isBetter = CalculateTheResult(false);
 
                     // Initial Optimization
-                    if (ChbInitialOptimisation.Checked)
+                    if (ChbInitialOptimization.Checked)
                         PerformInitialOptimization(worker, isBetter);
                 }
 
@@ -463,9 +464,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             Backtester.Calculate();
 
             int balance = (_isOOS ? Backtester.Balance(_barOOS) : Backtester.NetBalance);
-            bool isLimitationsOK = IsLimitationsFulfilled();
+            bool isLimitationsOk = IsLimitationsFulfilled();
 
-            if (isLimitationsOK)
+            if (isLimitationsOk)
             {
                 if (_bestBalance < balance ||
                     (_bestBalance == balance && (isSaveEqualResult || Data.Strategy.Slots < _strategyBest.Slots)))
@@ -604,10 +605,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             if (ChbOOSPatternFilter.Checked && ChbOutOfSample.Checked)
             {
                 int netBalance = Backtester.NetBalance;
-                int ooSbalance = Backtester.Balance(_barOOS);
-                var targetBalance = (int) (ooSbalance*_targetBalanceRatio);
+                int oosBalance = Backtester.Balance(_barOOS);
+                var targetBalance = (int) (oosBalance*_targetBalanceRatio);
                 var minBalance = (int) (targetBalance*(1 - NUDOOSPatternPercent.Value/100));
-                if (netBalance < ooSbalance || netBalance < minBalance)
+                if (netBalance < oosBalance || netBalance < minBalance)
                     return false;
             }
 
@@ -888,7 +889,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         private void GeneratePermanentSL()
         {
-            if (ChbPreservPermSL.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+            if (ChbPreservePermSL.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
             {
                 Data.Strategy.UsePermanentSL = _strategyBest.UsePermanentSL;
                 Data.Strategy.PermanentSLType = _strategyBest.PermanentSLType;
@@ -918,7 +919,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         private void GeneratePermanentTP()
         {
-            if (ChbPreservPermTP.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+            if (ChbPreservePermTP.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
             {
                 Data.Strategy.UsePermanentTP = _strategyBest.UsePermanentTP;
                 Data.Strategy.PermanentTPType = _strategyBest.PermanentTPType;
@@ -948,7 +949,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         private void GenerateBreakEven()
         {
-            if (ChbPreservBreakEven.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+            if (ChbPreserveBreakEven.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
             {
                 Data.Strategy.UseBreakEven = _strategyBest.UseBreakEven;
                 Data.Strategy.BreakEven = _strategyBest.BreakEven;
@@ -963,6 +964,20 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     int multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
                     Data.Strategy.BreakEven = multiplier*_random.Next(5, 50);
                 }
+            }
+        }
+
+        private void GenerateMartingale()
+        {
+            if (_strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+            {
+                Data.Strategy.UseMartingale = _strategyBest.UseMartingale;
+                Data.Strategy.MartingaleMultiplier = _strategyBest.MartingaleMultiplier;
+            }
+            else
+            {
+                Data.Strategy.UseMartingale = false;
+                Data.Strategy.MartingaleMultiplier = 2.0;
             }
         }
 

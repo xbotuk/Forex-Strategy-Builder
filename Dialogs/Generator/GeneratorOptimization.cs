@@ -46,15 +46,15 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 NormalizeSameOppositeSignalBehaviour(worker);
 
                 // Remove Permanent Stop Loss
-                if (!ChbPreservPermSL.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UsePermanentSL && !worker.CancellationPending)
+                if (!ChbPreservePermSL.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UsePermanentSL && !worker.CancellationPending)
                     RemovePermanentSL();
 
                 // Remove Permanent Take Profit
-                if (!ChbPreservPermTP.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UsePermanentTP && !worker.CancellationPending)
+                if (!ChbPreservePermTP.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UsePermanentTP && !worker.CancellationPending)
                     RemovePermanentTP();
 
                 // Remove Break Even
-                if (!ChbPreservBreakEven.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UseBreakEven && !worker.CancellationPending)
+                if (!ChbPreserveBreakEven.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UseBreakEven && !worker.CancellationPending)
                     RemoveBreakEven();
 
                 // Reduce the value of numeric parameters
@@ -150,7 +150,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             do
             {
                 if (worker.CancellationPending) break;
-                if (ChbPreservPermSL.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+                if (ChbPreservePermSL.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
                     break;
 
                 int oldPermSL = Data.Strategy.PermanentSL;
@@ -188,7 +188,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             do
             {
                 if (worker.CancellationPending) break;
-                if (ChbPreservPermTP.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked || !Data.Strategy.UsePermanentTP)
+                if (ChbPreservePermTP.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked || !Data.Strategy.UsePermanentTP)
                     break;
 
                 int oldPermTP = Data.Strategy.PermanentTP;
@@ -224,7 +224,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             do
             {
                 if (worker.CancellationPending) break;
-                if (ChbPreservBreakEven.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked || !Data.Strategy.UseBreakEven)
+                if (ChbPreserveBreakEven.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked || !Data.Strategy.UseBreakEven)
                     break;
 
                 int oldBreakEven = Data.Strategy.BreakEven;
