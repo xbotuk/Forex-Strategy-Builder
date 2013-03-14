@@ -266,7 +266,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         {
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
             {
-                if (bestBalance < 500) break;
+                if (bestValue < 500) break;
                 if (Data.Strategy.Slot[slot].SlotStatus == StrategySlotStatus.Locked) continue;
 
                 // Numeric parameters

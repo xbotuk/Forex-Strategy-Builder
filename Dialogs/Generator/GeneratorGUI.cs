@@ -41,16 +41,18 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private readonly FancyPanel pnlIndicators;
         private readonly FancyPanel pnlLimitations;
         private readonly FancyPanel pnlSettings;
+        private readonly FancyPanel pnlSorting;
         private readonly FancyPanel pnlTop10;
         private readonly ProgressBar progressBar;
         private readonly Random random = new Random();
         private readonly StrategyLayout strategyField;
         private readonly ToolTip toolTip = new ToolTip();
-        private readonly ToolStrip tsGenerator;
-        private readonly ToolStrip tsStrategy;
+        private readonly ToolStrip toolStrip;
         private Button btnReset;
         private double buttonWidthMultiplier = 1; // It's used in OnResize().
-
+        private ComboBox cbxCustomSortingAdvanced;
+        private ComboBox cbxCustomSortingAdvancedCompareTo;
+        private ComboBox cbxCustomSortingSimple;
 
         private CheckBox chbAmbiguousBars;
         private CheckBox chbEquityPercent;
@@ -64,11 +66,12 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private CheckBox chbOutOfSample;
         private CheckBox chbSaveStrategySlotStatus;
         private CheckBox chbSmoothBalanceLines;
-
         private CheckBox chbUseDefaultIndicatorValues;
         private CheckBox chbWinLossRatio;
+
         private IndicatorsLayout indicatorsField;
         private bool isReset;
+        private Label lblCustomSortingAdvancedCompareTo;
 
         private NumericUpDown nudAmbiguousBars;
         private NumericUpDown nudEquityPercent;
@@ -82,6 +85,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private NumericUpDown nudSmoothBalancePercent;
         private NumericUpDown nudWinLossRatio;
         private NumericUpDown nudoosPatternPercent;
+        private RadioButton rbnCustomSortingAdvanced;
+        private RadioButton rbnCustomSortingNone;
+        private RadioButton rbnCustomSortingSimple;
         private Top10Layout top10Field;
         private ToolStripButton tsbtLinkAll;
         private ToolStripButton tsbtLockAll;
@@ -90,6 +96,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private ToolStripButton tsbtShowLimitations;
         private ToolStripButton tsbtShowOptions;
         private ToolStripButton tsbtShowSettings;
+        private ToolStripButton tsbtShowSorting;
         private ToolStripButton tsbtShowTop10;
         private ToolStripButton tsbtStrategyInfo;
         private ToolStripButton tsbtStrategySize1;
@@ -103,19 +110,19 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         {
             GeneratedDescription = string.Empty;
             strategyBest = Data.Strategy.Clone();
-            bestBalance = isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance;
+            bestValue = isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance;
             isGenerating = false;
             isStartegyChanged = false;
             indicatorBlackList = new List<string>();
 
             colorText = LayoutColors.ColorControlText;
 
-            tsStrategy = new ToolStrip();
-            tsGenerator = new ToolStrip();
+            toolStrip = new ToolStrip();
             strategyField = new StrategyLayout(strategyBest);
             pnlCommon = new FancyPanel(Language.T("Common"));
             pnlLimitations = new FancyPanel(Language.T("Limitations"));
             pnlSettings = new FancyPanel(Language.T("Settings"));
+            pnlSorting = new FancyPanel(Language.T("Custom Sorting"));
             pnlTop10 = new FancyPanel(Language.T("Top 10"));
             pnlIndicators = new FancyPanel(Language.T("Indicators"));
             balanceChart = new SmallBalanceChart();
@@ -143,15 +150,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                    Data.Bars + " " + Language.T("bars");
             FormClosing += GeneratorFormClosing;
 
-            // Tool Strip Strategy
-            tsStrategy.Parent = this;
-            tsStrategy.Dock = DockStyle.None;
-            tsStrategy.AutoSize = false;
-
-            // Tool Strip Generator
-            tsGenerator.Parent = this;
-            tsGenerator.Dock = DockStyle.None;
-            tsGenerator.AutoSize = false;
+            // Tool Strip
+            toolStrip.Parent = this;
+            toolStrip.Dock = DockStyle.Top;
+            toolStrip.AutoSize = true;
 
             // Creates a Strategy Layout
             strategyField.Parent = this;
@@ -164,6 +166,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             pnlCommon.Parent = this;
             pnlLimitations.Parent = this;
             pnlSettings.Parent = this;
+            pnlSorting.Parent = this;
             pnlTop10.Parent = this;
             pnlIndicators.Parent = this;
 
@@ -174,8 +177,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             balanceChart.Cursor = Cursors.Hand;
             balanceChart.IsContextButtonVisible = true;
             balanceChart.PopUpContextMenu.Items.AddRange(GetBalanceChartContextMenuItems());
-            balanceChart.Click += AccountAutputClick;
-            balanceChart.DoubleClick += AccountAutputClick;
+            balanceChart.Click += AccountOutputClick;
+            balanceChart.DoubleClick += AccountOutputClick;
             toolTip.SetToolTip(balanceChart, Language.T("Show account statistics."));
             balanceChart.SetChartData();
 
@@ -185,8 +188,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             infpnlAccountStatistics.Cursor = Cursors.Hand;
             infpnlAccountStatistics.IsContextButtonVisible = true;
             infpnlAccountStatistics.PopUpContextMenu.Items.AddRange(GetInfoPanelContextMenuItems());
-            infpnlAccountStatistics.Click += AccountAutputClick;
-            infpnlAccountStatistics.DoubleClick += AccountAutputClick;
+            infpnlAccountStatistics.Click += AccountOutputClick;
+            infpnlAccountStatistics.DoubleClick += AccountOutputClick;
             toolTip.SetToolTip(infpnlAccountStatistics, Language.T("Show account chart."));
 
             // ProgressBar
@@ -234,9 +237,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             SetPanelCommon();
             SetPanelLimitations();
             SetPanelSettings();
+            SetPanelSorting();
             SetPanelTop10();
             SetPanelIndicators();
             LoadOptions();
+            SetCustomSortingUI();
             SetStrategyDescriptionButton();
 
             chbHideFsb.CheckedChanged += HideFSBClick;
@@ -244,6 +249,127 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             foreach (string arg in Environment.GetCommandLineArgs())
                 if (arg.StartsWith("-autostartgenerator"))
                     BtnGenerateClick(this, new EventArgs());
+        }
+
+        /// <summary>
+        ///     Sets Sorting Panel
+        /// </summary>
+        private void SetPanelSorting()
+        {
+            rbnCustomSortingNone = new RadioButton
+            {
+                Parent = pnlSorting,
+                ForeColor = colorText,
+                BackColor = Color.Transparent,
+                Text = Language.T("Do not use custom sorting"),
+                AutoSize = true,
+                Checked = true,
+                Cursor = Cursors.Default
+            };
+            rbnCustomSortingNone.Click += RbnCustomSortingClick;
+
+            rbnCustomSortingSimple = new RadioButton
+            {
+                Parent = pnlSorting,
+                ForeColor = colorText,
+                BackColor = Color.Transparent,
+                Text = Language.T("Simple"),
+                AutoSize = true,
+                Enabled = true,
+                Cursor = Cursors.Default
+            };
+            rbnCustomSortingSimple.Click += RbnCustomSortingClick;
+
+            rbnCustomSortingAdvanced = new RadioButton
+            {
+                Parent = pnlSorting,
+                ForeColor = colorText,
+                BackColor = Color.Transparent,
+                Text = Language.T("Advanced"),
+                AutoSize = true,
+                Enabled = true,
+                Cursor = Cursors.Default
+            };
+            rbnCustomSortingAdvanced.Click += RbnCustomSortingClick;
+
+            cbxCustomSortingSimple = new ComboBox
+            {
+                Parent = pnlSorting,
+                ForeColor = colorText,
+                BackColor = Color.White,
+                AutoSize = true,
+                Cursor = Cursors.Default,
+                Enabled = true,
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            cbxCustomSortingAdvanced = new ComboBox
+            {
+                Parent = pnlSorting,
+                ForeColor = colorText,
+                BackColor = Color.White,
+                AutoSize = true,
+                Cursor = Cursors.Default,
+                Enabled = true,
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            lblCustomSortingAdvancedCompareTo = new Label
+            {
+                Parent = pnlSorting,
+                ForeColor = colorText,
+                BackColor = Color.Transparent,
+                Text = Language.T("Comparison Curve"),
+                AutoSize = true,
+                Cursor = Cursors.Default,
+                Enabled = true
+            };
+
+            cbxCustomSortingAdvancedCompareTo = new ComboBox
+            {
+                Parent = pnlSorting,
+                ForeColor = colorText,
+                BackColor = Color.White,
+                AutoSize = true,
+                Cursor = Cursors.Default,
+                Enabled = true,
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            // Set the Simple Custom Sorting Options
+            List<string> simpleCustomSortingOptions = GetSimpleCustomSortingOptions();
+            foreach (string option in simpleCustomSortingOptions)
+                cbxCustomSortingSimple.Items.Add(option);
+
+            if (simpleCustomSortingOptions.Count > 0)
+            {
+                customSortingSimpleEnabled = true;
+                cbxCustomSortingSimple.Text = simpleCustomSortingOptions[0];
+            }
+
+            // Set the Advanced Custom Sorting Options
+            List<string> advancedCustomSortingOptions = GetAdvancedCustomSortingOptions();
+            foreach (string option in advancedCustomSortingOptions)
+                cbxCustomSortingAdvanced.Items.Add(option);
+
+            if (advancedCustomSortingOptions.Count > 0)
+            {
+                customSortingAdvancedEnabled = true;
+                cbxCustomSortingAdvanced.Text = advancedCustomSortingOptions[0];
+            }
+            else
+            {
+                rbnCustomSortingAdvanced.Visible = false;
+                cbxCustomSortingAdvanced.Visible = false;
+                lblCustomSortingAdvancedCompareTo.Visible = false;
+                cbxCustomSortingAdvancedCompareTo.Visible = false;
+            }
+
+            cbxCustomSortingAdvancedCompareTo.Items.Add("Balance");
+            cbxCustomSortingAdvancedCompareTo.Items.Add("Balance (with Transfers)");
+            cbxCustomSortingAdvancedCompareTo.Items.Add("Equity");
+            cbxCustomSortingAdvancedCompareTo.Items.Add("Equity (with Transfers)");
+            cbxCustomSortingAdvancedCompareTo.Text = "Balance";
         }
 
         public Form ParrentForm { private get; set; }
@@ -301,7 +427,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
                 chbUseDefaultIndicatorValues.Checked = bool.Parse(options[i++]);
                 chbSaveStrategySlotStatus.Checked = bool.Parse(options[i++]);
-                chbHideFsb.Checked = bool.Parse(options[i]);
+                chbHideFsb.Checked = bool.Parse(options[i++]);
+                rbnCustomSortingAdvanced.Checked = bool.Parse(options[i++]);
+                rbnCustomSortingSimple.Checked = bool.Parse(options[i++]);
+                rbnCustomSortingNone.Checked = bool.Parse(options[i++]);
+                cbxCustomSortingSimple.Text = options[i++];
+                cbxCustomSortingAdvanced.Text = options[i++];
+                cbxCustomSortingAdvancedCompareTo.Text = options[i];
             }
             catch (Exception exception)
             {
@@ -346,7 +478,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 nudSmoothBalanceCheckPoints.Value + ";" +
                 chbUseDefaultIndicatorValues.Checked + ";" +
                 chbSaveStrategySlotStatus.Checked + ";" +
-                chbHideFsb.Checked;
+                chbHideFsb.Checked + ";" +
+                rbnCustomSortingAdvanced.Checked + ";" +
+                rbnCustomSortingSimple.Checked + ";" +
+                rbnCustomSortingNone.Checked + ";" +
+                cbxCustomSortingSimple.Text + ";" +
+                cbxCustomSortingAdvanced.Text + ";" +
+                cbxCustomSortingAdvancedCompareTo.Text;
 
             Configs.GeneratorOptions = options;
         }
@@ -722,7 +860,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     ToolTipText = Language.T("Lock all slots.")
                 };
             tsbtLockAll.Click += ChangeSlotStatus;
-            tsStrategy.Items.Add(tsbtLockAll);
+            toolStrip.Items.Add(tsbtLockAll);
 
             tsbtUnlockAll = new ToolStripButton
                 {
@@ -731,7 +869,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     ToolTipText = Language.T("Unlock all slots.")
                 };
             tsbtUnlockAll.Click += ChangeSlotStatus;
-            tsStrategy.Items.Add(tsbtUnlockAll);
+            toolStrip.Items.Add(tsbtUnlockAll);
 
             tsbtLinkAll = new ToolStripButton
                 {
@@ -740,9 +878,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     ToolTipText = Language.T("Link all slots.")
                 };
             tsbtLinkAll.Click += ChangeSlotStatus;
-            tsStrategy.Items.Add(tsbtLinkAll);
+            toolStrip.Items.Add(tsbtLinkAll);
 
-            tsStrategy.Items.Add(new ToolStripSeparator());
+            toolStrip.Items.Add(new ToolStripSeparator());
 
             // Button Overview
             tsbtOverview = new ToolStripButton
@@ -752,7 +890,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     ToolTipText = Language.T("See the strategy overview.")
                 };
             tsbtOverview.Click += ShowOverview;
-            tsStrategy.Items.Add(tsbtOverview);
+            toolStrip.Items.Add(tsbtOverview);
+
+            toolStrip.Items.Add(new ToolStripSeparator());
 
             // Button tsbtStrategySize1
             tsbtStrategySize1 = new ToolStripButton
@@ -761,10 +901,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     Image = Resources.slot_size_max,
                     Tag = 1,
                     ToolTipText = Language.T("Show detailed info in the slots."),
-                    Alignment = ToolStripItemAlignment.Right
                 };
             tsbtStrategySize1.Click += BtnSlotSizeClick;
-            tsStrategy.Items.Add(tsbtStrategySize1);
+            toolStrip.Items.Add(tsbtStrategySize1);
 
             // Button tsbtStrategySize2
             tsbtStrategySize2 = new ToolStripButton
@@ -773,10 +912,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     Image = Resources.slot_size_min,
                     Tag = 2,
                     ToolTipText = Language.T("Show minimum info in the slots."),
-                    Alignment = ToolStripItemAlignment.Right
                 };
             tsbtStrategySize2.Click += BtnSlotSizeClick;
-            tsStrategy.Items.Add(tsbtStrategySize2);
+            toolStrip.Items.Add(tsbtStrategySize2);
 
             // Button tsbtStrategyInfo
             tsbtStrategyInfo = new ToolStripButton
@@ -784,10 +922,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     DisplayStyle = ToolStripItemDisplayStyle.Image,
                     Image = Resources.str_info_infook,
                     ToolTipText = Language.T("Show the strategy description."),
-                    Alignment = ToolStripItemAlignment.Right
                 };
             tsbtStrategyInfo.Click += BtnStrategyDescriptionClick;
-            tsStrategy.Items.Add(tsbtStrategyInfo);
+            toolStrip.Items.Add(tsbtStrategyInfo);
+
+            toolStrip.Items.Add(new ToolStripSeparator());
         }
 
         /// <summary>
@@ -803,27 +942,32 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     Enabled = false
                 };
             tsbtShowOptions.Click += ChangeGeneratorPanel;
-            tsGenerator.Items.Add(tsbtShowOptions);
+            toolStrip.Items.Add(tsbtShowOptions);
 
             // Button Limitations
             tsbtShowLimitations = new ToolStripButton {Name = "tsbtShowLimitations", Text = Language.T("Limitations")};
             tsbtShowLimitations.Click += ChangeGeneratorPanel;
-            tsGenerator.Items.Add(tsbtShowLimitations);
+            toolStrip.Items.Add(tsbtShowLimitations);
 
             // Button Settings
             tsbtShowSettings = new ToolStripButton {Name = "tsbtShowSettings", Text = Language.T("Settings")};
             tsbtShowSettings.Click += ChangeGeneratorPanel;
-            tsGenerator.Items.Add(tsbtShowSettings);
+            toolStrip.Items.Add(tsbtShowSettings);
+
+            // Button Sorting
+            tsbtShowSorting = new ToolStripButton { Name = "tsbtShowSorting", Text = Language.T("Sorting") };
+            tsbtShowSorting.Click += ChangeGeneratorPanel;
+            toolStrip.Items.Add(tsbtShowSorting);
 
             // Button Top10
             tsbtShowTop10 = new ToolStripButton {Name = "tsbtShowTop10", Text = Language.T("Top 10")};
             tsbtShowTop10.Click += ChangeGeneratorPanel;
-            tsGenerator.Items.Add(tsbtShowTop10);
+            toolStrip.Items.Add(tsbtShowTop10);
 
             // Button Indicators
             tsbtShowIndicators = new ToolStripButton {Name = "tsbtIndicators", Text = Language.T("Indicators")};
             tsbtShowIndicators.Click += ChangeGeneratorPanel;
-            tsGenerator.Items.Add(tsbtShowIndicators);
+            toolStrip.Items.Add(tsbtShowIndicators);
         }
 
         /// <summary>
@@ -852,10 +996,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             var btnHrzSpace = (int) (Data.HorizontalDLU*3);
             const int nudWidth = 55;
             pnlLimitations.Width = 3*buttonWidth + 2*btnHrzSpace;
-            int iBorderWidth = (pnlLimitations.Width - pnlLimitations.ClientSize.Width)/2;
+            int borderWidth = (pnlLimitations.Width - pnlLimitations.ClientSize.Width)/2;
 
             if (maxCheckBoxWidth + 3*btnHrzSpace + nudWidth + 4 > pnlLimitations.ClientSize.Width)
-                buttonWidthMultiplier = ((maxCheckBoxWidth + nudWidth + 3*btnHrzSpace + 2*iBorderWidth + 4)/3.0)/
+                buttonWidthMultiplier = ((maxCheckBoxWidth + nudWidth + 3*btnHrzSpace + 2*borderWidth + 4)/3.0)/
                                         buttonWidth;
 
             ClientSize = new Size(2*((int) (3*buttonWidth*buttonWidthMultiplier) + 2*btnHrzSpace) + 3*btnHrzSpace, 528);
@@ -904,37 +1048,38 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             progressBar.Size = new Size(ClientSize.Width - leftSideWidth - 3*border, (int) (Data.VerticalDLU*9));
             progressBar.Location = new Point(leftSideWidth + 2*border, btnAccept.Top - progressBar.Height - btnVertSpace);
 
-            // Tool Strip Strategy
-            tsStrategy.Width = leftSideWidth + border;
-            tsStrategy.Location = Point.Empty;
 
             // Tool Strip Strategy
-            tsGenerator.Width = ClientSize.Width - leftSideWidth - border;
-            tsGenerator.Location = new Point(tsStrategy.Right + border, 0);
+            toolStrip.Width = ClientSize.Width - leftSideWidth - border;
+            toolStrip.Location = new Point(toolStrip.Right + border, 0);
 
             // Panel Common
             pnlCommon.Size = new Size(rightSideWidth, optionsHeight);
-            pnlCommon.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
+            pnlCommon.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
 
             // Panel pnlLimitations
             pnlLimitations.Size = new Size(rightSideWidth, optionsHeight);
-            pnlLimitations.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
+            pnlLimitations.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
 
             // Panel Settings
             pnlSettings.Size = new Size(rightSideWidth, optionsHeight);
-            pnlSettings.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
+            pnlSettings.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
+
+            // Panel Sorting
+            pnlSorting.Size = new Size(rightSideWidth, optionsHeight);
+            pnlSorting.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
 
             // Panel Top 10
             pnlTop10.Size = new Size(rightSideWidth, optionsHeight);
-            pnlTop10.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
+            pnlTop10.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
 
             // Panel Indicators
             pnlIndicators.Size = new Size(rightSideWidth, optionsHeight);
-            pnlIndicators.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
+            pnlIndicators.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
 
             // Panel StrategyLayout
-            strategyField.Size = new Size(leftSideWidth, ClientSize.Height - border - tsStrategy.Bottom - border);
-            strategyField.Location = new Point(border, tsStrategy.Bottom + border);
+            strategyField.Size = new Size(leftSideWidth, ClientSize.Height - border - toolStrip.Bottom - border);
+            strategyField.Location = new Point(border, toolStrip.Bottom + border);
 
             // Panel Balance Chart
             balanceChart.Size = new Size(ClientSize.Width - leftSideWidth - 3*border,
@@ -1045,6 +1190,27 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
             // Hide FSB when generator starts
             chbHideFsb.Location = new Point(border + 2, chbSaveStrategySlotStatus.Bottom + border + 4);
+
+            // Custom Sorting Radio Buttons
+            rbnCustomSortingNone.Location = new Point(border + 2, 25);
+            rbnCustomSortingSimple.Location = new Point(border + 2, rbnCustomSortingNone.Bottom + border + 4);
+            rbnCustomSortingAdvanced.Location = new Point(border + 2, rbnCustomSortingSimple.Bottom + border + 4);
+
+            // Custom Sorting (Simple) Combo Box
+            cbxCustomSortingSimple.Width = 180;
+            cbxCustomSortingSimple.Location = new Point(pnlSorting.ClientSize.Width - cbxCustomSortingSimple.Width - border - 2, rbnCustomSortingSimple.Top - 1);
+
+            // Custom Sorting (Advanced) Combo Box
+            cbxCustomSortingAdvanced.Location = new Point(cbxCustomSortingSimple.Left, rbnCustomSortingAdvanced.Top - 1);
+            cbxCustomSortingAdvanced.Width = cbxCustomSortingSimple.Width;
+
+            // Custom Sorting (Advanced Comparison Curve) Combo Box
+            cbxCustomSortingAdvancedCompareTo.Location = new Point(cbxCustomSortingAdvanced.Left, cbxCustomSortingAdvanced.Bottom + border);
+            cbxCustomSortingAdvancedCompareTo.Width = cbxCustomSortingAdvanced.Width;
+
+            // Custom Sorting (Advanced Comparison Curve) Label
+            lblCustomSortingAdvancedCompareTo.Location = new Point(rbnCustomSortingAdvanced.Left + 17,
+                                                                   cbxCustomSortingAdvancedCompareTo.Top + 2);
 
             // Button Reset
             btnReset.Width = pnlSettings.ClientSize.Width - 2*(border + 2);
@@ -1173,6 +1339,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         private void SetLabelCyclesText(string text)
         {
+            customAnalytics.Cycles = Convert.ToInt32(text);
+
             if (lblCalcStrNumb.InvokeRequired)
             {
                 BeginInvoke(new SetCyclesCallback(SetLabelCyclesText), new object[] {text});
@@ -1190,7 +1358,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     Image = Resources.info_panel,
                     Text = Language.T("Account Statistics")
                 };
-            mi1.Click += AccountAutputClick;
+            mi1.Click += AccountOutputClick;
 
             var itemCollection = new ToolStripItem[]
                 {
@@ -1207,7 +1375,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     Image = Resources.chart_balance_equity,
                     Text = Language.T("Account Chart")
                 };
-            mi1.Click += AccountAutputClick;
+            mi1.Click += AccountOutputClick;
 
             var itemCollection = new ToolStripItem[]
                 {
@@ -1383,12 +1551,14 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 pnlCommon.Visible = true;
                 pnlLimitations.Visible = false;
                 pnlSettings.Visible = false;
+                pnlSorting.Visible = false;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = false;
                 tsbtShowLimitations.Enabled = true;
                 tsbtShowSettings.Enabled = true;
+                tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = true;
                 tsbtShowIndicators.Enabled = true;
             }
@@ -1397,12 +1567,14 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 pnlCommon.Visible = false;
                 pnlLimitations.Visible = true;
                 pnlSettings.Visible = false;
+                pnlSorting.Visible = false;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = true;
                 tsbtShowLimitations.Enabled = false;
                 tsbtShowSettings.Enabled = true;
+                tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = true;
                 tsbtShowIndicators.Enabled = true;
             }
@@ -1411,12 +1583,30 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 pnlCommon.Visible = false;
                 pnlLimitations.Visible = false;
                 pnlSettings.Visible = true;
+                pnlSorting.Visible = false;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = true;
                 tsbtShowLimitations.Enabled = true;
                 tsbtShowSettings.Enabled = false;
+                tsbtShowSorting.Enabled = true;
+                tsbtShowTop10.Enabled = true;
+                tsbtShowIndicators.Enabled = true;
+            }
+            else if (name == "tsbtShowSorting")
+            {
+                pnlCommon.Visible = false;
+                pnlLimitations.Visible = false;
+                pnlSettings.Visible = false;
+                pnlSorting.Visible = true;
+                pnlTop10.Visible = false;
+                pnlIndicators.Visible = false;
+
+                tsbtShowOptions.Enabled = true;
+                tsbtShowLimitations.Enabled = true;
+                tsbtShowSettings.Enabled = true;
+                tsbtShowSorting.Enabled = false;
                 tsbtShowTop10.Enabled = true;
                 tsbtShowIndicators.Enabled = true;
             }
@@ -1425,12 +1615,14 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 pnlCommon.Visible = false;
                 pnlLimitations.Visible = false;
                 pnlSettings.Visible = false;
+                pnlSorting.Visible = false;
                 pnlTop10.Visible = true;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = true;
                 tsbtShowLimitations.Enabled = true;
                 tsbtShowSettings.Enabled = true;
+                tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = false;
                 tsbtShowIndicators.Enabled = true;
             }
@@ -1439,12 +1631,14 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 pnlCommon.Visible = false;
                 pnlLimitations.Visible = false;
                 pnlSettings.Visible = false;
+                pnlSorting.Visible = false;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = true;
 
                 tsbtShowOptions.Enabled = true;
                 tsbtShowLimitations.Enabled = true;
                 tsbtShowSettings.Enabled = true;
+                tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = true;
                 tsbtShowIndicators.Enabled = false;
             }
@@ -1669,13 +1863,17 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             {
                 var top10Slot = new Top10Slot {Width = 290, Height = 65};
                 top10Slot.InitSlot();
+                top10Slot.CustomSortingOption = customSortingOptionDisplay;
+                top10Slot.CustomSortingValue = bestValue;
                 top10Slot.Click += Top10SlotClick;
                 top10Slot.DoubleClick += Top10SlotClick;
                 var top10StrategyInfo = new Top10StrategyInfo
                     {
-                        Balance = Configs.AccountInMoney
-                                      ? (int) Math.Round(Backtester.NetMoneyBalance)
-                                      : Backtester.NetBalance,
+                        Balance = String.IsNullOrEmpty(top10Slot.CustomSortingOption)
+                                      ? (Configs.AccountInMoney
+                                             ? (int) Math.Round(Backtester.NetMoneyBalance)
+                                             : Backtester.NetBalance)
+                                      : bestValue,
                         Top10Slot = top10Slot,
                         TheStrategy = Data.Strategy.Clone()
                     };
@@ -1702,14 +1900,14 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             top10Slot.Invalidate();
 
             Data.Strategy = top10Field.GetStrategy(top10Slot.Balance);
-            bestBalance = 0;
+            bestValue = 0;
             CalculateTheResult(true);
         }
 
         /// <summary>
         ///     Toggles the account chart and statistics.
         /// </summary>
-        private void AccountAutputClick(object sender, EventArgs e)
+        private void AccountOutputClick(object sender, EventArgs e)
         {
             bool isChartVisible = balanceChart.Visible;
             balanceChart.Visible = !isChartVisible;
@@ -1725,6 +1923,59 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             Configs.BannedIndicators = "";
             isReset = true;
             Close();
+        }
+
+        /// <summary>
+        ///     Radio buttons for custom sorting event handler
+        /// </summary>
+        private void RbnCustomSortingClick(object sender, EventArgs e)
+        {
+            SetCustomSortingUI();
+        }
+
+        /// <summary>
+        ///     Custom sorting user interface settings
+        /// </summary>
+        private void SetCustomSortingUI()
+        {
+            // Simple Custom Sorting is NOT Enabled
+            if (!customSortingSimpleEnabled || !Configs.AdditionalStatistics)
+            {
+                if (rbnCustomSortingSimple.Checked)
+                    rbnCustomSortingNone.Checked = true;
+                rbnCustomSortingSimple.Enabled = false;
+            }
+
+            // Simple Custom Sorting is NOT Enabled
+            if (!customSortingAdvancedEnabled || !Configs.AdditionalStatistics)
+            {
+                if (rbnCustomSortingAdvanced.Checked)
+                    rbnCustomSortingNone.Checked = true;
+                rbnCustomSortingAdvanced.Enabled = false;
+            }
+
+            // Update the GUI
+            if (rbnCustomSortingNone.Checked)
+            {
+                cbxCustomSortingSimple.Enabled = false;
+                cbxCustomSortingAdvanced.Enabled = false;
+                cbxCustomSortingAdvancedCompareTo.Enabled = false;
+                lblCustomSortingAdvancedCompareTo.Enabled = false;
+            }
+            else if (rbnCustomSortingSimple.Checked)
+            {
+                cbxCustomSortingSimple.Enabled = true;
+                cbxCustomSortingAdvanced.Enabled = false;
+                cbxCustomSortingAdvancedCompareTo.Enabled = false;
+                lblCustomSortingAdvancedCompareTo.Enabled = false;
+            }
+            else if (rbnCustomSortingAdvanced.Checked)
+            {
+                cbxCustomSortingSimple.Enabled = false;
+                cbxCustomSortingAdvanced.Enabled = true;
+                cbxCustomSortingAdvancedCompareTo.Enabled = true;
+                lblCustomSortingAdvancedCompareTo.Enabled = true;
+            }
         }
 
         #region Nested type: DelegateRebuildStrategyLayout

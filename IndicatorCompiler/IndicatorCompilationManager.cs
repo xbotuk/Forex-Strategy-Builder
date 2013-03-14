@@ -17,7 +17,7 @@ namespace Forex_Strategy_Builder
     /// </summary>
     public class IndicatorCompilationManager
     {
-        private readonly CSharpCompiler _compiler;
+        private readonly CSharpCompiler compiler;
 
         /// <summary>
         /// Constructor.
@@ -25,11 +25,11 @@ namespace Forex_Strategy_Builder
         public IndicatorCompilationManager()
         {
             CustomIndicatorsList = new List<Indicator>();
-            _compiler = new CSharpCompiler();
+            compiler = new CSharpCompiler();
 
             foreach (Assembly assembly in GetReferencedAndInitialAssembly(Assembly.GetEntryAssembly()))
             {
-                _compiler.AddReferencedAssembly(assembly);
+                compiler.AddReferencedAssembly(assembly);
             }
         }
 
@@ -74,7 +74,7 @@ namespace Forex_Strategy_Builder
             }
 
             Dictionary<string, int> dictCompilationErrors;
-            Assembly assembly = _compiler.CompileSource(source, out dictCompilationErrors);
+            Assembly assembly = compiler.CompileSource(source, out dictCompilationErrors);
 
             if (assembly == null)
             {

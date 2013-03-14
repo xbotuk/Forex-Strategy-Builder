@@ -23,6 +23,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
         public bool IsSelected { get; set; }
         public int Balance { get; private set; }
+        public string CustomSortingOption { get; set; }
+        public float CustomSortingValue { get; set; }
 
         /// <summary>
         ///     Sets the chart parameters
@@ -82,6 +84,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     " " + drawdown.ToString(CultureInfo.InvariantCulture),
                     " " + winLoss.ToString("F2")
                 };
+
+            // Modified display when custom sorting is used
+            if (CustomSortingOption != String.Empty)
+            {
+                paramNames[3] = CustomSortingOption;
+                paramValues[3] = CustomSortingValue.ToString(CultureInfo.InvariantCulture);
+            }
 
             int maxParamNameLenght = 0;
             foreach (string parameter in paramNames)

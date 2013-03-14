@@ -17,11 +17,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
         private readonly int maxStrategies;
         private readonly ToolTip toolTip;
-        private readonly SortableDictionary<int, Top10StrategyInfo> top10Holder;
+        private readonly SortableDictionary<Single, Top10StrategyInfo> top10Holder;
         private readonly VScrollBar vScrollBarStrategy;
 
-        private int maxBalance = int.MinValue;
-        private int minBalance = int.MaxValue;
+        private Single maxValue = Single.MinValue;
+        private Single minValue = Single.MaxValue;
 
         /// <summary>
         ///     Constructor
@@ -33,7 +33,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             this.maxStrategies = maxStrategies;
             BackColor = LayoutColors.ColorControlBack;
 
-            top10Holder = new SortableDictionary<int, Top10StrategyInfo>();
+            top10Holder = new SortableDictionary<Single, Top10StrategyInfo>();
 
             flowLayoutStrategy = new FlowLayoutPanel();
             vScrollBarStrategy = new VScrollBar();
@@ -52,10 +52,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// <summary>
         ///     Check whether the strategy has to be added in Top10 list
         /// </summary>
-        public bool IsNominated(int balance)
+        public bool IsNominated(float value)
         {
-            bool nominated = top10Holder.Count < maxStrategies && balance > 0 ||
-                             top10Holder.Count == maxStrategies && balance > minBalance;
+            bool nominated = top10Holder.Count < maxStrategies && value > 0 ||
+                             top10Holder.Count == maxStrategies && value > minValue;
 
             return nominated;
         }
@@ -78,12 +78,12 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             if (top10Holder.ContainsKey(top10StrategyInfo.Balance))
                 return;
 
-            if (top10Holder.Count == maxStrategies && top10StrategyInfo.Balance <= minBalance)
+            if (top10Holder.Count == maxStrategies && top10StrategyInfo.Balance <= minValue)
                 return;
 
-            if (top10Holder.Count == maxStrategies && top10StrategyInfo.Balance > minBalance)
+            if (top10Holder.Count == maxStrategies && top10StrategyInfo.Balance > minValue)
             {
-                top10Holder.Remove(minBalance);
+                top10Holder.Remove(minValue);
                 top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
             }
             else if (top10Holder.Count < maxStrategies)
@@ -93,20 +93,20 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
             top10Holder.ReverseSort();
 
-            minBalance = int.MaxValue;
-            maxBalance = int.MinValue;
+            minValue = Single.MaxValue;
+            maxValue = Single.MinValue;
             foreach (var keyValue in top10Holder)
             {
-                if (minBalance > keyValue.Key)
-                    minBalance = keyValue.Key;
-                if (maxBalance < keyValue.Key)
-                    maxBalance = keyValue.Key;
+                if (minValue > keyValue.Key)
+                    minValue = keyValue.Key;
+                if (maxValue < keyValue.Key)
+                    maxValue = keyValue.Key;
             }
 
             foreach (var keyValue in top10Holder)
                 keyValue.Value.Top10Slot.IsSelected = false;
 
-            top10Holder[maxBalance].Top10Slot.IsSelected = true;
+            top10Holder[maxValue].Top10Slot.IsSelected = true;
 
             ArrangeTop10Slots();
             SetVerticalScrollBar();
@@ -117,8 +117,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         public void ClearTop10Slots()
         {
-            minBalance = int.MaxValue;
-            maxBalance = int.MinValue;
+            minValue = Single.MaxValue;
+            maxValue = Single.MinValue;
             top10Holder.Clear();
 
             ArrangeTop10Slots();

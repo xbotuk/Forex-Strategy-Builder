@@ -15,7 +15,6 @@ namespace Forex_Strategy_Builder
     public static class Configs
     {
         static XmlDocument xmlConfig;
-        static readonly string PathToConfigFile;
         static bool isConfigLoaded;
         static bool isResetActivated;
         private const string DateStringFormat = "yyyy-MM-dd HH:mm:ss";
@@ -119,6 +118,8 @@ namespace Forex_Strategy_Builder
         private const bool IsBalanceChartAmbiguousMarkDefault = true;
         private const bool IsBalanceChartTrueChartsDefault = false;
         private const bool IsBalanceChartProtectionsDefault = false;
+
+        public static string PathToConfigFile { get; private set; }
 
         // ------------------------------------------------------------
         static int minBars = MinBarsDefault;
