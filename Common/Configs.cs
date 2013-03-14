@@ -14,10 +14,10 @@ namespace Forex_Strategy_Builder
 {
     public static class Configs
     {
-        static XmlDocument _xmlConfig;
+        static XmlDocument xmlConfig;
         static readonly string PathToConfigFile;
-        static bool _isConfigLoaded;
-        static bool _isResetActivated;
+        static bool isConfigLoaded;
+        static bool isResetActivated;
         private const string DateStringFormat = "yyyy-MM-dd HH:mm:ss";
 
         private const int MinBarsDefault = 300;
@@ -121,177 +121,177 @@ namespace Forex_Strategy_Builder
         private const bool IsBalanceChartProtectionsDefault = false;
 
         // ------------------------------------------------------------
-        static int _iMinBars = MinBarsDefault;
+        static int minBars = MinBarsDefault;
         /// <summary>
         /// Minimum data bars
         /// </summary>
         public static int MinBars
         {
-            get { return _iMinBars; }
+            get { return minBars; }
             private set
             {
-                _iMinBars = value;
+                minBars = value;
                 SetNode("config/MIN_BARS", value);
             }
         }
         // ------------------------------------------------------------
-        static int _iMaxBarsLimit = MaxBarsLimitDefault;
+        static int maxBarsLimit = MaxBarsLimitDefault;
         /// <summary>
         /// Maximum data bars
         /// </summary>
         public static int MaxBarsLimit
         {
-            get { return _iMaxBarsLimit; }
+            get { return maxBarsLimit; }
             private set
             {
-                _iMaxBarsLimit = value;
+                maxBarsLimit = value;
                 SetNode("config/MAX_BARS", value);
             }
         }
         // ------------------------------------------------------------
-        static int _iMaxIntraBars = MaxIntraBarsDefault;
+        static int maxIntraBars = MaxIntraBarsDefault;
         /// <summary>
         /// Maximum data intra bars
         /// </summary>
         public static int MaxIntraBars
         {
-            get { return _iMaxIntraBars; }
+            get { return maxIntraBars; }
             private set
             {
-                _iMaxIntraBars = value;
+                maxIntraBars = value;
                 SetNode("config/MAX_INTRA_BARS", value);
             }
         }
 
-        static int _iMaxEntryFilters = MaxEntryFiltersDefault;
+        static int maxEntryFilters = MaxEntryFiltersDefault;
         /// <summary>
         /// Maximum Entry Slots
         /// </summary>
         public static int MaxEntryFilters
         {
-            get { return _iMaxEntryFilters; }
+            get { return maxEntryFilters; }
             set
             {
-                _iMaxEntryFilters = value;
+                maxEntryFilters = value;
                 SetNode("config/MAX_ENTRY_FILTERS", value);
             }
         }
 
-        static int _iMaxExitFilters = MaxExitFiltersDefault;
+        static int maxExitFilters = MaxExitFiltersDefault;
         /// <summary>
         /// Maximum Exit Slots
         /// </summary>
         public static int MaxExitFilters
         {
-            get { return _iMaxExitFilters; }
+            get { return maxExitFilters; }
             set
             {
-                _iMaxExitFilters = value;
+                maxExitFilters = value;
                 SetNode("config/MAX_EXIT_FILTERS", value);
             }
         }
 
-        static int _iSigmaModeMainChart = SigmaModeMainChartDefault;
+        static int sigmaModeMainChart = SigmaModeMainChartDefault;
         /// <summary>
         /// Maximum Entry Slots
         /// </summary>
         public static int SigmaModeMainChart
         {
-            get { return _iSigmaModeMainChart; }
+            get { return sigmaModeMainChart; }
             private set
             {
-                _iSigmaModeMainChart = value;
+                sigmaModeMainChart = value;
                 SetNode("config/SIGMA_MODE_MAIN_CHART", value);
             }
         }
 
-        static int _iSigmaModeSeparatedChart = SigmaModeSeparatedChartDefault;
+        static int sigmaModeSeparatedChart = SigmaModeSeparatedChartDefault;
         /// <summary>
         /// Maximum Exit Slots
         /// </summary>
         public static int SigmaModeSeparatedChart
         {
-            get { return _iSigmaModeSeparatedChart; }
+            get { return sigmaModeSeparatedChart; }
             private set
             {
-                _iSigmaModeSeparatedChart = value;
+                sigmaModeSeparatedChart = value;
                 SetNode("config/SIGMA_MODE_SEPARATED_CHART", value);
             }
         }
 
         // -------------------------------------------------------------
-        static bool _isInstalled = true;
+        static bool isInstalled = true;
         private static bool IsInstalled
         {
             set
             {
-                _isInstalled = value;
+                isInstalled = value;
                 SetNode("config/installed", value);
             }
         }
         // ------------------------------------------------------------
         // Program's Language
-        static string _language = LanguageDefault;
+        static string language = LanguageDefault;
         /// <summary>
         /// Last Strategy
         /// </summary>
         public static string Language
         {
-            get { return _language; }
+            get { return language; }
             set
             {
-                _language = value;
+                language = value;
                 SetNode("config/language", value);
             }
         }
         // -------------------------------------------------------------
         // Show starting Tips
-        static bool _isShowStartingTip = ShowStartingTipDefault;
+        static bool isShowStartingTip = ShowStartingTipDefault;
         /// <summary>
         /// Whether to show starting tips
         /// </summary>
         public static bool ShowStartingTip
         {
-            get { return _isShowStartingTip; }
+            get { return isShowStartingTip; }
             set
             {
-                _isShowStartingTip = value;
+                isShowStartingTip = value;
                 SetNode("config/showStartingTip", value);
             }
         }
         // -------------------------------------------------------------
         // Current tip number
-        static int _currentTipNumber = CurrentTipNumberDefault;
+        static int currentTipNumber = CurrentTipNumberDefault;
         /// <summary>
         /// Gets or sets the current starting tip number
         /// </summary>
         public static int CurrentTipNumber
         {
-            get { return _currentTipNumber; }
+            get { return currentTipNumber; }
             set
             {
-                _currentTipNumber = value;
+                currentTipNumber = value;
                 SetNode("config/currentTipNumber", value);
             }
         }
         // -------------------------------------------------------------
         // Show Gradient View
-        static bool _isGradientView = IsGradientViewDefault;
+        static bool isGradientView = IsGradientViewDefault;
         /// <summary>
         /// Whether to show Gradient View
         /// </summary>
         public static bool GradientView
         {
-            get { return _isGradientView; }
+            get { return isGradientView; }
             set
             {
-                _isGradientView = value;
+                isGradientView = value;
                 SetNode("config/gradientView", value);
             }
         }
         // ------------------------------------------------------------
         // Data directory
-        static string _dataDirectory = DataDirectoryDefault;
+        static string dataDirectory = DataDirectoryDefault;
         /// <summary>
         /// Data Directory
         /// </summary>
@@ -299,685 +299,685 @@ namespace Forex_Strategy_Builder
         {
             set
             {
-                _dataDirectory = value;
+                dataDirectory = value;
                 SetNode("config/dataDirectory", value);
             }
         }
         // ------------------------------------------------------------
         // ColorScheme
-        static string _colorScheme = ColorSchemeDefault;
+        static string colorScheme = ColorSchemeDefault;
         /// <summary>
         /// ColorScheme
         /// </summary>
         public static string ColorScheme
         {
-            get { return _colorScheme; }
+            get { return colorScheme; }
             set
             {
-                _colorScheme = value;
+                colorScheme = value;
                 SetNode("config/colorScheme", value);
             }
         }
 
         // ------------------------------------------------------------
         // Remember the Last Strategy
-        static bool _isRememberLastStr = IsRememberLastStrDefault;
+        static bool isRememberLastStr = IsRememberLastStrDefault;
         /// <summary>
         /// Remember the Last Strategy
         /// </summary>
         public static bool RememberLastStr
         {
-            get { return _isRememberLastStr; }
+            get { return isRememberLastStr; }
             set
             {
-                _isRememberLastStr = value;
+                isRememberLastStr = value;
                 SetNode("config/rememberLastStrategy", value);
             }
         }
         // ------------------------------------------------------------
         // Last Strategy
-        static string _lastStrategy = LastStrategyDefault;
+        static string lastStrategy = LastStrategyDefault;
         /// <summary>
         /// Last Strategy
         /// </summary>
         public static string LastStrategy
         {
-            get { return _lastStrategy; }
+            get { return lastStrategy; }
             set
             {
-                _lastStrategy = value;
+                lastStrategy = value;
                 SetNode("config/lastStrategy", value);
             }
         }
         // ------------------------------------------------------------
         // Check for new versions
-        static bool _isCheckForUpdates = IsCheckForUpdatesDefault;
+        static bool isCheckForUpdates = IsCheckForUpdatesDefault;
         /// <summary>
         /// Check for new versions at startup.
         /// </summary>
         public static bool CheckForUpdates
         {
-            get { return _isCheckForUpdates; }
+            get { return isCheckForUpdates; }
             set
             {
-                _isCheckForUpdates = value;
+                isCheckForUpdates = value;
                 SetNode("config/checkForUpdates", value);
             }
         }
         // ------------------------------------------------------------
         // Check for new beta
-        static bool _isCheckForNewBeta = IsCheckForNewBetaDefault;
+        static bool isCheckForNewBeta = IsCheckForNewBetaDefault;
         /// <summary>
         /// Check for new new beta at startup.
         /// </summary>
         public static bool CheckForNewBeta
         {
-            get { return _isCheckForNewBeta; }
+            get { return isCheckForNewBeta; }
             set
             {
-                _isCheckForNewBeta = value;
+                isCheckForNewBeta = value;
                 SetNode("config/checkForNewBeta", value);
             }
         }
         // ------------------------------------------------------------
         // Check the Data
-        static bool _isCheckData = IsCheckDataDefault;
+        static bool isCheckData = IsCheckDataDefault;
         /// <summary>
         /// Whether to Check the Data
         /// </summary>
         public static bool CheckData
         {
-            get { return _isCheckData; }
+            get { return isCheckData; }
             set
             {
-                _isCheckData = value;
+                isCheckData = value;
                 SetNode("config/checkData", value);
             }
         }
         // ------------------------------------------------------------
         // Fill In Data Gaps
-        static bool _isFillDataGaps = IsFillDataGapsDefault;
+        static bool isFillDataGaps = IsFillDataGapsDefault;
         /// <summary>
         /// Whether to fill the data gaps in
         /// </summary>
         public static bool FillInDataGaps
         {
-            get { return _isFillDataGaps; }
+            get { return isFillDataGaps; }
             set
             {
-                _isFillDataGaps = value;
+                isFillDataGaps = value;
                 SetNode("config/fillDataGaps", value);
             }
         }
         // ------------------------------------------------------------
         // Fill In Data Gaps
-        static bool _isCutBadData = IsCutBadDataDefault;
+        static bool isCutBadData = IsCutBadDataDefault;
         /// <summary>
         /// Whether to cut off bed data
         /// </summary>
         public static bool CutBadData
         {
-            get { return _isCutBadData; }
+            get { return isCutBadData; }
             set
             {
-                _isCutBadData = value;
+                isCutBadData = value;
                 SetNode("config/cutBadData", value);
             }
         }
         // -------------------------------------------------------------
         // Cuts Saturday and Sunday data
-        static bool _isCutSatSunData = IsCutSatSunDataDefault;
+        static bool isCutSatSunData = IsCutSatSunDataDefault;
         /// <summary>
         /// Whether to cut off Sat and Sun data
         /// </summary>
         public static bool CutSatSunData
         {
-            get { return _isCutSatSunData; }
+            get { return isCutSatSunData; }
             set
             {
-                _isCutSatSunData = value;
+                isCutSatSunData = value;
                 SetNode("config/cutSatSunData", value);
             }
         }
         // -------------------------------------------------------------
         // Whether to load custom indicators
-        static bool _isLoadCustomIndicators = IsLoadCustIndDefault;
+        static bool isLoadCustomIndicators = IsLoadCustIndDefault;
         /// <summary>
         /// Whether to load custom indicators at startup.
         /// </summary>
         public static bool LoadCustomIndicators
         {
-            get { return _isLoadCustomIndicators; }
+            get { return isLoadCustomIndicators; }
             set
             {
-                _isLoadCustomIndicators = value;
+                isLoadCustomIndicators = value;
                 SetNode("config/loadCustomIndicators", value);
             }
         }
         // -------------------------------------------------------------
         // Whether to Show custom indicators
-        static bool _isShowCustomIndicators = IsShowCustIndDefault;
+        static bool isShowCustomIndicators = IsShowCustIndDefault;
         /// <summary>
         /// Whether to Show custom indicators at startup.
         /// </summary>
         public static bool ShowCustomIndicators
         {
-            get { return _isShowCustomIndicators; }
+            get { return isShowCustomIndicators; }
             set
             {
-                _isShowCustomIndicators = value;
+                isShowCustomIndicators = value;
                 SetNode("config/showCustomIndicators", value);
             }
         }
         // -------------------------------------------------------------
         // Maximum data bars
-        static int _maxBars = MaxBarsDefault;
+        static int maxBars = MaxBarsDefault;
         /// <summary>
         /// Maximum data bars
         /// </summary>
         public static int MaxBars
         {
-            get { return _maxBars; }
+            get { return maxBars; }
             set
             {
-                _maxBars = value;
+                maxBars = value;
                 SetNode("config/dataMaxBars", value);
             }
         }
 
-        static DateTime _dataStartTime = DataStartTimeDefault;
+        static DateTime dataStartTime = DataStartTimeDefault;
         /// <summary>
         /// Start time of market data.
         /// </summary>
         public static DateTime DataStartTime
         {
-            get { return _dataStartTime; }
+            get { return dataStartTime; }
             set
             {
-                _dataStartTime = value;
-                SetNode("config/dataStartTime", _dataStartTime.ToString(DateStringFormat));
+                dataStartTime = value;
+                SetNode("config/dataStartTime", dataStartTime.ToString(DateStringFormat));
             }
         }
 
-        static DateTime _dataEndTime = DataEndTimeDefault;
+        static DateTime dataEndTime = DataEndTimeDefault;
         /// <summary>
         /// End time of market data.
         /// </summary>
         public static DateTime DataEndTime
         {
-            get { return _dataEndTime; }
+            get { return dataEndTime; }
             set
             {
-                _dataEndTime = value;
-                SetNode("config/dataEndTime", _dataEndTime.ToString(DateStringFormat));
+                dataEndTime = value;
+                SetNode("config/dataEndTime", dataEndTime.ToString(DateStringFormat));
             }
         }
 
 
-        static bool _isUseStartTime = IsUseStartTimeDefault;
+        static bool isUseStartTime = IsUseStartTimeDefault;
         /// <summary>
         /// Use start time
         /// </summary>
         public static bool UseStartTime
         {
-            get { return _isUseStartTime; }
+            get { return isUseStartTime; }
             set
             {
-                _isUseStartTime = value;
+                isUseStartTime = value;
                 SetNode("config/dataUseStartTime", value);
             }
         }
 
-        static bool _isUseEndTime = IsUseEndTimeDefault;
+        static bool isUseEndTime = IsUseEndTimeDefault;
         /// <summary>
         /// Use ending time
         /// </summary>
         public static bool UseEndTime
         {
-            get { return _isUseEndTime; }
+            get { return isUseEndTime; }
             set
             {
-                _isUseEndTime = value;
+                isUseEndTime = value;
                 SetNode("config/dataUseEndTime", value);
             }
         }
 
-        static bool _isAccountInMoney = IsAccountInMoneyDefault;
+        static bool isAccountInMoney = IsAccountInMoneyDefault;
         /// <summary>
         /// Whether to express the account in currency or in pips
         /// </summary>
         public static bool AccountInMoney
         {
-            get { return _isAccountInMoney; }
+            get { return isAccountInMoney; }
             set
             {
-                _isAccountInMoney = value;
+                isAccountInMoney = value;
                 SetNode("config/account/accountInMoney", value);
             }
         }
 
-        static string _accountCurrency = AccountCurrencyDefault;
+        static string accountCurrency = AccountCurrencyDefault;
         /// <summary>
         /// Account Currency
         /// </summary>
         public static string AccountCurrency
         {
-            get { return _accountCurrency; }
+            get { return accountCurrency; }
             set
             {
-                _accountCurrency = value;
+                accountCurrency = value;
                 SetNode("config/account/accountCurrency", value);
             }
         }
 
-        static int _initialAccount = InitialAccountDefault;
+        static int initialAccount = InitialAccountDefault;
         /// <summary>
         /// Initial Account
         /// </summary>
         public static int InitialAccount
         {
-            get { return _initialAccount; }
+            get { return initialAccount; }
             set
             {
-                _initialAccount = value;
+                initialAccount = value;
                 SetNode("config/account/initialAccount", value);
             }
         }
 
-        static int _leverage = LeverageDefault;
+        static int leverage = LeverageDefault;
         /// <summary>
         /// Leverage
         /// </summary>
         public static int Leverage
         {
-            get { return _leverage; }
+            get { return leverage; }
             set
             {
-                _leverage = value;
+                leverage = value;
                 SetNode("config/account/leverage", value);
             }
         }
 
-        static bool _isShowJournal = IsShowJournalDefault;
+        static bool isShowJournal = IsShowJournalDefault;
         /// <summary>
         /// Whether to show the journal
         /// </summary>
         public static bool ShowJournal
         {
-            get { return _isShowJournal; }
+            get { return isShowJournal; }
             set
             {
-                _isShowJournal = value;
+                isShowJournal = value;
                 SetNode("config/showJournal", value);
             }
         }
 
-        static bool _isJournalByBars = IsJournalByBarsDefault;
+        static bool isJournalByBars = IsJournalByBarsDefault;
         /// <summary>
         /// Arrange the journal by bars
         /// </summary>
         public static bool JournalByBars
         {
-            get { return _isJournalByBars; }
+            get { return isJournalByBars; }
             set
             {
-                _isJournalByBars = value;
+                isJournalByBars = value;
                 SetNode("config/journalByBars", value);
             }
         }
 
-        static bool _isJournalShowTransfers = IsJournalShowTransfersDefault;
+        static bool isJournalShowTransfers = IsJournalShowTransfersDefault;
         /// <summary>
         /// Sets if journal shows transfers
         /// </summary>
         public static bool JournalShowTransfers
         {
-            get { return _isJournalShowTransfers; }
+            get { return isJournalShowTransfers; }
             set
             {
-                _isJournalShowTransfers = value;
+                isJournalShowTransfers = value;
                 SetNode("config/journalShowTransfers", value);
             }
         }
 
-        static bool _isAutoscan = IsAutoscanDefault;
+        static bool isAutoscan = IsAutoscanDefault;
         /// <summary>
         /// Perform auto scanning
         /// </summary>
         public static bool Autoscan
         {
-            get { return _isAutoscan; }
+            get { return isAutoscan; }
             set
             {
-                _isAutoscan = value;
+                isAutoscan = value;
                 SetNode("config/autoscan", value);
             }
         }
 
-        static bool _isTradeUntilMarginCall = IsTradeUntilMarginCallDefault;
+        static bool isTradeUntilMarginCall = IsTradeUntilMarginCallDefault;
         /// <summary>
         /// Close all trades after a Margin Call
         /// </summary>
         public static bool TradeUntilMarginCall
         {
-            get { return _isTradeUntilMarginCall; }
+            get { return isTradeUntilMarginCall; }
             set
             {
-                _isTradeUntilMarginCall = value;
+                isTradeUntilMarginCall = value;
                 SetNode("config/tradeUntilMarginCall", value);
             }
         }
 
-        static bool _isAdditionalStatistics = IsAdditionalStatisticsDefault;
+        static bool isAdditionalStatistics = IsAdditionalStatisticsDefault;
         /// <summary>
         /// Calculates additional stats
         /// </summary>
         public static bool AdditionalStatistics
         {
-            get { return _isAdditionalStatistics; }
+            get { return isAdditionalStatistics; }
             set
             {
-                _isAdditionalStatistics = value;
+                isAdditionalStatistics = value;
                 SetNode("config/additionalStatistics", value);
             }
         }
 
-        static bool _isUseLogicalGroups = IsUseLogicalGroupsDefault;
+        static bool isUseLogicalGroups = IsUseLogicalGroupsDefault;
         /// <summary>
         /// Logical groups for the entry / exit filters.
         /// </summary>
         public static bool UseLogicalGroups
         {
-            get { return _isUseLogicalGroups; }
+            get { return isUseLogicalGroups; }
             set
             {
-                _isUseLogicalGroups = value;
+                isUseLogicalGroups = value;
                 SetNode("config/useLogicalGroups", value);
             }
         }
 
-        static bool _isPlaySounds = IsPlaySoundsDefault;
+        static bool isPlaySounds = IsPlaySoundsDefault;
         /// <summary>
         /// Sets if the program plays sounds on events.
         /// </summary>
         public static bool PlaySounds
         {
-            get { return _isPlaySounds; }
+            get { return isPlaySounds; }
             set
             {
-                _isPlaySounds = value;
+                isPlaySounds = value;
                 SetNode("config/playSounds", value);
             }
         }
 
-        static string _generatorOptions = GeneratorOptionsDefault;
+        static string generatorOptions = GeneratorOptionsDefault;
         /// <summary>
         /// Generator options
         /// </summary>
         public static string GeneratorOptions
         {
-            get { return _generatorOptions; }
+            get { return generatorOptions; }
             set
             {
-                _generatorOptions = value;
+                generatorOptions = value;
                 SetNode("config/generatorOptions", value);
             }
         }
 
-        static string _optimizerOptions = OptimizerOptionsDefault;
+        static string optimizerOptions = OptimizerOptionsDefault;
         /// <summary>
         /// Optimizer options
         /// </summary>
         public static string OptimizerOptions
         {
-            get { return _optimizerOptions; }
+            get { return optimizerOptions; }
             set
             {
-                _optimizerOptions = value;
+                optimizerOptions = value;
                 SetNode("config/optimizerOptions", value);
             }
         }
 
-        static string _columnSeparator = ColumnSeparatorDefault;
+        static string columnSeparator = ColumnSeparatorDefault;
         public static string ColumnSeparator
         {
-            get { return _columnSeparator; }
+            get { return columnSeparator; }
             set
             {
-                _columnSeparator = value;
+                columnSeparator = value;
                 SetNode("config/columnSeparator", value);
             }
         }
 
-        static string _decimalSeparator = DecimalSeparatorDefault;
+        static string decimalSeparator = DecimalSeparatorDefault;
         public static string DecimalSeparator
         {
-            get { return _decimalSeparator; }
+            get { return decimalSeparator; }
             set
             {
-                _decimalSeparator = value;
+                decimalSeparator = value;
                 SetNode("config/decimalSeparator", value);
             }
         }
 
-        static bool _useTickData = UseTickDataDefault;
+        static bool useTickData = UseTickDataDefault;
         public static bool UseTickData
         {
-            get { return _useTickData; }
+            get { return useTickData; }
             set
             {
-                _useTickData = value;
+                useTickData = value;
                 SetNode("config/useTickData", value);
             }
         }
 
 
-        static string _jforexDataPath = JforexDataPathDefault;
+        static string jforexDataPath = JforexDataPathDefault;
         public static string JForexDataPath
         {
-            get { return _jforexDataPath; }
+            get { return jforexDataPath; }
             set
             {
-                _jforexDataPath = value;
+                jforexDataPath = value;
                 SetNode("config/jforexDataPath", value);
             }
         }
 
-        static string _metatrader4DataPath = Metatrader4DataPathDefault;
+        static string metatrader4DataPath = Metatrader4DataPathDefault;
         public static string MetaTrader4DataPath
         {
-            get { return _metatrader4DataPath; }
+            get { return metatrader4DataPath; }
             set
             {
-                _metatrader4DataPath = value;
+                metatrader4DataPath = value;
                 SetNode("config/metatrader4DataPath", value);
             }
         }
 
-        static int _marketClosingHour = MarketClosingHourDefault;
+        static int marketClosingHour = MarketClosingHourDefault;
         public static int MarketClosingHour
         {
-            get { return _marketClosingHour; }
+            get { return marketClosingHour; }
             set
             {
-                _marketClosingHour = value;
+                marketClosingHour = value;
                 SetNode("config/marketClosingHour", value);
             }
         }
 
-        static int _marketOpeningHour = MarketOpeningHourDefault;
+        static int marketOpeningHour = MarketOpeningHourDefault;
         public static int MarketOpeningHour
         {
-            get { return _marketOpeningHour; }
+            get { return marketOpeningHour; }
             set
             {
-                _marketOpeningHour = value;
+                marketOpeningHour = value;
                 SetNode("config/marketOpeningHour", value);
             }
         }
 
-        static string _importStartingDate = ImportStartingDateDefault;
+        static string importStartingDate = ImportStartingDateDefault;
         public static string ImportStartingDate
         {
-            get { return _importStartingDate; }
+            get { return importStartingDate; }
             set
             {
-                _importStartingDate = value;
+                importStartingDate = value;
                 SetNode("config/importStartingDate", value);
             }
         }
 
-        static string _importEndingDate = ImportEndingDateDefault;
+        static string importEndingDate = ImportEndingDateDefault;
         public static string ImportEndingDate
         {
-            get { return _importEndingDate; }
+            get { return importEndingDate; }
             set
             {
-                _importEndingDate = value;
+                importEndingDate = value;
                 SetNode("config/importEndingDate", value);
             }
         }
 
-        static string _mt4ImportDestFolder = MT4ImportDestFolderDefault;
+        static string mt4ImportDestFolder = MT4ImportDestFolderDefault;
         public static string MT4ImportDestFolder
         {
-            get { return _mt4ImportDestFolder; }
+            get { return mt4ImportDestFolder; }
             set
             {
-                _mt4ImportDestFolder = value;
+                mt4ImportDestFolder = value;
                 SetNode("config/mt4ImportDestFolder", value);
             }
         }
 
-        static string _jForexImportDestFolder = JForexImportDestFolderDefault;
+        static string jForexImportDestFolder = JForexImportDestFolderDefault;
         public static string JForexImportDestFolder
         {
-            get { return _jForexImportDestFolder; }
+            get { return jForexImportDestFolder; }
             set
             {
-                _jForexImportDestFolder = value;
+                jForexImportDestFolder = value;
                 SetNode("config/jForexImportDestFolder", value);
             }
         }
 
-        static int _minBarsInBarFile = MinBarsInBarFileDefault;
+        static int minBarsInBarFile = MinBarsInBarFileDefault;
         public static int MinBarsInBarFile
         {
-            get { return _minBarsInBarFile; }
+            get { return minBarsInBarFile; }
             set
             {
-                _minBarsInBarFile = value;
+                minBarsInBarFile = value;
                 SetNode("config/minBarsInBarFile", value);
             }
         }
 
-        static string _oandaImportDestFolder = OandaImportDestFolderDefault;
+        static string oandaImportDestFolder = OandaImportDestFolderDefault;
         public static string OandaImportDestFolder
         {
-            get { return _oandaImportDestFolder; }
+            get { return oandaImportDestFolder; }
             set
             {
-                _oandaImportDestFolder = value;
+                oandaImportDestFolder = value;
                 SetNode("config/oandaImportDestFolder", value);
             }
         }
 
-        static string _bannedIndicators = BannedIndicatorsDefault;
+        static string bannedIndicators = BannedIndicatorsDefault;
         public static string BannedIndicators
         {
-            get { return _bannedIndicators; }
+            get { return bannedIndicators; }
             set
             {
-                _bannedIndicators = value;
+                bannedIndicators = value;
                 SetNode("config/bannedIndicators", value);
             }
         }
 
-        static bool _showPriceChartOnAccountChart = ShowPriceChartOnAccountChartDefault;
+        static bool showPriceChartOnAccountChart = ShowPriceChartOnAccountChartDefault;
         public static bool ShowPriceChartOnAccountChart
         {
-            get { return _showPriceChartOnAccountChart; }
+            get { return showPriceChartOnAccountChart; }
             set
             {
-                _showPriceChartOnAccountChart = value;
+                showPriceChartOnAccountChart = value;
                 SetNode("config/showPriceChartOnAccountChart", value);
             }
         }
 
-        static bool _analyzerHideFSB = AnalyzerHideFSBDefault;
+        static bool analyzerHideFSB = AnalyzerHideFSBDefault;
         public static bool AnalyzerHideFSB
         {
-            get { return _analyzerHideFSB; }
+            get { return analyzerHideFSB; }
             set
             {
-                _analyzerHideFSB = value;
+                analyzerHideFSB = value;
                 SetNode("config/analyzerHideFSB", value);
             }
         }
 
-        static bool _sendUsageStats = SendUsageStatsDefault;
+        static bool sendUsageStats = SendUsageStatsDefault;
         public static bool SendUsageStats
         {
-            get { return _sendUsageStats; }
+            get { return sendUsageStats; }
             set
             {
-                _sendUsageStats = value;
+                sendUsageStats = value;
                 SetNode("config/sendUsageStats", value);
             }
         }
 
-        static int _mainScreenWidth = MainScreenWidthDefault;
+        static int mainScreenWidth = MainScreenWidthDefault;
         public static int MainScreenWidth
         {
-            get { return _mainScreenWidth; }
+            get { return mainScreenWidth; }
             set
             {
-                _mainScreenWidth = value;
+                mainScreenWidth = value;
                 SetNode("config/mainScreenWidth", value);
             }
         }
 
-        static int _mainScreenHeight = MainScreenHeightDefault;
+        static int mainScreenHeight = MainScreenHeightDefault;
         public static int MainScreenHeight
         {
-            get { return _mainScreenHeight; }
+            get { return mainScreenHeight; }
             set
             {
-                _mainScreenHeight = value;
+                mainScreenHeight = value;
                 SetNode("config/mainScreenHeight", value);
             }
         }
 
-        static bool _showStatusBar = ShowStatusBarDefault;
+        static bool showStatusBar = ShowStatusBarDefault;
         public static bool ShowStatusBar
         {
-            get { return _showStatusBar; }
+            get { return showStatusBar; }
             set
             {
-                _showStatusBar = value;
+                showStatusBar = value;
                 SetNode("config/showStatusBar", value);
             }
         }
 
 	
-        static bool _strategyDirWatch = StrategyDirWatchDefault;
+        static bool strategyDirWatch = StrategyDirWatchDefault;
         public static bool StrategyDirWatch
         {
-            get { return _strategyDirWatch; }
+            get { return strategyDirWatch; }
             set
             {
-                _strategyDirWatch = value;
+                strategyDirWatch = value;
                 SetNode("config/strategyDirWatch", value);
             }
         }
 
-        static string _truefxImportDestFolder = TrueFxImportDestFolderDefault;
+        static string truefxImportDestFolder = TrueFxImportDestFolderDefault;
         public static string TrueFxImportDestFolder
         {
-            get { return _truefxImportDestFolder; }
+            get { return truefxImportDestFolder; }
             set
             {
-                _oandaImportDestFolder = value;
+                oandaImportDestFolder = value;
                 SetNode("config/truefxImportDestFolder", value);
             }
         }
@@ -985,336 +985,336 @@ namespace Forex_Strategy_Builder
         // -------------------------------------------------------------
 
 
-        static int _indicatorChartZoom = IndicatorChartZoomDefault;
+        static int indicatorChartZoom = IndicatorChartZoomDefault;
         public static int IndicatorChartZoom
         {
-            get { return _indicatorChartZoom; }
+            get { return indicatorChartZoom; }
             set
             {
-                _indicatorChartZoom = value;
+                indicatorChartZoom = value;
                 SetNode("config/indicatorChart/zoom", value);
             }
         }
 
-        static bool _isIndicatorChartInfoPanel = IsIndicatorChartInfoPanelDefault;
+        static bool isIndicatorChartInfoPanel = IsIndicatorChartInfoPanelDefault;
         public static bool IndicatorChartInfoPanel
         {
-            get { return _isIndicatorChartInfoPanel; }
+            get { return isIndicatorChartInfoPanel; }
             set
             {
-                _isIndicatorChartInfoPanel = value;
+                isIndicatorChartInfoPanel = value;
                 SetNode("config/indicatorChart/infoPanel", value);
             }
         }
 
-        static bool _isIndicatorChartDynamicInfo = IsIndicatorChartDynamicInfoDefault;
+        static bool isIndicatorChartDynamicInfo = IsIndicatorChartDynamicInfoDefault;
         public static bool IndicatorChartDynamicInfo
         {
-            get { return _isIndicatorChartDynamicInfo; }
+            get { return isIndicatorChartDynamicInfo; }
             set
             {
-                _isIndicatorChartDynamicInfo = value;
+                isIndicatorChartDynamicInfo = value;
                 SetNode("config/indicatorChart/dynamicInfo", value);
             }
         }
 
-        static bool _isIndicatorChartGrid = IsIndicatorChartGridDefault;
+        static bool isIndicatorChartGrid = IsIndicatorChartGridDefault;
         public static bool IndicatorChartGrid
         {
-            get { return _isIndicatorChartGrid; }
+            get { return isIndicatorChartGrid; }
             set
             {
-                _isIndicatorChartGrid = value;
+                isIndicatorChartGrid = value;
                 SetNode("config/indicatorChart/grid", value);
             }
         }
 
-        static bool _isIndicatorChartCross = IsIndicatorChartCrossDefault;
+        static bool isIndicatorChartCross = IsIndicatorChartCrossDefault;
         public static bool IndicatorChartCross
         {
-            get { return _isIndicatorChartCross; }
+            get { return isIndicatorChartCross; }
             set
             {
-                _isIndicatorChartCross = value;
+                isIndicatorChartCross = value;
 
                 SetNode("config/indicatorChart/cross", value);
             }
         }
 
-        static bool _isIndicatorChartVolume = IsIndicatorChartVolumeDefault;
+        static bool isIndicatorChartVolume = IsIndicatorChartVolumeDefault;
         public static bool IndicatorChartVolume
         {
-            get { return _isIndicatorChartVolume; }
+            get { return isIndicatorChartVolume; }
             set
             {
-                _isIndicatorChartVolume = value;
+                isIndicatorChartVolume = value;
                 SetNode("config/indicatorChart/volume", value);
             }
         }
 
-        static bool _isIndicatorChartLots = IsIndicatorChartLotsDefault;
+        static bool isIndicatorChartLots = IsIndicatorChartLotsDefault;
         public static bool IndicatorChartLots
         {
-            get { return _isIndicatorChartLots; }
+            get { return isIndicatorChartLots; }
             set
             {
-                _isIndicatorChartLots = value;
+                isIndicatorChartLots = value;
                 SetNode("config/indicatorChart/lots", value);
             }
         }
 
-        static bool _isIndicatorChartEntryExitPoints = IsIndicatorChartEntryExitPointsDefault;
+        static bool isIndicatorChartEntryExitPoints = IsIndicatorChartEntryExitPointsDefault;
         public static bool IndicatorChartEntryExitPoints
         {
-            get { return _isIndicatorChartEntryExitPoints; }
+            get { return isIndicatorChartEntryExitPoints; }
             set
             {
-                _isIndicatorChartEntryExitPoints = value;
+                isIndicatorChartEntryExitPoints = value;
                 SetNode("config/indicatorChart/entryExitPoints", value);
             }
         }
 
-        static bool _isIndicatorChartCorrectedPositionPrice = IsIndicatorChartCorrectedPositionPriceDefault;
+        static bool isIndicatorChartCorrectedPositionPrice = IsIndicatorChartCorrectedPositionPriceDefault;
         public static bool IndicatorChartCorrectedPositionPrice
         {
-            get { return _isIndicatorChartCorrectedPositionPrice; }
+            get { return isIndicatorChartCorrectedPositionPrice; }
             set
             {
-                _isIndicatorChartCorrectedPositionPrice = value;
+                isIndicatorChartCorrectedPositionPrice = value;
                 SetNode("config/indicatorChart/correctedPositionPrice", value);
             }
         }
 
-        static bool _isIndicatorChartBalanceEquityChart = IsIndicatorChartBalanceEquityChartDefault;
+        static bool isIndicatorChartBalanceEquityChart = IsIndicatorChartBalanceEquityChartDefault;
         public static bool IndicatorChartBalanceEquityChart
         {
-            get { return _isIndicatorChartBalanceEquityChart; }
+            get { return isIndicatorChartBalanceEquityChart; }
             set
             {
-                _isIndicatorChartBalanceEquityChart = value;
+                isIndicatorChartBalanceEquityChart = value;
                 SetNode("config/indicatorChart/balanceEquityChart", value);
             }
         }
 
-        static bool _isIndicatorChartFloatingPLChart = IsIndicatorChartFloatingPLChartDefault;
+        static bool isIndicatorChartFloatingPLChart = IsIndicatorChartFloatingPLChartDefault;
         public static bool IndicatorChartFloatingPLChart
         {
-            get { return _isIndicatorChartFloatingPLChart; }
+            get { return isIndicatorChartFloatingPLChart; }
             set
             {
-                _isIndicatorChartFloatingPLChart = value;
+                isIndicatorChartFloatingPLChart = value;
                 SetNode("config/indicatorChart/floatingPLChart", value);
             }
         }
 
-        static bool _isIndicatorChartIndicators = IsIndicatorChartIndicatorsDefault;
+        static bool isIndicatorChartIndicators = IsIndicatorChartIndicatorsDefault;
         public static bool IndicatorChartIndicators
         {
-            get { return _isIndicatorChartIndicators; }
+            get { return isIndicatorChartIndicators; }
             set
             {
-                _isIndicatorChartIndicators = value;
+                isIndicatorChartIndicators = value;
 
                 SetNode("config/indicatorChart/indicators", value);
             }
         }
 
-        static bool _isIndicatorChartAmbiguousMark = IsIndicatorChartAmbiguousMarkDefault;
+        static bool isIndicatorChartAmbiguousMark = IsIndicatorChartAmbiguousMarkDefault;
         public static bool IndicatorChartAmbiguousMark
         {
-            get { return _isIndicatorChartAmbiguousMark; }
+            get { return isIndicatorChartAmbiguousMark; }
             set
             {
-                _isIndicatorChartAmbiguousMark = value;
+                isIndicatorChartAmbiguousMark = value;
                 SetNode("config/indicatorChart/ambiguousMark", value);
             }
         }
 
-        static bool _isIndicatorChartTrueCharts = IsIndicatorChartTrueChartsDefault;
+        static bool isIndicatorChartTrueCharts = IsIndicatorChartTrueChartsDefault;
         public static bool IndicatorChartTrueCharts
         {
-            get { return _isIndicatorChartTrueCharts; }
+            get { return isIndicatorChartTrueCharts; }
             set
             {
-                _isIndicatorChartTrueCharts = value;
+                isIndicatorChartTrueCharts = value;
 
                 SetNode("config/indicatorChart/trueCharts", value);
             }
         }
 
-        static bool _isIndicatorChartProtections = IsIndicatorChartProtectionsDefault;
+        static bool isIndicatorChartProtections = IsIndicatorChartProtectionsDefault;
         public static bool IndicatorChartProtections
         {
-            get { return _isIndicatorChartProtections; }
+            get { return isIndicatorChartProtections; }
             set
             {
-                _isIndicatorChartProtections = value;
+                isIndicatorChartProtections = value;
                 SetNode("config/indicatorChart/protections", value);
             }
         }
 
         // -------------------------------------------------------------
-        static int _balanceChartZoom = BalanceChartZoomDefault;
+        static int balanceChartZoom = BalanceChartZoomDefault;
         public static int BalanceChartZoom
         {
-            get { return _balanceChartZoom; }
+            get { return balanceChartZoom; }
             set
             {
-                _balanceChartZoom = value;
+                balanceChartZoom = value;
                 SetNode("config/balanceChart/zoom", value);
             }
         }
 
-        static bool _isBalanceChartInfoPanel = IsBalanceChartInfoPanelDefault;
+        static bool isBalanceChartInfoPanel = IsBalanceChartInfoPanelDefault;
         public static bool BalanceChartInfoPanel
         {
-            get { return _isBalanceChartInfoPanel; }
+            get { return isBalanceChartInfoPanel; }
             set
             {
-                _isBalanceChartInfoPanel = value;
+                isBalanceChartInfoPanel = value;
                 SetNode("config/balanceChart/infoPanel", value);
             }
         }
 
-        static bool _isBalanceChartDynamicInfo = IsBalanceChartDynamicInfoDefault;
+        static bool isBalanceChartDynamicInfo = IsBalanceChartDynamicInfoDefault;
         public static bool BalanceChartDynamicInfo
         {
-            get { return _isBalanceChartDynamicInfo; }
+            get { return isBalanceChartDynamicInfo; }
             set
             {
-                _isBalanceChartDynamicInfo = value;
+                isBalanceChartDynamicInfo = value;
                 SetNode("config/balanceChart/dynamicInfo", value);
             }
         }
 
-        static bool _isBalanceChartGrid = IsBalanceChartGridDefault;
+        static bool isBalanceChartGrid = IsBalanceChartGridDefault;
         public static bool BalanceChartGrid
         {
-            get { return _isBalanceChartGrid; }
+            get { return isBalanceChartGrid; }
             set
             {
-                _isBalanceChartGrid = value;
+                isBalanceChartGrid = value;
                 SetNode("config/balanceChart/grid", value);
             }
         }
 
-        static bool _isBalanceChartCross = IsBalanceChartCrossDefault;
+        static bool isBalanceChartCross = IsBalanceChartCrossDefault;
         public static bool BalanceChartCross
         {
-            get { return _isBalanceChartCross; }
+            get { return isBalanceChartCross; }
             set
             {
-                _isBalanceChartCross = value;
+                isBalanceChartCross = value;
                 SetNode("config/balanceChart/cross", value);
             }
         }
 
-        static bool _isBalanceChartVolume = IsBalanceChartVolumeDefault;
+        static bool isBalanceChartVolume = IsBalanceChartVolumeDefault;
         public static bool BalanceChartVolume
         {
-            get { return _isBalanceChartVolume; }
+            get { return isBalanceChartVolume; }
             set
             {
-                _isBalanceChartVolume = value;
+                isBalanceChartVolume = value;
                 SetNode("config/balanceChart/volume", value);
             }
         }
 
-        static bool _isBalanceChartLots = IsBalanceChartLotsDefault;
+        static bool isBalanceChartLots = IsBalanceChartLotsDefault;
         public static bool BalanceChartLots
         {
-            get { return _isBalanceChartLots; }
+            get { return isBalanceChartLots; }
             set
             {
-                _isBalanceChartLots = value;
+                isBalanceChartLots = value;
                 SetNode("config/balanceChart/lots", value);
             }
         }
 
-        static bool _isBalanceChartEntryExitPoints = IsBalanceChartEntryExitPointsDefault;
+        static bool isBalanceChartEntryExitPoints = IsBalanceChartEntryExitPointsDefault;
         public static bool BalanceChartEntryExitPoints
         {
-            get { return _isBalanceChartEntryExitPoints; }
+            get { return isBalanceChartEntryExitPoints; }
             set
             {
-                _isBalanceChartEntryExitPoints = value;
+                isBalanceChartEntryExitPoints = value;
                 SetNode("config/balanceChart/entryExitPoints", value);
             }
         }
 
-        static bool _isBalanceChartCorrectedPositionPrice = IsBalanceChartCorrectedPositionPriceDefault;
+        static bool isBalanceChartCorrectedPositionPrice = IsBalanceChartCorrectedPositionPriceDefault;
         public static bool BalanceChartCorrectedPositionPrice
         {
-            get { return _isBalanceChartCorrectedPositionPrice; }
+            get { return isBalanceChartCorrectedPositionPrice; }
             set
             {
-                _isBalanceChartCorrectedPositionPrice = value;
+                isBalanceChartCorrectedPositionPrice = value;
                 SetNode("config/balanceChart/correctedPositionPrice", value);
             }
         }
 
-        static bool _isBalanceChartBalanceEquityChart = IsBalanceChartBalanceEquityChartDefault;
+        static bool isBalanceChartBalanceEquityChart = IsBalanceChartBalanceEquityChartDefault;
         public static bool BalanceChartBalanceEquityChart
         {
-            get { return _isBalanceChartBalanceEquityChart; }
+            get { return isBalanceChartBalanceEquityChart; }
             set
             {
-                _isBalanceChartBalanceEquityChart = value;
+                isBalanceChartBalanceEquityChart = value;
                 SetNode("config/balanceChart/balanceEquityChart", value);
             }
         }
 
-        static bool _isBalanceChartFloatingPLChart = IsBalanceChartFloatingPLChartDefault;
+        static bool isBalanceChartFloatingPLChart = IsBalanceChartFloatingPLChartDefault;
         public static bool BalanceChartFloatingPLChart
         {
-            get { return _isBalanceChartFloatingPLChart; }
+            get { return isBalanceChartFloatingPLChart; }
             set
             {
-                _isBalanceChartFloatingPLChart = value;
+                isBalanceChartFloatingPLChart = value;
                 SetNode("config/balanceChart/floatingPLChart", value);
             }
         }
 
-        static bool _isBalanceChartIndicators = IsBalanceChartIndicatorsDefault;
+        static bool isBalanceChartIndicators = IsBalanceChartIndicatorsDefault;
         public static bool BalanceChartIndicators
         {
-            get { return _isBalanceChartIndicators; }
+            get { return isBalanceChartIndicators; }
             set
             {
-                _isBalanceChartIndicators = value;
+                isBalanceChartIndicators = value;
                 SetNode("config/balanceChart/indicators", value);
             }
         }
 
-        static bool _isBalanceChartAmbiguousMark = IsBalanceChartAmbiguousMarkDefault;
+        static bool isBalanceChartAmbiguousMark = IsBalanceChartAmbiguousMarkDefault;
         public static bool BalanceChartAmbiguousMark
         {
-            get { return _isBalanceChartAmbiguousMark; }
+            get { return isBalanceChartAmbiguousMark; }
             set
             {
-                _isBalanceChartAmbiguousMark = value;
+                isBalanceChartAmbiguousMark = value;
                 SetNode("config/balanceChart/ambiguousMark", value);
             }
         }
 
-        static bool _isBalanceChartTrueCharts = IsBalanceChartTrueChartsDefault;
+        static bool isBalanceChartTrueCharts = IsBalanceChartTrueChartsDefault;
         public static bool BalanceChartTrueCharts
         {
-            get { return _isBalanceChartTrueCharts; }
+            get { return isBalanceChartTrueCharts; }
             set
             {
-                _isBalanceChartTrueCharts = value;
+                isBalanceChartTrueCharts = value;
                 SetNode("config/balanceChart/trueCharts", value);
             }
         }
 
-        static bool _isBalanceChartProtections = IsBalanceChartProtectionsDefault;
+        static bool isBalanceChartProtections = IsBalanceChartProtectionsDefault;
         public static bool BalanceChartProtections
         {
-            get { return _isBalanceChartProtections; }
+            get { return isBalanceChartProtections; }
             set
             {
-                _isBalanceChartProtections = value;
+                isBalanceChartProtections = value;
                 SetNode("config/balanceChart/protections", value);
             }
         }
@@ -1326,14 +1326,22 @@ namespace Forex_Strategy_Builder
         /// </summary>
         static Configs()
         {
-            _xmlConfig = new XmlDocument();
-            PathToConfigFile = Path.Combine(Data.SystemDir, "config.xml");
+            string externalConfigFile = string.Empty;
+            foreach (string arg in Environment.GetCommandLineArgs())
+                if (arg.StartsWith("-configfile="))
+                    externalConfigFile = CommandLineParser.GetValue(arg);
+
+            xmlConfig = new XmlDocument();
+
+            PathToConfigFile = String.IsNullOrEmpty(externalConfigFile)
+                                ? Path.Combine(Data.SystemDir, "config.xml")
+                                : externalConfigFile;
         }
 
         private static void SetNode(string node, object value)
         {
-            if (!_isConfigLoaded) return;
-            var xmlNodeList = _xmlConfig.SelectNodes(node);
+            if (!isConfigLoaded) return;
+            var xmlNodeList = xmlConfig.SelectNodes(node);
             if (xmlNodeList == null) return;
             var xmlNode = xmlNodeList.Item(0);
             if (xmlNode != null)
@@ -1345,7 +1353,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public static void ResetParams()
         {
-            if (!_isConfigLoaded)
+            if (!isConfigLoaded)
                 return;
 
             MinBars                  = MinBarsDefault;
@@ -1446,7 +1454,7 @@ namespace Forex_Strategy_Builder
             BalanceChartProtections            = IsBalanceChartProtectionsDefault;
 
             SaveConfigs();
-            _isResetActivated = true;
+            isResetActivated = true;
         }
 
         /// <summary>
@@ -1455,110 +1463,110 @@ namespace Forex_Strategy_Builder
         static void ParseConfigs()
         {
             // Constants
-            _iMinBars                  = ParseNode("config/MIN_BARS", MinBarsDefault);
-            _iMaxBarsLimit             = ParseNode("config/MAX_BARS", MaxBarsLimitDefault);
-            _iMaxIntraBars             = ParseNode("config/MAX_INTRA_BARS", MaxIntraBarsDefault);
-            _iMaxEntryFilters          = ParseNode("config/MAX_ENTRY_FILTERS", MaxEntryFiltersDefault);
-            _iMaxExitFilters           = ParseNode("config/MAX_EXIT_FILTERS", MaxExitFiltersDefault);
-            _iSigmaModeMainChart       = ParseNode("config/SIGMA_MODE_MAIN_CHART", SigmaModeMainChartDefault);
-            _iSigmaModeSeparatedChart  = ParseNode("config/SIGMA_MODE_SEPARATED_CHART", SigmaModeSeparatedChartDefault);
+            minBars                  = ParseNode("config/MIN_BARS", MinBarsDefault);
+            maxBarsLimit             = ParseNode("config/MAX_BARS", MaxBarsLimitDefault);
+            maxIntraBars             = ParseNode("config/MAX_INTRA_BARS", MaxIntraBarsDefault);
+            maxEntryFilters          = ParseNode("config/MAX_ENTRY_FILTERS", MaxEntryFiltersDefault);
+            maxExitFilters           = ParseNode("config/MAX_EXIT_FILTERS", MaxExitFiltersDefault);
+            sigmaModeMainChart       = ParseNode("config/SIGMA_MODE_MAIN_CHART", SigmaModeMainChartDefault);
+            sigmaModeSeparatedChart  = ParseNode("config/SIGMA_MODE_SEPARATED_CHART", SigmaModeSeparatedChartDefault);
 
-            _isInstalled                  = ParseNode("config/installed", false);
-            _language                     = ParseNode("config/language", LanguageDefault);
-            _isShowStartingTip            = ParseNode("config/showStartingTip", ShowStartingTipDefault);
-            _currentTipNumber             = ParseNode("config/currentTipNumber", CurrentTipNumberDefault);
-            _isGradientView               = ParseNode("config/gradientView", IsGradientViewDefault);
-            _isShowJournal                = ParseNode("config/showJournal", IsShowJournalDefault);
-            _isJournalByBars              = ParseNode("config/journalByBars", IsJournalByBarsDefault);
-            _isJournalShowTransfers       = ParseNode("config/journalShowTransfers", IsJournalShowTransfersDefault);
-            _isAutoscan                   = ParseNode("config/autoscan", IsAutoscanDefault);
-            _isTradeUntilMarginCall       = ParseNode("config/tradeUntilMarginCall", IsTradeUntilMarginCallDefault);
-            _isAdditionalStatistics       = ParseNode("config/additionalStatistics", IsAdditionalStatisticsDefault);
-            _isUseLogicalGroups           = ParseNode("config/useLogicalGroups", IsUseLogicalGroupsDefault);
-            _dataDirectory                = ParseNode("config/dataDirectory", DataDirectoryDefault);
-            _colorScheme                  = ParseNode("config/colorScheme", ColorSchemeDefault);
-            _isRememberLastStr            = ParseNode("config/rememberLastStrategy", IsRememberLastStrDefault);
-            _lastStrategy                 = ParseNode("config/lastStrategy", LastStrategyDefault);
-            _isCheckForUpdates            = ParseNode("config/checkForUpdates", IsCheckForUpdatesDefault);
-            _isCheckForNewBeta            = ParseNode("config/checkForNewBeta", IsCheckForNewBetaDefault);
-            _isCheckData                  = ParseNode("config/checkData", IsCheckDataDefault);
-            _isFillDataGaps               = ParseNode("config/fillDataGaps", IsFillDataGapsDefault);
-            _isCutBadData                 = ParseNode("config/cutBadData", IsCutBadDataDefault);
-            _isCutSatSunData              = ParseNode("config/cutSatSunData", IsCutSatSunDataDefault);
-            _isLoadCustomIndicators       = ParseNode("config/loadCustomIndicators", IsLoadCustIndDefault);
-            _isShowCustomIndicators       = ParseNode("config/showCustomIndicators", IsShowCustIndDefault);
-            _isPlaySounds                 = ParseNode("config/playSounds", IsPlaySoundsDefault);
-            _generatorOptions             = ParseNode("config/generatorOptions", GeneratorOptionsDefault);
-            _optimizerOptions             = ParseNode("config/optimizerOptions", OptimizerOptionsDefault);
-            _columnSeparator              = ParseNode("config/columnSeparator", ColumnSeparatorDefault);
-            _decimalSeparator             = ParseNode("config/decimalSeparator", DecimalSeparatorDefault);
-            _useTickData                  = ParseNode("config/useTickData",  UseTickDataDefault);
-            _jforexDataPath               = ParseNode("config/jforexDataPath",  JforexDataPathDefault);
-            _jForexImportDestFolder       = ParseNode("config/jForexImportDestFolder", JForexImportDestFolderDefault);
-            _metatrader4DataPath          = ParseNode("config/metatrader4DataPath", Metatrader4DataPathDefault);
-            _marketClosingHour            = ParseNode("config/marketClosingHour", MarketClosingHourDefault);
-            _marketOpeningHour            = ParseNode("config/marketOpeningHour", MarketOpeningHourDefault);
-            _importStartingDate           = ParseNode("config/importStartingDate", ImportStartingDateDefault);
-            _importEndingDate             = ParseNode("config/importEndingDate", ImportEndingDateDefault);
-            _mt4ImportDestFolder          = ParseNode("config/mt4ImportDestFolder", MT4ImportDestFolderDefault);
-            _minBarsInBarFile             = ParseNode("config/minBarsInBarFile", MinBarsInBarFileDefault);
-            _oandaImportDestFolder        = ParseNode("config/oandaImportDestFolder", OandaImportDestFolderDefault);
-            _bannedIndicators             = ParseNode("config/bannedIndicators", BannedIndicatorsDefault);
-            _showPriceChartOnAccountChart = ParseNode("config/showPriceChartOnAccountChart", ShowPriceChartOnAccountChartDefault);
-            _analyzerHideFSB              = ParseNode("config/analyzerHideFSB", AnalyzerHideFSBDefault);
-            _sendUsageStats               = ParseNode("config/sendUsageStats", SendUsageStatsDefault);
-            _mainScreenWidth              = ParseNode("config/mainScreenWidth", MainScreenWidthDefault);
-            _mainScreenHeight             = ParseNode("config/mainScreenHeight", MainScreenHeightDefault);
-            _showStatusBar                = ParseNode("config/showStatusBar", ShowStatusBarDefault);
-            _strategyDirWatch             = ParseNode("config/strategyDirWatch", StrategyDirWatchDefault);
-            _truefxImportDestFolder       = ParseNode("config/truefxImportDestFolder", TrueFxImportDestFolderDefault);
+            isInstalled                  = ParseNode("config/installed", false);
+            language                     = ParseNode("config/language", LanguageDefault);
+            isShowStartingTip            = ParseNode("config/showStartingTip", ShowStartingTipDefault);
+            currentTipNumber             = ParseNode("config/currentTipNumber", CurrentTipNumberDefault);
+            isGradientView               = ParseNode("config/gradientView", IsGradientViewDefault);
+            isShowJournal                = ParseNode("config/showJournal", IsShowJournalDefault);
+            isJournalByBars              = ParseNode("config/journalByBars", IsJournalByBarsDefault);
+            isJournalShowTransfers       = ParseNode("config/journalShowTransfers", IsJournalShowTransfersDefault);
+            isAutoscan                   = ParseNode("config/autoscan", IsAutoscanDefault);
+            isTradeUntilMarginCall       = ParseNode("config/tradeUntilMarginCall", IsTradeUntilMarginCallDefault);
+            isAdditionalStatistics       = ParseNode("config/additionalStatistics", IsAdditionalStatisticsDefault);
+            isUseLogicalGroups           = ParseNode("config/useLogicalGroups", IsUseLogicalGroupsDefault);
+            dataDirectory                = ParseNode("config/dataDirectory", DataDirectoryDefault);
+            colorScheme                  = ParseNode("config/colorScheme", ColorSchemeDefault);
+            isRememberLastStr            = ParseNode("config/rememberLastStrategy", IsRememberLastStrDefault);
+            lastStrategy                 = ParseNode("config/lastStrategy", LastStrategyDefault);
+            isCheckForUpdates            = ParseNode("config/checkForUpdates", IsCheckForUpdatesDefault);
+            isCheckForNewBeta            = ParseNode("config/checkForNewBeta", IsCheckForNewBetaDefault);
+            isCheckData                  = ParseNode("config/checkData", IsCheckDataDefault);
+            isFillDataGaps               = ParseNode("config/fillDataGaps", IsFillDataGapsDefault);
+            isCutBadData                 = ParseNode("config/cutBadData", IsCutBadDataDefault);
+            isCutSatSunData              = ParseNode("config/cutSatSunData", IsCutSatSunDataDefault);
+            isLoadCustomIndicators       = ParseNode("config/loadCustomIndicators", IsLoadCustIndDefault);
+            isShowCustomIndicators       = ParseNode("config/showCustomIndicators", IsShowCustIndDefault);
+            isPlaySounds                 = ParseNode("config/playSounds", IsPlaySoundsDefault);
+            generatorOptions             = ParseNode("config/generatorOptions", GeneratorOptionsDefault);
+            optimizerOptions             = ParseNode("config/optimizerOptions", OptimizerOptionsDefault);
+            columnSeparator              = ParseNode("config/columnSeparator", ColumnSeparatorDefault);
+            decimalSeparator             = ParseNode("config/decimalSeparator", DecimalSeparatorDefault);
+            useTickData                  = ParseNode("config/useTickData",  UseTickDataDefault);
+            jforexDataPath               = ParseNode("config/jforexDataPath",  JforexDataPathDefault);
+            jForexImportDestFolder       = ParseNode("config/jForexImportDestFolder", JForexImportDestFolderDefault);
+            metatrader4DataPath          = ParseNode("config/metatrader4DataPath", Metatrader4DataPathDefault);
+            marketClosingHour            = ParseNode("config/marketClosingHour", MarketClosingHourDefault);
+            marketOpeningHour            = ParseNode("config/marketOpeningHour", MarketOpeningHourDefault);
+            importStartingDate           = ParseNode("config/importStartingDate", ImportStartingDateDefault);
+            importEndingDate             = ParseNode("config/importEndingDate", ImportEndingDateDefault);
+            mt4ImportDestFolder          = ParseNode("config/mt4ImportDestFolder", MT4ImportDestFolderDefault);
+            minBarsInBarFile             = ParseNode("config/minBarsInBarFile", MinBarsInBarFileDefault);
+            oandaImportDestFolder        = ParseNode("config/oandaImportDestFolder", OandaImportDestFolderDefault);
+            bannedIndicators             = ParseNode("config/bannedIndicators", BannedIndicatorsDefault);
+            showPriceChartOnAccountChart = ParseNode("config/showPriceChartOnAccountChart", ShowPriceChartOnAccountChartDefault);
+            analyzerHideFSB              = ParseNode("config/analyzerHideFSB", AnalyzerHideFSBDefault);
+            sendUsageStats               = ParseNode("config/sendUsageStats", SendUsageStatsDefault);
+            mainScreenWidth              = ParseNode("config/mainScreenWidth", MainScreenWidthDefault);
+            mainScreenHeight             = ParseNode("config/mainScreenHeight", MainScreenHeightDefault);
+            showStatusBar                = ParseNode("config/showStatusBar", ShowStatusBarDefault);
+            strategyDirWatch             = ParseNode("config/strategyDirWatch", StrategyDirWatchDefault);
+            truefxImportDestFolder       = ParseNode("config/truefxImportDestFolder", TrueFxImportDestFolderDefault);
 
             // Data Horizon
-            _maxBars                      = ParseNode("config/dataMaxBars", MaxBarsDefault);
-            _dataStartTime                = ParseNode("config/dataStartTime", DataStartTimeDefault);
-            _dataEndTime                  = ParseNode("config/dataEndTime", DataEndTimeDefault);
-            _isUseStartTime               = ParseNode("config/dataUseStartTime", IsUseStartTimeDefault);
-            _isUseEndTime                 = ParseNode("config/dataUseEndTime", IsUseEndTimeDefault);
+            maxBars                      = ParseNode("config/dataMaxBars", MaxBarsDefault);
+            dataStartTime                = ParseNode("config/dataStartTime", DataStartTimeDefault);
+            dataEndTime                  = ParseNode("config/dataEndTime", DataEndTimeDefault);
+            isUseStartTime               = ParseNode("config/dataUseStartTime", IsUseStartTimeDefault);
+            isUseEndTime                 = ParseNode("config/dataUseEndTime", IsUseEndTimeDefault);
 
             // Account
-            _isAccountInMoney             = ParseNode("config/account/accountInMoney", IsAccountInMoneyDefault);
-            _accountCurrency              = ParseNode("config/account/accountCurrency", AccountCurrencyDefault);
-            _initialAccount               = ParseNode("config/account/initialAccount", InitialAccountDefault);
-            _leverage                     = ParseNode("config/account/leverage", LeverageDefault);
+            isAccountInMoney             = ParseNode("config/account/accountInMoney", IsAccountInMoneyDefault);
+            accountCurrency              = ParseNode("config/account/accountCurrency", AccountCurrencyDefault);
+            initialAccount               = ParseNode("config/account/initialAccount", InitialAccountDefault);
+            leverage                     = ParseNode("config/account/leverage", LeverageDefault);
 
             // Indicator Chart
-            _indicatorChartZoom                     = ParseNode("config/indicatorChart/zoom", IndicatorChartZoomDefault);
-            _isIndicatorChartInfoPanel              = ParseNode("config/indicatorChart/infoPanel", IsIndicatorChartInfoPanelDefault);
-            _isIndicatorChartDynamicInfo            = ParseNode("config/indicatorChart/dynamicInfo", IsIndicatorChartDynamicInfoDefault);
-            _isIndicatorChartGrid                   = ParseNode("config/indicatorChart/grid", IsIndicatorChartGridDefault);
-            _isIndicatorChartCross                  = ParseNode("config/indicatorChart/cross", IsIndicatorChartCrossDefault);
-            _isIndicatorChartVolume                 = ParseNode("config/indicatorChart/volume", IsIndicatorChartVolumeDefault);
-            _isIndicatorChartLots                   = ParseNode("config/indicatorChart/lots", IsIndicatorChartLotsDefault);
-            _isIndicatorChartEntryExitPoints        = ParseNode("config/indicatorChart/entryExitPoints", IsIndicatorChartEntryExitPointsDefault);
-            _isIndicatorChartCorrectedPositionPrice = ParseNode("config/indicatorChart/correctedPositionPrice", IsIndicatorChartCorrectedPositionPriceDefault);
-            _isIndicatorChartBalanceEquityChart     = ParseNode("config/indicatorChart/balanceEquityChart", IsIndicatorChartBalanceEquityChartDefault);
-            _isIndicatorChartFloatingPLChart        = ParseNode("config/indicatorChart/floatingPLChart", IsIndicatorChartFloatingPLChartDefault);
-            _isIndicatorChartIndicators             = ParseNode("config/indicatorChart/indicators", IsIndicatorChartIndicatorsDefault);
-            _isIndicatorChartAmbiguousMark          = ParseNode("config/indicatorChart/ambiguousMark", IsIndicatorChartAmbiguousMarkDefault);
-            _isIndicatorChartTrueCharts             = ParseNode("config/indicatorChart/trueCharts", IsIndicatorChartTrueChartsDefault);
-            _isIndicatorChartProtections            = ParseNode("config/indicatorChart/protections", IsIndicatorChartProtectionsDefault);
+            indicatorChartZoom                     = ParseNode("config/indicatorChart/zoom", IndicatorChartZoomDefault);
+            isIndicatorChartInfoPanel              = ParseNode("config/indicatorChart/infoPanel", IsIndicatorChartInfoPanelDefault);
+            isIndicatorChartDynamicInfo            = ParseNode("config/indicatorChart/dynamicInfo", IsIndicatorChartDynamicInfoDefault);
+            isIndicatorChartGrid                   = ParseNode("config/indicatorChart/grid", IsIndicatorChartGridDefault);
+            isIndicatorChartCross                  = ParseNode("config/indicatorChart/cross", IsIndicatorChartCrossDefault);
+            isIndicatorChartVolume                 = ParseNode("config/indicatorChart/volume", IsIndicatorChartVolumeDefault);
+            isIndicatorChartLots                   = ParseNode("config/indicatorChart/lots", IsIndicatorChartLotsDefault);
+            isIndicatorChartEntryExitPoints        = ParseNode("config/indicatorChart/entryExitPoints", IsIndicatorChartEntryExitPointsDefault);
+            isIndicatorChartCorrectedPositionPrice = ParseNode("config/indicatorChart/correctedPositionPrice", IsIndicatorChartCorrectedPositionPriceDefault);
+            isIndicatorChartBalanceEquityChart     = ParseNode("config/indicatorChart/balanceEquityChart", IsIndicatorChartBalanceEquityChartDefault);
+            isIndicatorChartFloatingPLChart        = ParseNode("config/indicatorChart/floatingPLChart", IsIndicatorChartFloatingPLChartDefault);
+            isIndicatorChartIndicators             = ParseNode("config/indicatorChart/indicators", IsIndicatorChartIndicatorsDefault);
+            isIndicatorChartAmbiguousMark          = ParseNode("config/indicatorChart/ambiguousMark", IsIndicatorChartAmbiguousMarkDefault);
+            isIndicatorChartTrueCharts             = ParseNode("config/indicatorChart/trueCharts", IsIndicatorChartTrueChartsDefault);
+            isIndicatorChartProtections            = ParseNode("config/indicatorChart/protections", IsIndicatorChartProtectionsDefault);
 
             // Balance Chart
-            _balanceChartZoom                     = ParseNode("config/balanceChart/zoom", BalanceChartZoomDefault);
-            _isBalanceChartInfoPanel              = ParseNode("config/balanceChart/infoPanel", IsBalanceChartInfoPanelDefault);
-            _isBalanceChartDynamicInfo            = ParseNode("config/balanceChart/dynamicInfo", IsBalanceChartDynamicInfoDefault);
-            _isBalanceChartGrid                   = ParseNode("config/balanceChart/grid", IsBalanceChartGridDefault);
-            _isBalanceChartCross                  = ParseNode("config/balanceChart/cross", IsBalanceChartCrossDefault);
-            _isBalanceChartVolume                 = ParseNode("config/balanceChart/volume", IsBalanceChartVolumeDefault);
-            _isBalanceChartLots                   = ParseNode("config/balanceChart/lots", IsBalanceChartLotsDefault);
-            _isBalanceChartEntryExitPoints        = ParseNode("config/balanceChart/entryExitPoints", IsBalanceChartEntryExitPointsDefault);
-            _isBalanceChartCorrectedPositionPrice = ParseNode("config/balanceChart/correctedPositionPrice", IsBalanceChartCorrectedPositionPriceDefault);
-            _isBalanceChartBalanceEquityChart     = ParseNode("config/balanceChart/balanceEquityChart", IsBalanceChartBalanceEquityChartDefault);
-            _isBalanceChartFloatingPLChart        = ParseNode("config/balanceChart/floatingPLChart", IsBalanceChartFloatingPLChartDefault);
-            _isBalanceChartIndicators             = ParseNode("config/balanceChart/indicators", IsBalanceChartIndicatorsDefault);
-            _isBalanceChartAmbiguousMark          = ParseNode("config/balanceChart/ambiguousMark", IsBalanceChartAmbiguousMarkDefault);
-            _isBalanceChartTrueCharts             = ParseNode("config/balanceChart/trueCharts", IsBalanceChartTrueChartsDefault);
-            _isBalanceChartProtections            = ParseNode("config/balanceChart/protections", IsBalanceChartProtectionsDefault);
+            balanceChartZoom                     = ParseNode("config/balanceChart/zoom", BalanceChartZoomDefault);
+            isBalanceChartInfoPanel              = ParseNode("config/balanceChart/infoPanel", IsBalanceChartInfoPanelDefault);
+            isBalanceChartDynamicInfo            = ParseNode("config/balanceChart/dynamicInfo", IsBalanceChartDynamicInfoDefault);
+            isBalanceChartGrid                   = ParseNode("config/balanceChart/grid", IsBalanceChartGridDefault);
+            isBalanceChartCross                  = ParseNode("config/balanceChart/cross", IsBalanceChartCrossDefault);
+            isBalanceChartVolume                 = ParseNode("config/balanceChart/volume", IsBalanceChartVolumeDefault);
+            isBalanceChartLots                   = ParseNode("config/balanceChart/lots", IsBalanceChartLotsDefault);
+            isBalanceChartEntryExitPoints        = ParseNode("config/balanceChart/entryExitPoints", IsBalanceChartEntryExitPointsDefault);
+            isBalanceChartCorrectedPositionPrice = ParseNode("config/balanceChart/correctedPositionPrice", IsBalanceChartCorrectedPositionPriceDefault);
+            isBalanceChartBalanceEquityChart     = ParseNode("config/balanceChart/balanceEquityChart", IsBalanceChartBalanceEquityChartDefault);
+            isBalanceChartFloatingPLChart        = ParseNode("config/balanceChart/floatingPLChart", IsBalanceChartFloatingPLChartDefault);
+            isBalanceChartIndicators             = ParseNode("config/balanceChart/indicators", IsBalanceChartIndicatorsDefault);
+            isBalanceChartAmbiguousMark          = ParseNode("config/balanceChart/ambiguousMark", IsBalanceChartAmbiguousMarkDefault);
+            isBalanceChartTrueCharts             = ParseNode("config/balanceChart/trueCharts", IsBalanceChartTrueChartsDefault);
+            isBalanceChartProtections            = ParseNode("config/balanceChart/protections", IsBalanceChartProtectionsDefault);
         }
 
         /// <summary>
@@ -1566,10 +1574,10 @@ namespace Forex_Strategy_Builder
         /// </summary>
         static void ConfigAfterLoading()
         {
-            if (_maxBars > _iMaxBarsLimit)
-                _maxBars = _iMaxBarsLimit;
+            if (maxBars > maxBarsLimit)
+                maxBars = maxBarsLimit;
 
-            if (!_isInstalled)
+            if (!isInstalled)
             {
                 RegistryKey regKey = Registry.CurrentUser;
                 regKey = regKey.CreateSubKey("Software\\Forex Software\\Forex Strategy Builder");
@@ -1578,9 +1586,9 @@ namespace Forex_Strategy_Builder
                 IsInstalled = true;
             }
 
-            if (_dataDirectory != "" && Directory.Exists(_dataDirectory))
+            if (dataDirectory != "" && Directory.Exists(dataDirectory))
             {
-                Data.OfflineDataDir = _dataDirectory;
+                Data.OfflineDataDir = dataDirectory;
             }
         }
 
@@ -1593,7 +1601,7 @@ namespace Forex_Strategy_Builder
 
             try
             {
-                XmlNodeList list = _xmlConfig.SelectNodes(node);
+                XmlNodeList list = xmlConfig.SelectNodes(node);
                 if (list != null && list.Count > 0)
                 {
                     var xmlNode = list.Item(0);
@@ -1619,7 +1627,7 @@ namespace Forex_Strategy_Builder
 
             try
             {
-                XmlNodeList list = _xmlConfig.SelectNodes(node);
+                XmlNodeList list = xmlConfig.SelectNodes(node);
                 if (list != null && list.Count > 0)
                 {
                     var xmlNode = list.Item(0);
@@ -1645,7 +1653,7 @@ namespace Forex_Strategy_Builder
 
             try
             {
-                XmlNodeList list = _xmlConfig.SelectNodes(node);
+                XmlNodeList list = xmlConfig.SelectNodes(node);
                 if (list != null && list.Count > 0)
                 {
                     var xmlNode = list.Item(0);
@@ -1671,7 +1679,7 @@ namespace Forex_Strategy_Builder
 
             try
             {
-                XmlNodeList list = _xmlConfig.SelectNodes(node);
+                XmlNodeList list = xmlConfig.SelectNodes(node);
                 if (list != null && list.Count > 0)
                 {
                     var xmlNode = list.Item(0);
@@ -1700,18 +1708,18 @@ namespace Forex_Strategy_Builder
                 CreateSubElement(node, value);
                 return;
             }
-            XmlElement newElem = _xmlConfig.CreateElement(nodeToAdd);
+            XmlElement newElem = xmlConfig.CreateElement(nodeToAdd);
             newElem.InnerText = value;
-            if (_xmlConfig.DocumentElement != null)
-                _xmlConfig.DocumentElement.AppendChild(newElem);
+            if (xmlConfig.DocumentElement != null)
+                xmlConfig.DocumentElement.AppendChild(newElem);
         }
 
         private static void CreateSubElement(string node, string value)
         {
             string lastNode = node.Substring(node.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            XmlNode newElement = _xmlConfig.CreateElement(lastNode);
+            XmlNode newElement = xmlConfig.CreateElement(lastNode);
             string path = node.Substring(0, node.LastIndexOf("/", StringComparison.Ordinal));
-            XmlNodeList list = _xmlConfig.SelectNodes(path);
+            XmlNodeList list = xmlConfig.SelectNodes(path);
             if (list == null || list.Count <= 0) return;
             var xmlNode = list.Item(0);
             if (xmlNode == null) return;
@@ -1728,14 +1736,14 @@ namespace Forex_Strategy_Builder
             {
                 if (!File.Exists(PathToConfigFile))
                 {
-                    _xmlConfig = new XmlDocument {InnerXml = Properties.Resources.config};
+                    xmlConfig = new XmlDocument {InnerXml = Properties.Resources.config};
                 }
                 else
                 {
-                    _xmlConfig.Load(PathToConfigFile);
+                    xmlConfig.Load(PathToConfigFile);
                 }
                 ParseConfigs();
-                _isConfigLoaded = true;
+                isConfigLoaded = true;
                 ConfigAfterLoading();
             }
             catch (Exception ex)
@@ -1749,11 +1757,11 @@ namespace Forex_Strategy_Builder
         /// </summary>
         public static void SaveConfigs()
         {
-            if (_isResetActivated || !_isConfigLoaded) return;
+            if (isResetActivated || !isConfigLoaded) return;
 
             try
             {
-                _xmlConfig.Save(PathToConfigFile);
+                xmlConfig.Save(PathToConfigFile);
             }
             catch (Exception e)
             {
