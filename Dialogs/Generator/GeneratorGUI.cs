@@ -842,7 +842,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             OnResize(e);
 
             RebuildStrategyLayout(strategyBest);
-            RefreshAccountStatisticas();
+            RefreshAccountStatistics();
             Top10AddStrategy();
         }
 
@@ -1103,11 +1103,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// <summary>
         ///     Refreshes the AccountStatistics
         /// </summary>
-        private void RefreshAccountStatisticas()
+        private void RefreshAccountStatistics()
         {
             if (infpnlAccountStatistics.InvokeRequired)
             {
-                Invoke(new DelegateRefreshAccountStatisticas(RefreshAccountStatisticas), new object[] {});
+                Invoke(new DelegateRefreshAccountStatisticas(RefreshAccountStatistics), new object[] {});
             }
             else
             {

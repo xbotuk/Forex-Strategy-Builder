@@ -494,7 +494,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                         isStartegyChanged = true;
 
                         RefreshSmallBalanceChart();
-                        RefreshAccountStatisticas();
+                        RefreshAccountStatistics();
                         RebuildStrategyLayout(strategyBest);
                         Top10AddStrategy();
                     }
