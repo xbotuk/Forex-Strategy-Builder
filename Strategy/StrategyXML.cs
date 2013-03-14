@@ -80,6 +80,7 @@ namespace Forex_Strategy_Builder
                 XmlElement newSlot = xmlDocStrategy.CreateElement("slot");
                 newSlot.SetAttribute("slotNumber", slot.ToString(CultureInfo.InvariantCulture));
                 newSlot.SetAttribute("slotType", slType.ToString());
+                newSlot.SetAttribute("slotStatus", stratSlot.SlotStatus.ToString());
 
                 if (slType == SlotTypes.OpenFilter || slType == SlotTypes.CloseFilter)
                     newSlot.SetAttribute("logicalGroup", stratSlot.LogicalGroup);
@@ -317,7 +318,19 @@ namespace Forex_Strategy_Builder
                 XmlAttributeCollection collection = xmlSlotList[slot].Attributes;
                 if (collection != null)
                 {
+                    // Identify the Slot Type
                     var slotType = (SlotTypes) Enum.Parse(typeof (SlotTypes), collection["slotType"].InnerText);
+
+                    // Identify the Slot Status
+                    StrategySlotStatus slotStatus;
+                    try
+                    {
+                        slotStatus = (StrategySlotStatus) Enum.Parse(typeof (StrategySlotStatus), collection["slotStatus"].InnerText);
+                    }
+                    catch
+                    {
+                        slotStatus = StrategySlotStatus.Open;
+                    }
 
                     // Logical group
                     if (slotType == SlotTypes.OpenFilter || slotType == SlotTypes.CloseFilter)
@@ -418,7 +431,10 @@ namespace Forex_Strategy_Builder
                             }
                         }
                     }
-
+                    
+                    // Set the Slot Status (Open, Locked, or Linked)
+                    tempStrategy.Slot[slot].SlotStatus = slotStatus;
+                    
                     // Calculate the indicator.
                     indicator.Calculate(slotType);
                     tempStrategy.Slot[slot].IndicatorName = indicator.IndicatorName;

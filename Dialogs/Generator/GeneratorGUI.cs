@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using Forex_Strategy_Builder.Properties;
 
@@ -61,6 +62,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private CheckBox chbMinTrades;
         private CheckBox chbOOSPatternFilter;
         private CheckBox chbOutOfSample;
+        private CheckBox chbSaveStrategySlotStatus;
         private CheckBox chbSmoothBalanceLines;
 
         private CheckBox chbUseDefaultIndicatorValues;
@@ -220,6 +222,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             bgWorker.ProgressChanged += BgWorkerProgressChanged;
             bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
 
+            // Apply a Cryptographic Random Seed
+            var rng = new RNGCryptoServiceProvider();
+            var rndBytes = new byte[4];
+            rng.GetBytes(rndBytes);
+            int rand = BitConverter.ToInt32(rndBytes, 0);
+            random = new Random(rand);
+
             SetButtonsStrategy();
             SetButtonsGenerator();
             SetPanelCommon();
@@ -291,6 +300,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 nudSmoothBalancePercent.Value = int.Parse(options[i++]);
                 nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
                 chbUseDefaultIndicatorValues.Checked = bool.Parse(options[i++]);
+                chbSaveStrategySlotStatus.Checked = bool.Parse(options[i++]);
                 chbHideFsb.Checked = bool.Parse(options[i]);
             }
             catch (Exception exception)
@@ -335,6 +345,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 nudSmoothBalancePercent.Value + ";" +
                 nudSmoothBalanceCheckPoints.Value + ";" +
                 chbUseDefaultIndicatorValues.Checked + ";" +
+                chbSaveStrategySlotStatus.Checked + ";" +
                 chbHideFsb.Checked;
 
             Configs.GeneratorOptions = options;
@@ -649,6 +660,16 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     ForeColor = colorText,
                     BackColor = Color.Transparent,
                     Text = Language.T("Only use default numeric indicator values"),
+                    Checked = false,
+                    AutoSize = true
+                };
+
+            chbSaveStrategySlotStatus = new CheckBox
+                {
+                    Parent = pnlSettings,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Save strategy slots Lock status"),
                     Checked = false,
                     AutoSize = true
                 };
@@ -1019,8 +1040,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             // Use default indicator values
             chbUseDefaultIndicatorValues.Location = new Point(border + 2, chbOutOfSample.Bottom + border + 4);
 
+            // Save strategy slot status
+            chbSaveStrategySlotStatus.Location = new Point(border + 2, chbUseDefaultIndicatorValues.Bottom + border + 4);
+
             // Hide FSB when generator starts
-            chbHideFsb.Location = new Point(border + 2, chbUseDefaultIndicatorValues.Bottom + border + 4);
+            chbHideFsb.Location = new Point(border + 2, chbSaveStrategySlotStatus.Bottom + border + 4);
 
             // Button Reset
             btnReset.Width = pnlSettings.ClientSize.Width - 2*(border + 2);
@@ -1079,7 +1103,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             if (!isReset)
                 indicatorsField.SetConfigFile();
 
-            Data.Strategy = ClearStrategySlotsStatus(Data.Strategy);
+            if (!chbSaveStrategySlotStatus.Checked)
+                Data.Strategy = ClearStrategySlotsStatus(Data.Strategy);
+
             ParrentForm.Visible = true;
         }
 
@@ -1601,7 +1627,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         private void AddStrategyToGeneratorHistory(string description)
         {
-            Strategy strategy = ClearStrategySlotsStatus(strategyBest);
+            Strategy strategy = chbSaveStrategySlotStatus.Checked
+                                    ? strategyBest.Clone()
+                                    : ClearStrategySlotsStatus(strategyBest);
+
             Data.GeneratorHistory.Add(strategy);
             Data.GeneratorHistory[Data.GeneratorHistory.Count - 1].Description = description;
 
@@ -1619,7 +1648,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             if (Data.GeneratorHistory.Count == 0)
                 return;
 
-            Strategy strategy = ClearStrategySlotsStatus(strategyBest);
+            Strategy strategy = chbSaveStrategySlotStatus.Checked
+                                    ? strategyBest.Clone()
+                                    : ClearStrategySlotsStatus(strategyBest);
+
             Data.GeneratorHistory[Data.GeneratorHistory.Count - 1] = strategy;
             Data.GeneratorHistory[Data.GeneratorHistory.Count - 1].Description = description;
         }
