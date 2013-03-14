@@ -16,16 +16,16 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private const int Border = 1;
         private const int Space = 4;
 
-        private Bitmap _chart;
-        private int _drawdown;
-        private double _profitPerDay;
-        private double _winLoss;
+        private Bitmap chart;
+        private int drawdown;
+        private double profitPerDay;
+        private double winLoss;
 
         public bool IsSelected { get; set; }
         public int Balance { get; private set; }
 
         /// <summary>
-        /// Sets the chart parameters
+        ///     Sets the chart parameters
         /// </summary>
         public void InitSlot()
         {
@@ -33,15 +33,15 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             var cahartWidth = (int) (1.5*chartHeight);
             var microChart = new MicroBalanceChartImage(cahartWidth, chartHeight);
 
-            _chart = microChart.Chart;
+            chart = microChart.Chart;
             Balance = Configs.AccountInMoney ? (int) Math.Round(Backtester.NetMoneyBalance) : Backtester.NetBalance;
-            _profitPerDay = Configs.AccountInMoney ? Backtester.MoneyProfitPerDay : Backtester.ProfitPerDay;
-            _drawdown = Configs.AccountInMoney ? (int) Math.Round(Backtester.MaxMoneyDrawdown) : Backtester.MaxDrawdown;
-            _winLoss = Backtester.WinLossRatio;
+            profitPerDay = Configs.AccountInMoney ? Backtester.MoneyProfitPerDay : Backtester.ProfitPerDay;
+            drawdown = Configs.AccountInMoney ? (int) Math.Round(Backtester.MaxMoneyDrawdown) : Backtester.MaxDrawdown;
+            winLoss = Backtester.WinLossRatio;
         }
 
         /// <summary>
-        /// Paints the chart
+        ///     Paints the chart
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -63,25 +63,25 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 g.DrawRectangle(penGlow, 3, 3, ClientSize.Width - 6, ClientSize.Height - 6);
 
             // Draws the chart image
-            g.DrawImage(_chart, new Point(Border + Space, Border + Space));
+            g.DrawImage(chart, new Point(Border + Space, Border + Space));
 
             // Draws the stats
-            int textLeft = Border + Space + _chart.Width + Space;
+            int textLeft = Border + Space + chart.Width + Space;
 
             var paramNames = new[]
-                                 {
-                                     Language.T("Account balance"),
-                                     Language.T("Profit per day"),
-                                     Language.T("Maximum drawdown"),
-                                     Language.T("Win/loss ratio")
-                                 };
+                {
+                    Language.T("Account balance"),
+                    Language.T("Profit per day"),
+                    Language.T("Maximum drawdown"),
+                    Language.T("Win/loss ratio")
+                };
             var paramValues = new[]
-                                  {
-                                      " " + Balance.ToString(CultureInfo.InvariantCulture),
-                                      " " + (Configs.AccountInMoney ? _profitPerDay.ToString("F2") : _profitPerDay.ToString("F0")),
-                                      " " + _drawdown.ToString(CultureInfo.InvariantCulture),
-                                      " " + _winLoss.ToString("F2")
-                                  };
+                {
+                    " " + Balance.ToString(CultureInfo.InvariantCulture),
+                    " " + (Configs.AccountInMoney ? profitPerDay.ToString("F2") : profitPerDay.ToString("F0")),
+                    " " + drawdown.ToString(CultureInfo.InvariantCulture),
+                    " " + winLoss.ToString("F2")
+                };
 
             int maxParamNameLenght = 0;
             foreach (string parameter in paramNames)
@@ -115,7 +115,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Invalidates the chart after resizing
+        ///     Invalidates the chart after resizing
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {

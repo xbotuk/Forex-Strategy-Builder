@@ -15,210 +15,210 @@ using Forex_Strategy_Builder.Properties;
 namespace Forex_Strategy_Builder.Dialogs.Generator
 {
     /// <summary>
-    /// Strategy Generator
+    ///     Strategy Generator
     /// </summary>
     public sealed partial class Generator : Form
     {
-        private BackgroundWorker BgWorker { get; set; }
-        private Button BtnAccept { get; set; }
-        private Button BtnCancel { get; set; }
-        private Button BtnGenerate { get; set; }
+        private readonly SmallBalanceChart balanceChart;
+        private readonly BackgroundWorker bgWorker;
+        private readonly Button btnAccept;
+        private readonly Button btnCancel;
+        private readonly Button btnGenerate;
 
-        private CheckBox ChbGenerateNewStrategy { get; set; }
-        private CheckBox ChbInitialOptimization { get; set; }
-        private CheckBox ChbPreserveBreakEven { get; set; }
-        private CheckBox ChbPreservePermSL { get; set; }
-        private CheckBox ChbPreservePermTP { get; set; }
-        private Color ColorText { get; set; }
-        private InfoPanel InfpnlAccountStatistics { get; set; }
-        private Label LblCalcStrInfo { get; set; }
-        private Label LblCalcStrNumb { get; set; }
-        private Label LblWorkingMinutes { get; set; }
-        private NumericUpDown NudWorkingMinutes { get; set; }
-        private FancyPanel PnlCommon { get; set; }
-        private FancyPanel PnlIndicators { get; set; }
-        private FancyPanel PnlLimitations { get; set; }
-        private FancyPanel PnlSettings { get; set; }
-        private FancyPanel PnlTop10 { get; set; }
-        private ProgressBar ProgressBar { get; set; }
-        private SmallBalanceChart BalanceChart { get; set; }
-        private StrategyLayout StrategyField { get; set; }
+        private readonly CheckBox chbGenerateNewStrategy;
+        private readonly CheckBox chbInitialOptimization;
+        private readonly CheckBox chbPreserveBreakEven;
+        private readonly CheckBox chbPreservePermSL;
+        private readonly CheckBox chbPreservePermTP;
+        private readonly Color colorText;
+        private readonly InfoPanel infpnlAccountStatistics;
+        private readonly Label lblCalcStrInfo;
+        private readonly Label lblCalcStrNumb;
+        private readonly Label lblWorkingMinutes;
+        private readonly NumericUpDown nudWorkingMinutes;
+        private readonly FancyPanel pnlCommon;
+        private readonly FancyPanel pnlIndicators;
+        private readonly FancyPanel pnlLimitations;
+        private readonly FancyPanel pnlSettings;
+        private readonly FancyPanel pnlTop10;
+        private readonly ProgressBar progressBar;
+        private readonly Random random = new Random();
+        private readonly StrategyLayout strategyField;
         private readonly ToolTip toolTip = new ToolTip();
-        private ToolStrip TsGenerator { get; set; }
-        private ToolStrip TsStrategy { get; set; }
-        private Button BtnReset { get; set; }
+        private readonly ToolStrip tsGenerator;
+        private readonly ToolStrip tsStrategy;
+        private Button btnReset;
+        private double buttonWidthMultiplier = 1; // It's used in OnResize().
 
 
-        private CheckBox ChbAmbiguousBars { get; set; }
-        private CheckBox ChbEquityPercent { get; set; }
-        private CheckBox ChbHideFsb { get; set; }
-        private CheckBox ChbMaxClosingLogicSlots { get; set; }
-        private CheckBox ChbMaxDrawdown { get; set; }
-        private CheckBox ChbMaxOpeningLogicSlots { get; set; }
-        private CheckBox ChbMaxTrades { get; set; }
-        private CheckBox ChbMinTrades { get; set; }
-        private CheckBox ChbOOSPatternFilter { get; set; }
-        private CheckBox ChbOutOfSample { get; set; }
-        private CheckBox ChbSmoothBalanceLines { get; set; }
+        private CheckBox chbAmbiguousBars;
+        private CheckBox chbEquityPercent;
+        private CheckBox chbHideFsb;
+        private CheckBox chbMaxClosingLogicSlots;
+        private CheckBox chbMaxDrawdown;
+        private CheckBox chbMaxOpeningLogicSlots;
+        private CheckBox chbMaxTrades;
+        private CheckBox chbMinTrades;
+        private CheckBox chbOOSPatternFilter;
+        private CheckBox chbOutOfSample;
+        private CheckBox chbSmoothBalanceLines;
 
-        private CheckBox ChbUseDefaultIndicatorValues { get; set; }
-        private CheckBox ChbWinLossRatio { get; set; }
-        private IndicatorsLayout IndicatorsField { get; set; }
+        private CheckBox chbUseDefaultIndicatorValues;
+        private CheckBox chbWinLossRatio;
+        private IndicatorsLayout indicatorsField;
+        private bool isReset;
 
-        private NumericUpDown NUDAmbiguousBars { get; set; }
-        private NumericUpDown NUDEquityPercent { get; set; }
-        private NumericUpDown NUDMaxClosingLogicSlots { get; set; }
-        private NumericUpDown NUDMaxDrawdown { get; set; }
-        private NumericUpDown NUDMaxOpeningLogicSlots { get; set; }
-        private NumericUpDown NUDMaxTrades { get; set; }
-        private NumericUpDown NUDMinTrades { get; set; }
-        private NumericUpDown NUDOOSPatternPercent { get; set; }
-        private NumericUpDown NUDOutOfSample { get; set; }
-        private NumericUpDown NUDSmoothBalanceCheckPoints { get; set; }
-        private NumericUpDown NUDSmoothBalancePercent { get; set; }
-        private NumericUpDown NUDWinLossRatio { get; set; }
-        private Top10Layout Top10Field { get; set; }
-        private ToolStripButton TsbtLinkAll { get; set; }
-        private ToolStripButton TsbtLockAll { get; set; }
-        private ToolStripButton TsbtOverview { get; set; }
-        private ToolStripButton TsbtShowIndicators { get; set; }
-        private ToolStripButton TsbtShowLimitations { get; set; }
-        private ToolStripButton TsbtShowOptions { get; set; }
-        private ToolStripButton TsbtShowSettings { get; set; }
-        private ToolStripButton TsbtShowTop10 { get; set; }
-        private ToolStripButton TsbtStrategyInfo { get; set; }
-        private ToolStripButton TsbtStrategySize1 { get; set; }
-        private ToolStripButton TsbtStrategySize2 { get; set; }
-        private ToolStripButton TsbtUnlockAll { get; set; }
-        private bool _isReset;
-        private double _buttonWidthMultiplier = 1; // It's used in OnResize().
-        private readonly Random _random = new Random();
+        private NumericUpDown nudAmbiguousBars;
+        private NumericUpDown nudEquityPercent;
+        private NumericUpDown nudMaxClosingLogicSlots;
+        private NumericUpDown nudMaxDrawdown;
+        private NumericUpDown nudMaxOpeningLogicSlots;
+        private NumericUpDown nudMaxTrades;
+        private NumericUpDown nudMinTrades;
+        private NumericUpDown nudOutOfSample;
+        private NumericUpDown nudSmoothBalanceCheckPoints;
+        private NumericUpDown nudSmoothBalancePercent;
+        private NumericUpDown nudWinLossRatio;
+        private NumericUpDown nudoosPatternPercent;
+        private Top10Layout top10Field;
+        private ToolStripButton tsbtLinkAll;
+        private ToolStripButton tsbtLockAll;
+        private ToolStripButton tsbtOverview;
+        private ToolStripButton tsbtShowIndicators;
+        private ToolStripButton tsbtShowLimitations;
+        private ToolStripButton tsbtShowOptions;
+        private ToolStripButton tsbtShowSettings;
+        private ToolStripButton tsbtShowTop10;
+        private ToolStripButton tsbtStrategyInfo;
+        private ToolStripButton tsbtStrategySize1;
+        private ToolStripButton tsbtStrategySize2;
+        private ToolStripButton tsbtUnlockAll;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Generator()
         {
             GeneratedDescription = string.Empty;
-            _strategyBest = Data.Strategy.Clone();
-            _bestBalance = _isOOS ? Backtester.Balance(_barOOS) : Backtester.NetBalance;
-            _isGenerating = false;
-            _isStartegyChanged = false;
-            _indicatorBlackList = new List<string>();
+            strategyBest = Data.Strategy.Clone();
+            bestBalance = isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance;
+            isGenerating = false;
+            isStartegyChanged = false;
+            indicatorBlackList = new List<string>();
 
-            ColorText = LayoutColors.ColorControlText;
+            colorText = LayoutColors.ColorControlText;
 
-            TsStrategy = new ToolStrip();
-            TsGenerator = new ToolStrip();
-            StrategyField = new StrategyLayout(_strategyBest);
-            PnlCommon = new FancyPanel(Language.T("Common"));
-            PnlLimitations = new FancyPanel(Language.T("Limitations"));
-            PnlSettings = new FancyPanel(Language.T("Settings"));
-            PnlTop10 = new FancyPanel(Language.T("Top 10"));
-            PnlIndicators = new FancyPanel(Language.T("Indicators"));
-            BalanceChart = new SmallBalanceChart();
-            InfpnlAccountStatistics = new InfoPanel();
-            ProgressBar = new ProgressBar();
-            LblCalcStrInfo = new Label();
-            LblCalcStrNumb = new Label();
-            BtnAccept = new Button();
-            BtnGenerate = new Button();
-            BtnCancel = new Button();
-            ChbGenerateNewStrategy = new CheckBox();
-            ChbPreservePermSL = new CheckBox();
-            ChbPreservePermTP = new CheckBox();
-            ChbPreserveBreakEven = new CheckBox();
-            ChbInitialOptimization = new CheckBox();
-            NudWorkingMinutes = new NumericUpDown();
-            LblWorkingMinutes = new Label();
+            tsStrategy = new ToolStrip();
+            tsGenerator = new ToolStrip();
+            strategyField = new StrategyLayout(strategyBest);
+            pnlCommon = new FancyPanel(Language.T("Common"));
+            pnlLimitations = new FancyPanel(Language.T("Limitations"));
+            pnlSettings = new FancyPanel(Language.T("Settings"));
+            pnlTop10 = new FancyPanel(Language.T("Top 10"));
+            pnlIndicators = new FancyPanel(Language.T("Indicators"));
+            balanceChart = new SmallBalanceChart();
+            infpnlAccountStatistics = new InfoPanel();
+            progressBar = new ProgressBar();
+            lblCalcStrInfo = new Label();
+            lblCalcStrNumb = new Label();
+            btnAccept = new Button();
+            btnGenerate = new Button();
+            btnCancel = new Button();
+            chbGenerateNewStrategy = new CheckBox();
+            chbPreservePermSL = new CheckBox();
+            chbPreservePermTP = new CheckBox();
+            chbPreserveBreakEven = new CheckBox();
+            chbInitialOptimization = new CheckBox();
+            nudWorkingMinutes = new NumericUpDown();
+            lblWorkingMinutes = new Label();
 
             MaximizeBox = false;
             Icon = Data.Icon;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             BackColor = LayoutColors.ColorFormBack;
-            AcceptButton = BtnGenerate;
+            AcceptButton = btnGenerate;
             Text = Language.T("Strategy Generator") + " - " + Data.Symbol + " " + Data.PeriodString + ", " +
                    Data.Bars + " " + Language.T("bars");
             FormClosing += GeneratorFormClosing;
 
             // Tool Strip Strategy
-            TsStrategy.Parent = this;
-            TsStrategy.Dock = DockStyle.None;
-            TsStrategy.AutoSize = false;
+            tsStrategy.Parent = this;
+            tsStrategy.Dock = DockStyle.None;
+            tsStrategy.AutoSize = false;
 
             // Tool Strip Generator
-            TsGenerator.Parent = this;
-            TsGenerator.Dock = DockStyle.None;
-            TsGenerator.AutoSize = false;
+            tsGenerator.Parent = this;
+            tsGenerator.Dock = DockStyle.None;
+            tsGenerator.AutoSize = false;
 
             // Creates a Strategy Layout
-            StrategyField.Parent = this;
-            StrategyField.ShowAddSlotButtons = false;
-            StrategyField.ShowRemoveSlotButtons = false;
-            StrategyField.ShowPadlockImg = true;
-            StrategyField.SlotPropertiesTipText = Language.T("Lock or unlock the slot.");
-            StrategyField.SlotToolTipText = Language.T("Lock, link, or unlock the slot.");
+            strategyField.Parent = this;
+            strategyField.ShowAddSlotButtons = false;
+            strategyField.ShowRemoveSlotButtons = false;
+            strategyField.ShowPadlockImg = true;
+            strategyField.SlotPropertiesTipText = Language.T("Lock or unlock the slot.");
+            strategyField.SlotToolTipText = Language.T("Lock, link, or unlock the slot.");
 
-            PnlCommon.Parent = this;
-            PnlLimitations.Parent = this;
-            PnlSettings.Parent = this;
-            PnlTop10.Parent = this;
-            PnlIndicators.Parent = this;
+            pnlCommon.Parent = this;
+            pnlLimitations.Parent = this;
+            pnlSettings.Parent = this;
+            pnlTop10.Parent = this;
+            pnlIndicators.Parent = this;
 
             // Small Balance Chart
-            BalanceChart.Parent = this;
-            BalanceChart.BackColor = LayoutColors.ColorControlBack;
-            BalanceChart.Visible = true;
-            BalanceChart.Cursor = Cursors.Hand;
-            BalanceChart.IsContextButtonVisible = true;
-            BalanceChart.PopUpContextMenu.Items.AddRange(GetBalanceChartContextMenuItems());
-            BalanceChart.Click += AccountAutputClick;
-            BalanceChart.DoubleClick += AccountAutputClick;
-            toolTip.SetToolTip(BalanceChart, Language.T("Show account statistics."));
-            BalanceChart.SetChartData();
+            balanceChart.Parent = this;
+            balanceChart.BackColor = LayoutColors.ColorControlBack;
+            balanceChart.Visible = true;
+            balanceChart.Cursor = Cursors.Hand;
+            balanceChart.IsContextButtonVisible = true;
+            balanceChart.PopUpContextMenu.Items.AddRange(GetBalanceChartContextMenuItems());
+            balanceChart.Click += AccountAutputClick;
+            balanceChart.DoubleClick += AccountAutputClick;
+            toolTip.SetToolTip(balanceChart, Language.T("Show account statistics."));
+            balanceChart.SetChartData();
 
             // Info Panel Account Statistics
-            InfpnlAccountStatistics.Parent = this;
-            InfpnlAccountStatistics.Visible = false;
-            InfpnlAccountStatistics.Cursor = Cursors.Hand;
-            InfpnlAccountStatistics.IsContextButtonVisible = true;
-            InfpnlAccountStatistics.PopUpContextMenu.Items.AddRange(GetInfoPanelContextMenuItems());
-            InfpnlAccountStatistics.Click += AccountAutputClick;
-            InfpnlAccountStatistics.DoubleClick += AccountAutputClick;
-            toolTip.SetToolTip(InfpnlAccountStatistics, Language.T("Show account chart."));
+            infpnlAccountStatistics.Parent = this;
+            infpnlAccountStatistics.Visible = false;
+            infpnlAccountStatistics.Cursor = Cursors.Hand;
+            infpnlAccountStatistics.IsContextButtonVisible = true;
+            infpnlAccountStatistics.PopUpContextMenu.Items.AddRange(GetInfoPanelContextMenuItems());
+            infpnlAccountStatistics.Click += AccountAutputClick;
+            infpnlAccountStatistics.DoubleClick += AccountAutputClick;
+            toolTip.SetToolTip(infpnlAccountStatistics, Language.T("Show account chart."));
 
             // ProgressBar
-            ProgressBar.Parent = this;
-            ProgressBar.Minimum = 1;
-            ProgressBar.Maximum = 100;
-            ProgressBar.Step = 1;
+            progressBar.Parent = this;
+            progressBar.Minimum = 1;
+            progressBar.Maximum = 100;
+            progressBar.Step = 1;
 
             //Button Generate
-            BtnGenerate.Parent = this;
-            BtnGenerate.Name = "Generate";
-            BtnGenerate.Text = Language.T("Generate");
-            BtnGenerate.Click += BtnGenerateClick;
-            BtnGenerate.UseVisualStyleBackColor = true;
+            btnGenerate.Parent = this;
+            btnGenerate.Name = "Generate";
+            btnGenerate.Text = Language.T("Generate");
+            btnGenerate.Click += BtnGenerateClick;
+            btnGenerate.UseVisualStyleBackColor = true;
 
             //Button Accept
-            BtnAccept.Parent = this;
-            BtnAccept.Name = "Accept";
-            BtnAccept.Text = Language.T("Accept");
-            BtnAccept.Enabled = false;
-            BtnAccept.DialogResult = DialogResult.OK;
-            BtnAccept.UseVisualStyleBackColor = true;
+            btnAccept.Parent = this;
+            btnAccept.Name = "Accept";
+            btnAccept.Text = Language.T("Accept");
+            btnAccept.Enabled = false;
+            btnAccept.DialogResult = DialogResult.OK;
+            btnAccept.UseVisualStyleBackColor = true;
 
             //Button Cancel
-            BtnCancel.Parent = this;
-            BtnCancel.Text = Language.T("Cancel");
-            BtnCancel.DialogResult = DialogResult.Cancel;
-            BtnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Parent = this;
+            btnCancel.Text = Language.T("Cancel");
+            btnCancel.DialogResult = DialogResult.Cancel;
+            btnCancel.UseVisualStyleBackColor = true;
 
             // BackgroundWorker
-            BgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
-            BgWorker.DoWork += BgWorkerDoWork;
-            BgWorker.ProgressChanged += BgWorkerProgressChanged;
-            BgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
+            bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            bgWorker.DoWork += BgWorkerDoWork;
+            bgWorker.ProgressChanged += BgWorkerProgressChanged;
+            bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
 
             SetButtonsStrategy();
             SetButtonsGenerator();
@@ -230,23 +230,23 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             LoadOptions();
             SetStrategyDescriptionButton();
 
-            ChbHideFsb.CheckedChanged += HideFSBClick;
+            chbHideFsb.CheckedChanged += HideFSBClick;
         }
 
         public Form ParrentForm { private get; set; }
 
         /// <summary>
-        /// Gets the strategy description
+        ///     Gets the strategy description
         /// </summary>
         public string GeneratedDescription { get; private set; }
 
         /// <summary>
-        /// Whether the strategy was modified or entirely generated
+        ///     Whether the strategy was modified or entirely generated
         /// </summary>
         public bool IsStrategyModified { get; private set; }
 
         /// <summary>
-        /// Loads and parses the generator's options.
+        ///     Loads and parses the generator's options.
         /// </summary>
         private void LoadOptions()
         {
@@ -254,40 +254,40 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 return;
 
             string[] options = Configs.GeneratorOptions.Split(';');
-            var i = 0;
+            int i = 0;
             try
             {
-                ChbGenerateNewStrategy.Checked = bool.Parse(options[i++]);
-                ChbPreservePermSL.Checked = bool.Parse(options[i++]);
-                ChbPreservePermTP.Checked = bool.Parse(options[i++]);
-                ChbPreserveBreakEven.Checked = bool.Parse(options[i++]);
-                ChbInitialOptimization.Checked = bool.Parse(options[i++]);
-                ChbMaxOpeningLogicSlots.Checked = bool.Parse(options[i++]);
-                NUDMaxOpeningLogicSlots.Value = Math.Min(int.Parse(options[i++]), Strategy.MaxOpenFilters);
-                ChbMaxClosingLogicSlots.Checked = bool.Parse(options[i++]);
-                NUDMaxClosingLogicSlots.Value = Math.Min(int.Parse(options[i++]), Strategy.MaxCloseFilters);
-                ChbOutOfSample.Checked = bool.Parse(options[i++]);
-                NUDOutOfSample.Value = int.Parse(options[i++]);
-                NudWorkingMinutes.Value = int.Parse(options[i++]);
-                ChbAmbiguousBars.Checked = bool.Parse(options[i++]);
-                NUDAmbiguousBars.Value = int.Parse(options[i++]);
-                ChbMaxDrawdown.Checked = bool.Parse(options[i++]);
-                NUDMaxDrawdown.Value = int.Parse(options[i++]);
-                ChbMinTrades.Checked = bool.Parse(options[i++]);
-                NUDMinTrades.Value = int.Parse(options[i++]);
-                ChbMaxTrades.Checked = bool.Parse(options[i++]);
-                NUDMaxTrades.Value = int.Parse(options[i++]);
-                ChbWinLossRatio.Checked = bool.Parse(options[i++]);
-                NUDWinLossRatio.Value = int.Parse(options[i++])/100M;
-                ChbEquityPercent.Checked = bool.Parse(options[i++]);
-                NUDEquityPercent.Value = int.Parse(options[i++]);
-                ChbOOSPatternFilter.Checked = bool.Parse(options[i++]);
-                NUDOOSPatternPercent.Value = int.Parse(options[i++]);
-                ChbSmoothBalanceLines.Checked = bool.Parse(options[i++]);
-                NUDSmoothBalancePercent.Value = int.Parse(options[i++]);
-                NUDSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
-                ChbUseDefaultIndicatorValues.Checked = bool.Parse(options[i++]);
-                ChbHideFsb.Checked = bool.Parse(options[i]);
+                chbGenerateNewStrategy.Checked = bool.Parse(options[i++]);
+                chbPreservePermSL.Checked = bool.Parse(options[i++]);
+                chbPreservePermTP.Checked = bool.Parse(options[i++]);
+                chbPreserveBreakEven.Checked = bool.Parse(options[i++]);
+                chbInitialOptimization.Checked = bool.Parse(options[i++]);
+                chbMaxOpeningLogicSlots.Checked = bool.Parse(options[i++]);
+                nudMaxOpeningLogicSlots.Value = Math.Min(int.Parse(options[i++]), Strategy.MaxOpenFilters);
+                chbMaxClosingLogicSlots.Checked = bool.Parse(options[i++]);
+                nudMaxClosingLogicSlots.Value = Math.Min(int.Parse(options[i++]), Strategy.MaxCloseFilters);
+                chbOutOfSample.Checked = bool.Parse(options[i++]);
+                nudOutOfSample.Value = int.Parse(options[i++]);
+                nudWorkingMinutes.Value = int.Parse(options[i++]);
+                chbAmbiguousBars.Checked = bool.Parse(options[i++]);
+                nudAmbiguousBars.Value = int.Parse(options[i++]);
+                chbMaxDrawdown.Checked = bool.Parse(options[i++]);
+                nudMaxDrawdown.Value = int.Parse(options[i++]);
+                chbMinTrades.Checked = bool.Parse(options[i++]);
+                nudMinTrades.Value = int.Parse(options[i++]);
+                chbMaxTrades.Checked = bool.Parse(options[i++]);
+                nudMaxTrades.Value = int.Parse(options[i++]);
+                chbWinLossRatio.Checked = bool.Parse(options[i++]);
+                nudWinLossRatio.Value = int.Parse(options[i++])/100M;
+                chbEquityPercent.Checked = bool.Parse(options[i++]);
+                nudEquityPercent.Value = int.Parse(options[i++]);
+                chbOOSPatternFilter.Checked = bool.Parse(options[i++]);
+                nudoosPatternPercent.Value = int.Parse(options[i++]);
+                chbSmoothBalanceLines.Checked = bool.Parse(options[i++]);
+                nudSmoothBalancePercent.Value = int.Parse(options[i++]);
+                nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
+                chbUseDefaultIndicatorValues.Checked = bool.Parse(options[i++]);
+                chbHideFsb.Checked = bool.Parse(options[i]);
             }
             catch (Exception exception)
             {
@@ -296,523 +296,528 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Saves the generator's options.
+        ///     Saves the generator's options.
         /// </summary>
         private void SaveOptions()
         {
             string options =
-                ChbGenerateNewStrategy.Checked + ";" +
-                ChbPreservePermSL.Checked + ";" +
-                ChbPreservePermTP.Checked + ";" +
-                ChbPreserveBreakEven.Checked + ";" +
-                ChbInitialOptimization.Checked + ";" +
-                ChbMaxOpeningLogicSlots.Checked + ";" +
-                NUDMaxOpeningLogicSlots.Value + ";" +
-                ChbMaxClosingLogicSlots.Checked + ";" +
-                NUDMaxClosingLogicSlots.Value + ";" +
-                ChbOutOfSample.Checked + ";" +
-                NUDOutOfSample.Value + ";" +
-                NudWorkingMinutes.Value + ";" +
-                ChbAmbiguousBars.Checked + ";" +
-                NUDAmbiguousBars.Value + ";" +
-                ChbMaxDrawdown.Checked + ";" +
-                NUDMaxDrawdown.Value + ";" +
-                ChbMinTrades.Checked + ";" +
-                NUDMinTrades.Value + ";" +
-                ChbMaxTrades.Checked + ";" +
-                NUDMaxTrades.Value + ";" +
-                ChbWinLossRatio.Checked + ";" +
-                ((int) (NUDWinLossRatio.Value*100M)) + ";" +
-                ChbEquityPercent.Checked + ";" +
-                NUDEquityPercent.Value + ";" +
-                ChbOOSPatternFilter.Checked + ";" +
-                NUDOOSPatternPercent.Value + ";" +
-                ChbSmoothBalanceLines.Checked + ";" +
-                NUDSmoothBalancePercent.Value + ";" +
-                NUDSmoothBalanceCheckPoints.Value + ";" +
-                ChbUseDefaultIndicatorValues.Checked + ";" +
-                ChbHideFsb.Checked;
+                chbGenerateNewStrategy.Checked + ";" +
+                chbPreservePermSL.Checked + ";" +
+                chbPreservePermTP.Checked + ";" +
+                chbPreserveBreakEven.Checked + ";" +
+                chbInitialOptimization.Checked + ";" +
+                chbMaxOpeningLogicSlots.Checked + ";" +
+                nudMaxOpeningLogicSlots.Value + ";" +
+                chbMaxClosingLogicSlots.Checked + ";" +
+                nudMaxClosingLogicSlots.Value + ";" +
+                chbOutOfSample.Checked + ";" +
+                nudOutOfSample.Value + ";" +
+                nudWorkingMinutes.Value + ";" +
+                chbAmbiguousBars.Checked + ";" +
+                nudAmbiguousBars.Value + ";" +
+                chbMaxDrawdown.Checked + ";" +
+                nudMaxDrawdown.Value + ";" +
+                chbMinTrades.Checked + ";" +
+                nudMinTrades.Value + ";" +
+                chbMaxTrades.Checked + ";" +
+                nudMaxTrades.Value + ";" +
+                chbWinLossRatio.Checked + ";" +
+                ((int) (nudWinLossRatio.Value*100M)) + ";" +
+                chbEquityPercent.Checked + ";" +
+                nudEquityPercent.Value + ";" +
+                chbOOSPatternFilter.Checked + ";" +
+                nudoosPatternPercent.Value + ";" +
+                chbSmoothBalanceLines.Checked + ";" +
+                nudSmoothBalancePercent.Value + ";" +
+                nudSmoothBalanceCheckPoints.Value + ";" +
+                chbUseDefaultIndicatorValues.Checked + ";" +
+                chbHideFsb.Checked;
 
             Configs.GeneratorOptions = options;
         }
 
         /// <summary>
-        /// Sets controls in panel Common
+        ///     Sets controls in panel Common
         /// </summary>
         private void SetPanelCommon()
         {
             // chbGenerateNewStrategy
-            ChbGenerateNewStrategy.Parent = PnlCommon;
-            ChbGenerateNewStrategy.Text = Language.T("Generate a new strategy at every start");
-            ChbGenerateNewStrategy.AutoSize = true;
-            ChbGenerateNewStrategy.Checked = true;
-            ChbGenerateNewStrategy.ForeColor = LayoutColors.ColorControlText;
-            ChbGenerateNewStrategy.BackColor = Color.Transparent;
+            chbGenerateNewStrategy.Parent = pnlCommon;
+            chbGenerateNewStrategy.Text = Language.T("Generate a new strategy at every start");
+            chbGenerateNewStrategy.AutoSize = true;
+            chbGenerateNewStrategy.Checked = true;
+            chbGenerateNewStrategy.ForeColor = LayoutColors.ColorControlText;
+            chbGenerateNewStrategy.BackColor = Color.Transparent;
 
             // chbPreservPermSL
-            ChbPreservePermSL.Parent = PnlCommon;
-            ChbPreservePermSL.Text = Language.T("Do not change the Permanent Stop Loss");
-            ChbPreservePermSL.AutoSize = true;
-            ChbPreservePermSL.Checked = true;
-            ChbPreservePermSL.ForeColor = LayoutColors.ColorControlText;
-            ChbPreservePermSL.BackColor = Color.Transparent;
+            chbPreservePermSL.Parent = pnlCommon;
+            chbPreservePermSL.Text = Language.T("Do not change the Permanent Stop Loss");
+            chbPreservePermSL.AutoSize = true;
+            chbPreservePermSL.Checked = true;
+            chbPreservePermSL.ForeColor = LayoutColors.ColorControlText;
+            chbPreservePermSL.BackColor = Color.Transparent;
 
             // chbPreservPermTP
-            ChbPreservePermTP.Parent = PnlCommon;
-            ChbPreservePermTP.Text = Language.T("Do not change the Permanent Take Profit");
-            ChbPreservePermTP.AutoSize = true;
-            ChbPreservePermTP.Checked = true;
-            ChbPreservePermTP.ForeColor = LayoutColors.ColorControlText;
-            ChbPreservePermTP.BackColor = Color.Transparent;
+            chbPreservePermTP.Parent = pnlCommon;
+            chbPreservePermTP.Text = Language.T("Do not change the Permanent Take Profit");
+            chbPreservePermTP.AutoSize = true;
+            chbPreservePermTP.Checked = true;
+            chbPreservePermTP.ForeColor = LayoutColors.ColorControlText;
+            chbPreservePermTP.BackColor = Color.Transparent;
 
             // chbPreservbreakEven
-            ChbPreserveBreakEven.Parent = PnlCommon;
-            ChbPreserveBreakEven.Text = Language.T("Do not change the Break Even");
-            ChbPreserveBreakEven.AutoSize = true;
-            ChbPreserveBreakEven.Checked = true;
-            ChbPreserveBreakEven.ForeColor = LayoutColors.ColorControlText;
-            ChbPreserveBreakEven.BackColor = Color.Transparent;
+            chbPreserveBreakEven.Parent = pnlCommon;
+            chbPreserveBreakEven.Text = Language.T("Do not change the Break Even");
+            chbPreserveBreakEven.AutoSize = true;
+            chbPreserveBreakEven.Checked = true;
+            chbPreserveBreakEven.ForeColor = LayoutColors.ColorControlText;
+            chbPreserveBreakEven.BackColor = Color.Transparent;
 
             // chbPseudoOpt
-            ChbInitialOptimization.Parent = PnlCommon;
-            ChbInitialOptimization.Text = Language.T("Perform an initial optimization");
-            ChbInitialOptimization.AutoSize = true;
-            ChbInitialOptimization.Checked = true;
-            ChbInitialOptimization.ForeColor = LayoutColors.ColorControlText;
-            ChbInitialOptimization.BackColor = Color.Transparent;
+            chbInitialOptimization.Parent = pnlCommon;
+            chbInitialOptimization.Text = Language.T("Perform an initial optimization");
+            chbInitialOptimization.AutoSize = true;
+            chbInitialOptimization.Checked = true;
+            chbInitialOptimization.ForeColor = LayoutColors.ColorControlText;
+            chbInitialOptimization.BackColor = Color.Transparent;
 
-            ChbMaxOpeningLogicSlots = new CheckBox
-                                          {
-                                              Parent = PnlCommon,
-                                              ForeColor = ColorText,
-                                              BackColor = Color.Transparent,
-                                              Text = Language.T("Maximum number of opening logic slots"),
-                                              Checked = true,
-                                              AutoSize = true
-                                          };
+            chbMaxOpeningLogicSlots = new CheckBox
+                {
+                    Parent = pnlCommon,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Maximum number of opening logic slots"),
+                    Checked = true,
+                    AutoSize = true
+                };
 
-            NUDMaxOpeningLogicSlots = new NumericUpDown {Parent = PnlCommon, TextAlign = HorizontalAlignment.Center};
-            NUDMaxOpeningLogicSlots.BeginInit();
-            NUDMaxOpeningLogicSlots.Minimum = 0;
-            NUDMaxOpeningLogicSlots.Maximum = Strategy.MaxOpenFilters;
-            NUDMaxOpeningLogicSlots.Increment = 1;
-            NUDMaxOpeningLogicSlots.Value = 2;
-            NUDMaxOpeningLogicSlots.EndInit();
+            nudMaxOpeningLogicSlots = new NumericUpDown {Parent = pnlCommon, TextAlign = HorizontalAlignment.Center};
+            nudMaxOpeningLogicSlots.BeginInit();
+            nudMaxOpeningLogicSlots.Minimum = 0;
+            nudMaxOpeningLogicSlots.Maximum = Strategy.MaxOpenFilters;
+            nudMaxOpeningLogicSlots.Increment = 1;
+            nudMaxOpeningLogicSlots.Value = 2;
+            nudMaxOpeningLogicSlots.EndInit();
 
-            ChbMaxClosingLogicSlots = new CheckBox
-                                          {
-                                              Parent = PnlCommon,
-                                              ForeColor = ColorText,
-                                              BackColor = Color.Transparent,
-                                              Text = Language.T("Maximum number of closing logic slots"),
-                                              Checked = true,
-                                              AutoSize = true
-                                          };
+            chbMaxClosingLogicSlots = new CheckBox
+                {
+                    Parent = pnlCommon,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Maximum number of closing logic slots"),
+                    Checked = true,
+                    AutoSize = true
+                };
 
-            NUDMaxClosingLogicSlots = new NumericUpDown {Parent = PnlCommon, TextAlign = HorizontalAlignment.Center};
-            NUDMaxClosingLogicSlots.BeginInit();
-            NUDMaxClosingLogicSlots.Minimum = 0;
-            NUDMaxClosingLogicSlots.Maximum = Strategy.MaxCloseFilters;
-            NUDMaxClosingLogicSlots.Increment = 1;
-            NUDMaxClosingLogicSlots.Value = 1;
-            NUDMaxClosingLogicSlots.EndInit();
+            nudMaxClosingLogicSlots = new NumericUpDown {Parent = pnlCommon, TextAlign = HorizontalAlignment.Center};
+            nudMaxClosingLogicSlots.BeginInit();
+            nudMaxClosingLogicSlots.Minimum = 0;
+            nudMaxClosingLogicSlots.Maximum = Strategy.MaxCloseFilters;
+            nudMaxClosingLogicSlots.Increment = 1;
+            nudMaxClosingLogicSlots.Value = 1;
+            nudMaxClosingLogicSlots.EndInit();
 
             //lblNumUpDown
-            LblWorkingMinutes.Parent = PnlCommon;
-            LblWorkingMinutes.ForeColor = LayoutColors.ColorControlText;
-            LblWorkingMinutes.BackColor = Color.Transparent;
-            LblWorkingMinutes.Text = Language.T("Working time");
-            LblWorkingMinutes.AutoSize = true;
-            LblWorkingMinutes.TextAlign = ContentAlignment.MiddleRight;
+            lblWorkingMinutes.Parent = pnlCommon;
+            lblWorkingMinutes.ForeColor = LayoutColors.ColorControlText;
+            lblWorkingMinutes.BackColor = Color.Transparent;
+            lblWorkingMinutes.Text = Language.T("Working time");
+            lblWorkingMinutes.AutoSize = true;
+            lblWorkingMinutes.TextAlign = ContentAlignment.MiddleRight;
 
             // numUpDownWorkingTime
-            NudWorkingMinutes.Parent = PnlCommon;
-            NudWorkingMinutes.Value = 5;
-            NudWorkingMinutes.Minimum = 0;
-            NudWorkingMinutes.Maximum = 10000;
-            NudWorkingMinutes.TextAlign = HorizontalAlignment.Center;
-            toolTip.SetToolTip(NudWorkingMinutes, Language.T("Set the number of minutes for the Generator to work.") +
+            nudWorkingMinutes.Parent = pnlCommon;
+            nudWorkingMinutes.Value = 5;
+            nudWorkingMinutes.Minimum = 0;
+            nudWorkingMinutes.Maximum = 10000;
+            nudWorkingMinutes.TextAlign = HorizontalAlignment.Center;
+            toolTip.SetToolTip(nudWorkingMinutes, Language.T("Set the number of minutes for the Generator to work.") +
                                                   Environment.NewLine + "0 - " + Language.T("No limits").ToLower() + ".");
 
             // Label Calculated Strategies Caption
-            LblCalcStrInfo.Parent = PnlCommon;
-            LblCalcStrInfo.AutoSize = true;
-            LblCalcStrInfo.ForeColor = LayoutColors.ColorControlText;
-            LblCalcStrInfo.BackColor = Color.Transparent;
-            LblCalcStrInfo.Text = Language.T("Calculations");
+            lblCalcStrInfo.Parent = pnlCommon;
+            lblCalcStrInfo.AutoSize = true;
+            lblCalcStrInfo.ForeColor = LayoutColors.ColorControlText;
+            lblCalcStrInfo.BackColor = Color.Transparent;
+            lblCalcStrInfo.Text = Language.T("Calculations");
 
             // Label Calculated Strategies Number
-            LblCalcStrNumb.Parent = PnlCommon;
-            LblCalcStrNumb.BorderStyle = BorderStyle.FixedSingle;
-            LblCalcStrNumb.ForeColor = LayoutColors.ColorControlText;
-            LblCalcStrNumb.BackColor = LayoutColors.ColorControlBack;
-            LblCalcStrNumb.TextAlign = ContentAlignment.MiddleCenter;
-            LblCalcStrNumb.Text = "0";
+            lblCalcStrNumb.Parent = pnlCommon;
+            lblCalcStrNumb.BorderStyle = BorderStyle.FixedSingle;
+            lblCalcStrNumb.ForeColor = LayoutColors.ColorControlText;
+            lblCalcStrNumb.BackColor = LayoutColors.ColorControlBack;
+            lblCalcStrNumb.TextAlign = ContentAlignment.MiddleCenter;
+            lblCalcStrNumb.Text = "0";
         }
 
         /// <summary>
-        /// Sets controls in panel Limitations
+        ///     Sets controls in panel Limitations
         /// </summary>
         private void SetPanelLimitations()
         {
-            ChbAmbiguousBars = new CheckBox
-                                   {
-                                       Parent = PnlLimitations,
-                                       ForeColor = ColorText,
-                                       BackColor = Color.Transparent,
-                                       Text = Language.T("Maximum number of ambiguous bars"),
-                                       Checked = true,
-                                       AutoSize = true
-                                   };
+            chbAmbiguousBars = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Maximum number of ambiguous bars"),
+                    Checked = true,
+                    AutoSize = true
+                };
 
-            NUDAmbiguousBars = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDAmbiguousBars.BeginInit();
-            NUDAmbiguousBars.Minimum = 0;
-            NUDAmbiguousBars.Maximum = 100;
-            NUDAmbiguousBars.Increment = 1;
-            NUDAmbiguousBars.Value = 10;
-            NUDAmbiguousBars.EndInit();
+            nudAmbiguousBars = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudAmbiguousBars.BeginInit();
+            nudAmbiguousBars.Minimum = 0;
+            nudAmbiguousBars.Maximum = 100;
+            nudAmbiguousBars.Increment = 1;
+            nudAmbiguousBars.Value = 10;
+            nudAmbiguousBars.EndInit();
 
-            ChbMaxDrawdown = new CheckBox
-                                 {
-                                     Parent = PnlLimitations,
-                                     ForeColor = ColorText,
-                                     BackColor = Color.Transparent,
-                                     Text = Language.T("Maximum equity drawdown") + " [" +
-                                            (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]"),
-                                     Checked = false,
-                                     AutoSize = true
-                                 };
+            chbMaxDrawdown = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Maximum equity drawdown") + " [" +
+                           (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDMaxDrawdown = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDMaxDrawdown.BeginInit();
-            NUDMaxDrawdown.Minimum = 0;
-            NUDMaxDrawdown.Maximum = Configs.InitialAccount;
-            NUDMaxDrawdown.Increment = 10;
-            NUDMaxDrawdown.Value = (decimal) Math.Round(Configs.InitialAccount/4.0);
-            NUDMaxDrawdown.EndInit();
+            nudMaxDrawdown = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudMaxDrawdown.BeginInit();
+            nudMaxDrawdown.Minimum = 0;
+            nudMaxDrawdown.Maximum = Configs.InitialAccount;
+            nudMaxDrawdown.Increment = 10;
+            nudMaxDrawdown.Value = (decimal) Math.Round(Configs.InitialAccount/4.0);
+            nudMaxDrawdown.EndInit();
 
-            ChbEquityPercent = new CheckBox
-                                   {
-                                       Parent = PnlLimitations,
-                                       ForeColor = ColorText,
-                                       BackColor = Color.Transparent,
-                                       Text =
-                                           Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency +
-                                           "]",
-                                       Checked = true,
-                                       AutoSize = true
-                                   };
+            chbEquityPercent = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text =
+                        Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency +
+                        "]",
+                    Checked = true,
+                    AutoSize = true
+                };
 
-            NUDEquityPercent = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDEquityPercent.BeginInit();
-            NUDEquityPercent.Minimum = 1;
-            NUDEquityPercent.Maximum = 100;
-            NUDEquityPercent.Increment = 1;
-            NUDEquityPercent.Value = 25;
-            NUDEquityPercent.EndInit();
+            nudEquityPercent = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudEquityPercent.BeginInit();
+            nudEquityPercent.Minimum = 1;
+            nudEquityPercent.Maximum = 100;
+            nudEquityPercent.Increment = 1;
+            nudEquityPercent.Value = 25;
+            nudEquityPercent.EndInit();
 
-            ChbMinTrades = new CheckBox
-                               {
-                                   Parent = PnlLimitations,
-                                   ForeColor = ColorText,
-                                   BackColor = Color.Transparent,
-                                   Text = Language.T("Minimum number of trades"),
-                                   Checked = true,
-                                   AutoSize = true
-                               };
+            chbMinTrades = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Minimum number of trades"),
+                    Checked = true,
+                    AutoSize = true
+                };
 
-            NUDMinTrades = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDMinTrades.BeginInit();
-            NUDMinTrades.Minimum = 10;
-            NUDMinTrades.Maximum = 1000;
-            NUDMinTrades.Increment = 10;
-            NUDMinTrades.Value = 100;
-            NUDMinTrades.EndInit();
+            nudMinTrades = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudMinTrades.BeginInit();
+            nudMinTrades.Minimum = 10;
+            nudMinTrades.Maximum = 1000;
+            nudMinTrades.Increment = 10;
+            nudMinTrades.Value = 100;
+            nudMinTrades.EndInit();
 
-            ChbMaxTrades = new CheckBox
-                               {
-                                   Parent = PnlLimitations,
-                                   ForeColor = ColorText,
-                                   BackColor = Color.Transparent,
-                                   Text = Language.T("Maximum number of trades"),
-                                   Checked = false,
-                                   AutoSize = true
-                               };
+            chbMaxTrades = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Maximum number of trades"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDMaxTrades = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDMaxTrades.BeginInit();
-            NUDMaxTrades.Minimum = 10;
-            NUDMaxTrades.Maximum = 10000;
-            NUDMaxTrades.Increment = 10;
-            NUDMaxTrades.Value = 1000;
-            NUDMaxTrades.EndInit();
+            nudMaxTrades = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudMaxTrades.BeginInit();
+            nudMaxTrades.Minimum = 10;
+            nudMaxTrades.Maximum = 10000;
+            nudMaxTrades.Increment = 10;
+            nudMaxTrades.Value = 1000;
+            nudMaxTrades.EndInit();
 
-            ChbWinLossRatio = new CheckBox
-                                  {
-                                      Parent = PnlLimitations,
-                                      ForeColor = ColorText,
-                                      BackColor = Color.Transparent,
-                                      Text = Language.T("Minimum win / loss trades ratio"),
-                                      Checked = false,
-                                      AutoSize = true
-                                  };
+            chbWinLossRatio = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Minimum win / loss trades ratio"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDWinLossRatio = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDWinLossRatio.BeginInit();
-            NUDWinLossRatio.Minimum = 0.10M;
-            NUDWinLossRatio.Maximum = 1;
-            NUDWinLossRatio.Increment = 0.01M;
-            NUDWinLossRatio.Value = 0.30M;
-            NUDWinLossRatio.DecimalPlaces = 2;
-            NUDWinLossRatio.EndInit();
+            nudWinLossRatio = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudWinLossRatio.BeginInit();
+            nudWinLossRatio.Minimum = 0.10M;
+            nudWinLossRatio.Maximum = 1;
+            nudWinLossRatio.Increment = 0.01M;
+            nudWinLossRatio.Value = 0.30M;
+            nudWinLossRatio.DecimalPlaces = 2;
+            nudWinLossRatio.EndInit();
 
-            ChbOOSPatternFilter = new CheckBox
-                                      {
-                                          Parent = PnlLimitations,
-                                          ForeColor = ColorText,
-                                          BackColor = Color.Transparent,
-                                          Text = Language.T("Filter bad OOS performance"),
-                                          Checked = false,
-                                          AutoSize = true
-                                      };
+            chbOOSPatternFilter = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Filter bad OOS performance"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDOOSPatternPercent = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDOOSPatternPercent.BeginInit();
-            NUDOOSPatternPercent.Minimum = 1;
-            NUDOOSPatternPercent.Maximum = 50;
-            NUDOOSPatternPercent.Value = 20;
-            NUDOOSPatternPercent.EndInit();
-            toolTip.SetToolTip(NUDOOSPatternPercent, Language.T("Deviation percent."));
+            nudoosPatternPercent = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudoosPatternPercent.BeginInit();
+            nudoosPatternPercent.Minimum = 1;
+            nudoosPatternPercent.Maximum = 50;
+            nudoosPatternPercent.Value = 20;
+            nudoosPatternPercent.EndInit();
+            toolTip.SetToolTip(nudoosPatternPercent, Language.T("Deviation percent."));
 
-            ChbSmoothBalanceLines = new CheckBox
-                                        {
-                                            Parent = PnlLimitations,
-                                            ForeColor = ColorText,
-                                            BackColor = Color.Transparent,
-                                            Text = Language.T("Filter non-linear balance pattern"),
-                                            Checked = false,
-                                            AutoSize = true
-                                        };
+            chbSmoothBalanceLines = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Filter non-linear balance pattern"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDSmoothBalancePercent = new NumericUpDown
-                                          {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDSmoothBalancePercent.BeginInit();
-            NUDSmoothBalancePercent.Minimum = 1;
-            NUDSmoothBalancePercent.Maximum = 50;
-            NUDSmoothBalancePercent.Value = 20;
-            NUDSmoothBalancePercent.EndInit();
-            toolTip.SetToolTip(NUDSmoothBalancePercent, Language.T("Deviation percent."));
+            nudSmoothBalancePercent = new NumericUpDown
+                {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudSmoothBalancePercent.BeginInit();
+            nudSmoothBalancePercent.Minimum = 1;
+            nudSmoothBalancePercent.Maximum = 50;
+            nudSmoothBalancePercent.Value = 20;
+            nudSmoothBalancePercent.EndInit();
+            toolTip.SetToolTip(nudSmoothBalancePercent, Language.T("Deviation percent."));
 
-            NUDSmoothBalanceCheckPoints = new NumericUpDown
-                                              {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDSmoothBalanceCheckPoints.BeginInit();
-            NUDSmoothBalanceCheckPoints.Minimum = 1;
-            NUDSmoothBalanceCheckPoints.Maximum = 50;
-            NUDSmoothBalanceCheckPoints.Value = 1;
-            NUDSmoothBalanceCheckPoints.EndInit();
-            toolTip.SetToolTip(NUDSmoothBalanceCheckPoints, Language.T("Check points count."));
+            nudSmoothBalanceCheckPoints = new NumericUpDown
+                {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudSmoothBalanceCheckPoints.BeginInit();
+            nudSmoothBalanceCheckPoints.Minimum = 1;
+            nudSmoothBalanceCheckPoints.Maximum = 50;
+            nudSmoothBalanceCheckPoints.Value = 1;
+            nudSmoothBalanceCheckPoints.EndInit();
+            toolTip.SetToolTip(nudSmoothBalanceCheckPoints, Language.T("Check points count."));
         }
 
         /// <summary>
-        /// Sets controls in panel Settings
+        ///     Sets controls in panel Settings
         /// </summary>
         private void SetPanelSettings()
         {
-            ChbOutOfSample = new CheckBox
-                                 {
-                                     Parent = PnlSettings,
-                                     ForeColor = ColorText,
-                                     BackColor = Color.Transparent,
-                                     Text = Language.T("Out of sample testing, percent of OOS bars"),
-                                     Checked = false,
-                                     AutoSize = true
-                                 };
-            ChbOutOfSample.CheckedChanged += ChbOutOfSampleCheckedChanged;
+            chbOutOfSample = new CheckBox
+                {
+                    Parent = pnlSettings,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Out of sample testing, percent of OOS bars"),
+                    Checked = false,
+                    AutoSize = true
+                };
+            chbOutOfSample.CheckedChanged += ChbOutOfSampleCheckedChanged;
 
-            NUDOutOfSample = new NumericUpDown {Parent = PnlSettings, TextAlign = HorizontalAlignment.Center};
-            NUDOutOfSample.BeginInit();
-            NUDOutOfSample.Minimum = 10;
-            NUDOutOfSample.Maximum = 60;
-            NUDOutOfSample.Increment = 1;
-            NUDOutOfSample.Value = 30;
-            NUDOutOfSample.EndInit();
-            NUDOutOfSample.ValueChanged += NudOutOfSampleValueChanged;
+            nudOutOfSample = new NumericUpDown {Parent = pnlSettings, TextAlign = HorizontalAlignment.Center};
+            nudOutOfSample.BeginInit();
+            nudOutOfSample.Minimum = 10;
+            nudOutOfSample.Maximum = 60;
+            nudOutOfSample.Increment = 1;
+            nudOutOfSample.Value = 30;
+            nudOutOfSample.EndInit();
+            nudOutOfSample.ValueChanged += NudOutOfSampleValueChanged;
 
-            ChbUseDefaultIndicatorValues = new CheckBox
-                                               {
-                                                   Parent = PnlSettings,
-                                                   ForeColor = ColorText,
-                                                   BackColor = Color.Transparent,
-                                                   Text = Language.T("Only use default numeric indicator values"),
-                                                   Checked = false,
-                                                   AutoSize = true
-                                               };
+            chbUseDefaultIndicatorValues = new CheckBox
+                {
+                    Parent = pnlSettings,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Only use default numeric indicator values"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            ChbHideFsb = new CheckBox
-                             {
-                                 Parent = PnlSettings,
-                                 ForeColor = ColorText,
-                                 BackColor = Color.Transparent,
-                                 Text = Language.T("Hide FSB when Generator starts"),
-                                 Checked = true,
-                                 AutoSize = true,
-                                 Cursor = Cursors.Default
-                             };
+            chbHideFsb = new CheckBox
+                {
+                    Parent = pnlSettings,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Hide FSB when Generator starts"),
+                    Checked = true,
+                    AutoSize = true,
+                    Cursor = Cursors.Default
+                };
 
-            BtnReset = new Button
-                           {
-                               Parent = PnlSettings,
-                               UseVisualStyleBackColor = true,
-                               Text = Language.T("Reset all parameters and settings")
-                           };
-            BtnReset.Click += BtnResetClick;
+            btnReset = new Button
+                {
+                    Parent = pnlSettings,
+                    UseVisualStyleBackColor = true,
+                    Text = Language.T("Reset all parameters and settings")
+                };
+            btnReset.Click += BtnResetClick;
         }
 
         /// <summary>
-        /// Sets controls in panel Top 10
+        ///     Sets controls in panel Top 10
         /// </summary>
         private void SetPanelTop10()
         {
-            Top10Field = new Top10Layout(10) {Parent = PnlTop10};
+            top10Field = new Top10Layout(10) {Parent = pnlTop10};
         }
 
         /// <summary>
-        /// Sets controls in panel Indicators
+        ///     Sets controls in panel Indicators
         /// </summary>
         private void SetPanelIndicators()
         {
-            IndicatorsField = new IndicatorsLayout {Parent = PnlIndicators};
+            indicatorsField = new IndicatorsLayout {Parent = pnlIndicators};
         }
 
         /// <summary>
-        /// Sets tool strip buttons
+        ///     Sets tool strip buttons
         /// </summary>
         private void SetButtonsStrategy()
         {
-            TsbtLockAll = new ToolStripButton
-                              {
-                                  Name = "tsbtLockAll",
-                                  Image = Resources.padlock_img,
-                                  ToolTipText = Language.T("Lock all slots.")
-                              };
-            TsbtLockAll.Click += ChangeSlotStatus;
-            TsStrategy.Items.Add(TsbtLockAll);
+            tsbtLockAll = new ToolStripButton
+                {
+                    Name = "tsbtLockAll",
+                    Image = Resources.padlock_img,
+                    ToolTipText = Language.T("Lock all slots.")
+                };
+            tsbtLockAll.Click += ChangeSlotStatus;
+            tsStrategy.Items.Add(tsbtLockAll);
 
-            TsbtUnlockAll = new ToolStripButton
-                                {
-                                    Name = "tsbtUnlockAll",
-                                    Image = Resources.open_padlock_img,
-                                    ToolTipText = Language.T("Unlock all slots.")
-                                };
-            TsbtUnlockAll.Click += ChangeSlotStatus;
-            TsStrategy.Items.Add(TsbtUnlockAll);
+            tsbtUnlockAll = new ToolStripButton
+                {
+                    Name = "tsbtUnlockAll",
+                    Image = Resources.open_padlock_img,
+                    ToolTipText = Language.T("Unlock all slots.")
+                };
+            tsbtUnlockAll.Click += ChangeSlotStatus;
+            tsStrategy.Items.Add(tsbtUnlockAll);
 
-            TsbtLinkAll = new ToolStripButton
-                              {
-                                  Name = "tsbtLinkAll",
-                                  Image = Resources.linked,
-                                  ToolTipText = Language.T("Link all slots.")
-                              };
-            TsbtLinkAll.Click += ChangeSlotStatus;
-            TsStrategy.Items.Add(TsbtLinkAll);
+            tsbtLinkAll = new ToolStripButton
+                {
+                    Name = "tsbtLinkAll",
+                    Image = Resources.linked,
+                    ToolTipText = Language.T("Link all slots.")
+                };
+            tsbtLinkAll.Click += ChangeSlotStatus;
+            tsStrategy.Items.Add(tsbtLinkAll);
 
-            TsStrategy.Items.Add(new ToolStripSeparator());
+            tsStrategy.Items.Add(new ToolStripSeparator());
 
             // Button Overview
-            TsbtOverview = new ToolStripButton
-                               {
-                                   Name = "Overview",
-                                   Text = Language.T("Overview"),
-                                   ToolTipText = Language.T("See the strategy overview.")
-                               };
-            TsbtOverview.Click += ShowOverview;
-            TsStrategy.Items.Add(TsbtOverview);
+            tsbtOverview = new ToolStripButton
+                {
+                    Name = "Overview",
+                    Text = Language.T("Overview"),
+                    ToolTipText = Language.T("See the strategy overview.")
+                };
+            tsbtOverview.Click += ShowOverview;
+            tsStrategy.Items.Add(tsbtOverview);
 
             // Button tsbtStrategySize1
-            TsbtStrategySize1 = new ToolStripButton
-                                    {
-                                        DisplayStyle = ToolStripItemDisplayStyle.Image,
-                                        Image = Resources.slot_size_max,
-                                        Tag = 1,
-                                        ToolTipText = Language.T("Show detailed info in the slots."),
-                                        Alignment = ToolStripItemAlignment.Right
-                                    };
-            TsbtStrategySize1.Click += BtnSlotSizeClick;
-            TsStrategy.Items.Add(TsbtStrategySize1);
+            tsbtStrategySize1 = new ToolStripButton
+                {
+                    DisplayStyle = ToolStripItemDisplayStyle.Image,
+                    Image = Resources.slot_size_max,
+                    Tag = 1,
+                    ToolTipText = Language.T("Show detailed info in the slots."),
+                    Alignment = ToolStripItemAlignment.Right
+                };
+            tsbtStrategySize1.Click += BtnSlotSizeClick;
+            tsStrategy.Items.Add(tsbtStrategySize1);
 
             // Button tsbtStrategySize2
-            TsbtStrategySize2 = new ToolStripButton
-                                    {
-                                        DisplayStyle = ToolStripItemDisplayStyle.Image,
-                                        Image = Resources.slot_size_min,
-                                        Tag = 2,
-                                        ToolTipText = Language.T("Show minimum info in the slots."),
-                                        Alignment = ToolStripItemAlignment.Right
-                                    };
-            TsbtStrategySize2.Click += BtnSlotSizeClick;
-            TsStrategy.Items.Add(TsbtStrategySize2);
+            tsbtStrategySize2 = new ToolStripButton
+                {
+                    DisplayStyle = ToolStripItemDisplayStyle.Image,
+                    Image = Resources.slot_size_min,
+                    Tag = 2,
+                    ToolTipText = Language.T("Show minimum info in the slots."),
+                    Alignment = ToolStripItemAlignment.Right
+                };
+            tsbtStrategySize2.Click += BtnSlotSizeClick;
+            tsStrategy.Items.Add(tsbtStrategySize2);
 
             // Button tsbtStrategyInfo
-            TsbtStrategyInfo = new ToolStripButton
-                                   {
-                                       DisplayStyle = ToolStripItemDisplayStyle.Image,
-                                       Image = Resources.str_info_infook,
-                                       ToolTipText = Language.T("Show the strategy description."),
-                                       Alignment = ToolStripItemAlignment.Right
-                                   };
-            TsbtStrategyInfo.Click += BtnStrategyDescriptionClick;
-            TsStrategy.Items.Add(TsbtStrategyInfo);
+            tsbtStrategyInfo = new ToolStripButton
+                {
+                    DisplayStyle = ToolStripItemDisplayStyle.Image,
+                    Image = Resources.str_info_infook,
+                    ToolTipText = Language.T("Show the strategy description."),
+                    Alignment = ToolStripItemAlignment.Right
+                };
+            tsbtStrategyInfo.Click += BtnStrategyDescriptionClick;
+            tsStrategy.Items.Add(tsbtStrategyInfo);
         }
 
         /// <summary>
-        /// Sets tool strip buttons
+        ///     Sets tool strip buttons
         /// </summary>
         private void SetButtonsGenerator()
         {
             // Button Options
-            TsbtShowOptions = new ToolStripButton {Name = "tsbtShowOptions", Text = Language.T("Common"), Enabled = false};
-            TsbtShowOptions.Click += ChangeGeneratorPanel;
-            TsGenerator.Items.Add(TsbtShowOptions);
+            tsbtShowOptions = new ToolStripButton
+                {
+                    Name = "tsbtShowOptions",
+                    Text = Language.T("Common"),
+                    Enabled = false
+                };
+            tsbtShowOptions.Click += ChangeGeneratorPanel;
+            tsGenerator.Items.Add(tsbtShowOptions);
 
             // Button Limitations
-            TsbtShowLimitations = new ToolStripButton {Name = "tsbtShowLimitations", Text = Language.T("Limitations")};
-            TsbtShowLimitations.Click += ChangeGeneratorPanel;
-            TsGenerator.Items.Add(TsbtShowLimitations);
+            tsbtShowLimitations = new ToolStripButton {Name = "tsbtShowLimitations", Text = Language.T("Limitations")};
+            tsbtShowLimitations.Click += ChangeGeneratorPanel;
+            tsGenerator.Items.Add(tsbtShowLimitations);
 
             // Button Settings
-            TsbtShowSettings = new ToolStripButton {Name = "tsbtShowSettings", Text = Language.T("Settings")};
-            TsbtShowSettings.Click += ChangeGeneratorPanel;
-            TsGenerator.Items.Add(TsbtShowSettings);
+            tsbtShowSettings = new ToolStripButton {Name = "tsbtShowSettings", Text = Language.T("Settings")};
+            tsbtShowSettings.Click += ChangeGeneratorPanel;
+            tsGenerator.Items.Add(tsbtShowSettings);
 
             // Button Top10
-            TsbtShowTop10 = new ToolStripButton {Name = "tsbtShowTop10", Text = Language.T("Top 10")};
-            TsbtShowTop10.Click += ChangeGeneratorPanel;
-            TsGenerator.Items.Add(TsbtShowTop10);
+            tsbtShowTop10 = new ToolStripButton {Name = "tsbtShowTop10", Text = Language.T("Top 10")};
+            tsbtShowTop10.Click += ChangeGeneratorPanel;
+            tsGenerator.Items.Add(tsbtShowTop10);
 
             // Button Indicators
-            TsbtShowIndicators = new ToolStripButton {Name = "tsbtIndicators", Text = Language.T("Indicators")};
-            TsbtShowIndicators.Click += ChangeGeneratorPanel;
-            TsGenerator.Items.Add(TsbtShowIndicators);
+            tsbtShowIndicators = new ToolStripButton {Name = "tsbtIndicators", Text = Language.T("Indicators")};
+            tsbtShowIndicators.Click += ChangeGeneratorPanel;
+            tsGenerator.Items.Add(tsbtShowIndicators);
         }
 
         /// <summary>
-        /// Perform initializing
+        ///     Perform initializing
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            ParrentForm.Visible = !ChbHideFsb.Checked;
+            ParrentForm.Visible = !chbHideFsb.Checked;
 
             // Find correct size
             int maxCheckBoxWidth = 250;
-            foreach (Control control in PnlLimitations.Controls)
+            foreach (Control control in pnlLimitations.Controls)
             {
                 if (maxCheckBoxWidth < control.Width)
                     maxCheckBoxWidth = control.Width;
             }
-            foreach (Control control in PnlCommon.Controls)
+            foreach (Control control in pnlCommon.Controls)
             {
                 if (maxCheckBoxWidth < control.Width)
                     maxCheckBoxWidth = control.Width;
@@ -821,31 +826,31 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             var buttonWidth = (int) (Data.HorizontalDLU*60);
             var btnHrzSpace = (int) (Data.HorizontalDLU*3);
             const int nudWidth = 55;
-            PnlLimitations.Width = 3*buttonWidth + 2*btnHrzSpace;
-            int iBorderWidth = (PnlLimitations.Width - PnlLimitations.ClientSize.Width)/2;
+            pnlLimitations.Width = 3*buttonWidth + 2*btnHrzSpace;
+            int iBorderWidth = (pnlLimitations.Width - pnlLimitations.ClientSize.Width)/2;
 
-            if (maxCheckBoxWidth + 3*btnHrzSpace + nudWidth + 4 > PnlLimitations.ClientSize.Width)
-                _buttonWidthMultiplier = ((maxCheckBoxWidth + nudWidth + 3*btnHrzSpace + 2*iBorderWidth + 4)/3.0)/
+            if (maxCheckBoxWidth + 3*btnHrzSpace + nudWidth + 4 > pnlLimitations.ClientSize.Width)
+                buttonWidthMultiplier = ((maxCheckBoxWidth + nudWidth + 3*btnHrzSpace + 2*iBorderWidth + 4)/3.0)/
                                         buttonWidth;
 
-            ClientSize = new Size(2*((int) (3*buttonWidth*_buttonWidthMultiplier) + 2*btnHrzSpace) + 3*btnHrzSpace, 528);
+            ClientSize = new Size(2*((int) (3*buttonWidth*buttonWidthMultiplier) + 2*btnHrzSpace) + 3*btnHrzSpace, 528);
 
             OnResize(e);
 
-            RebuildStrategyLayout(_strategyBest);
+            RebuildStrategyLayout(strategyBest);
             RefreshAccountStatisticas();
             Top10AddStrategy();
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing
+        ///     Recalculates the sizes and positions of the controls after resizing
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
             var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60*_buttonWidthMultiplier);
+            var buttonWidth = (int) (Data.HorizontalDLU*60*buttonWidthMultiplier);
             var btnVertSpace = (int) (Data.VerticalDLU*5.5);
             var btnHrzSpace = (int) (Data.HorizontalDLU*3);
             int border = btnHrzSpace;
@@ -856,194 +861,194 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             const int optionsHeight = 228;
 
             //Button Cancel
-            BtnCancel.Size = new Size(buttonWidth, buttonHeight);
-            BtnCancel.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
+            btnCancel.Size = new Size(buttonWidth, buttonHeight);
+            btnCancel.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
                                            ClientSize.Height - buttonHeight - btnVertSpace);
 
             //Button Accept
-            BtnAccept.Size = new Size(buttonWidth, buttonHeight);
-            BtnAccept.Location = new Point(BtnCancel.Left - buttonWidth - btnHrzSpace,
+            btnAccept.Size = new Size(buttonWidth, buttonHeight);
+            btnAccept.Location = new Point(btnCancel.Left - buttonWidth - btnHrzSpace,
                                            ClientSize.Height - buttonHeight - btnVertSpace);
 
             //Button Generate
-            BtnGenerate.Size = new Size(buttonWidth, buttonHeight);
-            BtnGenerate.Location = new Point(BtnAccept.Left - buttonWidth - btnHrzSpace,
+            btnGenerate.Size = new Size(buttonWidth, buttonHeight);
+            btnGenerate.Location = new Point(btnAccept.Left - buttonWidth - btnHrzSpace,
                                              ClientSize.Height - buttonHeight - btnVertSpace);
 
             // Progress Bar
-            ProgressBar.Size = new Size(ClientSize.Width - leftSideWidth - 3*border, (int) (Data.VerticalDLU*9));
-            ProgressBar.Location = new Point(leftSideWidth + 2*border, BtnAccept.Top - ProgressBar.Height - btnVertSpace);
+            progressBar.Size = new Size(ClientSize.Width - leftSideWidth - 3*border, (int) (Data.VerticalDLU*9));
+            progressBar.Location = new Point(leftSideWidth + 2*border, btnAccept.Top - progressBar.Height - btnVertSpace);
 
             // Tool Strip Strategy
-            TsStrategy.Width = leftSideWidth + border;
-            TsStrategy.Location = Point.Empty;
+            tsStrategy.Width = leftSideWidth + border;
+            tsStrategy.Location = Point.Empty;
 
             // Tool Strip Strategy
-            TsGenerator.Width = ClientSize.Width - leftSideWidth - border;
-            TsGenerator.Location = new Point(TsStrategy.Right + border, 0);
+            tsGenerator.Width = ClientSize.Width - leftSideWidth - border;
+            tsGenerator.Location = new Point(tsStrategy.Right + border, 0);
 
             // Panel Common
-            PnlCommon.Size = new Size(rightSideWidth, optionsHeight);
-            PnlCommon.Location = new Point(rightSideLocation, TsStrategy.Bottom + border);
+            pnlCommon.Size = new Size(rightSideWidth, optionsHeight);
+            pnlCommon.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
 
             // Panel pnlLimitations
-            PnlLimitations.Size = new Size(rightSideWidth, optionsHeight);
-            PnlLimitations.Location = new Point(rightSideLocation, TsStrategy.Bottom + border);
+            pnlLimitations.Size = new Size(rightSideWidth, optionsHeight);
+            pnlLimitations.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
 
             // Panel Settings
-            PnlSettings.Size = new Size(rightSideWidth, optionsHeight);
-            PnlSettings.Location = new Point(rightSideLocation, TsStrategy.Bottom + border);
+            pnlSettings.Size = new Size(rightSideWidth, optionsHeight);
+            pnlSettings.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
 
             // Panel Top 10
-            PnlTop10.Size = new Size(rightSideWidth, optionsHeight);
-            PnlTop10.Location = new Point(rightSideLocation, TsStrategy.Bottom + border);
+            pnlTop10.Size = new Size(rightSideWidth, optionsHeight);
+            pnlTop10.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
 
             // Panel Indicators
-            PnlIndicators.Size = new Size(rightSideWidth, optionsHeight);
-            PnlIndicators.Location = new Point(rightSideLocation, TsStrategy.Bottom + border);
+            pnlIndicators.Size = new Size(rightSideWidth, optionsHeight);
+            pnlIndicators.Location = new Point(rightSideLocation, tsStrategy.Bottom + border);
 
             // Panel StrategyLayout
-            StrategyField.Size = new Size(leftSideWidth, ClientSize.Height - border - TsStrategy.Bottom - border);
-            StrategyField.Location = new Point(border, TsStrategy.Bottom + border);
+            strategyField.Size = new Size(leftSideWidth, ClientSize.Height - border - tsStrategy.Bottom - border);
+            strategyField.Location = new Point(border, tsStrategy.Bottom + border);
 
             // Panel Balance Chart
-            BalanceChart.Size = new Size(ClientSize.Width - leftSideWidth - 3*border,
-                                              ProgressBar.Top - 3*border - PnlCommon.Bottom);
-            BalanceChart.Location = new Point(StrategyField.Right + border, PnlCommon.Bottom + border);
+            balanceChart.Size = new Size(ClientSize.Width - leftSideWidth - 3*border,
+                                         progressBar.Top - 3*border - pnlCommon.Bottom);
+            balanceChart.Location = new Point(strategyField.Right + border, pnlCommon.Bottom + border);
 
             // Account Statistics
-            InfpnlAccountStatistics.Size = new Size(ClientSize.Width - leftSideWidth - 3*border,
-                                                    ProgressBar.Top - 3*border - PnlCommon.Bottom);
-            InfpnlAccountStatistics.Location = new Point(StrategyField.Right + border, PnlCommon.Bottom + border);
+            infpnlAccountStatistics.Size = new Size(ClientSize.Width - leftSideWidth - 3*border,
+                                                    progressBar.Top - 3*border - pnlCommon.Bottom);
+            infpnlAccountStatistics.Location = new Point(strategyField.Right + border, pnlCommon.Bottom + border);
 
             //chbGenerateNewStrategy
-            ChbGenerateNewStrategy.Location = new Point(border + 2, 26);
+            chbGenerateNewStrategy.Location = new Point(border + 2, 26);
 
             //chbPreservePermSL
-            ChbPreservePermSL.Location = new Point(border + 2, ChbGenerateNewStrategy.Bottom + border + 4);
+            chbPreservePermSL.Location = new Point(border + 2, chbGenerateNewStrategy.Bottom + border + 4);
 
             //chbPreservePermTP
-            ChbPreservePermTP.Location = new Point(border + 2, ChbPreservePermSL.Bottom + border + 4);
+            chbPreservePermTP.Location = new Point(border + 2, chbPreservePermSL.Bottom + border + 4);
 
             //chbPreservebreakEven
-            ChbPreserveBreakEven.Location = new Point(border + 2, ChbPreservePermTP.Bottom + border + 4);
+            chbPreserveBreakEven.Location = new Point(border + 2, chbPreservePermTP.Bottom + border + 4);
 
             // chbPseudoOpt
-            ChbInitialOptimization.Location = new Point(border + 2, ChbPreserveBreakEven.Bottom + border + 4);
+            chbInitialOptimization.Location = new Point(border + 2, chbPreserveBreakEven.Bottom + border + 4);
 
             // chbMaxOpeningLogicSlots
-            ChbMaxOpeningLogicSlots.Location = new Point(border + 2, ChbInitialOptimization.Bottom + border + 4);
+            chbMaxOpeningLogicSlots.Location = new Point(border + 2, chbInitialOptimization.Bottom + border + 4);
 
             // nudMaxOpeningLogicSlots
-            NUDMaxOpeningLogicSlots.Width = nudWidth;
-            NUDMaxOpeningLogicSlots.Location = new Point(NUDAmbiguousBars.Left, ChbMaxOpeningLogicSlots.Top - 1);
+            nudMaxOpeningLogicSlots.Width = nudWidth;
+            nudMaxOpeningLogicSlots.Location = new Point(nudAmbiguousBars.Left, chbMaxOpeningLogicSlots.Top - 1);
 
             // chbMaxClosingLogicSlots
-            ChbMaxClosingLogicSlots.Location = new Point(border + 2, ChbMaxOpeningLogicSlots.Bottom + border + 4);
+            chbMaxClosingLogicSlots.Location = new Point(border + 2, chbMaxOpeningLogicSlots.Bottom + border + 4);
 
             // nudMaxClosingLogicSlots
-            NUDMaxClosingLogicSlots.Width = nudWidth;
-            NUDMaxClosingLogicSlots.Location = new Point(NUDAmbiguousBars.Left, ChbMaxClosingLogicSlots.Top - 1);
+            nudMaxClosingLogicSlots.Width = nudWidth;
+            nudMaxClosingLogicSlots.Location = new Point(nudAmbiguousBars.Left, chbMaxClosingLogicSlots.Top - 1);
 
             // Labels Strategy Calculations
-            LblCalcStrInfo.Location = new Point(border - 1, PnlCommon.Height - NUDMaxOpeningLogicSlots.Height - border);
-            LblCalcStrNumb.Size = new Size(nudWidth, NUDMaxOpeningLogicSlots.Height - 1);
-            LblCalcStrNumb.Location = new Point(LblCalcStrInfo.Right + border, LblCalcStrInfo.Top - 3);
+            lblCalcStrInfo.Location = new Point(border - 1, pnlCommon.Height - nudMaxOpeningLogicSlots.Height - border);
+            lblCalcStrNumb.Size = new Size(nudWidth, nudMaxOpeningLogicSlots.Height - 1);
+            lblCalcStrNumb.Location = new Point(lblCalcStrInfo.Right + border, lblCalcStrInfo.Top - 3);
 
             //Working Minutes
-            NudWorkingMinutes.Width = nudWidth;
-            NudWorkingMinutes.Location = new Point(NUDMaxOpeningLogicSlots.Right - nudWidth, LblCalcStrInfo.Top - 2);
-            LblWorkingMinutes.Location = new Point(NudWorkingMinutes.Left - LblWorkingMinutes.Width - 3,
-                                                   LblCalcStrInfo.Top);
+            nudWorkingMinutes.Width = nudWidth;
+            nudWorkingMinutes.Location = new Point(nudMaxOpeningLogicSlots.Right - nudWidth, lblCalcStrInfo.Top - 2);
+            lblWorkingMinutes.Location = new Point(nudWorkingMinutes.Left - lblWorkingMinutes.Width - 3,
+                                                   lblCalcStrInfo.Top);
 
             // chbAmbiguousBars
-            ChbAmbiguousBars.Location = new Point(border + 2, 25);
+            chbAmbiguousBars.Location = new Point(border + 2, 25);
 
             // nudAmbiguousBars
-            NUDAmbiguousBars.Width = nudWidth;
-            NUDAmbiguousBars.Location = new Point(PnlLimitations.ClientSize.Width - nudWidth - border - 2,
-                                                  ChbAmbiguousBars.Top - 1);
+            nudAmbiguousBars.Width = nudWidth;
+            nudAmbiguousBars.Location = new Point(pnlLimitations.ClientSize.Width - nudWidth - border - 2,
+                                                  chbAmbiguousBars.Top - 1);
 
             // MaxDrawdown
-            ChbMaxDrawdown.Location = new Point(border + 2, ChbAmbiguousBars.Bottom + border + 4);
-            NUDMaxDrawdown.Width = nudWidth;
-            NUDMaxDrawdown.Location = new Point(NUDAmbiguousBars.Left, ChbMaxDrawdown.Top - 1);
+            chbMaxDrawdown.Location = new Point(border + 2, chbAmbiguousBars.Bottom + border + 4);
+            nudMaxDrawdown.Width = nudWidth;
+            nudMaxDrawdown.Location = new Point(nudAmbiguousBars.Left, chbMaxDrawdown.Top - 1);
 
             // MaxDrawdown %
-            ChbEquityPercent.Location = new Point(border + 2, NUDMaxDrawdown.Bottom + border + 4);
-            NUDEquityPercent.Width = nudWidth;
-            NUDEquityPercent.Location = new Point(NUDAmbiguousBars.Left, ChbEquityPercent.Top - 1);
+            chbEquityPercent.Location = new Point(border + 2, nudMaxDrawdown.Bottom + border + 4);
+            nudEquityPercent.Width = nudWidth;
+            nudEquityPercent.Location = new Point(nudAmbiguousBars.Left, chbEquityPercent.Top - 1);
 
             // MinTrades
-            ChbMinTrades.Location = new Point(border + 2, ChbEquityPercent.Bottom + border + 4);
-            NUDMinTrades.Width = nudWidth;
-            NUDMinTrades.Location = new Point(NUDAmbiguousBars.Left, ChbMinTrades.Top - 1);
+            chbMinTrades.Location = new Point(border + 2, chbEquityPercent.Bottom + border + 4);
+            nudMinTrades.Width = nudWidth;
+            nudMinTrades.Location = new Point(nudAmbiguousBars.Left, chbMinTrades.Top - 1);
 
             // MaxTrades
-            ChbMaxTrades.Location = new Point(border + 2, ChbMinTrades.Bottom + border + 4);
-            NUDMaxTrades.Width = nudWidth;
-            NUDMaxTrades.Location = new Point(NUDAmbiguousBars.Left, ChbMaxTrades.Top - 1);
+            chbMaxTrades.Location = new Point(border + 2, chbMinTrades.Bottom + border + 4);
+            nudMaxTrades.Width = nudWidth;
+            nudMaxTrades.Location = new Point(nudAmbiguousBars.Left, chbMaxTrades.Top - 1);
 
             // WinLossRatios
-            ChbWinLossRatio.Location = new Point(border + 2, ChbMaxTrades.Bottom + border + 4);
-            NUDWinLossRatio.Width = nudWidth;
-            NUDWinLossRatio.Location = new Point(NUDAmbiguousBars.Left, ChbWinLossRatio.Top - 1);
+            chbWinLossRatio.Location = new Point(border + 2, chbMaxTrades.Bottom + border + 4);
+            nudWinLossRatio.Width = nudWidth;
+            nudWinLossRatio.Location = new Point(nudAmbiguousBars.Left, chbWinLossRatio.Top - 1);
 
             // OOS Pattern Filter
-            ChbOOSPatternFilter.Location = new Point(border + 2, ChbWinLossRatio.Bottom + border + 4);
-            NUDOOSPatternPercent.Width = nudWidth;
-            NUDOOSPatternPercent.Location = new Point(NUDAmbiguousBars.Left, ChbOOSPatternFilter.Top - 1);
+            chbOOSPatternFilter.Location = new Point(border + 2, chbWinLossRatio.Bottom + border + 4);
+            nudoosPatternPercent.Width = nudWidth;
+            nudoosPatternPercent.Location = new Point(nudAmbiguousBars.Left, chbOOSPatternFilter.Top - 1);
 
             // Balance lines pattern
-            ChbSmoothBalanceLines.Location = new Point(border + 2, ChbOOSPatternFilter.Bottom + border + 4);
-            NUDSmoothBalancePercent.Width = nudWidth;
-            NUDSmoothBalancePercent.Location = new Point(NUDAmbiguousBars.Left, ChbSmoothBalanceLines.Top - 1);
-            NUDSmoothBalanceCheckPoints.Width = nudWidth;
-            NUDSmoothBalanceCheckPoints.Location = new Point(NUDSmoothBalancePercent.Left - nudWidth - border,
-                                                             ChbSmoothBalanceLines.Top - 1);
+            chbSmoothBalanceLines.Location = new Point(border + 2, chbOOSPatternFilter.Bottom + border + 4);
+            nudSmoothBalancePercent.Width = nudWidth;
+            nudSmoothBalancePercent.Location = new Point(nudAmbiguousBars.Left, chbSmoothBalanceLines.Top - 1);
+            nudSmoothBalanceCheckPoints.Width = nudWidth;
+            nudSmoothBalanceCheckPoints.Location = new Point(nudSmoothBalancePercent.Left - nudWidth - border,
+                                                             chbSmoothBalanceLines.Top - 1);
 
             // chbOutOfSample
-            ChbOutOfSample.Location = new Point(border + 2, 25);
-            NUDOutOfSample.Width = nudWidth;
-            NUDOutOfSample.Location = new Point(NUDAmbiguousBars.Left, ChbOutOfSample.Top - 1);
+            chbOutOfSample.Location = new Point(border + 2, 25);
+            nudOutOfSample.Width = nudWidth;
+            nudOutOfSample.Location = new Point(nudAmbiguousBars.Left, chbOutOfSample.Top - 1);
 
             // Use default indicator values
-            ChbUseDefaultIndicatorValues.Location = new Point(border + 2, ChbOutOfSample.Bottom + border + 4);
+            chbUseDefaultIndicatorValues.Location = new Point(border + 2, chbOutOfSample.Bottom + border + 4);
 
             // Hide FSB when generator starts
-            ChbHideFsb.Location = new Point(border + 2, ChbUseDefaultIndicatorValues.Bottom + border + 4);
+            chbHideFsb.Location = new Point(border + 2, chbUseDefaultIndicatorValues.Bottom + border + 4);
 
             // Button Reset
-            BtnReset.Width = PnlSettings.ClientSize.Width - 2*(border + 2);
-            BtnReset.Location = new Point(border + 2, PnlSettings.Height - BtnReset.Height - border - 2);
+            btnReset.Width = pnlSettings.ClientSize.Width - 2*(border + 2);
+            btnReset.Location = new Point(border + 2, pnlSettings.Height - btnReset.Height - border - 2);
 
             // Top 10 Layout
-            Top10Field.Size = new Size(PnlTop10.Width - 2*2, PnlTop10.Height - (int) PnlTop10.CaptionHeight - 2);
-            Top10Field.Location = new Point(2, (int) PnlTop10.CaptionHeight);
+            top10Field.Size = new Size(pnlTop10.Width - 2*2, pnlTop10.Height - (int) pnlTop10.CaptionHeight - 2);
+            top10Field.Location = new Point(2, (int) pnlTop10.CaptionHeight);
 
             // Indicators Layout
-            IndicatorsField.Size = new Size(PnlIndicators.Width - 2*2,
-                                             PnlIndicators.Height - (int) PnlIndicators.CaptionHeight - 2);
-            IndicatorsField.Location = new Point(2, (int) PnlIndicators.CaptionHeight);
+            indicatorsField.Size = new Size(pnlIndicators.Width - 2*2,
+                                            pnlIndicators.Height - (int) pnlIndicators.CaptionHeight - 2);
+            indicatorsField.Location = new Point(2, (int) pnlIndicators.CaptionHeight);
         }
 
         /// <summary>
-        /// Check whether the strategy have been changed
+        ///     Check whether the strategy have been changed
         /// </summary>
         private void GeneratorFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!_isReset)
+            if (!isReset)
                 SaveOptions();
 
-            if (_isGenerating)
+            if (isGenerating)
             {
                 // Cancel the asynchronous operation.
-                BgWorker.CancelAsync();
+                bgWorker.CancelAsync();
                 e.Cancel = true;
                 return;
             }
 
-            if (DialogResult == DialogResult.Cancel && _isStartegyChanged)
+            if (DialogResult == DialogResult.Cancel && isStartegyChanged)
             {
                 DialogResult dr = MessageBox.Show(Language.T("Do you want to accept the generated strategy?"),
                                                   Data.ProgramName, MessageBoxButtons.YesNoCancel,
@@ -1062,47 +1067,47 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                         break;
                 }
             }
-            else if (DialogResult == DialogResult.OK && !_isStartegyChanged)
+            else if (DialogResult == DialogResult.OK && !isStartegyChanged)
             {
                 DialogResult = DialogResult.Cancel;
             }
 
-            if (!_isReset)
-                IndicatorsField.SetConfigFile();
+            if (!isReset)
+                indicatorsField.SetConfigFile();
 
             Data.Strategy = ClearStrategySlotsStatus(Data.Strategy);
             ParrentForm.Visible = true;
         }
 
         /// <summary>
-        /// Refreshes the balance chart
+        ///     Refreshes the balance chart
         /// </summary>
         private void RefreshSmallBalanceChart()
         {
-            if (BalanceChart.InvokeRequired)
+            if (balanceChart.InvokeRequired)
             {
                 Invoke(new DelegateRefreshBalanceChart(RefreshSmallBalanceChart), new object[] {});
             }
             else
             {
-                BalanceChart.SetChartData();
-                BalanceChart.InitChart();
-                BalanceChart.Invalidate();
+                balanceChart.SetChartData();
+                balanceChart.InitChart();
+                balanceChart.Invalidate();
             }
         }
 
         /// <summary>
-        /// Refreshes the AccountStatistics
+        ///     Refreshes the AccountStatistics
         /// </summary>
         private void RefreshAccountStatisticas()
         {
-            if (InfpnlAccountStatistics.InvokeRequired)
+            if (infpnlAccountStatistics.InvokeRequired)
             {
                 Invoke(new DelegateRefreshAccountStatisticas(RefreshAccountStatisticas), new object[] {});
             }
             else
             {
-                InfpnlAccountStatistics.Update(
+                infpnlAccountStatistics.Update(
                     Backtester.AccountStatsParam,
                     Backtester.AccountStatsValue,
                     Backtester.AccountStatsFlags,
@@ -1111,56 +1116,56 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Creates a new strategy layout according to the given strategy.
+        ///     Creates a new strategy layout according to the given strategy.
         /// </summary>
         private void RebuildStrategyLayout(Strategy strategy)
         {
-            if (StrategyField.InvokeRequired)
+            if (strategyField.InvokeRequired)
             {
                 Invoke(new DelegateRebuildStrategyLayout(RebuildStrategyLayout), new object[] {strategy});
             }
             else
             {
-                StrategyField.RebuildStrategyControls(strategy);
+                strategyField.RebuildStrategyControls(strategy);
 
-                StrategyField.PanelProperties.Click += PnlPropertiesClick;
-                StrategyField.PanelProperties.DoubleClick += PnlPropertiesClick;
+                strategyField.PanelProperties.Click += PnlPropertiesClick;
+                strategyField.PanelProperties.DoubleClick += PnlPropertiesClick;
                 for (int slot = 0; slot < strategy.Slots; slot++)
                 {
-                    StrategyField.SlotPanelsList[slot].Click += PnlSlotClick;
-                    StrategyField.SlotPanelsList[slot].DoubleClick += PnlSlotClick;
+                    strategyField.SlotPanelsList[slot].Click += PnlSlotClick;
+                    strategyField.SlotPanelsList[slot].DoubleClick += PnlSlotClick;
                 }
             }
         }
 
         /// <summary>
-        /// Sets the lblCalcStrNumb.Text
+        ///     Sets the lblCalcStrNumb.Text
         /// </summary>
         private void SetLabelCyclesText(string text)
         {
-            if (LblCalcStrNumb.InvokeRequired)
+            if (lblCalcStrNumb.InvokeRequired)
             {
                 BeginInvoke(new SetCyclesCallback(SetLabelCyclesText), new object[] {text});
             }
             else
             {
-                LblCalcStrNumb.Text = text;
+                lblCalcStrNumb.Text = text;
             }
         }
 
         private ToolStripItem[] GetBalanceChartContextMenuItems()
         {
             var mi1 = new ToolStripMenuItem
-            {
-                Image = Resources.info_panel,
-                Text = Language.T("Account Statistics")
-            };
+                {
+                    Image = Resources.info_panel,
+                    Text = Language.T("Account Statistics")
+                };
             mi1.Click += AccountAutputClick;
 
             var itemCollection = new ToolStripItem[]
-            {
-                mi1
-            };
+                {
+                    mi1
+                };
 
             return itemCollection;
         }
@@ -1168,22 +1173,22 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private ToolStripItem[] GetInfoPanelContextMenuItems()
         {
             var mi1 = new ToolStripMenuItem
-            {
-                Image = Resources.chart_balance_equity,
-                Text = Language.T("Account Chart")
-            };
+                {
+                    Image = Resources.chart_balance_equity,
+                    Text = Language.T("Account Chart")
+                };
             mi1.Click += AccountAutputClick;
 
             var itemCollection = new ToolStripItem[]
-            {
-                mi1
-            };
+                {
+                    mi1
+                };
 
             return itemCollection;
         }
 
         /// <summary>
-        /// Composes an informative error message. It presumes that the reason for the error is a custom indicator. Ohhh!!
+        ///     Composes an informative error message. It presumes that the reason for the error is a custom indicator. Ohhh!!
         /// </summary>
         private string GenerateCalculationErrorMessage(string exceptionMessage)
         {
@@ -1198,7 +1203,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 if (indicator.CustomIndicator)
                 {
                     customIndCount++;
-                    _indicatorBlackList.Add(indName);
+                    indicatorBlackList.Add(indName);
                     customIndicators += "<li>" + Data.Strategy.Slot[slot].IndicatorName + "</li>" + Environment.NewLine;
                 }
             }
@@ -1232,7 +1237,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Report Indicator Error
+        ///     Report Indicator Error
         /// </summary>
         private void ReportIndicatorError(string text, string caption)
         {
@@ -1248,55 +1253,55 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Out of Sample
+        ///     Out of Sample
         /// </summary>
         private void NudOutOfSampleValueChanged(object sender, EventArgs e)
         {
             SetOOS();
-            BalanceChart.OOSBar = _barOOS;
+            balanceChart.OOSBar = barOOS;
 
-            if (_isOOS)
+            if (isOOS)
             {
-                BalanceChart.SetChartData();
-                BalanceChart.InitChart();
-                BalanceChart.Invalidate();
+                balanceChart.SetChartData();
+                balanceChart.InitChart();
+                balanceChart.Invalidate();
             }
         }
 
         /// <summary>
-        /// Out of Sample
+        ///     Out of Sample
         /// </summary>
         private void ChbOutOfSampleCheckedChanged(object sender, EventArgs e)
         {
             SetOOS();
 
-            BalanceChart.IsOOS = _isOOS;
-            BalanceChart.OOSBar = _barOOS;
+            balanceChart.IsOOS = isOOS;
+            balanceChart.OOSBar = barOOS;
 
-            BalanceChart.SetChartData();
-            BalanceChart.InitChart();
-            BalanceChart.Invalidate();
+            balanceChart.SetChartData();
+            balanceChart.InitChart();
+            balanceChart.Invalidate();
         }
 
         /// <summary>
-        /// Out of Sample
+        ///     Out of Sample
         /// </summary>
         private void SetOOS()
         {
-            _isOOS = ChbOutOfSample.Checked;
-            _barOOS = Data.Bars - Data.Bars*(int) NUDOutOfSample.Value/100 - 1;
-            _targetBalanceRatio = 1 + (int) NUDOutOfSample.Value/100.0F;
+            isOOS = chbOutOfSample.Checked;
+            barOOS = Data.Bars - Data.Bars*(int) nudOutOfSample.Value/100 - 1;
+            targetBalanceRatio = 1 + (int) nudOutOfSample.Value/100.0F;
         }
 
         /// <summary>
-        /// Generates a description
+        ///     Generates a description
         /// </summary>
         private string GenerateDescription()
         {
             // Description
-            if (_lockedEntryFilters == 0 && _lockedExitFilters == 0 &&
-                _lockedEntrySlot == null && _lockedExitSlot == null &&
-                _strategyBest.PropertiesStatus == StrategySlotStatus.Open)
+            if (lockedEntryFilters == 0 && lockedExitFilters == 0 &&
+                lockedEntrySlot == null && lockedExitSlot == null &&
+                strategyBest.PropertiesStatus == StrategySlotStatus.Open)
             {
                 IsStrategyModified = false;
                 GeneratedDescription = Language.T("Automatically generated on") + " ";
@@ -1309,32 +1314,34 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
             GeneratedDescription += DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + ".";
 
-            if (_isOOS)
+            if (isOOS)
             {
                 GeneratedDescription += Environment.NewLine + Language.T("Out of sample testing, percent of OOS bars") +
-                                        ": " + NUDOutOfSample.Value.ToString(CultureInfo.InvariantCulture) + "%";
+                                        ": " + nudOutOfSample.Value.ToString(CultureInfo.InvariantCulture) + "%";
                 GeneratedDescription += Environment.NewLine + Language.T("Balance") + ": " +
                                         (Configs.AccountInMoney
-                                             ? Backtester.MoneyBalance(_barOOS).ToString("F2") + " " + Configs.AccountCurrency
-                                             : Backtester.Balance(_barOOS).ToString(CultureInfo.InvariantCulture) + " " + Language.T("pips"));
-                GeneratedDescription += " (" + Data.Time[_barOOS].ToShortDateString() + " " +
-                                        Data.Time[_barOOS].ToShortTimeString() + "  " + Language.T("Bar") + ": " +
-                                        _barOOS.ToString(CultureInfo.InvariantCulture) + ")";
+                                             ? Backtester.MoneyBalance(barOOS).ToString("F2") + " " +
+                                               Configs.AccountCurrency
+                                             : Backtester.Balance(barOOS).ToString(CultureInfo.InvariantCulture) + " " +
+                                               Language.T("pips"));
+                GeneratedDescription += " (" + Data.Time[barOOS].ToShortDateString() + " " +
+                                        Data.Time[barOOS].ToShortTimeString() + "  " + Language.T("Bar") + ": " +
+                                        barOOS.ToString(CultureInfo.InvariantCulture) + ")";
             }
 
             return GeneratedDescription;
         }
 
         /// <summary>
-        /// Toggles FSB visibility.
+        ///     Toggles FSB visibility.
         /// </summary>
         private void HideFSBClick(object sender, EventArgs e)
         {
-            ParrentForm.Visible = !ChbHideFsb.Checked;
+            ParrentForm.Visible = !chbHideFsb.Checked;
         }
 
         /// <summary>
-        /// Toggles panels.
+        ///     Toggles panels.
         /// </summary>
         private void ChangeGeneratorPanel(object sender, EventArgs e)
         {
@@ -1343,78 +1350,78 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
             if (name == "tsbtShowOptions")
             {
-                PnlCommon.Visible = true;
-                PnlLimitations.Visible = false;
-                PnlSettings.Visible = false;
-                PnlTop10.Visible = false;
-                PnlIndicators.Visible = false;
+                pnlCommon.Visible = true;
+                pnlLimitations.Visible = false;
+                pnlSettings.Visible = false;
+                pnlTop10.Visible = false;
+                pnlIndicators.Visible = false;
 
-                TsbtShowOptions.Enabled = false;
-                TsbtShowLimitations.Enabled = true;
-                TsbtShowSettings.Enabled = true;
-                TsbtShowTop10.Enabled = true;
-                TsbtShowIndicators.Enabled = true;
+                tsbtShowOptions.Enabled = false;
+                tsbtShowLimitations.Enabled = true;
+                tsbtShowSettings.Enabled = true;
+                tsbtShowTop10.Enabled = true;
+                tsbtShowIndicators.Enabled = true;
             }
             else if (name == "tsbtShowLimitations")
             {
-                PnlCommon.Visible = false;
-                PnlLimitations.Visible = true;
-                PnlSettings.Visible = false;
-                PnlTop10.Visible = false;
-                PnlIndicators.Visible = false;
+                pnlCommon.Visible = false;
+                pnlLimitations.Visible = true;
+                pnlSettings.Visible = false;
+                pnlTop10.Visible = false;
+                pnlIndicators.Visible = false;
 
-                TsbtShowOptions.Enabled = true;
-                TsbtShowLimitations.Enabled = false;
-                TsbtShowSettings.Enabled = true;
-                TsbtShowTop10.Enabled = true;
-                TsbtShowIndicators.Enabled = true;
+                tsbtShowOptions.Enabled = true;
+                tsbtShowLimitations.Enabled = false;
+                tsbtShowSettings.Enabled = true;
+                tsbtShowTop10.Enabled = true;
+                tsbtShowIndicators.Enabled = true;
             }
             else if (name == "tsbtShowSettings")
             {
-                PnlCommon.Visible = false;
-                PnlLimitations.Visible = false;
-                PnlSettings.Visible = true;
-                PnlTop10.Visible = false;
-                PnlIndicators.Visible = false;
+                pnlCommon.Visible = false;
+                pnlLimitations.Visible = false;
+                pnlSettings.Visible = true;
+                pnlTop10.Visible = false;
+                pnlIndicators.Visible = false;
 
-                TsbtShowOptions.Enabled = true;
-                TsbtShowLimitations.Enabled = true;
-                TsbtShowSettings.Enabled = false;
-                TsbtShowTop10.Enabled = true;
-                TsbtShowIndicators.Enabled = true;
+                tsbtShowOptions.Enabled = true;
+                tsbtShowLimitations.Enabled = true;
+                tsbtShowSettings.Enabled = false;
+                tsbtShowTop10.Enabled = true;
+                tsbtShowIndicators.Enabled = true;
             }
             else if (name == "tsbtShowTop10")
             {
-                PnlCommon.Visible = false;
-                PnlLimitations.Visible = false;
-                PnlSettings.Visible = false;
-                PnlTop10.Visible = true;
-                PnlIndicators.Visible = false;
+                pnlCommon.Visible = false;
+                pnlLimitations.Visible = false;
+                pnlSettings.Visible = false;
+                pnlTop10.Visible = true;
+                pnlIndicators.Visible = false;
 
-                TsbtShowOptions.Enabled = true;
-                TsbtShowLimitations.Enabled = true;
-                TsbtShowSettings.Enabled = true;
-                TsbtShowTop10.Enabled = false;
-                TsbtShowIndicators.Enabled = true;
+                tsbtShowOptions.Enabled = true;
+                tsbtShowLimitations.Enabled = true;
+                tsbtShowSettings.Enabled = true;
+                tsbtShowTop10.Enabled = false;
+                tsbtShowIndicators.Enabled = true;
             }
             else if (name == "tsbtIndicators")
             {
-                PnlCommon.Visible = false;
-                PnlLimitations.Visible = false;
-                PnlSettings.Visible = false;
-                PnlTop10.Visible = false;
-                PnlIndicators.Visible = true;
+                pnlCommon.Visible = false;
+                pnlLimitations.Visible = false;
+                pnlSettings.Visible = false;
+                pnlTop10.Visible = false;
+                pnlIndicators.Visible = true;
 
-                TsbtShowOptions.Enabled = true;
-                TsbtShowLimitations.Enabled = true;
-                TsbtShowSettings.Enabled = true;
-                TsbtShowTop10.Enabled = true;
-                TsbtShowIndicators.Enabled = false;
+                tsbtShowOptions.Enabled = true;
+                tsbtShowLimitations.Enabled = true;
+                tsbtShowSettings.Enabled = true;
+                tsbtShowTop10.Enabled = true;
+                tsbtShowIndicators.Enabled = false;
             }
         }
 
         /// <summary>
-        /// Shows strategy overview.
+        ///     Shows strategy overview.
         /// </summary>
         private void ShowOverview(object sender, EventArgs e)
         {
@@ -1426,7 +1433,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Lock, unlock, link all slots.
+        ///     Lock, unlock, link all slots.
         /// </summary>
         private void ChangeSlotStatus(object sender, EventArgs e)
         {
@@ -1435,64 +1442,64 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
             if (name == "tsbtLockAll")
             {
-                _strategyBest.PropertiesStatus = StrategySlotStatus.Locked;
-                for (int slot = 0; slot < _strategyBest.Slots; slot++)
-                    _strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Locked;
+                strategyBest.PropertiesStatus = StrategySlotStatus.Locked;
+                for (int slot = 0; slot < strategyBest.Slots; slot++)
+                    strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Locked;
             }
             else if (name == "tsbtUnlockAll")
             {
-                _strategyBest.PropertiesStatus = StrategySlotStatus.Open;
-                for (int slot = 0; slot < _strategyBest.Slots; slot++)
-                    _strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Open;
+                strategyBest.PropertiesStatus = StrategySlotStatus.Open;
+                for (int slot = 0; slot < strategyBest.Slots; slot++)
+                    strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Open;
             }
             else if (name == "tsbtLinkAll")
             {
-                _strategyBest.PropertiesStatus = StrategySlotStatus.Open;
-                for (int slot = 0; slot < _strategyBest.Slots; slot++)
-                    _strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Linked;
+                strategyBest.PropertiesStatus = StrategySlotStatus.Open;
+                for (int slot = 0; slot < strategyBest.Slots; slot++)
+                    strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Linked;
             }
 
-            StrategyField.RepaintStrategyControls(_strategyBest);
+            strategyField.RepaintStrategyControls(strategyBest);
         }
 
         /// <summary>
-        /// Lock, link, or unlock the strategy slot.
+        ///     Lock, link, or unlock the strategy slot.
         /// </summary>
         private void PnlSlotClick(object sender, EventArgs e)
         {
-            if (_isGenerating)
+            if (isGenerating)
                 return;
 
             var slot = (int) ((Panel) sender).Tag;
 
-            if (_strategyBest.Slot[slot].SlotStatus == StrategySlotStatus.Open)
-                _strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Locked;
-            else if (_strategyBest.Slot[slot].SlotStatus == StrategySlotStatus.Locked)
-                _strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Linked;
-            else if (_strategyBest.Slot[slot].SlotStatus == StrategySlotStatus.Linked)
-                _strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Open;
+            if (strategyBest.Slot[slot].SlotStatus == StrategySlotStatus.Open)
+                strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Locked;
+            else if (strategyBest.Slot[slot].SlotStatus == StrategySlotStatus.Locked)
+                strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Linked;
+            else if (strategyBest.Slot[slot].SlotStatus == StrategySlotStatus.Linked)
+                strategyBest.Slot[slot].SlotStatus = StrategySlotStatus.Open;
 
-            StrategyField.RepaintStrategyControls(_strategyBest);
+            strategyField.RepaintStrategyControls(strategyBest);
         }
 
         /// <summary>
-        /// Lock, link, or unlock the strategy properties slot.
+        ///     Lock, link, or unlock the strategy properties slot.
         /// </summary>
         private void PnlPropertiesClick(object sender, EventArgs e)
         {
-            if (_isGenerating)
+            if (isGenerating)
                 return;
 
-            if (_strategyBest.PropertiesStatus == StrategySlotStatus.Open)
-                _strategyBest.PropertiesStatus = StrategySlotStatus.Locked;
-            else if (_strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
-                _strategyBest.PropertiesStatus = StrategySlotStatus.Open;
+            if (strategyBest.PropertiesStatus == StrategySlotStatus.Open)
+                strategyBest.PropertiesStatus = StrategySlotStatus.Locked;
+            else if (strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+                strategyBest.PropertiesStatus = StrategySlotStatus.Open;
 
-            StrategyField.RepaintStrategyControls(_strategyBest);
+            strategyField.RepaintStrategyControls(strategyBest);
         }
 
         /// <summary>
-        /// Changes the slot size
+        ///     Changes the slot size
         /// </summary>
         private void BtnSlotSizeClick(object sender, EventArgs e)
         {
@@ -1500,50 +1507,50 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
             if (tag == 1)
             {
-                if (StrategyField.SlotMinMidMax == SlotSizeMinMidMax.min ||
-                    StrategyField.SlotMinMidMax == SlotSizeMinMidMax.mid)
+                if (strategyField.SlotMinMidMax == SlotSizeMinMidMax.min ||
+                    strategyField.SlotMinMidMax == SlotSizeMinMidMax.mid)
                 {
-                    TsbtStrategySize1.Image = Resources.slot_size_mid;
-                    TsbtStrategySize1.ToolTipText = Language.T("Show regular info in the slots.");
-                    TsbtStrategySize2.Image = Resources.slot_size_min;
-                    TsbtStrategySize2.ToolTipText = Language.T("Show minimum info in the slots.");
-                    StrategyField.SlotMinMidMax = SlotSizeMinMidMax.max;
+                    tsbtStrategySize1.Image = Resources.slot_size_mid;
+                    tsbtStrategySize1.ToolTipText = Language.T("Show regular info in the slots.");
+                    tsbtStrategySize2.Image = Resources.slot_size_min;
+                    tsbtStrategySize2.ToolTipText = Language.T("Show minimum info in the slots.");
+                    strategyField.SlotMinMidMax = SlotSizeMinMidMax.max;
                 }
-                else if (StrategyField.SlotMinMidMax == SlotSizeMinMidMax.max)
+                else if (strategyField.SlotMinMidMax == SlotSizeMinMidMax.max)
                 {
-                    TsbtStrategySize1.Image = Resources.slot_size_max;
-                    TsbtStrategySize1.ToolTipText = Language.T("Show detailed info in the slots.");
-                    TsbtStrategySize2.Image = Resources.slot_size_min;
-                    TsbtStrategySize2.ToolTipText = Language.T("Show minimum info in the slots.");
-                    StrategyField.SlotMinMidMax = SlotSizeMinMidMax.mid;
+                    tsbtStrategySize1.Image = Resources.slot_size_max;
+                    tsbtStrategySize1.ToolTipText = Language.T("Show detailed info in the slots.");
+                    tsbtStrategySize2.Image = Resources.slot_size_min;
+                    tsbtStrategySize2.ToolTipText = Language.T("Show minimum info in the slots.");
+                    strategyField.SlotMinMidMax = SlotSizeMinMidMax.mid;
                 }
             }
             else
             {
-                if (StrategyField.SlotMinMidMax == SlotSizeMinMidMax.min)
+                if (strategyField.SlotMinMidMax == SlotSizeMinMidMax.min)
                 {
-                    TsbtStrategySize1.Image = Resources.slot_size_max;
-                    TsbtStrategySize1.ToolTipText = Language.T("Show detailed info in the slots.");
-                    TsbtStrategySize2.Image = Resources.slot_size_min;
-                    TsbtStrategySize2.ToolTipText = Language.T("Show minimum info in the slots.");
-                    StrategyField.SlotMinMidMax = SlotSizeMinMidMax.mid;
+                    tsbtStrategySize1.Image = Resources.slot_size_max;
+                    tsbtStrategySize1.ToolTipText = Language.T("Show detailed info in the slots.");
+                    tsbtStrategySize2.Image = Resources.slot_size_min;
+                    tsbtStrategySize2.ToolTipText = Language.T("Show minimum info in the slots.");
+                    strategyField.SlotMinMidMax = SlotSizeMinMidMax.mid;
                 }
-                else if (StrategyField.SlotMinMidMax == SlotSizeMinMidMax.mid ||
-                         StrategyField.SlotMinMidMax == SlotSizeMinMidMax.max)
+                else if (strategyField.SlotMinMidMax == SlotSizeMinMidMax.mid ||
+                         strategyField.SlotMinMidMax == SlotSizeMinMidMax.max)
                 {
-                    TsbtStrategySize1.Image = Resources.slot_size_max;
-                    TsbtStrategySize1.ToolTipText = Language.T("Show detailed info in the slots.");
-                    TsbtStrategySize2.Image = Resources.slot_size_mid;
-                    TsbtStrategySize2.ToolTipText = Language.T("Show regular info in the slots.");
-                    StrategyField.SlotMinMidMax = SlotSizeMinMidMax.min;
+                    tsbtStrategySize1.Image = Resources.slot_size_max;
+                    tsbtStrategySize1.ToolTipText = Language.T("Show detailed info in the slots.");
+                    tsbtStrategySize2.Image = Resources.slot_size_mid;
+                    tsbtStrategySize2.ToolTipText = Language.T("Show regular info in the slots.");
+                    strategyField.SlotMinMidMax = SlotSizeMinMidMax.min;
                 }
             }
 
-            StrategyField.RearrangeStrategyControls();
+            strategyField.RearrangeStrategyControls();
         }
 
         /// <summary>
-        /// View and edit the strategy description
+        ///     View and edit the strategy description
         /// </summary>
         private void BtnStrategyDescriptionClick(object sender, EventArgs e)
         {
@@ -1555,7 +1562,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Sets the strategy description button icon
+        ///     Sets the strategy description button icon
         /// </summary>
         private void SetStrategyDescriptionButton()
         {
@@ -1563,15 +1570,17 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 Data.Strategy.Description = GeneratedDescription;
 
             if (Data.Strategy.Description == "")
-                TsbtStrategyInfo.Image = Resources.str_info_noinfo;
+                tsbtStrategyInfo.Image = Resources.str_info_noinfo;
             else
             {
-                TsbtStrategyInfo.Image = Data.IsStrDescriptionRelevant() ? Resources.str_info_infook : Resources.str_info_warning;
+                tsbtStrategyInfo.Image = Data.IsStrDescriptionRelevant()
+                                             ? Resources.str_info_infook
+                                             : Resources.str_info_warning;
             }
         }
 
         /// <summary>
-        /// Clears the slots status of the given strategy.
+        ///     Clears the slots status of the given strategy.
         /// </summary>
         private Strategy ClearStrategySlotsStatus(Strategy strategy)
         {
@@ -1584,11 +1593,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Saves the Generator History
+        ///     Saves the Generator History
         /// </summary>
         private void AddStrategyToGeneratorHistory(string description)
         {
-            Strategy strategy = ClearStrategySlotsStatus(_strategyBest);
+            Strategy strategy = ClearStrategySlotsStatus(strategyBest);
             Data.GeneratorHistory.Add(strategy);
             Data.GeneratorHistory[Data.GeneratorHistory.Count - 1].Description = description;
 
@@ -1599,24 +1608,24 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Updates the last strategy in Generator History
+        ///     Updates the last strategy in Generator History
         /// </summary>
         private void UpdateStrategyInGeneratorHistory(string description)
         {
             if (Data.GeneratorHistory.Count == 0)
                 return;
 
-            Strategy strategy = ClearStrategySlotsStatus(_strategyBest);
+            Strategy strategy = ClearStrategySlotsStatus(strategyBest);
             Data.GeneratorHistory[Data.GeneratorHistory.Count - 1] = strategy;
             Data.GeneratorHistory[Data.GeneratorHistory.Count - 1].Description = description;
         }
 
         /// <summary>
-        /// Adds a strategy to Top 10 list.
+        ///     Adds a strategy to Top 10 list.
         /// </summary>
         private void Top10AddStrategy()
         {
-            if (Top10Field.InvokeRequired)
+            if (top10Field.InvokeRequired)
             {
                 Invoke(new DelegateTop10AddStrategy(Top10AddStrategy), new object[] {});
             }
@@ -1627,23 +1636,23 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 top10Slot.Click += Top10SlotClick;
                 top10Slot.DoubleClick += Top10SlotClick;
                 var top10StrategyInfo = new Top10StrategyInfo
-                                            {
-                                                Balance = Configs.AccountInMoney
-                                                              ? (int) Math.Round(Backtester.NetMoneyBalance)
-                                                              : Backtester.NetBalance,
-                                                Top10Slot = top10Slot,
-                                                TheStrategy = Data.Strategy.Clone()
-                                            };
-                Top10Field.AddStrategyInfo(top10StrategyInfo);
+                    {
+                        Balance = Configs.AccountInMoney
+                                      ? (int) Math.Round(Backtester.NetMoneyBalance)
+                                      : Backtester.NetBalance,
+                        Top10Slot = top10Slot,
+                        TheStrategy = Data.Strategy.Clone()
+                    };
+                top10Field.AddStrategyInfo(top10StrategyInfo);
             }
         }
 
         /// <summary>
-        /// Loads a strategy from the clicked Top 10 slot.
+        ///     Loads a strategy from the clicked Top 10 slot.
         /// </summary>
         private void Top10SlotClick(object sender, EventArgs e)
         {
-            if (_isGenerating)
+            if (isGenerating)
                 return;
 
             var top10Slot = (Top10Slot) sender;
@@ -1651,34 +1660,34 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             if (top10Slot.IsSelected)
                 return;
 
-            Top10Field.ClearSelectionOfSelectedSlot();
+            top10Field.ClearSelectionOfSelectedSlot();
 
             top10Slot.IsSelected = true;
             top10Slot.Invalidate();
 
-            Data.Strategy = Top10Field.GetStrategy(top10Slot.Balance);
-            _bestBalance = 0;
+            Data.Strategy = top10Field.GetStrategy(top10Slot.Balance);
+            bestBalance = 0;
             CalculateTheResult(true);
         }
 
         /// <summary>
-        /// Toggles the account chart and statistics.
+        ///     Toggles the account chart and statistics.
         /// </summary>
         private void AccountAutputClick(object sender, EventArgs e)
         {
-            bool isChartVisible = BalanceChart.Visible;
-            BalanceChart.Visible = !isChartVisible;
-            InfpnlAccountStatistics.Visible = isChartVisible;
+            bool isChartVisible = balanceChart.Visible;
+            balanceChart.Visible = !isChartVisible;
+            infpnlAccountStatistics.Visible = isChartVisible;
         }
 
         /// <summary>
-        /// Resets Generator
+        ///     Resets Generator
         /// </summary>
         private void BtnResetClick(object sender, EventArgs e)
         {
             Configs.GeneratorOptions = "";
             Configs.BannedIndicators = "";
-            _isReset = true;
+            isReset = true;
             Close();
         }
 

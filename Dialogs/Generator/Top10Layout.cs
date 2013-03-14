@@ -12,127 +12,125 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 {
     public sealed class Top10Layout : Panel
     {
-        private VScrollBar VScrollBarStrategy { get; set; }
-        private FlowLayoutPanel FlowLayoutStrategy { get; set; }
-
-        private readonly int _maxStrategies;
-        private readonly ToolTip _toolTip;
-        private readonly SortableDictionary<int, Top10StrategyInfo> _top10Holder;
-
         private const int Space = 3;
-        private int _maxBalance = int.MinValue;
-        private int _minBalance = int.MaxValue;
+        private readonly FlowLayoutPanel flowLayoutStrategy;
+
+        private readonly int maxStrategies;
+        private readonly ToolTip toolTip;
+        private readonly SortableDictionary<int, Top10StrategyInfo> top10Holder;
+        private readonly VScrollBar vScrollBarStrategy;
+
+        private int maxBalance = int.MinValue;
+        private int minBalance = int.MaxValue;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Top10Layout(int maxStrategies)
         {
-            _toolTip = new ToolTip();
+            toolTip = new ToolTip();
 
-            _maxStrategies = maxStrategies;
+            this.maxStrategies = maxStrategies;
             BackColor = LayoutColors.ColorControlBack;
 
-            _top10Holder = new SortableDictionary<int, Top10StrategyInfo>();
+            top10Holder = new SortableDictionary<int, Top10StrategyInfo>();
 
-            FlowLayoutStrategy = new FlowLayoutPanel();
-            VScrollBarStrategy = new VScrollBar();
+            flowLayoutStrategy = new FlowLayoutPanel();
+            vScrollBarStrategy = new VScrollBar();
 
             // FlowLayoutStrategy
-            FlowLayoutStrategy.Parent = this;
-            FlowLayoutStrategy.AutoScroll = false;
-            FlowLayoutStrategy.BackColor = LayoutColors.ColorControlBack;
+            flowLayoutStrategy.Parent = this;
+            flowLayoutStrategy.AutoScroll = false;
+            flowLayoutStrategy.BackColor = LayoutColors.ColorControlBack;
 
             // VScrollBarStrategy
-            VScrollBarStrategy.Parent = this;
-            VScrollBarStrategy.TabStop = true;
-            VScrollBarStrategy.Scroll += VScrollBarScroll;
+            vScrollBarStrategy.Parent = this;
+            vScrollBarStrategy.TabStop = true;
+            vScrollBarStrategy.Scroll += VScrollBarScroll;
         }
 
         /// <summary>
-        /// Check whether the strategy has to be added in Top10 list
+        ///     Check whether the strategy has to be added in Top10 list
         /// </summary>
         public bool IsNominated(int balance)
         {
-            bool nominated = _top10Holder.Count < _maxStrategies && balance > 0;
-
-            if (_top10Holder.Count == _maxStrategies && balance > _minBalance)
-                nominated = true;
+            bool nominated = top10Holder.Count < maxStrategies && balance > 0 ||
+                             top10Holder.Count == maxStrategies && balance > minBalance;
 
             return nominated;
         }
 
         /// <summary>
-        /// Arranges the controls after resizing
+        ///     Arranges the controls after resizing
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {
-            FlowLayoutStrategy.SuspendLayout();
+            flowLayoutStrategy.SuspendLayout();
             SetVerticalScrollBar();
-            FlowLayoutStrategy.ResumeLayout();
+            flowLayoutStrategy.ResumeLayout();
         }
 
         /// <summary>
-        /// Adds a strategy to the top 10 Layout
+        ///     Adds a strategy to the top 10 Layout
         /// </summary>
         public void AddStrategyInfo(Top10StrategyInfo top10StrategyInfo)
         {
-            if (_top10Holder.ContainsKey(top10StrategyInfo.Balance))
+            if (top10Holder.ContainsKey(top10StrategyInfo.Balance))
                 return;
 
-            if (_top10Holder.Count == _maxStrategies && top10StrategyInfo.Balance <= _minBalance)
+            if (top10Holder.Count == maxStrategies && top10StrategyInfo.Balance <= minBalance)
                 return;
 
-            if (_top10Holder.Count == _maxStrategies && top10StrategyInfo.Balance > _minBalance)
+            if (top10Holder.Count == maxStrategies && top10StrategyInfo.Balance > minBalance)
             {
-                _top10Holder.Remove(_minBalance);
-                _top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
+                top10Holder.Remove(minBalance);
+                top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
             }
-            else if (_top10Holder.Count < _maxStrategies)
+            else if (top10Holder.Count < maxStrategies)
             {
-                _top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
-            }
-
-            _top10Holder.ReverseSort();
-
-            _minBalance = int.MaxValue;
-            _maxBalance = int.MinValue;
-            foreach (var keyValue in _top10Holder)
-            {
-                if (_minBalance > keyValue.Key)
-                    _minBalance = keyValue.Key;
-                if (_maxBalance < keyValue.Key)
-                    _maxBalance = keyValue.Key;
+                top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
             }
 
-            foreach (var keyValue in _top10Holder)
+            top10Holder.ReverseSort();
+
+            minBalance = int.MaxValue;
+            maxBalance = int.MinValue;
+            foreach (var keyValue in top10Holder)
+            {
+                if (minBalance > keyValue.Key)
+                    minBalance = keyValue.Key;
+                if (maxBalance < keyValue.Key)
+                    maxBalance = keyValue.Key;
+            }
+
+            foreach (var keyValue in top10Holder)
                 keyValue.Value.Top10Slot.IsSelected = false;
 
-            _top10Holder[_maxBalance].Top10Slot.IsSelected = true;
+            top10Holder[maxBalance].Top10Slot.IsSelected = true;
 
             ArrangeTop10Slots();
             SetVerticalScrollBar();
         }
 
         /// <summary>
-        /// Resets the Top 10 layout.
+        ///     Resets the Top 10 layout.
         /// </summary>
         public void ClearTop10Slots()
         {
-            _minBalance = int.MaxValue;
-            _maxBalance = int.MinValue;
-            _top10Holder.Clear();
+            minBalance = int.MaxValue;
+            maxBalance = int.MinValue;
+            top10Holder.Clear();
 
             ArrangeTop10Slots();
             SetVerticalScrollBar();
         }
 
         /// <summary>
-        /// Clears the selection attribute of the slots.
+        ///     Clears the selection attribute of the slots.
         /// </summary>
         public void ClearSelectionOfSelectedSlot()
         {
-            foreach (var keyValue in _top10Holder)
+            foreach (var keyValue in top10Holder)
                 if (keyValue.Value.Top10Slot.IsSelected)
                 {
                     keyValue.Value.Top10Slot.IsSelected = false;
@@ -141,74 +139,74 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Returns strategy with the selected balance;
+        ///     Returns strategy with the selected balance;
         /// </summary>
         public Strategy GetStrategy(int balance)
         {
-            return _top10Holder[balance].TheStrategy.Clone();
+            return top10Holder[balance].TheStrategy.Clone();
         }
 
         /// <summary>
-        /// Arranges slots in the layout.
+        ///     Arranges slots in the layout.
         /// </summary>
         private void ArrangeTop10Slots()
         {
-            FlowLayoutStrategy.SuspendLayout();
-            FlowLayoutStrategy.Controls.Clear();
-            foreach (var keyValue in _top10Holder)
+            flowLayoutStrategy.SuspendLayout();
+            flowLayoutStrategy.Controls.Clear();
+            foreach (var keyValue in top10Holder)
             {
                 Top10Slot top10Slot = keyValue.Value.Top10Slot;
-                top10Slot.Width = ClientSize.Width - VScrollBarStrategy.Width - 2*Space;
+                top10Slot.Width = ClientSize.Width - vScrollBarStrategy.Width - 2*Space;
                 top10Slot.Margin = new Padding(Space, Space, 0, 0);
                 top10Slot.Cursor = Cursors.Hand;
-                _toolTip.SetToolTip(top10Slot, Language.T("Activate the strategy."));
-                FlowLayoutStrategy.Controls.Add(top10Slot);
+                toolTip.SetToolTip(top10Slot, Language.T("Activate the strategy."));
+                flowLayoutStrategy.Controls.Add(top10Slot);
             }
-            FlowLayoutStrategy.ResumeLayout();
+            flowLayoutStrategy.ResumeLayout();
         }
 
         /// <summary>
-        /// Shows, hides, sets the scrollbar.
+        ///     Shows, hides, sets the scrollbar.
         /// </summary>
         private void SetVerticalScrollBar()
         {
-            int width = ClientSize.Width - VScrollBarStrategy.Width;
+            int width = ClientSize.Width - vScrollBarStrategy.Width;
             int height = ClientSize.Height;
             int totalHeight = 100;
 
-            if (_top10Holder != null && _top10Holder.Count > 0)
-                totalHeight = _top10Holder.Count*70;
+            if (top10Holder != null && top10Holder.Count > 0)
+                totalHeight = top10Holder.Count*70;
 
             if (totalHeight < height)
             {
-                VScrollBarStrategy.Enabled = false;
-                VScrollBarStrategy.Visible = false;
+                vScrollBarStrategy.Enabled = false;
+                vScrollBarStrategy.Visible = false;
             }
             else
             {
-                VScrollBarStrategy.Enabled = true;
-                VScrollBarStrategy.Visible = true;
-                VScrollBarStrategy.Value = 0;
-                VScrollBarStrategy.SmallChange = 30;
-                VScrollBarStrategy.LargeChange = 60;
-                VScrollBarStrategy.Maximum = Math.Max(totalHeight - height + 80, 0);
-                VScrollBarStrategy.Location = new Point(width, 0);
-                VScrollBarStrategy.Height = height;
-                VScrollBarStrategy.Cursor = Cursors.Default;
+                vScrollBarStrategy.Enabled = true;
+                vScrollBarStrategy.Visible = true;
+                vScrollBarStrategy.Value = 0;
+                vScrollBarStrategy.SmallChange = 30;
+                vScrollBarStrategy.LargeChange = 60;
+                vScrollBarStrategy.Maximum = Math.Max(totalHeight - height + 80, 0);
+                vScrollBarStrategy.Location = new Point(width, 0);
+                vScrollBarStrategy.Height = height;
+                vScrollBarStrategy.Cursor = Cursors.Default;
             }
 
-            FlowLayoutStrategy.Width = width;
-            FlowLayoutStrategy.Height = totalHeight;
-            FlowLayoutStrategy.Location = Point.Empty;
+            flowLayoutStrategy.Width = width;
+            flowLayoutStrategy.Height = totalHeight;
+            flowLayoutStrategy.Location = Point.Empty;
         }
 
         /// <summary>
-        /// The Scrolling moves the flowLayout
+        ///     The Scrolling moves the flowLayout
         /// </summary>
         private void VScrollBarScroll(object sender, ScrollEventArgs e)
         {
             var vscroll = (VScrollBar) sender;
-            FlowLayoutStrategy.Location = new Point(0, -vscroll.Value);
+            flowLayoutStrategy.Location = new Point(0, -vscroll.Value);
         }
     }
 }

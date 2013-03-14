@@ -10,16 +10,16 @@ using System.ComponentModel;
 namespace Forex_Strategy_Builder.Dialogs.Generator
 {
     /// <summary>
-    /// Strategy Generator
+    ///     Strategy Generator
     /// </summary>
     public sealed partial class Generator
     {
         /// <summary>
-        /// Initial Optimization
+        ///     Initial Optimization
         /// </summary>
-        void PerformInitialOptimization(BackgroundWorker worker, bool isBetter)
+        private void PerformInitialOptimization(BackgroundWorker worker, bool isBetter)
         {
-            bool secondChance = (_random.Next(100) < 10 && Backtester.NetBalance > 500);
+            bool secondChance = (random.Next(100) < 10 && Backtester.NetBalance > 500);
             int maxCycles = isBetter ? 3 : 1;
 
             if (isBetter || secondChance)
@@ -46,29 +46,32 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 NormalizeSameOppositeSignalBehaviour(worker);
 
                 // Remove Permanent Stop Loss
-                if (!ChbPreservePermSL.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UsePermanentSL && !worker.CancellationPending)
+                if (!chbPreservePermSL.Checked && strategyBest.PropertiesStatus == StrategySlotStatus.Open &&
+                    Data.Strategy.UsePermanentSL && !worker.CancellationPending)
                     RemovePermanentSL();
 
                 // Remove Permanent Take Profit
-                if (!ChbPreservePermTP.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UsePermanentTP && !worker.CancellationPending)
+                if (!chbPreservePermTP.Checked && strategyBest.PropertiesStatus == StrategySlotStatus.Open &&
+                    Data.Strategy.UsePermanentTP && !worker.CancellationPending)
                     RemovePermanentTP();
 
                 // Remove Break Even
-                if (!ChbPreserveBreakEven.Checked && _strategyBest.PropertiesStatus == StrategySlotStatus.Open && Data.Strategy.UseBreakEven && !worker.CancellationPending)
+                if (!chbPreserveBreakEven.Checked && strategyBest.PropertiesStatus == StrategySlotStatus.Open &&
+                    Data.Strategy.UseBreakEven && !worker.CancellationPending)
                     RemoveBreakEven();
 
                 // Reduce the value of numeric parameters
-                if (!ChbUseDefaultIndicatorValues.Checked)
+                if (!chbUseDefaultIndicatorValues.Checked)
                     ReduceTheValuesOfNumericParams(worker);
-           }
+            }
         }
 
         /// <summary>
-        /// Tries to clear the Same / Opposite Signals
+        ///     Tries to clear the Same / Opposite Signals
         /// </summary>
-        void NormalizeSameOppositeSignalBehaviour(BackgroundWorker worker)
+        private void NormalizeSameOppositeSignalBehaviour(BackgroundWorker worker)
         {
-            if (_strategyBest.PropertiesStatus != StrategySlotStatus.Open) return;
+            if (strategyBest.PropertiesStatus != StrategySlotStatus.Open) return;
 
             if (Data.Strategy.SameSignalAction != SameDirSignalAction.Nothing)
             {
@@ -95,16 +98,18 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Removes the excessive filter.
+        ///     Removes the excessive filter.
         /// </summary>
-        void RemoveNeedlessFilters(BackgroundWorker worker)
+        private void RemoveNeedlessFilters(BackgroundWorker worker)
         {
             for (int slot = 1; slot < Data.Strategy.Slots; slot++)
             {
-                if (Data.Strategy.Slot[slot].SlotStatus == StrategySlotStatus.Locked || Data.Strategy.Slot[slot].SlotStatus == StrategySlotStatus.Linked)
+                if (Data.Strategy.Slot[slot].SlotStatus == StrategySlotStatus.Locked ||
+                    Data.Strategy.Slot[slot].SlotStatus == StrategySlotStatus.Linked)
                     continue;
 
-                if (Data.Strategy.Slot[slot].SlotType == SlotTypes.OpenFilter || Data.Strategy.Slot[slot].SlotType == SlotTypes.CloseFilter)
+                if (Data.Strategy.Slot[slot].SlotType == SlotTypes.OpenFilter ||
+                    Data.Strategy.Slot[slot].SlotType == SlotTypes.CloseFilter)
                 {
                     if (worker.CancellationPending) break;
 
@@ -117,9 +122,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Change Numeric Parameters
+        ///     Change Numeric Parameters
         /// </summary>
-        void ChangeNumericParameters(BackgroundWorker worker)
+        private void ChangeNumericParameters(BackgroundWorker worker)
         {
             bool isDoAgain;
             int repeats = 0;
@@ -142,21 +147,21 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Change Permanent Stop Loss
+        ///     Change Permanent Stop Loss
         /// </summary>
-        void ChangePermanentSL(BackgroundWorker worker)
+        private void ChangePermanentSL(BackgroundWorker worker)
         {
             bool isDoAgain;
             do
             {
                 if (worker.CancellationPending) break;
-                if (ChbPreservePermSL.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+                if (chbPreservePermSL.Checked || strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
                     break;
 
                 int oldPermSL = Data.Strategy.PermanentSL;
                 Data.Strategy.UsePermanentSL = true;
                 int multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
-                Data.Strategy.PermanentSL = multiplier * _random.Next(5, 100);
+                Data.Strategy.PermanentSL = multiplier*random.Next(5, 100);
 
                 isDoAgain = CalculateTheResult(false);
                 if (!isDoAgain)
@@ -165,13 +170,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Remove Permanent Stop Loss
+        ///     Remove Permanent Stop Loss
         /// </summary>
-        void RemovePermanentSL()
+        private void RemovePermanentSL()
         {
             int oldPermSL = Data.Strategy.PermanentSL;
             Data.Strategy.UsePermanentSL = false;
-            Data.Strategy.PermanentSL    = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
+            Data.Strategy.PermanentSL = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
             bool isBetterOrSame = CalculateTheResult(true);
             if (isBetterOrSame) return;
             Data.Strategy.UsePermanentSL = true;
@@ -179,21 +184,22 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        ///  Change Permanent Take Profit
+        ///     Change Permanent Take Profit
         /// </summary>
-        void ChangePermanentTP(BackgroundWorker worker)
+        private void ChangePermanentTP(BackgroundWorker worker)
         {
             bool isDoAgain;
-            int  multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
+            int multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
             do
             {
                 if (worker.CancellationPending) break;
-                if (ChbPreservePermTP.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked || !Data.Strategy.UsePermanentTP)
+                if (chbPreservePermTP.Checked || strategyBest.PropertiesStatus == StrategySlotStatus.Locked ||
+                    !Data.Strategy.UsePermanentTP)
                     break;
 
                 int oldPermTP = Data.Strategy.PermanentTP;
                 Data.Strategy.UsePermanentTP = true;
-                Data.Strategy.PermanentTP = multiplier * _random.Next(5, 100);
+                Data.Strategy.PermanentTP = multiplier*random.Next(5, 100);
 
                 isDoAgain = CalculateTheResult(false);
                 if (!isDoAgain)
@@ -202,9 +208,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Removes the Permanent Take Profit
+        ///     Removes the Permanent Take Profit
         /// </summary>
-        void RemovePermanentTP()
+        private void RemovePermanentTP()
         {
             int oldPermTP = Data.Strategy.PermanentTP;
             Data.Strategy.UsePermanentTP = false;
@@ -216,21 +222,22 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Change Break Even
+        ///     Change Break Even
         /// </summary>
-        void ChangeBreakEven(BackgroundWorker worker)
+        private void ChangeBreakEven(BackgroundWorker worker)
         {
             bool isDoAgain;
             do
             {
                 if (worker.CancellationPending) break;
-                if (ChbPreserveBreakEven.Checked || _strategyBest.PropertiesStatus == StrategySlotStatus.Locked || !Data.Strategy.UseBreakEven)
+                if (chbPreserveBreakEven.Checked || strategyBest.PropertiesStatus == StrategySlotStatus.Locked ||
+                    !Data.Strategy.UseBreakEven)
                     break;
 
                 int oldBreakEven = Data.Strategy.BreakEven;
                 Data.Strategy.UseBreakEven = true;
                 int multiplier = Data.InstrProperties.IsFiveDigits ? 50 : 5;
-                Data.Strategy.BreakEven = multiplier * _random.Next(5, 100);
+                Data.Strategy.BreakEven = multiplier*random.Next(5, 100);
 
                 isDoAgain = CalculateTheResult(false);
                 if (!isDoAgain)
@@ -239,9 +246,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Removes the Break Even
+        ///     Removes the Break Even
         /// </summary>
-        void RemoveBreakEven()
+        private void RemoveBreakEven()
         {
             int oldBreakEven = Data.Strategy.BreakEven;
             Data.Strategy.UseBreakEven = false;
@@ -253,13 +260,13 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         }
 
         /// <summary>
-        /// Normalizes the numeric parameters.
+        ///     Normalizes the numeric parameters.
         /// </summary>
-        void ReduceTheValuesOfNumericParams(BackgroundWorker worker)
+        private void ReduceTheValuesOfNumericParams(BackgroundWorker worker)
         {
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
             {
-                if (_bestBalance < 500) break;
+                if (bestBalance < 500) break;
                 if (Data.Strategy.Slot[slot].SlotStatus == StrategySlotStatus.Locked) continue;
 
                 // Numeric parameters
@@ -283,7 +290,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                         if (Math.Abs(num.Value - defaultValue) < 0.00001) break;
 
                         double value = num.Value;
-                        double delta = (defaultValue - value) * 3 / 4;
+                        double delta = (defaultValue - value)*3/4;
                         value += delta;
                         value = Math.Round(value, num.Point);
 
@@ -294,7 +301,6 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                         RecalculateSlots();
                         isDoAgain = CalculateTheResult(true);
                         if (!isDoAgain) RestoreFromBest();
-
                     } while (isDoAgain);
                 }
             }
