@@ -231,6 +231,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             SetStrategyDescriptionButton();
 
             chbHideFsb.CheckedChanged += HideFSBClick;
+
+            foreach (string arg in Environment.GetCommandLineArgs())
+                if (arg.StartsWith("-autostartgenerator"))
+                    BtnGenerateClick(this, new EventArgs());
         }
 
         public Form ParrentForm { private get; set; }

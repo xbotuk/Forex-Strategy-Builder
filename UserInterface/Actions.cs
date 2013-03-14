@@ -44,6 +44,10 @@ namespace Forex_Strategy_Builder
             ShowStartingTips();
             UpdateStatusLabel("Loading user interface...");
             SetStrategyDirWatcher();
+
+            foreach (string arg in Environment.GetCommandLineArgs())
+                if (arg.StartsWith("-autostartgenerator"))
+                    ShowGenerator();
         }
 
         private bool IsDiscardSelectedIndexChange { get; set; }

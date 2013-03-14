@@ -15,5 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <StartWorkingDirectory>
     </StartWorkingDirectory>
+    <StartArguments>
+    </StartArguments>
   </PropertyGroup>
 </Project>
