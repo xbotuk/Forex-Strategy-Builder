@@ -47,7 +47,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Output\Debug\</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -58,9 +58,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Forex Strategy Builder\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <OutputPath>..\..\Output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -79,9 +78,6 @@
   </Target>
   -->
   <ItemGroup>
-    <Reference Include="Forex Strategy Builder - Custom Analytics">
-      <HintPath>Libs\Forex Strategy Builder - Custom Analytics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -685,11 +681,11 @@
     <EmbeddedResource Include="Images\str-info-warning.png" />
     <EmbeddedResource Include="Images\paste.png" />
     <EmbeddedResource Include="Images\copy.png" />
-    <None Include="License Agreement.txt" />
-    <None Include="ToDo.txt" />
-    <None Include="app.config" />
-    <None Include="Properties\app.manifest" />
-    <Content Include="README.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ForexStrategyBuilder.CustomAnalytics\CustomAnalytics.csproj">
+      <Project>{9353190E-DA92-43F5-B8EC-4A23A6592716}</Project>
+      <Name>CustomAnalytics</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

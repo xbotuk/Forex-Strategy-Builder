@@ -1,25 +1,27 @@
 Thumbs.db
-/*ReSharper*
-/*DotSettings.user
-/*.suo
-/*.sln.docstates
-/obj
-/bin/*.exe
-/bin/fsb-padfile.xml
-/bin/Debug/*.exe
-/bin/Debug/*.config
-/bin/Debug/*.pdb
-/bin/Debug/*.manifest
-/bin/Debug/System/config.xml
-/bin/Debug/System/fsb-update.xml
-/bin/Debug/System/instruments.xml
-/bin/Debug/Strategies/*.csv
-/bin/Forex\ Strategy\ Builder/*.exe
-!/bin/Forex\ Strategy\ Builder/FSB\ Starter.exe
-/bin/Forex\ Strategy\ Builder/*.config
-/bin/Forex\ Strategy\ Builder/*.pdb
-/bin/Forex\ Strategy\ Builder/*.manifest
-/bin/Forex\ Strategy\ Builder/Strategies/*.csv
-/bin/Forex\ Strategy\ Builder/System/config.xml
-/bin/Forex\ Strategy\ Builder/System/fsb-update.xml
-/bin/Forex\ Strategy\ Builder/System/instruments.xml
+*ReSharper*
+*DotSettings.user
+*.suo
+*.sln.docstates
+obj
+/Output/*.exe
+/Output/fsb-padfile.xml
+/Output/Debug/*.exe
+/Output/Debug/*.config
+/Output/Debug/*.pdb
+/Output/Debug/*.manifest
+/Output/Debug/*.dll
+/Output/Debug/System/config.xml
+/Output/Debug/System/fsb-update.xml
+/Output/Debug/System/instruments.xml
+/Output/Debug/Strategies/*.csv
+/Output/Release/*.exe
+!/Output/Release/FSB\ Starter.exe
+/Output/Release/*.config
+/Output/Release/*.pdb
+/Output/Release/*.manifest
+/Output/Release/*.dll
+/Output/Release/Strategies/*.csv
+/Output/Release/System/config.xml
+/Output/Release/System/fsb-update.xml
+/Output/Release/System/instruments.xml

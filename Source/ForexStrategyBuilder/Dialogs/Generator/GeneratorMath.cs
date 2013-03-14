@@ -28,7 +28,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private IndicatorSlot[] aLockedExitFilter; // Holds all locked exit filters.
         private int barOOS = Data.Bars - 1;
         private Single bestValue;
-        private Custom.CustomGeneratorAnalytics customAnalytics;
+        private CustomAnalytics.CustomGeneratorAnalytics customAnalytics;
         private bool customSortingAdvancedEnabled;
         private string customSortingOptionDisplay = String.Empty;
         private bool customSortingSimpleEnabled;
@@ -73,12 +73,12 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     customAnalytics.Template = StrategyXML.CreateStrategyXmlDoc(Data.Strategy);
 
                     // Provide full bar data to the analytics assembly if requested
-                    if (Custom.Analytics.Generator.IsFullBarDataNeeded)
+                    if (CustomAnalytics.Generator.IsFullBarDataNeeded)
                     {
-                        var bars = new List<Custom.Bar>();
+                        var bars = new List<CustomAnalytics.Bar>();
                         for (int i = 0; i <= Data.Bars - 1; i++)
                         {
-                            var bar = new Custom.Bar
+                            var bar = new CustomAnalytics.Bar
                                 {
                                     Time = Data.Time[i],
                                     Open = Data.Open[i],
@@ -1113,8 +1113,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 };
 
             // External Simple Sorting Options
-            if (Custom.Analytics.Generator.IsAnalyticsEnabled)
-                foreach (string option in Custom.Analytics.Generator.GetSimpleCustomSortingOptions())
+            if (CustomAnalytics.Generator.IsAnalyticsEnabled)
+                foreach (string option in CustomAnalytics.Generator.GetSimpleCustomSortingOptions())
                     options.Add(option);
 
             options.Sort();
@@ -1156,7 +1156,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     customAnalytics.Strategy = StrategyXML.CreateStrategyXmlDoc(Data.Strategy);
                     customAnalytics.Positions = GetPositionsList();
                     // Retrieve the Custom Filter Value
-                    Custom.Analytics.Generator.GetSimpleCustomSortingValue(ref customAnalytics, out value,
+                    CustomAnalytics.Generator.GetSimpleCustomSortingValue(ref customAnalytics, out value,
                                                                            out displayName);
                     break;
             }
@@ -1170,8 +1170,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             var options = new List<string>();
 
             // External Advanced Sorting Options
-            if (Custom.Analytics.Generator.IsAnalyticsEnabled)
-                foreach (string option in Custom.Analytics.Generator.GetAdvancedCustomSortingOptions())
+            if (CustomAnalytics.Generator.IsAnalyticsEnabled)
+                foreach (string option in CustomAnalytics.Generator.GetAdvancedCustomSortingOptions())
                     options.Add(option);
 
             options.Sort();
@@ -1191,19 +1191,19 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             customAnalytics.Positions = GetPositionsList();
 
             // Retrieve the Custom Filter Value
-            Custom.Analytics.Generator.GetAdvancedCustomSortingValue(ref customAnalytics, out value, out displayName);
+            CustomAnalytics.Generator.GetAdvancedCustomSortingValue(ref customAnalytics, out value, out displayName);
         }
 
         /// <summary>
         ///     Construct a list of positions for custom analysis
         /// </summary>
-        private List<Custom.Position> GetPositionsList()
+        private List<CustomAnalytics.Position> GetPositionsList()
         {
-            var positions = new List<Custom.Position>();
+            var positions = new List<CustomAnalytics.Position>();
 
             for (int iPos = 0; iPos < Backtester.PositionsTotal; iPos++)
             {
-                var pos = new Custom.Position();
+                var pos = new CustomAnalytics.Position();
                 Position position = Backtester.PosFromNumb(iPos);
                 int bar = Backtester.PosCoordinates[iPos].Bar;
 
@@ -1220,16 +1220,16 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 switch (position.PosDir)
                 {
                     case PosDirection.None:
-                        pos.Direction = Custom.PosDirection.None;
+                        pos.Direction = CustomAnalytics.PosDirection.None;
                         break;
                     case PosDirection.Long:
-                        pos.Direction = Custom.PosDirection.Long;
+                        pos.Direction = CustomAnalytics.PosDirection.Long;
                         break;
                     case PosDirection.Short:
-                        pos.Direction = Custom.PosDirection.Short;
+                        pos.Direction = CustomAnalytics.PosDirection.Short;
                         break;
                     case PosDirection.Closed:
-                        pos.Direction = Custom.PosDirection.Closed;
+                        pos.Direction = CustomAnalytics.PosDirection.Closed;
                         break;
                 }
 
@@ -1240,25 +1240,25 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 switch (position.Transaction)
                 {
                     case Transaction.None:
-                        pos.Transaction = Custom.Transaction.None;
+                        pos.Transaction = CustomAnalytics.Transaction.None;
                         break;
                     case Transaction.Open:
-                        pos.Transaction = Custom.Transaction.Open;
+                        pos.Transaction = CustomAnalytics.Transaction.Open;
                         break;
                     case Transaction.Close:
-                        pos.Transaction = Custom.Transaction.Close;
+                        pos.Transaction = CustomAnalytics.Transaction.Close;
                         break;
                     case Transaction.Add:
-                        pos.Transaction = Custom.Transaction.Add;
+                        pos.Transaction = CustomAnalytics.Transaction.Add;
                         break;
                     case Transaction.Reduce:
-                        pos.Transaction = Custom.Transaction.Reduce;
+                        pos.Transaction = CustomAnalytics.Transaction.Reduce;
                         break;
                     case Transaction.Reverse:
-                        pos.Transaction = Custom.Transaction.Reverse;
+                        pos.Transaction = CustomAnalytics.Transaction.Reverse;
                         break;
                     case Transaction.Transfer:
-                        pos.Transaction = Custom.Transaction.Transfer;
+                        pos.Transaction = CustomAnalytics.Transaction.Transfer;
                         break;
                 }
 

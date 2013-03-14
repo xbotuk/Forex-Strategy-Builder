@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
-using System.Resources;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Forex Strategy Builder")]
+[assembly: AssemblyTitle("Forex Strategy Builder - Custom Generator")]
 [assembly: AssemblyDescription("Free forex backtester, generator, optimizer...")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Forex Software Ltd.")]
 [assembly: AssemblyProduct("Forex Strategy Builder")]
-[assembly: AssemblyCopyright("Copyright © 2006 - 2012 Miroslav Popov")]
+[assembly: AssemblyCopyright("Copyright © 2006 - 2013 Miroslav Popov")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ec8a84d0-2ef4-4e99-9661-1e02a30b5017")]
+[assembly: Guid("8e6fdd0b-a493-4c28-8563-9021ba48d8c1")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,6 +29,8 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.76.0.0")]
-[assembly: AssemblyFileVersion("2.76.0.0")]
-[assembly: NeutralResourcesLanguageAttribute("en")]
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
