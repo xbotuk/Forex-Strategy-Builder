@@ -8,7 +8,7 @@
 using System;
 using System.Drawing;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     /// Top Bottom Price Indicator

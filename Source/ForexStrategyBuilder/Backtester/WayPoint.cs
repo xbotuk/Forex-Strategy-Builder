@@ -1,37 +1,41 @@
-// Backtester - Way Point
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public class WayPoint
     {
         public WayPoint(double price, WayPointType wpType)
         {
             Price = price;
-            WPType = wpType;
+            WpType = wpType;
             OrdNumb = -1;
             PosNumb = -1;
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public WayPoint(double price, WayPointType wpType, int ordNumb, int posNumb)
         {
-            Price  = price;
-            WPType = wpType;
+            Price = price;
+            WpType = wpType;
 
-            if (wpType == WayPointType.Open || wpType == WayPointType.High  ||
-                wpType == WayPointType.Low  || wpType == WayPointType.Close ||
+            if (wpType == WayPointType.Open || wpType == WayPointType.High ||
+                wpType == WayPointType.Low || wpType == WayPointType.Close ||
                 wpType == WayPointType.None)
                 OrdNumb = -1;
             else
                 OrdNumb = ordNumb;
 
-            if (Backtester.PosFromNumb(posNumb).PosDir == PosDirection.None   ||
+            if (Backtester.PosFromNumb(posNumb).PosDir == PosDirection.None ||
                 Backtester.PosFromNumb(posNumb).PosDir == PosDirection.Closed &&
                 wpType != WayPointType.Exit && wpType != WayPointType.Reduce)
                 PosNumb = -1;
@@ -40,34 +44,36 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
-        private WayPoint(){}
+        private WayPoint()
+        {
+        }
 
         /// <summary>
-        /// Gets or sets the waypoint price
+        ///     Gets or sets the waypoint price
         /// </summary>
         public double Price { get; private set; }
 
         /// <summary>
-        /// Gets or sets the waypoint type
+        ///     Gets or sets the waypoint type
         /// </summary>
-        public WayPointType WPType { get; private set; }
+        public WayPointType WpType { get; private set; }
 
         /// <summary>
-        /// Gets or sets the waypoint order number
+        ///     Gets or sets the waypoint order number
         /// </summary>
         public int OrdNumb { get; set; }
 
         /// <summary>
-        /// Gets or sets the waypoint position number
+        ///     Gets or sets the waypoint position number
         /// </summary>
         public int PosNumb { get; private set; }
 
         /// <summary>
-        /// Shows the WayPointType as a string.
+        ///     Shows the WayPointType as a string.
         /// </summary>
-        public static string WPTypeToString(WayPointType wpType)
+        public static string WpTypeToString(WayPointType wpType)
         {
             string output;
 
@@ -117,12 +123,12 @@ namespace Forex_Strategy_Builder
         public WayPoint Copy()
         {
             var wayPoint = new WayPoint
-                               {
-                                   Price = Price,
-                                   WPType = WPType,
-                                   OrdNumb = OrdNumb,
-                                   PosNumb = PosNumb
-                               };
+                {
+                    Price = Price,
+                    WpType = WpType,
+                    OrdNumb = OrdNumb,
+                    PosNumb = PosNumb
+                };
             return wayPoint;
         }
     }

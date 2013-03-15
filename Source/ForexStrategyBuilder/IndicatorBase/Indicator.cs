@@ -1,20 +1,24 @@
-// Indicator class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Class Indicator.
+    ///     Class Indicator.
     /// </summary>
     public class Indicator
     {
         /// <summary>
-        /// The default constructor
+        ///     The default constructor
         /// </summary>
         protected Indicator()
         {
@@ -41,107 +45,107 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the indicator name.
+        ///     Gets or sets the indicator name.
         /// </summary>
         public string IndicatorName { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the possible slots
+        ///     Gets or sets the possible slots
         /// </summary>
         protected SlotTypes PossibleSlots { private get; set; }
 
         /// <summary>
-        /// Gets or sets the indicator current parameters.
+        ///     Gets or sets the indicator current parameters.
         /// </summary>
         public IndicatorParam IndParam { get; set; }
 
         /// <summary>
-        /// If the chart is drown in separated panel.
+        ///     If the chart is drown in separated panel.
         /// </summary>
         public bool SeparatedChart { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator components.
+        ///     Gets the indicator components.
         /// </summary>
         public IndicatorComp[] Component { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator's special values.
+        ///     Gets the indicator's special values.
         /// </summary>
         public double[] SpecialValues { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator's min value.
+        ///     Gets the indicator's min value.
         /// </summary>
         public double SeparatedChartMinValue { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator's max value.
+        ///     Gets the indicator's max value.
         /// </summary>
         public double SeparatedChartMaxValue { get; protected set; }
 
         /// <summary>
-        /// Shows if the indicator has discrete values.
+        ///     Shows if the indicator has discrete values.
         /// </summary>
         protected bool IsDescreteValues { private get; set; }
 
         /// <summary>
-        /// Shows if the indicator is custom.
+        ///     Shows if the indicator is custom.
         /// </summary>
         public bool CustomIndicator { get; protected set; }
 
         /// <summary>
-        /// Gets or sets a warning message about the indicator
+        ///     Gets or sets a warning message about the indicator
         /// </summary>
         public string WarningMessage { get; protected set; }
 
         /// <summary>
-        /// Shows if a closing point indicator can be used with closing logic conditions.
+        ///     Shows if a closing point indicator can be used with closing logic conditions.
         /// </summary>
         public bool AllowClosingFilters { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator Entry Point Long Description
+        ///     Gets the indicator Entry Point Long Description
         /// </summary>
         public string EntryPointLongDescription { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator Entry Point Short Description
+        ///     Gets the indicator Entry Point Short Description
         /// </summary>
         public string EntryPointShortDescription { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator Exit Point Long Description
+        ///     Gets the indicator Exit Point Long Description
         /// </summary>
         public string ExitPointLongDescription { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator Exit Point Short Description
+        ///     Gets the indicator Exit Point Short Description
         /// </summary>
         public string ExitPointShortDescription { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator Entry Filter Description
+        ///     Gets the indicator Entry Filter Description
         /// </summary>
         public string EntryFilterLongDescription { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator Exit Filter Description
+        ///     Gets the indicator Exit Filter Description
         /// </summary>
         public string ExitFilterLongDescription { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator Entry Filter Description
+        ///     Gets the indicator Entry Filter Description
         /// </summary>
         public string EntryFilterShortDescription { get; protected set; }
 
         /// <summary>
-        /// Gets the indicator Exit Filter Description
+        ///     Gets the indicator Exit Filter Description
         /// </summary>
         public string ExitFilterShortDescription { get; protected set; }
 
         /// <summary>
-        /// Time frame of the loaded historical data
+        ///     Time frame of the loaded historical data
         /// </summary>
         protected static DataPeriods Period
         {
@@ -149,7 +153,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// The minimal price change.
+        ///     The minimal price change.
         /// </summary>
         protected static double Point
         {
@@ -157,7 +161,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Number of digits after the decimal point of the historical data.
+        ///     Number of digits after the decimal point of the historical data.
         /// </summary>
         protected static int Digits
         {
@@ -165,7 +169,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Number of loaded bars
+        ///     Number of loaded bars
         /// </summary>
         protected static int Bars
         {
@@ -173,7 +177,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Obsolete! Use 'Time' instead.
+        ///     Obsolete! Use 'Time' instead.
         /// </summary>
         protected static DateTime[] Date
         {
@@ -181,7 +185,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Bar opening date and time
+        ///     Bar opening date and time
         /// </summary>
         protected static DateTime[] Time
         {
@@ -189,7 +193,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Bar opening price
+        ///     Bar opening price
         /// </summary>
         protected static double[] Open
         {
@@ -197,7 +201,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Bar highest price
+        ///     Bar highest price
         /// </summary>
         protected static double[] High
         {
@@ -205,7 +209,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Bar lowest price
+        ///     Bar lowest price
         /// </summary>
         protected static double[] Low
         {
@@ -213,7 +217,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Bar closing price
+        ///     Bar closing price
         /// </summary>
         protected static double[] Close
         {
@@ -221,7 +225,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Bar volume
+        ///     Bar volume
         /// </summary>
         protected static int[] Volume
         {
@@ -229,7 +233,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Tests if this is one of the possible slots.
+        ///     Tests if this is one of the possible slots.
         /// </summary>
         /// <param name="slotType">The slot we test.</param>
         /// <returns>True if the slot is possible.</returns>
@@ -251,21 +255,21 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates the components
+        ///     Calculates the components
         /// </summary>
         public virtual void Calculate(SlotTypes slotType)
         {
         }
 
         /// <summary>
-        /// Sets the indicator logic description
+        ///     Sets the indicator logic description
         /// </summary>
         public virtual void SetDescription(SlotTypes slotType)
         {
         }
 
         /// <summary>
-        /// Calculates the base price.
+        ///     Calculates the base price.
         /// </summary>
         /// <param name="priceType">The base price type.</param>
         /// <returns>Base price.</returns>
@@ -304,7 +308,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the check box "Use previous bar value"
+        ///     Sets the check box "Use previous bar value"
         /// </summary>
         protected bool PrepareUsePrevBarValueCheckBox(SlotTypes slotType)
         {
@@ -312,7 +316,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates a Moving Average
+        ///     Calculates a Moving Average
         /// </summary>
         /// <param name="period">Period</param>
         /// <param name="shift">Shift</param>
@@ -400,13 +404,15 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Maximum error for comparing indicator values
+        ///     Maximum error for comparing indicator values
         /// </summary>
         protected double Sigma()
         {
             int sigmaMode = SeparatedChart
-                                ? Configs.SigmaModeSeparatedChart // Indicators plotted on its own chart (MACD, RSI, ADX, Momentum, ...)
-                                : Configs.SigmaModeMainChart; // Indicators plotted on the main chart (MA, Bollinger Bands, Alligator, ...)
+                                ? Configs.SigmaModeSeparatedChart
+                                // Indicators plotted on its own chart (MACD, RSI, ADX, Momentum, ...)
+                                : Configs.SigmaModeMainChart;
+                // Indicators plotted on the main chart (MA, Bollinger Bands, Alligator, ...)
 
             double sigma;
 
@@ -448,7 +454,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates the logic of an Oscillator.
+        ///     Calculates the logic of an Oscillator.
         /// </summary>
         /// <param name="firstBar">The first bar number.</param>
         /// <param name="prvs">To use the previous bar or not.</param>
@@ -629,7 +635,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates the logic of a No Direction Oscillator.
+        ///     Calculates the logic of a No Direction Oscillator.
         /// </summary>
         /// <param name="firstBar">The first bar number.</param>
         /// <param name="prvs">To use the previous bar or not.</param>
@@ -781,7 +787,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates the logic of a band indicator.
+        ///     Calculates the logic of a band indicator.
         /// </summary>
         /// <param name="firstBar">The first bar number.</param>
         /// <param name="prvs">To use the previous bar or not.</param>
@@ -976,7 +982,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "Indicator rises".
+        ///     Returns signals for the logic rule "Indicator rises".
         /// </summary>
         protected void IndicatorRisesLogic(int firstBar, int prvs, double[] adIndValue, ref IndicatorComp indCompLong,
                                            ref IndicatorComp indCompShort)
@@ -1002,7 +1008,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "Indicator falls"
+        ///     Returns signals for the logic rule "Indicator falls"
         /// </summary>
         protected void IndicatorFallsLogic(int firstBar, int prvs, double[] adIndValue, ref IndicatorComp indCompLong,
                                            ref IndicatorComp indCompShort)
@@ -1028,7 +1034,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The Indicator is higher than the AnotherIndicator"
+        ///     Returns signals for the logic rule "The Indicator is higher than the AnotherIndicator"
         /// </summary>
         protected void IndicatorIsHigherThanAnotherIndicatorLogic(int firstBar, int prvs, double[] adIndValue,
                                                                   double[] adAnotherIndValue,
@@ -1046,7 +1052,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The Indicator is lower than the AnotherIndicator"
+        ///     Returns signals for the logic rule "The Indicator is lower than the AnotherIndicator"
         /// </summary>
         protected void IndicatorIsLowerThanAnotherIndicatorLogic(int firstBar, int prvs, double[] adIndValue,
                                                                  double[] adAnotherIndValue,
@@ -1064,7 +1070,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The Indicator crosses AnotherIndicator upward"
+        ///     Returns signals for the logic rule "The Indicator crosses AnotherIndicator upward"
         /// </summary>
         protected void IndicatorCrossesAnotherIndicatorUpwardLogic(int firstBar, int prvs, double[] adIndValue,
                                                                    double[] adAnotherIndValue,
@@ -1094,7 +1100,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The Indicator crosses AnotherIndicator downward"
+        ///     Returns signals for the logic rule "The Indicator crosses AnotherIndicator downward"
         /// </summary>
         protected void IndicatorCrossesAnotherIndicatorDownwardLogic(int firstBar, int prvs, double[] adIndValue,
                                                                      double[] adAnotherIndValue,
@@ -1124,7 +1130,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The bar opens above the Indicator"
+        ///     Returns signals for the logic rule "The bar opens above the Indicator"
         /// </summary>
         protected void BarOpensAboveIndicatorLogic(int firstBar, int prvs, double[] adIndValue,
                                                    ref IndicatorComp indCompLong, ref IndicatorComp indCompShort)
@@ -1139,7 +1145,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The bar opens below the Indicator"
+        ///     Returns signals for the logic rule "The bar opens below the Indicator"
         /// </summary>
         protected void BarOpensBelowIndicatorLogic(int firstBar, int prvs, double[] adIndValue,
                                                    ref IndicatorComp indCompLong, ref IndicatorComp indCompShort)
@@ -1154,7 +1160,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The bar opens above the Indicator after opening below it"
+        ///     Returns signals for the logic rule "The bar opens above the Indicator after opening below it"
         /// </summary>
         protected void BarOpensAboveIndicatorAfterOpeningBelowLogic(int firstBar, int prvs, double[] adIndValue,
                                                                     ref IndicatorComp indCompLong,
@@ -1182,7 +1188,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The bar opens below the Indicator after opening above it"
+        ///     Returns signals for the logic rule "The bar opens below the Indicator after opening above it"
         /// </summary>
         protected void BarOpensBelowIndicatorAfterOpeningAboveLogic(int firstBar, int prvs, double[] adIndValue,
                                                                     ref IndicatorComp indCompLong,
@@ -1210,7 +1216,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The bar closes above the Indicator"
+        ///     Returns signals for the logic rule "The bar closes above the Indicator"
         /// </summary>
         protected void BarClosesAboveIndicatorLogic(int firstBar, int prvs, double[] adIndValue,
                                                     ref IndicatorComp indCompLong, ref IndicatorComp indCompShort)
@@ -1225,7 +1231,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns signals for the logic rule "The bar closes below the Indicator"
+        ///     Returns signals for the logic rule "The bar closes below the Indicator"
         /// </summary>
         protected void BarClosesBelowIndicatorLogic(int firstBar, int prvs, double[] adIndValue,
                                                     ref IndicatorComp indCompLong, ref IndicatorComp indCompShort)

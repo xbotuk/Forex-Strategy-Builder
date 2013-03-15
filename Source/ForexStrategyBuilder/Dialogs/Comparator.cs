@@ -1,8 +1,12 @@
-// Forex Strategy Builder - Comparator
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.ComponentModel;
@@ -12,38 +16,38 @@ using System.Globalization;
 using System.Media;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     internal sealed class Comparator : Form
     {
-        private readonly BackgroundWorker _bgWorker;
-        private readonly Brush _brushRandArea;
-        private readonly int _countMethods;
-        private readonly bool _isTradeUntilMC = Configs.TradeUntilMarginCall;
-        private readonly Pen _penBalance;
-        private readonly Pen _penNearest;
-        private readonly Pen _penOptimistic;
-        private readonly Pen _penPessimistic;
-        private readonly Pen _penRandBands;
-        private readonly Pen _penRandom;
-        private readonly Pen _penShortest;
-        private float[] _afBalance;
-        private float[] _afMaxRandom;
-        private float[,] _afMethods;
-        private float[] _afMinRandom;
-        private float[,] _afRandoms;
-        private int _checkedMethods;
-        private bool _isPaintChart;
-        private bool _isRandom;
-        private bool _isWorking; // It is true when the comparator is running
-        private int _lines;
-        private float _maximum;
-        private float _maximumRandom;
-        private float _minimum;
-        private float _minimumRandom;
+        private readonly BackgroundWorker bgWorker;
+        private readonly Brush brushRandArea;
+        private readonly int countMethods;
+        private readonly bool isTradeUntilMC = Configs.TradeUntilMarginCall;
+        private readonly Pen penBalance;
+        private readonly Pen penNearest;
+        private readonly Pen penOptimistic;
+        private readonly Pen penPessimistic;
+        private readonly Pen penRandBands;
+        private readonly Pen penRandom;
+        private readonly Pen penShortest;
+        private float[] afBalance;
+        private float[] afMaxRandom;
+        private float[,] afMethods;
+        private float[] afMinRandom;
+        private float[,] afRandoms;
+        private int checkedMethods;
+        private bool isPaintChart;
+        private bool isRandom;
+        private bool isWorking; // It is true when the comparator is running
+        private int lines;
+        private float maximum;
+        private float maximumRandom;
+        private float minimum;
+        private float minimumRandom;
 
         /// <summary>
-        /// Initialize the form and controls
+        ///     Initialize the form and controls
         /// </summary>
         public Comparator()
         {
@@ -65,7 +69,7 @@ namespace Forex_Strategy_Builder
             ShowInTaskbar = false;
             FormClosing += ActionsFormClosing;
 
-            _isPaintChart = false;
+            isPaintChart = false;
 
             //Button Calculate
             BtnCalculate.Parent = this;
@@ -95,19 +99,19 @@ namespace Forex_Strategy_Builder
             PnlOptions.ForeColor = LayoutColors.ColorControlText;
             PnlOptions.Paint += PnlOptionsPaint;
 
-            _countMethods = Enum.GetValues(typeof (InterpolationMethod)).Length;
-            AchboxMethods = new CheckBox[_countMethods];
-            for (int i = 0; i < _countMethods; i++)
+            countMethods = Enum.GetValues(typeof (InterpolationMethod)).Length;
+            AchboxMethods = new CheckBox[countMethods];
+            for (int i = 0; i < countMethods; i++)
             {
                 AchboxMethods[i] = new CheckBox
-                                       {
-                                           Parent = PnlOptions,
-                                           Text = Language.T(Enum.GetNames(typeof (InterpolationMethod))[i]),
-                                           Tag = Enum.GetValues(typeof (InterpolationMethod)).GetValue(i),
-                                           Checked = true,
-                                           BackColor = Color.Transparent,
-                                           AutoSize = true
-                                       };
+                    {
+                        Parent = PnlOptions,
+                        Text = Language.T(Enum.GetNames(typeof (InterpolationMethod))[i]),
+                        Tag = Enum.GetValues(typeof (InterpolationMethod)).GetValue(i),
+                        Checked = true,
+                        BackColor = Color.Transparent,
+                        AutoSize = true
+                    };
                 AchboxMethods[i].CheckedChanged += ComparatorCheckedChanged;
             }
 
@@ -137,20 +141,20 @@ namespace Forex_Strategy_Builder
             LblRandomCycles.TextAlign = ContentAlignment.MiddleLeft;
 
             // Colors
-            _penOptimistic = new Pen(LayoutColors.ComparatorChartOptimisticLine);
-            _penPessimistic = new Pen(LayoutColors.ComparatorChartPessimisticLine);
-            _penShortest = new Pen(LayoutColors.ComparatorChartShortestLine);
-            _penNearest = new Pen(LayoutColors.ComparatorChartNearestLine);
-            _penRandom = new Pen(LayoutColors.ComparatorChartRandomLine);
-            _penRandBands = new Pen(LayoutColors.ComparatorChartRandomBands);
-            _brushRandArea = new SolidBrush(LayoutColors.ComparatorChartRandomArea);
-            _penBalance = new Pen(LayoutColors.ComparatorChartBalanceLine) {Width = 2};
+            penOptimistic = new Pen(LayoutColors.ComparatorChartOptimisticLine);
+            penPessimistic = new Pen(LayoutColors.ComparatorChartPessimisticLine);
+            penShortest = new Pen(LayoutColors.ComparatorChartShortestLine);
+            penNearest = new Pen(LayoutColors.ComparatorChartNearestLine);
+            penRandom = new Pen(LayoutColors.ComparatorChartRandomLine);
+            penRandBands = new Pen(LayoutColors.ComparatorChartRandomBands);
+            brushRandArea = new SolidBrush(LayoutColors.ComparatorChartRandomArea);
+            penBalance = new Pen(LayoutColors.ComparatorChartBalanceLine) {Width = 2};
 
             // BackGroundWorker
-            _bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
-            _bgWorker.DoWork += BgWorkerDoWork;
-            _bgWorker.ProgressChanged += BgWorkerProgressChanged;
-            _bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
+            bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            bgWorker.DoWork += BgWorkerDoWork;
+            bgWorker.ProgressChanged += BgWorkerProgressChanged;
+            bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
 
             Configs.TradeUntilMarginCall = false;
         }
@@ -166,26 +170,26 @@ namespace Forex_Strategy_Builder
         private Button BtnClose { get; set; }
 
         /// <summary>
-        /// Resizes the form
+        ///     Resizes the form
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            Width = (int) (Data.HorizontalDLU*290);
-            Height = (int) (Data.VerticalDLU*260);
+            Width = (int) (Data.HorizontalDlu*290);
+            Height = (int) (Data.VerticalDlu*260);
         }
 
         /// <summary>
-        /// Arrange the controls
+        ///     Arrange the controls
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
             int controlZoneH = buttonHeight + 2*btnVertSpace;
             int controlZoneY = ClientSize.Height - controlZoneH;
@@ -201,7 +205,7 @@ namespace Forex_Strategy_Builder
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    if (num < _countMethods)
+                    if (num < countMethods)
                         AchboxMethods[num].Location = new Point(j*positionX + 40, i*30 + positionY);
                     else
                         LblAverageBalance.Location = new Point(j*positionX + 40, i*30 + positionY + 1);
@@ -221,29 +225,29 @@ namespace Forex_Strategy_Builder
             BtnCalculate.Size = new Size(buttonWidth, buttonHeight);
             BtnCalculate.Location = new Point(BtnClose.Left - buttonWidth - btnHrzSpace, buttonY);
 
-            ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
+            ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDlu*9));
             ProgressBar.Location = new Point(space, BtnClose.Top - ProgressBar.Height - btnVertSpace);
             PnlChart.Size = new Size(ClientSize.Width - 2*space, ProgressBar.Top - PnlOptions.Bottom - 2*space);
             PnlChart.Location = new Point(space, PnlOptions.Bottom + space);
         }
 
         /// <summary>
-        /// Check whether the strategy have been changed.
+        ///     Check whether the strategy have been changed.
         /// </summary>
         private void ActionsFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_isWorking)
+            if (isWorking)
             {
                 // Cancel the asynchronous operation.
-                _bgWorker.CancelAsync();
+                bgWorker.CancelAsync();
                 e.Cancel = true;
             }
 
-            Configs.TradeUntilMarginCall = _isTradeUntilMC;
+            Configs.TradeUntilMarginCall = isTradeUntilMC;
         }
 
         /// <summary>
-        /// A check boxes status
+        ///     A check boxes status
         /// </summary>
         private void ComparatorCheckedChanged(object sender, EventArgs e)
         {
@@ -257,35 +261,35 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculate
+        ///     Calculate
         /// </summary>
         private void BtnCalculateClick(object sender, EventArgs e)
         {
-            if (_isWorking)
+            if (isWorking)
             {
                 // Cancel the asynchronous operation.
-                _bgWorker.CancelAsync();
+                bgWorker.CancelAsync();
                 return;
             }
 
             Cursor = Cursors.WaitCursor;
             ProgressBar.Value = 1;
-            _isWorking = true;
+            isWorking = true;
             BtnClose.Enabled = false;
             BtnCalculate.Text = Language.T("Stop");
 
-            for (int m = 0; m < _countMethods; m++)
+            for (int m = 0; m < countMethods; m++)
             {
                 AchboxMethods[m].Enabled = false;
             }
             NumRandom.Enabled = false;
 
             // Start the bgWorker
-            _bgWorker.RunWorkerAsync();
+            bgWorker.RunWorkerAsync();
         }
 
         /// <summary>
-        /// Does the job
+        ///     Does the job
         /// </summary>
         private void BgWorkerDoWork(object sender, DoWorkEventArgs e)
         {
@@ -297,13 +301,13 @@ namespace Forex_Strategy_Builder
             // Optimize all Parameters
             if (Calculate(worker) == 0)
             {
-                _isPaintChart = true;
+                isPaintChart = true;
                 PnlChart.Invalidate();
             }
         }
 
         /// <summary>
-        /// This event handler updates the progress bar.
+        ///     This event handler updates the progress bar.
         /// </summary>
         private void BgWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -311,15 +315,15 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// This event handler deals with the results of the background operation.
+        ///     This event handler deals with the results of the background operation.
         /// </summary>
         private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _isWorking = false;
+            isWorking = false;
             BtnClose.Enabled = true;
             BtnCalculate.Text = Language.T("Calculate");
 
-            for (int m = 0; m < _countMethods; m++)
+            for (int m = 0; m < countMethods; m++)
             {
                 AchboxMethods[m].Enabled = true;
             }
@@ -330,7 +334,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates the balance lines
+        ///     Calculates the balance lines
         /// </summary>
         private int Calculate(BackgroundWorker worker)
         {
@@ -340,47 +344,47 @@ namespace Forex_Strategy_Builder
             // Also we have two border lines for the random method
             // Plus the average balance line
 
-            _isRandom = false;
-            _minimum = float.MaxValue;
-            _maximum = float.MinValue;
-            _minimumRandom = float.MaxValue;
-            _maximumRandom = float.MinValue;
+            isRandom = false;
+            minimum = float.MaxValue;
+            maximum = float.MinValue;
+            minimumRandom = float.MaxValue;
+            maximumRandom = float.MinValue;
             var randomLines = (int) NumRandom.Value;
 
-            _checkedMethods = 0;
-            _lines = 1;
-            for (int m = 0; m < _countMethods; m++)
+            checkedMethods = 0;
+            lines = 1;
+            for (int m = 0; m < countMethods; m++)
                 if (AchboxMethods[m].Checked)
                 {
-                    _checkedMethods++;
-                    _lines++;
+                    checkedMethods++;
+                    lines++;
                     if ((InterpolationMethod) AchboxMethods[m].Tag == InterpolationMethod.Random)
-                        _isRandom = true;
+                        isRandom = true;
                 }
 
-            if (_checkedMethods == 0 && Configs.PlaySounds)
+            if (checkedMethods == 0 && Configs.PlaySounds)
             {
                 SystemSounds.Hand.Play();
                 return -1;
             }
 
-            _afBalance = new float[Data.Bars - Data.FirstBar];
-            _afMethods = new float[_countMethods,Data.Bars - Data.FirstBar];
-            if (_isRandom)
+            afBalance = new float[Data.Bars - Data.FirstBar];
+            afMethods = new float[countMethods,Data.Bars - Data.FirstBar];
+            if (isRandom)
             {
-                _afRandoms = new float[randomLines,Data.Bars - Data.FirstBar];
-                _afMinRandom = new float[Data.Bars - Data.FirstBar];
-                _afMaxRandom = new float[Data.Bars - Data.FirstBar];
+                afRandoms = new float[randomLines,Data.Bars - Data.FirstBar];
+                afMinRandom = new float[Data.Bars - Data.FirstBar];
+                afMaxRandom = new float[Data.Bars - Data.FirstBar];
             }
 
             // Progress parameters
             int computedCycles = 0;
-            int cycles = _lines + (_isRandom ? randomLines : 0);
+            int cycles = lines + (isRandom ? randomLines : 0);
             int highestPercentageReached = 0;
             int percentComplete;
 
             // Calculates the lines
-            for (int m = 0; m < _countMethods; m++)
+            for (int m = 0; m < countMethods; m++)
             {
                 if (worker.CancellationPending) return -1;
                 if (!AchboxMethods[m].Checked) continue;
@@ -398,10 +402,10 @@ namespace Forex_Strategy_Builder
 
                         if (Configs.AccountInMoney)
                             for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
-                                _afRandoms[r, iBar] = (float) Backtester.MoneyBalance(iBar + Data.FirstBar);
+                                afRandoms[r, iBar] = (float) Backtester.MoneyBalance(iBar + Data.FirstBar);
                         else
                             for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
-                                _afRandoms[r, iBar] = Backtester.Balance(iBar + Data.FirstBar);
+                                afRandoms[r, iBar] = Backtester.Balance(iBar + Data.FirstBar);
 
 
                         // Report progress as a percentage of the total task.
@@ -422,16 +426,16 @@ namespace Forex_Strategy_Builder
                         float maxRandom = float.MinValue;
                         for (int r = 0; r < randomLines; r++)
                         {
-                            float value = _afRandoms[r, iBar];
+                            float value = afRandoms[r, iBar];
                             randomSum += value;
                             minRandom = value < minRandom ? value : minRandom;
                             maxRandom = value > maxRandom ? value : maxRandom;
                         }
-                        _afMethods[m, iBar] = randomSum/randomLines;
-                        _afMinRandom[iBar] = minRandom;
-                        _afMaxRandom[iBar] = maxRandom;
-                        _minimumRandom = minRandom < _minimumRandom ? minRandom : _minimumRandom;
-                        _maximumRandom = maxRandom > _maximumRandom ? maxRandom : _maximumRandom;
+                        afMethods[m, iBar] = randomSum/randomLines;
+                        afMinRandom[iBar] = minRandom;
+                        afMaxRandom[iBar] = maxRandom;
+                        minimumRandom = minRandom < minimumRandom ? minRandom : minimumRandom;
+                        maximumRandom = maxRandom > maximumRandom ? maxRandom : maximumRandom;
                     }
 
                     // Report progress as a percentage of the total task.
@@ -451,10 +455,10 @@ namespace Forex_Strategy_Builder
 
                     if (Configs.AccountInMoney)
                         for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
-                            _afMethods[m, iBar] = (float) Backtester.MoneyBalance(iBar + Data.FirstBar);
+                            afMethods[m, iBar] = (float) Backtester.MoneyBalance(iBar + Data.FirstBar);
                     else
                         for (int iBar = 0; iBar < Data.Bars - Data.FirstBar; iBar++)
-                            _afMethods[m, iBar] = Backtester.Balance(iBar + Data.FirstBar);
+                            afMethods[m, iBar] = Backtester.Balance(iBar + Data.FirstBar);
 
                     // Report progress as a percentage of the total task.
                     computedCycles++;
@@ -472,18 +476,18 @@ namespace Forex_Strategy_Builder
             for (int bar = 0; bar < Data.Bars - Data.FirstBar; bar++)
             {
                 float sum = 0;
-                for (int m = 0; m < _countMethods; m++)
+                for (int m = 0; m < countMethods; m++)
                 {
                     if (!AchboxMethods[m].Checked) continue;
 
-                    float value = _afMethods[m, bar];
+                    float value = afMethods[m, bar];
                     sum += value;
-                    if (value < _minimum)
-                        _minimum = value;
-                    if (value > _maximum)
-                        _maximum = value;
+                    if (value < minimum)
+                        minimum = value;
+                    if (value > maximum)
+                        maximum = value;
                 }
-                _afBalance[bar] = sum/_checkedMethods;
+                afBalance[bar] = sum/checkedMethods;
             }
 
             // Report progress as a percentage of the total task.
@@ -499,7 +503,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Paints panel pnlOptions
+        ///     Paints panel pnlOptions
         /// </summary>
         private void PnlOptionsPaint(object sender, PaintEventArgs e)
         {
@@ -513,7 +517,7 @@ namespace Forex_Strategy_Builder
             var fCaptionHeight = (float) Math.Max(font.Height, 18);
             var rectfCaption = new RectangleF(0, 0, pnl.ClientSize.Width, fCaptionHeight);
             var stringFormatCaption = new StringFormat
-                                          {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
+                {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
             Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
             g.DrawString(str, Font, new SolidBrush(LayoutColors.ColorCaptionText), rectfCaption, stringFormatCaption);
 
@@ -537,7 +541,7 @@ namespace Forex_Strategy_Builder
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    if (num < _countMethods)
+                    if (num < countMethods)
                     {
                         var pt1 = new Point(j*positionX + 10, i*30 + positionY);
                         var pt2 = new Point(j*positionX + 30, i*30 + positionY);
@@ -588,7 +592,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Paints the charts
+        ///     Paints the charts
         /// </summary>
         private void PnlChartPaint(object sender, PaintEventArgs e)
         {
@@ -605,7 +609,7 @@ namespace Forex_Strategy_Builder
             var fCaptionHeight = (float) Math.Max(font.Height, 18);
             var rectfCaption = new RectangleF(0, 0, pnl.ClientSize.Width, fCaptionHeight);
             var stringFormatCaption = new StringFormat
-                                          {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
+                {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
             Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
             g.DrawString(str, Font, new SolidBrush(LayoutColors.ColorCaptionText), rectfCaption, stringFormatCaption);
 
@@ -622,7 +626,7 @@ namespace Forex_Strategy_Builder
             g.DrawLine(penBorder, 0, pnl.ClientSize.Height - border + 1, pnl.ClientSize.Width,
                        pnl.ClientSize.Height - border + 1);
 
-            if (!_isPaintChart)
+            if (!isPaintChart)
             {
                 if (Backtester.AmbiguousBars == 0)
                 {
@@ -635,8 +639,8 @@ namespace Forex_Strategy_Builder
             }
 
             int bars = Data.Bars - Data.FirstBar;
-            int max = (int) Math.Max(_maximum, _maximumRandom) + 1;
-            int min = (int) Math.Min(_minimum, _minimumRandom) - 1;
+            int max = (int) Math.Max(maximum, maximumRandom) + 1;
+            int min = (int) Math.Min(minimum, minimumRandom) - 1;
             min = (int) Math.Floor(min/10f)*10;
             int yTop = (int) fCaptionHeight + 2*space + 1;
             int yBottom = (pnl.ClientSize.Height - 2*space - border);
@@ -658,7 +662,7 @@ namespace Forex_Strategy_Builder
             float scaleY = (yBottom - yTop)/(cntLabels*(float) step);
             Brush brushFore = new SolidBrush(LayoutColors.ColorChartFore);
             var penGrid = new Pen(LayoutColors.ColorChartGrid)
-                              {DashStyle = DashStyle.Dash, DashPattern = new float[] {4, 2}};
+                {DashStyle = DashStyle.Dash, DashPattern = new float[] {4, 2}};
             // Price labels
             for (int label = min; label <= max; label += step)
             {
@@ -670,7 +674,7 @@ namespace Forex_Strategy_Builder
 
             float fScaleX = (xRight - 2*space - border)/(float) bars;
 
-            if (_isRandom)
+            if (isRandom)
             {
                 // Draws the random area and Min Max lines
                 var apntMinRandom = new PointF[bars];
@@ -678,9 +682,9 @@ namespace Forex_Strategy_Builder
                 for (int iBar = 0; iBar < bars; iBar++)
                 {
                     apntMinRandom[iBar].X = border + space + iBar*fScaleX;
-                    apntMinRandom[iBar].Y = yBottom - (_afMinRandom[iBar] - min)*scaleY;
+                    apntMinRandom[iBar].Y = yBottom - (afMinRandom[iBar] - min)*scaleY;
                     apntMaxRandom[iBar].X = border + space + iBar*fScaleX;
-                    apntMaxRandom[iBar].Y = yBottom - (_afMaxRandom[iBar] - min)*scaleY;
+                    apntMaxRandom[iBar].Y = yBottom - (afMaxRandom[iBar] - min)*scaleY;
                 }
                 apntMinRandom[0].Y = apntMaxRandom[0].Y;
                 var path = new GraphicsPath();
@@ -688,13 +692,13 @@ namespace Forex_Strategy_Builder
                 path.AddLine(apntMinRandom[bars - 1], apntMaxRandom[bars - 1]);
                 path.AddLines(apntMaxRandom);
                 var region = new Region(path);
-                g.FillRegion(_brushRandArea, region);
-                g.DrawLines(_penRandBands, apntMinRandom);
-                g.DrawLines(_penRandBands, apntMaxRandom);
+                g.FillRegion(brushRandArea, region);
+                g.DrawLines(penRandBands, apntMinRandom);
+                g.DrawLines(penRandBands, apntMaxRandom);
             }
 
             // Draws the lines
-            for (int m = 0; m < _countMethods; m++)
+            for (int m = 0; m < countMethods; m++)
             {
                 if (!AchboxMethods[m].Checked) continue;
 
@@ -702,26 +706,26 @@ namespace Forex_Strategy_Builder
                 for (int iBar = 0; iBar < bars; iBar++)
                 {
                     apntLines[iBar].X = border + space + iBar*fScaleX;
-                    apntLines[iBar].Y = yBottom - (_afMethods[m, iBar] - min)*scaleY;
+                    apntLines[iBar].Y = yBottom - (afMethods[m, iBar] - min)*scaleY;
                 }
 
                 var pen = new Pen(LayoutColors.ColorSignalRed);
                 switch ((InterpolationMethod) AchboxMethods[m].Tag)
                 {
                     case InterpolationMethod.Pessimistic:
-                        pen = _penPessimistic;
+                        pen = penPessimistic;
                         break;
                     case InterpolationMethod.Shortest:
-                        pen = _penShortest;
+                        pen = penShortest;
                         break;
                     case InterpolationMethod.Nearest:
-                        pen = _penNearest;
+                        pen = penNearest;
                         break;
                     case InterpolationMethod.Optimistic:
-                        pen = _penOptimistic;
+                        pen = penOptimistic;
                         break;
                     case InterpolationMethod.Random:
-                        pen = _penRandom;
+                        pen = penRandom;
                         break;
                 }
                 g.DrawLines(pen, apntLines);
@@ -732,9 +736,9 @@ namespace Forex_Strategy_Builder
             for (int bar = 0; bar < bars; bar++)
             {
                 apntBalance[bar].X = border + space + bar*fScaleX;
-                apntBalance[bar].Y = yBottom - (_afBalance[bar] - min)*scaleY;
+                apntBalance[bar].Y = yBottom - (afBalance[bar] - min)*scaleY;
             }
-            g.DrawLines(_penBalance, apntBalance);
+            g.DrawLines(penBalance, apntBalance);
 
             // Coordinate axes
             g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space - 1, yTop - space, border + space - 1,
@@ -742,13 +746,13 @@ namespace Forex_Strategy_Builder
             g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space, yBottom, xRight, yBottom);
 
             // Balance label
-            float fBalanceY = yBottom - (_afBalance[bars - 1] - min)*scaleY;
+            float fBalanceY = yBottom - (afBalance[bars - 1] - min)*scaleY;
             g.DrawLine(new Pen(LayoutColors.ColorChartCross), border + space, fBalanceY, xRight - space, fBalanceY);
 
             var szBalance = new Size(labelWidth + space, Font.Height + 2);
             var point = new Point(xRight - space + 2, (int) (fBalanceY - Font.Height/2.0 - 1));
             var rec = new Rectangle(point, szBalance);
-            string sBalance = ((int) _afBalance[bars - 1]).ToString(CultureInfo.InvariantCulture);
+            string sBalance = ((int) afBalance[bars - 1]).ToString(CultureInfo.InvariantCulture);
             g.FillRectangle(new SolidBrush(LayoutColors.ColorLabelBack), rec);
             g.DrawRectangle(new Pen(LayoutColors.ColorChartCross), rec);
             g.DrawString(sBalance, Font, new SolidBrush(LayoutColors.ColorLabelText), rec, stringFormatCaption);
@@ -785,7 +789,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {

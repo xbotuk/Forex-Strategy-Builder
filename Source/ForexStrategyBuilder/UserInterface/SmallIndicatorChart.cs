@@ -1,18 +1,22 @@
-// Small Indicator Chart
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Common;
-using Forex_Strategy_Builder.CustomControls;
-using Forex_Strategy_Builder.Utils;
+using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.CustomControls;
+using ForexStrategyBuilder.Utils;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     ///     Draws a small indicator chart
@@ -568,12 +572,12 @@ namespace Forex_Strategy_Builder
             int bar = Math.Min(Data.Bars - 1, chartFirstBar + currentBar);
 
             CurrentBarInfo = string.Format("{0} {1} O:{2} H:{3} L:{4} C:{5} V:{6}",
-                                           Data.Time[bar].ToString(Data.DF),
+                                           Data.Time[bar].ToString(Data.Df),
                                            Data.Time[bar].ToString("HH:mm"),
-                                           Data.Open[bar].ToString(Data.FF),
-                                           Data.High[bar].ToString(Data.FF),
-                                           Data.Low[bar].ToString(Data.FF),
-                                           Data.Close[bar].ToString(Data.FF),
+                                           Data.Open[bar].ToString(Data.Ff),
+                                           Data.High[bar].ToString(Data.Ff),
+                                           Data.Low[bar].ToString(Data.Ff),
+                                           Data.Close[bar].ToString(Data.Ff),
                                            Data.Volume[bar]);
         }
 

@@ -1,29 +1,33 @@
-﻿// FormState
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Class used to preserve / restore state of the form
+    ///     Class used to preserve / restore state of the form
     /// </summary>
     public static class FormState
     {
-        private static FormWindowState _winState;
-        private static FormBorderStyle _brdStyle;
-        private static Rectangle _bounds;
-        private static bool _topMost;
-        private static bool _isMaximized;
+        private static FormWindowState winState;
+        private static FormBorderStyle brdStyle;
+        private static Rectangle bounds;
+        private static bool topMost;
+        private static bool isMaximized;
 
         public static void Maximize(Form targetForm)
         {
-            if (_isMaximized) return;
-            _isMaximized = true;
+            if (isMaximized) return;
+            isMaximized = true;
             Save(targetForm);
             targetForm.WindowState = FormWindowState.Maximized;
             targetForm.FormBorderStyle = FormBorderStyle.None;
@@ -33,19 +37,19 @@ namespace Forex_Strategy_Builder
 
         private static void Save(Form targetForm)
         {
-            _winState = targetForm.WindowState;
-            _brdStyle = targetForm.FormBorderStyle;
-            _bounds = targetForm.Bounds;
-            _topMost = targetForm.TopMost;
+            winState = targetForm.WindowState;
+            brdStyle = targetForm.FormBorderStyle;
+            bounds = targetForm.Bounds;
+            topMost = targetForm.TopMost;
         }
 
         public static void Restore(Form targetForm)
         {
-            targetForm.WindowState = _winState;
-            targetForm.FormBorderStyle = _brdStyle;
-            targetForm.Bounds = _bounds;
-            targetForm.TopMost = _topMost;
-            _isMaximized = false;
+            targetForm.WindowState = winState;
+            targetForm.FormBorderStyle = brdStyle;
+            targetForm.Bounds = bounds;
+            targetForm.TopMost = topMost;
+            isMaximized = false;
         }
     }
 }

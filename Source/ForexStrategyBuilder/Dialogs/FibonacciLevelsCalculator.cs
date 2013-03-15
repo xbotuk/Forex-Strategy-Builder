@@ -1,25 +1,29 @@
-﻿// Fibonacci Levels Calculator
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     internal sealed class FibonacciLevelsCalculator : Form
     {
-        private readonly float[] _afLevels = new[]
-            { 0.0f, 23.6f, 38.2f, 50.0f, 61.8f, 76.4f, 100.0f, 138.2f, 161.8f, 261.8f };
+        private readonly float[] afLevels = new[]
+            {0.0f, 23.6f, 38.2f, 50.0f, 61.8f, 76.4f, 100.0f, 138.2f, 161.8f, 261.8f};
 
-        private readonly Color _colorText;
+        private readonly Color colorText;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public FibonacciLevelsCalculator()
         {
@@ -31,7 +35,7 @@ namespace Forex_Strategy_Builder
             AlblOutputNames = new Label[10];
             AlblOutputValues = new Label[10];
 
-            _colorText = LayoutColors.ColorControlText;
+            colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -48,22 +52,22 @@ namespace Forex_Strategy_Builder
 
             // Input Names
             var asInputNames = new[]
-                                   {
-                                       Language.T("First price"),
-                                       Language.T("Second price")
-                                   };
+                {
+                    Language.T("First price"),
+                    Language.T("Second price")
+                };
 
             int number = 0;
             foreach (string name in asInputNames)
             {
                 AlblInputNames[number] = new Label
-                                             {
-                                                 Parent = PnlInput,
-                                                 ForeColor = _colorText,
-                                                 BackColor = Color.Transparent,
-                                                 AutoSize = true,
-                                                 Text = name
-                                             };
+                    {
+                        Parent = PnlInput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Text = name
+                    };
 
                 AtbxInputValues[number] = new TextBox {Parent = PnlInput};
                 AtbxInputValues[number].TextChanged += TbxInputTextChanged;
@@ -72,24 +76,24 @@ namespace Forex_Strategy_Builder
 
             // Output Names
             number = 0;
-            foreach (float fn in _afLevels)
+            foreach (float fn in afLevels)
             {
                 AlblOutputNames[number] = new Label
-                                              {
-                                                  Parent = PnlOutput,
-                                                  ForeColor = _colorText,
-                                                  BackColor = Color.Transparent,
-                                                  AutoSize = true,
-                                                  Text = fn.ToString("F1") + " %"
-                                              };
+                    {
+                        Parent = PnlOutput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Text = fn.ToString("F1") + " %"
+                    };
 
                 AlblOutputValues[number] = new Label
-                                               {
-                                                   Parent = PnlOutput,
-                                                   ForeColor = _colorText,
-                                                   BackColor = Color.Transparent,
-                                                   AutoSize = true
-                                               };
+                    {
+                        Parent = PnlOutput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true
+                    };
 
                 number++;
             }
@@ -111,7 +115,7 @@ namespace Forex_Strategy_Builder
         private Label[] AlblOutputValues { get; set; }
 
         /// <summary>
-        /// Initial parameters
+        ///     Initial parameters
         /// </summary>
         private void InitParams()
         {
@@ -122,7 +126,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -134,14 +138,14 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             const int width = 100; // Right side controls
 
@@ -192,7 +196,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Parses a float number
+        ///     Parses a float number
         /// </summary>
         private float ParseInput(string input)
         {
@@ -204,7 +208,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Input parameter changed
+        ///     Input parameter changed
         /// </summary>
         private void TbxInputTextChanged(object sender, EventArgs e)
         {
@@ -212,7 +216,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates the result
+        ///     Calculates the result
         /// </summary>
         private void Calculate()
         {
@@ -236,13 +240,13 @@ namespace Forex_Strategy_Builder
 
             if (price1 > price2)
             {
-                for (int i = _afLevels.Length - 1; i >= 0; i--)
-                    AlblOutputValues[i].Text = ((price1 - price2)*_afLevels[i]/100 + price2).ToString("F4");
+                for (int i = afLevels.Length - 1; i >= 0; i--)
+                    AlblOutputValues[i].Text = ((price1 - price2)*afLevels[i]/100 + price2).ToString("F4");
             }
             else if (price1 < price2)
             {
-                for (int i = 0; i < _afLevels.Length; i++)
-                    AlblOutputValues[i].Text = (price2 - (price2 - price1)*_afLevels[i]/100).ToString("F4");
+                for (int i = 0; i < afLevels.Length; i++)
+                    AlblOutputValues[i].Text = (price2 - (price2 - price1)*afLevels[i]/100).ToString("F4");
             }
             else
             {
@@ -252,7 +256,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {

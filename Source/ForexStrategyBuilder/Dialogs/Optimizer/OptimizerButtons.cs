@@ -1,7 +1,17 @@
-namespace Forex_Strategy_Builder.Dialogs.Optimizer
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
+
+namespace ForexStrategyBuilder.Dialogs.Optimizer
 {
     /// <summary>
-    ///  Optimizer ToolStrip Buttons
+    ///     Optimizer ToolStrip Buttons
     /// </summary>
     public enum OptimizerButtons
     {

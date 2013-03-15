@@ -1,16 +1,20 @@
-﻿// Strategy Analyzer - CumulativeStrategy
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder.Dialogs.Analyzer
+namespace ForexStrategyBuilder.Dialogs.Analyzer
 {
     internal sealed class CumulativeStrategy : FancyPanel
     {
@@ -76,10 +80,10 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 
         private void PnlCumulativeStrategyResize(object sender, EventArgs e)
         {
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
             const int border = 2;
 
             // Button Add Strategy.
@@ -105,21 +109,21 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 
 
         /// <summary>
-        /// Adds the strategy to the cumulative report.
+        ///     Adds the strategy to the cumulative report.
         /// </summary>
         private void BtnStartClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Opens charts screen.
+        ///     Opens charts screen.
         /// </summary>
         private void ViewChartsClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Opens the report folder.
+        ///     Opens the report folder.
         /// </summary>
         private void OpenFolderClick(object sender, EventArgs e)
         {
@@ -134,7 +138,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Opens the report.
+        ///     Opens the report.
         /// </summary>
         private void OpenReportClick(object sender, EventArgs e)
         {

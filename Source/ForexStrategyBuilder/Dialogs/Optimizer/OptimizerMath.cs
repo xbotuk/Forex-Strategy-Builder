@@ -1,8 +1,12 @@
-﻿// Strategy Optimizer - Math
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.ComponentModel;
@@ -10,40 +14,40 @@ using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs.Optimizer
+namespace ForexStrategyBuilder.Dialogs.Optimizer
 {
     /// <summary>
-    /// The Optimizer - Math
+    ///     The Optimizer - Math
     /// </summary>
     public sealed partial class Optimizer
     {
-        private double[] _initialValues;
+        private double[] initialValues;
 
         /// <summary>
-        /// Sets the parameters.
+        ///     Sets the parameters.
         /// </summary>
         private void SetIndicatorParams()
         {
-            _protections = 0;
-            _parameters = 0;
+            protections = 0;
+            parameters = 0;
 
             CountParameters();
             CountPermanentProtections();
             CreateControls();
             CreateProtectionParameters();
 
-            for (int prot = 0; prot < _protections; prot++)
+            for (int prot = 0; prot < protections; prot++)
             {
                 SetParametersValues(prot);
             }
 
-            int param = _protections;
+            int param = protections;
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
             {
                 for (int numParam = 0; numParam < 6; numParam++)
                 {
                     if (!Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled) continue;
-                    AParameter[param] = new Parameter(OptimizerParameterType.Indicator, slot, numParam);
+                    aParameter[param] = new Parameter(OptimizerParameterType.Indicator, slot, numParam);
                     SetParametersValues(param);
                     param++;
                 }
@@ -51,296 +55,303 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
             int totalHeight = ArrangeControls();
 
-            if (_parameters == 0)
+            if (parameters == 0)
             {
-                PnlParams.Height = 50;
-                LblNoParams.Visible = true;
+                pnlParams.Height = 50;
+                lblNoParams.Visible = true;
             }
             else
             {
-                PnlParams.Height = totalHeight;
+                pnlParams.Height = totalHeight;
             }
 
-            BtnOptimize.Focus();
+            btnOptimize.Focus();
         }
 
         /// <summary>
-        /// Counts the strategy's numeric parameters and Indicators.
+        ///     Counts the strategy's numeric parameters and Indicators.
         /// </summary>
         private void CountParameters()
         {
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)
                     if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled)
-                        _parameters++;
+                        parameters++;
         }
 
         /// <summary>
-        /// Counts Permanent SL, TP and Breakeven
+        ///     Counts Permanent SL, TP and Breakeven
         /// </summary>
         private void CountPermanentProtections()
         {
             if (Data.Strategy.UsePermanentSL)
             {
-                _parameters++;
-                _protections++;
+                parameters++;
+                protections++;
             }
             if (Data.Strategy.UsePermanentTP)
             {
-                _parameters++;
-                _protections++;
+                parameters++;
+                protections++;
             }
             if (Data.Strategy.UseBreakEven)
             {
-                _parameters++;
-                _protections++;
+                parameters++;
+                protections++;
             }
         }
 
         /// <summary>
-        /// Creates control arrays.
+        ///     Creates control arrays.
         /// </summary>
         private void CreateControls()
         {
-            AParameter = new Parameter[_parameters];
-            AchbxParameterName = new CheckBox[_parameters];
-            AlblInitialValue = new Label[_parameters];
-            AlblParameterValue = new Label[_parameters];
-            AnudParameterMin = new NumericUpDown[_parameters];
-            AnudParameterMax = new NumericUpDown[_parameters];
-            AnudParameterStep = new NumericUpDown[_parameters];
-            AlblIndicatorName = new Label[_parameters];
+            aParameter = new Parameter[parameters];
+            achbxParameterName = new CheckBox[parameters];
+            alblInitialValue = new Label[parameters];
+            alblParameterValue = new Label[parameters];
+            anudParameterMin = new NumericUpDown[parameters];
+            anudParameterMax = new NumericUpDown[parameters];
+            anudParameterStep = new NumericUpDown[parameters];
+            alblIndicatorName = new Label[parameters];
 
-            for (int param = 0; param < _parameters; param++)
+            for (int param = 0; param < parameters; param++)
             {
-                AlblIndicatorName[param] = new Label();
-                AchbxParameterName[param] = new CheckBox();
-                AlblInitialValue[param] = new Label();
-                AlblParameterValue[param] = new Label();
-                AnudParameterMin[param] = new NumericUpDown();
-                AnudParameterMax[param] = new NumericUpDown();
-                AnudParameterStep[param] = new NumericUpDown();
+                alblIndicatorName[param] = new Label();
+                achbxParameterName[param] = new CheckBox();
+                alblInitialValue[param] = new Label();
+                alblParameterValue[param] = new Label();
+                anudParameterMin[param] = new NumericUpDown();
+                anudParameterMax[param] = new NumericUpDown();
+                anudParameterStep[param] = new NumericUpDown();
             }
 
-            _initialValues = new double[_parameters];
+            initialValues = new double[parameters];
         }
 
         /// <summary>
-        /// Initializes protection parameter.
+        ///     Initializes protection parameter.
         /// </summary>
         private void CreateProtectionParameters()
         {
             int par = 0;
             if (Data.Strategy.UsePermanentSL)
             {
-                AParameter[par] = new Parameter(OptimizerParameterType.PermanentSL, -1, 0);
+                aParameter[par] = new Parameter(OptimizerParameterType.PermanentSL, -1, 0);
                 par++;
             }
             if (Data.Strategy.UsePermanentTP)
             {
-                AParameter[par] = new Parameter(OptimizerParameterType.PermanentTP, -1, 0);
+                aParameter[par] = new Parameter(OptimizerParameterType.PermanentTP, -1, 0);
                 par++;
             }
             if (Data.Strategy.UseBreakEven)
             {
-                AParameter[par] = new Parameter(OptimizerParameterType.BreakEven, -1, 0);
+                aParameter[par] = new Parameter(OptimizerParameterType.BreakEven, -1, 0);
             }
         }
 
         /// <summary>
-        /// Sets values of optimizer controls.
+        ///     Sets values of optimizer controls.
         /// </summary>
         private void SetParametersValues(int param)
         {
-            AlblIndicatorName[param].Parent = PnlParams;
-            AlblIndicatorName[param].Text = AParameter[param].GroupName;
-            AlblIndicatorName[param].Font = _fontIndicator;
-            AlblIndicatorName[param].ForeColor = LayoutColors.ColorSlotIndicatorText;
-            AlblIndicatorName[param].BackColor = Color.Transparent;
-            AlblIndicatorName[param].Height = 18;
-            AlblIndicatorName[param].Width = 200;
+            alblIndicatorName[param].Parent = pnlParams;
+            alblIndicatorName[param].Text = aParameter[param].GroupName;
+            alblIndicatorName[param].Font = fontIndicator;
+            alblIndicatorName[param].ForeColor = LayoutColors.ColorSlotIndicatorText;
+            alblIndicatorName[param].BackColor = Color.Transparent;
+            alblIndicatorName[param].Height = 18;
+            alblIndicatorName[param].Width = 200;
 
-            AchbxParameterName[param].ForeColor = _colorText;
-            AchbxParameterName[param].BackColor = Color.Transparent;
-            AchbxParameterName[param].Text = AParameter[param].ParameterName;
-            AchbxParameterName[param].CheckedChanged += OptimizerCheckedChanged;
-            AchbxParameterName[param].Parent = PnlParams;
-            AchbxParameterName[param].Width = 155;
-            AchbxParameterName[param].TextAlign = ContentAlignment.MiddleLeft;
+            achbxParameterName[param].ForeColor = colorText;
+            achbxParameterName[param].BackColor = Color.Transparent;
+            achbxParameterName[param].Text = aParameter[param].ParameterName;
+            achbxParameterName[param].CheckedChanged += OptimizerCheckedChanged;
+            achbxParameterName[param].Parent = pnlParams;
+            achbxParameterName[param].Width = 155;
+            achbxParameterName[param].TextAlign = ContentAlignment.MiddleLeft;
 
-            int point = AParameter[param].Point;
-            double value = AParameter[param].Value;
-            double min = AParameter[param].Minimum;
-            double max = AParameter[param].Maximum;
-            double step = AParameter[param].Step;
+            int point = aParameter[param].Point;
+            double value = aParameter[param].Value;
+            double min = aParameter[param].Minimum;
+            double max = aParameter[param].Maximum;
+            double step = aParameter[param].Step;
             string stringFormat = "{0:F" + point + "}";
 
-            AlblInitialValue[param].ForeColor = _colorText;
-            AlblInitialValue[param].BackColor = Color.Transparent;
-            AlblInitialValue[param].Text = string.Format(stringFormat, value);
-            AlblInitialValue[param].Parent = PnlParams;
-            AlblInitialValue[param].Width = 55;
-            AlblInitialValue[param].TextAlign = ContentAlignment.MiddleCenter;
+            alblInitialValue[param].ForeColor = colorText;
+            alblInitialValue[param].BackColor = Color.Transparent;
+            alblInitialValue[param].Text = string.Format(stringFormat, value);
+            alblInitialValue[param].Parent = pnlParams;
+            alblInitialValue[param].Width = 55;
+            alblInitialValue[param].TextAlign = ContentAlignment.MiddleCenter;
 
-            AlblParameterValue[param].ForeColor = _colorText;
-            AlblParameterValue[param].BackColor = Color.Transparent;
-            AlblParameterValue[param].Text = string.Format(stringFormat, value);
-            AlblParameterValue[param].Parent = PnlParams;
-            AlblParameterValue[param].Width = 55;
-            AlblParameterValue[param].TextAlign = ContentAlignment.MiddleCenter;
+            alblParameterValue[param].ForeColor = colorText;
+            alblParameterValue[param].BackColor = Color.Transparent;
+            alblParameterValue[param].Text = string.Format(stringFormat, value);
+            alblParameterValue[param].Parent = pnlParams;
+            alblParameterValue[param].Width = 55;
+            alblParameterValue[param].TextAlign = ContentAlignment.MiddleCenter;
 
-            _fontParamValueRegular = AlblParameterValue[param].Font;
-            _fontParamValueBold = new Font(_fontParamValueRegular, FontStyle.Bold);
+            fontParamValueRegular = alblParameterValue[param].Font;
+            fontParamValueBold = new Font(fontParamValueRegular, FontStyle.Bold);
 
-            AnudParameterMin[param].BeginInit();
-            AnudParameterMin[param].Minimum = (decimal) min;
-            AnudParameterMin[param].Maximum = (decimal) max;
-            AnudParameterMin[param].Value = (decimal) Math.Round(Math.Max(value - _lastSetStepButtonValue*step, min), point);
-            AnudParameterMin[param].DecimalPlaces = point;
-            AnudParameterMin[param].Increment = (decimal) step;
-            AnudParameterMin[param].EndInit();
-            AnudParameterMin[param].Parent = PnlParams;
-            AnudParameterMin[param].Width = 70;
-            AnudParameterMin[param].TextAlign = HorizontalAlignment.Center;
-            _toolTip.SetToolTip(AnudParameterMin[param], Language.T("Minimum value."));
+            anudParameterMin[param].BeginInit();
+            anudParameterMin[param].Minimum = (decimal) min;
+            anudParameterMin[param].Maximum = (decimal) max;
+            anudParameterMin[param].Value =
+                (decimal) Math.Round(Math.Max(value - lastSetStepButtonValue*step, min), point);
+            anudParameterMin[param].DecimalPlaces = point;
+            anudParameterMin[param].Increment = (decimal) step;
+            anudParameterMin[param].EndInit();
+            anudParameterMin[param].Parent = pnlParams;
+            anudParameterMin[param].Width = 70;
+            anudParameterMin[param].TextAlign = HorizontalAlignment.Center;
+            toolTip.SetToolTip(anudParameterMin[param], Language.T("Minimum value."));
 
-            AnudParameterMax[param].BeginInit();
-            AnudParameterMax[param].Minimum = (decimal) min;
-            AnudParameterMax[param].Maximum = (decimal) max;
-            AnudParameterMax[param].Value = (decimal) Math.Round(Math.Min(value + _lastSetStepButtonValue*step, max), point);
-            AnudParameterMax[param].DecimalPlaces = point;
-            AnudParameterMax[param].Increment = (decimal) step;
-            AnudParameterMax[param].EndInit();
-            AnudParameterMax[param].Parent = PnlParams;
-            AnudParameterMax[param].Width = 70;
-            AnudParameterMax[param].TextAlign = HorizontalAlignment.Center;
-            _toolTip.SetToolTip(AnudParameterMax[param], Language.T("Maximum value."));
+            anudParameterMax[param].BeginInit();
+            anudParameterMax[param].Minimum = (decimal) min;
+            anudParameterMax[param].Maximum = (decimal) max;
+            anudParameterMax[param].Value =
+                (decimal) Math.Round(Math.Min(value + lastSetStepButtonValue*step, max), point);
+            anudParameterMax[param].DecimalPlaces = point;
+            anudParameterMax[param].Increment = (decimal) step;
+            anudParameterMax[param].EndInit();
+            anudParameterMax[param].Parent = pnlParams;
+            anudParameterMax[param].Width = 70;
+            anudParameterMax[param].TextAlign = HorizontalAlignment.Center;
+            toolTip.SetToolTip(anudParameterMax[param], Language.T("Maximum value."));
 
-            AnudParameterStep[param].BeginInit();
-            AnudParameterStep[param].Minimum = (decimal) step;
-            AnudParameterStep[param].Maximum = (decimal) Math.Max(step, Math.Abs(max - min));
-            AnudParameterStep[param].Value = (decimal) step;
-            AnudParameterStep[param].DecimalPlaces = point;
-            AnudParameterStep[param].Increment = (decimal) step;
-            AnudParameterStep[param].EndInit();
-            AnudParameterStep[param].Parent = PnlParams;
-            AnudParameterStep[param].Width = 70;
-            AnudParameterStep[param].TextAlign = HorizontalAlignment.Center;
-            _toolTip.SetToolTip(AnudParameterStep[param], Language.T("Step of change."));
+            anudParameterStep[param].BeginInit();
+            anudParameterStep[param].Minimum = (decimal) step;
+            anudParameterStep[param].Maximum = (decimal) Math.Max(step, Math.Abs(max - min));
+            anudParameterStep[param].Value = (decimal) step;
+            anudParameterStep[param].DecimalPlaces = point;
+            anudParameterStep[param].Increment = (decimal) step;
+            anudParameterStep[param].EndInit();
+            anudParameterStep[param].Parent = pnlParams;
+            anudParameterStep[param].Width = 70;
+            anudParameterStep[param].TextAlign = HorizontalAlignment.Center;
+            toolTip.SetToolTip(anudParameterStep[param], Language.T("Step of change."));
 
-            _initialValues[param] = value;
+            initialValues[param] = value;
         }
 
         /// <summary>
-        /// Arranges the controls
+        ///     Arranges the controls
         /// </summary>
         private int ArrangeControls()
         {
             const int vertMargin = 3;
             const int horizMargin = 5;
-            int vertPosition = vertMargin - ScrollBar.Value;
+            int vertPosition = vertMargin - scrollBar.Value;
             int totalHeight = vertMargin;
 
             int slotNumber = int.MinValue;
-            for (int param = 0; param < _parameters; param++)
+            for (int param = 0; param < parameters; param++)
             {
-                if (AParameter[param].SlotNumber != slotNumber)
+                if (aParameter[param].SlotNumber != slotNumber)
                 {
-                    slotNumber = AParameter[param].SlotNumber;
-                    AlblIndicatorName[param].Location = new Point(horizMargin, vertPosition);
-                    vertPosition += AlblIndicatorName[param].Height + vertMargin;
-                    totalHeight += AlblIndicatorName[param].Height + vertMargin;
+                    slotNumber = aParameter[param].SlotNumber;
+                    alblIndicatorName[param].Location = new Point(horizMargin, vertPosition);
+                    vertPosition += alblIndicatorName[param].Height + vertMargin;
+                    totalHeight += alblIndicatorName[param].Height + vertMargin;
                 }
                 else
                 {
-                    AlblIndicatorName[param].Visible = false;
+                    alblIndicatorName[param].Visible = false;
                 }
-                AchbxParameterName[param].Location = new Point(horizMargin, vertPosition);
-                AlblInitialValue[param].Location = new Point(AchbxParameterName[param].Right + horizMargin, vertPosition - 1);
-                AlblParameterValue[param].Location = new Point(AlblInitialValue[param].Right + horizMargin, vertPosition - 1);
-                AnudParameterMin[param].Location = new Point(AlblParameterValue[param].Right + horizMargin, vertPosition + 2);
-                AnudParameterMax[param].Location = new Point(AnudParameterMin[param].Right + horizMargin, vertPosition + 2);
-                AnudParameterStep[param].Location = new Point(AnudParameterMax[param].Right + horizMargin, vertPosition + 2);
-                vertPosition += AchbxParameterName[param].Height + vertMargin;
-                totalHeight += AchbxParameterName[param].Height + vertMargin;
+                achbxParameterName[param].Location = new Point(horizMargin, vertPosition);
+                alblInitialValue[param].Location = new Point(achbxParameterName[param].Right + horizMargin,
+                                                             vertPosition - 1);
+                alblParameterValue[param].Location = new Point(alblInitialValue[param].Right + horizMargin,
+                                                               vertPosition - 1);
+                anudParameterMin[param].Location = new Point(alblParameterValue[param].Right + horizMargin,
+                                                             vertPosition + 2);
+                anudParameterMax[param].Location = new Point(anudParameterMin[param].Right + horizMargin,
+                                                             vertPosition + 2);
+                anudParameterStep[param].Location = new Point(anudParameterMax[param].Right + horizMargin,
+                                                              vertPosition + 2);
+                vertPosition += achbxParameterName[param].Height + vertMargin;
+                totalHeight += achbxParameterName[param].Height + vertMargin;
             }
 
             return totalHeight;
         }
 
         /// <summary>
-        /// Sets parameters' Min / Max values
+        ///     Sets parameters' Min / Max values
         /// </summary>
         private void SetParamsMinMax(int deltaStep)
         {
-            for (int param = 0; param < _parameters; param++)
+            for (int param = 0; param < parameters; param++)
             {
-                int point = AParameter[param].Point;
-                double value = AParameter[param].Value;
-                double min = AParameter[param].Minimum;
-                double max = AParameter[param].Maximum;
-                double step = AParameter[param].Step;
+                int point = aParameter[param].Point;
+                double value = aParameter[param].Value;
+                double min = aParameter[param].Minimum;
+                double max = aParameter[param].Maximum;
+                double step = aParameter[param].Step;
 
-                AnudParameterMin[param].Value = (decimal) Math.Round(Math.Max(value - deltaStep*step, min), point);
-                AnudParameterMax[param].Value = (decimal) Math.Round(Math.Min(value + deltaStep*step, max), point);
-                AlblParameterValue[param].Text = GetParameterText(param);
+                anudParameterMin[param].Value = (decimal) Math.Round(Math.Max(value - deltaStep*step, min), point);
+                anudParameterMax[param].Value = (decimal) Math.Round(Math.Min(value + deltaStep*step, max), point);
+                alblParameterValue[param].Text = GetParameterText(param);
             }
         }
 
         /// <summary>
-        /// Select / unselect parameters
+        ///     Select / unselect parameters
         /// </summary>
         private void SelectParameters(OptimizerButtons button)
         {
-            for (int param = 0; param < _parameters; param++)
+            for (int param = 0; param < parameters; param++)
             {
                 if (button == OptimizerButtons.SelectAll)
-                    AchbxParameterName[param].Checked = true;
+                    achbxParameterName[param].Checked = true;
                 else if (button == OptimizerButtons.SelectNone)
-                    AchbxParameterName[param].Checked = false;
+                    achbxParameterName[param].Checked = false;
                 else if (button == OptimizerButtons.SelectRandom)
                     SelectRandomParameters();
             }
         }
 
         /// <summary>
-        /// Selects parameters randomly.
+        ///     Selects parameters randomly.
         /// </summary>
         private void SelectRandomParameters()
         {
-            for (int param = 0; param < _protections; param++)
+            for (int param = 0; param < protections; param++)
             {
-                AchbxParameterName[param].Checked = _rand.Next(100) > 40;
+                achbxParameterName[param].Checked = rand.Next(100) > 40;
             }
 
             int checkedChBoxes = 0;
-            for (int param = _protections; param < _parameters; param++)
+            for (int param = protections; param < parameters; param++)
             {
-                int slot = AParameter[param].SlotNumber;
-                int numParam = AParameter[param].NumParam;
+                int slot = aParameter[param].SlotNumber;
+                int numParam = aParameter[param].NumParam;
 
-                AchbxParameterName[param].Checked = false;
+                achbxParameterName[param].Checked = false;
 
                 if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Caption == "Level")
                 {
                     if (Data.Strategy.Slot[slot].IndParam.ListParam[0].Text.Contains("Level"))
                     {
-                        if (_rand.Next(100) > 20 && checkedChBoxes < 6)
+                        if (rand.Next(100) > 20 && checkedChBoxes < 6)
                         {
-                            AchbxParameterName[param].Checked = true;
+                            achbxParameterName[param].Checked = true;
                             checkedChBoxes++;
                         }
                     }
                     else
                     {
-                        AchbxParameterName[param].Checked = false;
+                        achbxParameterName[param].Checked = false;
                     }
                 }
                 else
                 {
-                    if (_rand.Next(100) > 40 && checkedChBoxes < 6)
+                    if (rand.Next(100) > 40 && checkedChBoxes < 6)
                     {
-                        AchbxParameterName[param].Checked = true;
+                        achbxParameterName[param].Checked = true;
                         checkedChBoxes++;
                     }
                 }
@@ -348,107 +359,107 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Optimize.
+        ///     Optimize.
         /// </summary>
         private void BtnOptimizeClick(object sender, EventArgs e)
         {
-            if (_isOptimizing)
+            if (isOptimizing)
             {
                 // Cancel the asynchronous operation.
-                BgWorker.CancelAsync();
+                bgWorker.CancelAsync();
                 return;
             }
 
-            if (ChbOptimizerWritesReport.Checked)
+            if (chbOptimizerWritesReport.Checked)
                 InitReport();
 
             // Counts the checked parameters
-            _checkedParams = 0;
-            for (int i = 0; i < _parameters; i++)
-                if (AchbxParameterName[i].Checked)
-                    _checkedParams++;
+            checkedParams = 0;
+            for (int i = 0; i < parameters; i++)
+                if (achbxParameterName[i].Checked)
+                    checkedParams++;
 
             // If there are no checked returns
-            if (_checkedParams < 1)
+            if (checkedParams < 1)
             {
                 SystemSounds.Hand.Play();
                 return;
             }
 
             // Contains the checked parameters only
-            _aiChecked = new int[_checkedParams];
+            aiChecked = new int[checkedParams];
             int indexChecked = 0;
-            for (int i = 0; i < _parameters; i++)
-                if (AchbxParameterName[i].Checked)
-                    _aiChecked[indexChecked++] = i;
+            for (int i = 0; i < parameters; i++)
+                if (achbxParameterName[i].Checked)
+                    aiChecked[indexChecked++] = i;
 
             SetNecessaryCycles();
 
             Cursor = Cursors.WaitCursor;
-            ProgressBar.Value = 1;
-            _progressPercent = 0;
-            _computedCycles = 0;
-            _isOptimizing = true;
-            BtnCancel.Enabled = false;
-            BtnAccept.Enabled = false;
-            BtnOptimize.Text = Language.T("Stop");
+            progressBar.Value = 1;
+            progressPercent = 0;
+            computedCycles = 0;
+            isOptimizing = true;
+            btnCancel.Enabled = false;
+            btnAccept.Enabled = false;
+            btnOptimize.Text = Language.T("Stop");
 
             for (int i = 0; i <= (int) OptimizerButtons.ResetStrategy; i++)
-                AOptimizerButtons[i].Enabled = false;
+                aOptimizerButtons[i].Enabled = false;
 
-            foreach (Control control in PnlParams.Controls)
+            foreach (Control control in pnlParams.Controls)
                 if (control.GetType() != typeof (Label))
                     control.Enabled = false;
 
-            foreach (Control control in PnlLimitations.Controls)
+            foreach (Control control in pnlLimitations.Controls)
                 control.Enabled = false;
 
-            foreach (Control control in PnlSettings.Controls)
+            foreach (Control control in pnlSettings.Controls)
                 control.Enabled = false;
-            ChbHideFSB.Enabled = true;
+            chbHideFSB.Enabled = true;
 
             // Start the bgWorker
-            BgWorker.RunWorkerAsync();
+            bgWorker.RunWorkerAsync();
         }
 
         /// <summary>
-        /// Counts the necessary optimization cycles.
+        ///     Counts the necessary optimization cycles.
         /// </summary>
         private void SetNecessaryCycles()
         {
-            _cycles = 0;
-            for (int i = 0; i < _checkedParams; i++)
+            cycles = 0;
+            for (int i = 0; i < checkedParams; i++)
             {
-                var min = (double) AnudParameterMin[_aiChecked[i]].Value;
-                var max = (double) AnudParameterMax[_aiChecked[i]].Value;
-                var step = (double) AnudParameterStep[_aiChecked[i]].Value;
+                var min = (double) anudParameterMin[aiChecked[i]].Value;
+                var max = (double) anudParameterMax[aiChecked[i]].Value;
+                var step = (double) anudParameterStep[aiChecked[i]].Value;
 
                 for (double value = min; value <= max; value += step)
-                    _cycles += 1;
+                    cycles += 1;
             }
 
-            for (int i = 0; i < _checkedParams - 1; i++)
+            for (int i = 0; i < checkedParams - 1; i++)
             {
-                for (int j = 0; j < _checkedParams; j++)
+                for (int j = 0; j < checkedParams; j++)
                 {
                     if (i >= j) continue;
 
-                    var min1 = (double) AnudParameterMin[_aiChecked[i]].Value;
-                    var max1 = (double) AnudParameterMax[_aiChecked[i]].Value;
-                    var step1 = (double) AnudParameterStep[_aiChecked[i]].Value;
-                    var min2 = (double) AnudParameterMin[_aiChecked[j]].Value;
-                    var max2 = (double) AnudParameterMax[_aiChecked[j]].Value;
-                    var step2 = (double) AnudParameterStep[_aiChecked[j]].Value;
+                    var min1 = (double) anudParameterMin[aiChecked[i]].Value;
+                    var max1 = (double) anudParameterMax[aiChecked[i]].Value;
+                    var step1 = (double) anudParameterStep[aiChecked[i]].Value;
+                    var min2 = (double) anudParameterMin[aiChecked[j]].Value;
+                    var max2 = (double) anudParameterMax[aiChecked[j]].Value;
+                    var step2 = (double) anudParameterStep[aiChecked[j]].Value;
 
                     for (double value1 = min1; value1 <= max1; value1 += step1)
                         for (double value2 = min2; value2 <= max2; value2 += step2)
-                            _cycles += 1;
+                            cycles += 1;
                 }
             }
         }
 
         /// <summary>
-        /// Does the job
+        ///     Does the job
         /// </summary>
         private void BgWorkerDoWork(object sender, DoWorkEventArgs e)
         {
@@ -460,57 +471,57 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// This event handler updates the progress bar.
+        ///     This event handler updates the progress bar.
         /// </summary>
         private void BgWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            ProgressBar.Value = e.ProgressPercentage;
+            progressBar.Value = e.ProgressPercentage;
         }
 
         /// <summary>
-        /// This event handler deals with the results of the background operation.
+        ///     This event handler deals with the results of the background operation.
         /// </summary>
         private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Backtester.Calculate();
             Backtester.CalculateAccountStats();
-            BalanceChart.SetChartData();
-            BalanceChart.InitChart();
-            BalanceChart.Invalidate();
+            balanceChart.SetChartData();
+            balanceChart.InitChart();
+            balanceChart.Invalidate();
 
             if (!e.Cancelled && Configs.PlaySounds)
                 SystemSounds.Exclamation.Play();
 
-            _isOptimizing = false;
-            BtnCancel.Enabled = true;
-            BtnAccept.Enabled = true;
-            BtnOptimize.Text = Language.T("Optimize");
-            ProgressBar.Value = 1;
+            isOptimizing = false;
+            btnCancel.Enabled = true;
+            btnAccept.Enabled = true;
+            btnOptimize.Text = Language.T("Optimize");
+            progressBar.Value = 1;
 
-            if (PnlParams.Visible)
+            if (pnlParams.Visible)
                 for (int i = 0; i <= (int) OptimizerButtons.ResetStrategy; i++)
-                    AOptimizerButtons[i].Enabled = true;
+                    aOptimizerButtons[i].Enabled = true;
 
-            for (int i = 0; i < _parameters; i++)
-                AlblParameterValue[i].Text = GetParameterText(i);
+            for (int i = 0; i < parameters; i++)
+                alblParameterValue[i].Text = GetParameterText(i);
 
-            foreach (Control control in PnlParams.Controls)
+            foreach (Control control in pnlParams.Controls)
                 control.Enabled = true;
 
-            foreach (Control control in PnlLimitations.Controls)
+            foreach (Control control in pnlLimitations.Controls)
                 control.Enabled = true;
 
-            foreach (Control control in PnlSettings.Controls)
+            foreach (Control control in pnlSettings.Controls)
                 control.Enabled = true;
 
-            if (ChbOptimizerWritesReport.Checked)
+            if (chbOptimizerWritesReport.Checked)
                 SaveReport();
 
             Cursor = Cursors.Default;
         }
 
         /// <summary>
-        /// Saves the Generator History
+        ///     Saves the Generator History
         /// </summary>
         private void SetStrategyToGeneratorHistory()
         {
@@ -523,63 +534,63 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Optimize all the checked parameters
+        ///     Optimize all the checked parameters
         /// </summary>
         private void OptimizeParams(BackgroundWorker worker, DoWorkEventArgs e)
         {
-            int bestBalance = (_isOOS ? Backtester.Balance(_barOOS) : Backtester.NetBalance);
+            int bestBalance = (isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance);
 
             // First Optimization Cycle
-            for (int round = 0; round < _checkedParams && _isOptimizing; round++)
+            for (int round = 0; round < checkedParams && isOptimizing; round++)
             {
                 if (worker.CancellationPending) break;
 
-                int param = _aiChecked[round];
+                int param = aiChecked[round];
 
-                var min = (double) AnudParameterMin[param].Value;
-                var max = (double) AnudParameterMax[param].Value;
-                var step = (double) AnudParameterStep[param].Value;
+                var min = (double) anudParameterMin[param].Value;
+                var max = (double) anudParameterMax[param].Value;
+                var step = (double) anudParameterStep[param].Value;
 
                 for (double value = min; value <= max; value += step)
                 {
                     if (worker.CancellationPending) break;
 
-                    AParameter[param].Value = value;
-                    if (AParameter[param].Type == OptimizerParameterType.Indicator)
-                        CalculateIndicator(AParameter[param].SlotNumber);
+                    aParameter[param].Value = value;
+                    if (aParameter[param].Type == OptimizerParameterType.Indicator)
+                        CalculateIndicator(aParameter[param].SlotNumber);
 
                     Backtester.Calculate();
                     Backtester.CalculateAccountStats();
-                    if (ChbOptimizerWritesReport.Checked)
+                    if (chbOptimizerWritesReport.Checked)
                         FillInReport();
 
-                    int balance = _isOOS ? Backtester.Balance(_barOOS) : Backtester.NetBalance;
+                    int balance = isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance;
                     if (balance > bestBalance && IsLimitationsFulfilled())
                     {
                         bestBalance = balance;
-                        AParameter[param].BestValue = value;
+                        aParameter[param].BestValue = value;
                         ShowParamBestValue(param);
-                        BalanceChart.SetChartData();
-                        BalanceChart.InitChart();
-                        BalanceChart.Invalidate();
-                        _isStartegyChanged = true;
+                        balanceChart.SetChartData();
+                        balanceChart.InitChart();
+                        balanceChart.Invalidate();
+                        isStartegyChanged = true;
                         SetStrategyToGeneratorHistory();
                     }
 
                     // Report progress as a percentage of the total task.
-                    _computedCycles++;
-                    int percentComplete = 100*_computedCycles/_cycles;
+                    computedCycles++;
+                    int percentComplete = 100*computedCycles/cycles;
                     percentComplete = percentComplete > 100 ? 100 : percentComplete;
-                    if (percentComplete > _progressPercent)
+                    if (percentComplete > progressPercent)
                     {
-                        _progressPercent = percentComplete;
+                        progressPercent = percentComplete;
                         worker.ReportProgress(percentComplete);
                     }
                 }
 
-                AParameter[param].Value = AParameter[param].BestValue;
-                if (AParameter[param].Type == OptimizerParameterType.Indicator)
-                    CalculateIndicator(AParameter[param].SlotNumber);
+                aParameter[param].Value = aParameter[param].BestValue;
+                if (aParameter[param].Type == OptimizerParameterType.Indicator)
+                    CalculateIndicator(aParameter[param].SlotNumber);
                 Backtester.Calculate();
                 Backtester.CalculateAccountStats();
             }
@@ -590,26 +601,26 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 return;
             }
 
-            if (_checkedParams < 2)
+            if (checkedParams < 2)
                 return;
 
             // Counts the necessary round
             int rounds = 0;
-            for (int i = 0; i < _checkedParams - 1; i++)
-                for (int j = 0; j < _checkedParams; j++)
+            for (int i = 0; i < checkedParams - 1; i++)
+                for (int j = 0; j < checkedParams; j++)
                     if (i < j) rounds++;
 
-            var aCP = new CoupleOfParams[rounds];
-            var aCPTemp = new CoupleOfParams[rounds];
+            var aCp = new CoupleOfParams[rounds];
+            var aCpTemp = new CoupleOfParams[rounds];
 
             rounds = 0;
-            for (int i = 0; i < _checkedParams - 1; i++)
-                for (int j = 0; j < _checkedParams; j++)
+            for (int i = 0; i < checkedParams - 1; i++)
+                for (int j = 0; j < checkedParams; j++)
                     if (i < j)
                     {
-                        aCPTemp[rounds].Param1 = _aiChecked[i];
-                        aCPTemp[rounds].Param2 = _aiChecked[j];
-                        aCPTemp[rounds].IsPassed = false;
+                        aCpTemp[rounds].Param1 = aiChecked[i];
+                        aCpTemp[rounds].Param2 = aiChecked[j];
+                        aCpTemp[rounds].IsPassed = false;
                         rounds++;
                     }
 
@@ -619,10 +630,10 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 int couple;
                 do
                 {
-                    couple = _rand.Next(rounds);
-                } while (aCPTemp[couple].IsPassed);
-                aCPTemp[couple].IsPassed = true;
-                aCP[round] = aCPTemp[couple];
+                    couple = rand.Next(rounds);
+                } while (aCpTemp[couple].IsPassed);
+                aCpTemp[couple].IsPassed = true;
+                aCp[round] = aCpTemp[couple];
             }
 
             // The Optimization Cycle
@@ -630,20 +641,20 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             {
                 if (worker.CancellationPending) break;
 
-                int param1 = aCP[round].Param1;
-                int param2 = aCP[round].Param2;
-                bool isOneIndicator = (AParameter[param1].Type == OptimizerParameterType.Indicator &&
-                                       AParameter[param2].Type == OptimizerParameterType.Indicator &&
-                                       AParameter[param1].IndParam.IndicatorName ==
-                                       AParameter[param2].IndParam.IndicatorName);
+                int param1 = aCp[round].Param1;
+                int param2 = aCp[round].Param2;
+                bool isOneIndicator = (aParameter[param1].Type == OptimizerParameterType.Indicator &&
+                                       aParameter[param2].Type == OptimizerParameterType.Indicator &&
+                                       aParameter[param1].IndParam.IndicatorName ==
+                                       aParameter[param2].IndParam.IndicatorName);
 
-                var min1 = (double) AnudParameterMin[param1].Value;
-                var max1 = (double) AnudParameterMax[param1].Value;
-                var step1 = (double) AnudParameterStep[param1].Value;
+                var min1 = (double) anudParameterMin[param1].Value;
+                var max1 = (double) anudParameterMax[param1].Value;
+                var step1 = (double) anudParameterStep[param1].Value;
 
-                var min2 = (double) AnudParameterMin[param2].Value;
-                var max2 = (double) AnudParameterMax[param2].Value;
-                var step2 = (double) AnudParameterStep[param2].Value;
+                var min2 = (double) anudParameterMin[param2].Value;
+                var max2 = (double) anudParameterMax[param2].Value;
+                var step2 = (double) anudParameterStep[param2].Value;
 
                 for (double value1 = min1; value1 <= max1; value1 += step1)
                 {
@@ -651,9 +662,9 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
                     if (!isOneIndicator)
                     {
-                        AParameter[param1].Value = value1;
-                        if (AParameter[param1].Type == OptimizerParameterType.Indicator)
-                            CalculateIndicator(AParameter[param1].SlotNumber);
+                        aParameter[param1].Value = value1;
+                        if (aParameter[param1].Type == OptimizerParameterType.Indicator)
+                            CalculateIndicator(aParameter[param1].SlotNumber);
                     }
 
                     for (double value2 = min2; value2 <= max2; value2 += step2)
@@ -662,65 +673,65 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
 
                         if (isOneIndicator)
                         {
-                            AParameter[param1].Value = value1;
-                            AParameter[param2].Value = value2;
-                            if (AParameter[param1].Type == OptimizerParameterType.Indicator)
-                                CalculateIndicator(AParameter[param1].SlotNumber);
+                            aParameter[param1].Value = value1;
+                            aParameter[param2].Value = value2;
+                            if (aParameter[param1].Type == OptimizerParameterType.Indicator)
+                                CalculateIndicator(aParameter[param1].SlotNumber);
                         }
                         else
                         {
-                            AParameter[param2].Value = value2;
-                            if (AParameter[param2].Type == OptimizerParameterType.Indicator)
-                                CalculateIndicator(AParameter[param2].SlotNumber);
+                            aParameter[param2].Value = value2;
+                            if (aParameter[param2].Type == OptimizerParameterType.Indicator)
+                                CalculateIndicator(aParameter[param2].SlotNumber);
                         }
 
                         // Calculates the Strategy
                         Backtester.Calculate();
                         Backtester.CalculateAccountStats();
-                        if (ChbOptimizerWritesReport.Checked)
+                        if (chbOptimizerWritesReport.Checked)
                             FillInReport();
 
-                        int balance = _isOOS ? Backtester.Balance(_barOOS) : Backtester.NetBalance;
+                        int balance = isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance;
                         if (balance > bestBalance && IsLimitationsFulfilled())
                         {
                             bestBalance = balance;
-                            AParameter[param1].BestValue = value1;
-                            AParameter[param2].BestValue = value2;
+                            aParameter[param1].BestValue = value1;
+                            aParameter[param2].BestValue = value2;
                             ShowParamBestValue(param1);
                             ShowParamBestValue(param2);
-                            BalanceChart.SetChartData();
-                            BalanceChart.InitChart();
-                            BalanceChart.Invalidate();
-                            _isStartegyChanged = true;
+                            balanceChart.SetChartData();
+                            balanceChart.InitChart();
+                            balanceChart.Invalidate();
+                            isStartegyChanged = true;
                             SetStrategyToGeneratorHistory();
                         }
 
                         // Report progress as a percentage of the total task.
-                        _computedCycles++;
-                        int percentComplete = 100*_computedCycles/_cycles;
+                        computedCycles++;
+                        int percentComplete = 100*computedCycles/cycles;
                         percentComplete = percentComplete > 100 ? 100 : percentComplete;
-                        if (percentComplete > _progressPercent)
+                        if (percentComplete > progressPercent)
                         {
-                            _progressPercent = percentComplete;
+                            progressPercent = percentComplete;
                             worker.ReportProgress(percentComplete);
                         }
                     }
                 }
 
-                AParameter[param1].Value = AParameter[param1].BestValue;
-                AParameter[param2].Value = AParameter[param2].BestValue;
+                aParameter[param1].Value = aParameter[param1].BestValue;
+                aParameter[param2].Value = aParameter[param2].BestValue;
 
                 if (isOneIndicator)
                 {
-                    if (AParameter[param1].Type == OptimizerParameterType.Indicator)
-                        CalculateIndicator(AParameter[param1].SlotNumber);
+                    if (aParameter[param1].Type == OptimizerParameterType.Indicator)
+                        CalculateIndicator(aParameter[param1].SlotNumber);
                 }
                 else
                 {
-                    if (AParameter[param1].Type == OptimizerParameterType.Indicator)
-                        CalculateIndicator(AParameter[param1].SlotNumber);
-                    if (AParameter[param2].Type == OptimizerParameterType.Indicator)
-                        CalculateIndicator(AParameter[param2].SlotNumber);
+                    if (aParameter[param1].Type == OptimizerParameterType.Indicator)
+                        CalculateIndicator(aParameter[param1].SlotNumber);
+                    if (aParameter[param2].Type == OptimizerParameterType.Indicator)
+                        CalculateIndicator(aParameter[param2].SlotNumber);
                 }
 
                 Backtester.Calculate();
@@ -734,7 +745,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Calculates the indicator in the designated slot
+        ///     Calculates the indicator in the designated slot
         /// </summary>
         private void CalculateIndicator(int slot)
         {
@@ -780,54 +791,54 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Calculates the Limitations Criteria
+        ///     Calculates the Limitations Criteria
         /// </summary>
         private bool IsLimitationsFulfilled()
         {
             // Limitation Max Ambiguous Bars
-            if (ChbAmbiguousBars.Checked && Backtester.AmbiguousBars > NUDAmbiguousBars.Value)
+            if (chbAmbiguousBars.Checked && Backtester.AmbiguousBars > nudAmbiguousBars.Value)
                 return false;
 
             // Limitation Max Equity Drawdown
             double maxEquityDrawdown = Configs.AccountInMoney
                                            ? Backtester.MaxMoneyEquityDrawdown
                                            : Backtester.MaxEquityDrawdown;
-            if (ChbMaxDrawdown.Checked && maxEquityDrawdown > (double) NUDMaxDrawdown.Value)
+            if (chbMaxDrawdown.Checked && maxEquityDrawdown > (double) nudMaxDrawdown.Value)
                 return false;
 
             // Limitation Max Equity percent drawdown
-            if (ChbEquityPercent.Checked && Backtester.MoneyEquityPercentDrawdown > (double) NUDEquityPercent.Value)
+            if (chbEquityPercent.Checked && Backtester.MoneyEquityPercentDrawdown > (double) nudEquityPercent.Value)
                 return false;
 
             // Limitation Min Trades
-            if (ChbMinTrades.Checked && Backtester.ExecutedOrders < NUDMinTrades.Value)
+            if (chbMinTrades.Checked && Backtester.ExecutedOrders < nudMinTrades.Value)
                 return false;
 
             // Limitation Max Trades
-            if (ChbMaxTrades.Checked && Backtester.ExecutedOrders > NUDMaxTrades.Value)
+            if (chbMaxTrades.Checked && Backtester.ExecutedOrders > nudMaxTrades.Value)
                 return false;
 
             // Limitation Win / Loss ratio
-            if (ChbWinLossRatio.Checked && Backtester.WinLossRatio < (double) NUDWinLossRatio.Value)
+            if (chbWinLossRatio.Checked && Backtester.WinLossRatio < (double) nudWinLossRatio.Value)
                 return false;
 
             // OOS Pattern filter
-            if (ChbOOSPatternFilter.Checked && ChbOutOfSample.Checked)
+            if (chbOOSPatternFilter.Checked && chbOutOfSample.Checked)
             {
                 int netBalance = Backtester.NetBalance;
-                int oosBalance = Backtester.Balance(_barOOS);
-                float targetBalanceRatio = 1 + (int) NUDOutOfSample.Value/100.0F;
+                int oosBalance = Backtester.Balance(barOOS);
+                float targetBalanceRatio = 1 + (int) nudOutOfSample.Value/100.0F;
                 var targetBalance = (int) (oosBalance*targetBalanceRatio);
-                var minBalance = (int) (targetBalance*(1 - NUDOOSPatternPercent.Value/100));
+                var minBalance = (int) (targetBalance*(1 - nudoosPatternPercent.Value/100));
                 if (netBalance < oosBalance || netBalance < minBalance)
                     return false;
             }
 
             // Smooth Balance Line
-            if (ChbSmoothBalanceLines.Checked)
+            if (chbSmoothBalanceLines.Checked)
             {
-                var checkPoints = (int) NUDSmoothBalanceCheckPoints.Value;
-                var maxPercentDeviation = (double) (NUDSmoothBalancePercent.Value/100);
+                var checkPoints = (int) nudSmoothBalanceCheckPoints.Value;
+                var maxPercentDeviation = (double) (nudSmoothBalancePercent.Value/100);
 
                 for (int i = 1; i <= checkPoints; i++)
                 {
@@ -842,28 +853,25 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                     if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
                         return false;
 
-                    if (Configs.AdditionalStatistics)
-                    {
-                        // Long balance line
-                        netBalance = Backtester.NetLongMoneyBalance;
-                        checkPointBalance = Backtester.LongMoneyBalance(bar);
-                        startBalance = Backtester.LongMoneyBalance(firstBar);
-                        targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                        minBalance = targetBalance*(1 - maxPercentDeviation);
-                        maxBalance = targetBalance*(1 + maxPercentDeviation);
-                        if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                            return false;
+                    // Long balance line
+                    netBalance = Backtester.NetLongMoneyBalance;
+                    checkPointBalance = Backtester.LongMoneyBalance(bar);
+                    startBalance = Backtester.LongMoneyBalance(firstBar);
+                    targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
+                    minBalance = targetBalance*(1 - maxPercentDeviation);
+                    maxBalance = targetBalance*(1 + maxPercentDeviation);
+                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
+                        return false;
 
-                        // Short balance line
-                        netBalance = Backtester.NetShortMoneyBalance;
-                        checkPointBalance = Backtester.ShortMoneyBalance(bar);
-                        startBalance = Backtester.ShortMoneyBalance(firstBar);
-                        targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                        minBalance = targetBalance*(1 - maxPercentDeviation);
-                        maxBalance = targetBalance*(1 + maxPercentDeviation);
-                        if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                            return false;
-                    }
+                    // Short balance line
+                    netBalance = Backtester.NetShortMoneyBalance;
+                    checkPointBalance = Backtester.ShortMoneyBalance(bar);
+                    startBalance = Backtester.ShortMoneyBalance(firstBar);
+                    targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
+                    minBalance = targetBalance*(1 - maxPercentDeviation);
+                    maxBalance = targetBalance*(1 + maxPercentDeviation);
+                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
+                        return false;
                 }
             }
 
@@ -871,22 +879,22 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Shows the best value of a parameter during optimization.
+        ///     Shows the best value of a parameter during optimization.
         /// </summary>
         private void ShowParamBestValue(int param)
         {
-            if (AlblParameterValue[param].InvokeRequired)
+            if (alblParameterValue[param].InvokeRequired)
             {
                 BeginInvoke(new ShowParamBestValueCallback(ShowParamBestValue), new object[] {param});
             }
             else
             {
-                AlblParameterValue[param].Text = GetParameterText(param);
-                AlblParameterValue[param].Font = _fontParamValueBold;
-                if (AParameter[param].OldBestValue < AParameter[param].BestValue)
-                    AlblParameterValue[param].ForeColor = LayoutColors.ColorTradeLong;
-                if (AParameter[param].OldBestValue > AParameter[param].BestValue)
-                    AlblParameterValue[param].ForeColor = LayoutColors.ColorTradeShort;
+                alblParameterValue[param].Text = GetParameterText(param);
+                alblParameterValue[param].Font = fontParamValueBold;
+                if (aParameter[param].OldBestValue < aParameter[param].BestValue)
+                    alblParameterValue[param].ForeColor = LayoutColors.ColorTradeLong;
+                if (aParameter[param].OldBestValue > aParameter[param].BestValue)
+                    alblParameterValue[param].ForeColor = LayoutColors.ColorTradeShort;
 
                 var timer = new Timer {Interval = 1500, Tag = param};
                 timer.Tick += TimerTick;
@@ -895,74 +903,74 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Generates the parameter text.
+        ///     Generates the parameter text.
         /// </summary>
         private string GetParameterText(int param)
         {
-            string stringFormat = "{0:F" + AParameter[param].Point + "}";
-            string newText = string.Format(stringFormat, AParameter[param].BestValue);
+            string stringFormat = "{0:F" + aParameter[param].Point + "}";
+            string newText = string.Format(stringFormat, aParameter[param].BestValue);
 
-            if (AlblParameterValue[param].Text == newText)
+            if (alblParameterValue[param].Text == newText)
                 return newText;
 
-            var bestValue = AParameter[param].BestValue;
-            if (Math.Abs(bestValue - (double) AnudParameterMin[param].Value) < 0.000001)
+            double bestValue = aParameter[param].BestValue;
+            if (Math.Abs(bestValue - (double) anudParameterMin[param].Value) < 0.000001)
                 newText = "[" + newText;
-            if (Math.Abs(bestValue - AParameter[param].Minimum) < 0.000001)
+            if (Math.Abs(bestValue - aParameter[param].Minimum) < 0.000001)
                 newText = "[" + newText;
-            if (Math.Abs(bestValue - (double) AnudParameterMax[param].Value) < 0.000001)
+            if (Math.Abs(bestValue - (double) anudParameterMax[param].Value) < 0.000001)
                 newText = newText + "]";
-            if (Math.Abs(bestValue - AParameter[param].Maximum) < 0.000001)
+            if (Math.Abs(bestValue - aParameter[param].Maximum) < 0.000001)
                 newText = newText + "]";
 
             return newText;
         }
 
         /// <summary>
-        /// Recovers the font of a parameter value label.
+        ///     Recovers the font of a parameter value label.
         /// </summary>
         private void TimerTick(object sender, EventArgs e)
         {
             var timer = (Timer) sender;
             var param = (int) timer.Tag;
 
-            AlblParameterValue[param].ForeColor = LayoutColors.ColorControlText;
-            AlblParameterValue[param].Font = _fontParamValueRegular;
+            alblParameterValue[param].ForeColor = LayoutColors.ColorControlText;
+            alblParameterValue[param].Font = fontParamValueRegular;
 
             timer.Stop();
             timer.Dispose();
         }
 
         /// <summary>
-        /// Resets parameters and recalculates the strategy.
+        ///     Resets parameters and recalculates the strategy.
         /// </summary>
         private void ResetStrategyParameters()
         {
-            for (int param = 0; param < _parameters; param++)
+            for (int param = 0; param < parameters; param++)
             {
-                int point = AParameter[param].Point;
+                int point = aParameter[param].Point;
                 string stringFormat = "{0:F" + point + "}";
-                double value = _initialValues[param];
+                double value = initialValues[param];
 
-                AParameter[param].Value = value;
-                AlblParameterValue[param].Text = string.Format(stringFormat, value);
+                aParameter[param].Value = value;
+                alblParameterValue[param].Text = string.Format(stringFormat, value);
             }
 
             int lastSlot = -1;
-            for (int param = 0; param < _parameters; param++)
+            for (int param = 0; param < parameters; param++)
             {
-                if (AParameter[param].Type != OptimizerParameterType.Indicator) continue;
-                if (AParameter[param].SlotNumber == lastSlot) continue;
-                lastSlot = AParameter[param].SlotNumber;
+                if (aParameter[param].Type != OptimizerParameterType.Indicator) continue;
+                if (aParameter[param].SlotNumber == lastSlot) continue;
+                lastSlot = aParameter[param].SlotNumber;
                 CalculateIndicator(lastSlot);
             }
 
             Backtester.Calculate();
             Backtester.CalculateAccountStats();
-            BalanceChart.SetChartData();
-            BalanceChart.InitChart();
-            BalanceChart.Invalidate();
-            _isStartegyChanged = false;
+            balanceChart.SetChartData();
+            balanceChart.InitChart();
+            balanceChart.Invalidate();
+            isStartegyChanged = false;
         }
 
         #region Nested type: ShowParamBestValueCallback

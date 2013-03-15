@@ -1,8 +1,12 @@
-// Data class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -13,24 +17,26 @@ using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    ///  Base class containing the data.
+    ///     Base class containing the data.
     /// </summary>
     public class Data
     {
+        private static string[] asStrategyIndicators;
+
         /// <summary>
-        /// The default constructor.
+        ///     The default constructor.
         /// </summary>
         static Data()
         {
             Icon = Resources.Icon;
             PointChar = '.';
-            DFS = "dd.MM";
-            DF = "dd.MM.yy";
+            Dfs = "dd.MM";
+            Df = "dd.MM.yy";
             AutoUsePrvBarValue = true;
             FirstBar = 40;
             PeriodColor = new Dictionary<DataPeriods, Color>();
@@ -42,7 +48,7 @@ namespace Forex_Strategy_Builder
             SystemDir = "System" + Path.DirectorySeparatorChar;
             ProgramDir = "";
             ProgramName = "Forex Strategy Builder";
-            IsProgramRC = false;
+            IsProgramReleaseCandidate = false;
             IsProgramBeta = false;
             LoadedSavedStrategy = "";
             StrategyName = "New.xml";
@@ -61,7 +67,7 @@ namespace Forex_Strategy_Builder
             // Program's Major, Minor, Version and Build numbers must be <= 99.
             ProgramVersion = Application.ProductVersion;
             string[] version = ProgramVersion.Split('.');
-            ProgramID = 1000000*int.Parse(version[0]) +
+            ProgramId = 1000000*int.Parse(version[0]) +
                         10000*int.Parse(version[1]) +
                         100*int.Parse(version[2]) +
                         1*int.Parse(version[3]);
@@ -73,87 +79,87 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the program name.
+        ///     Gets the program name.
         /// </summary>
         public static string ProgramName { get; private set; }
 
         /// <summary>
-        /// Programs icon.
+        ///     Programs icon.
         /// </summary>
         public static Icon Icon { get; private set; }
 
         /// <summary>
-        /// Gets the program version.
+        ///     Gets the program version.
         /// </summary>
         public static string ProgramVersion { get; private set; }
 
         /// <summary>
-        /// Gets the program Beta state.
+        ///     Gets the program Beta state.
         /// </summary>
         public static bool IsProgramBeta { get; private set; }
 
         /// <summary>
-        /// Gets the program Release Candidate.
+        ///     Gets the program Release Candidate.
         /// </summary>
-        public static bool IsProgramRC { get; private set; }
+        public static bool IsProgramReleaseCandidate { get; private set; }
 
         /// <summary>
-        /// Gets the program ID
+        ///     Gets the program Id
         /// </summary>
-        public static int ProgramID { get; private set; }
+        public static int ProgramId { get; private set; }
 
         /// <summary>
-        /// Gets the program current working directory.
+        ///     Gets the program current working directory.
         /// </summary>
         public static string ProgramDir { get; private set; }
 
         /// <summary>
-        /// Gets the path to System Dir.
+        ///     Gets the path to System Dir.
         /// </summary>
         public static string SystemDir { get; private set; }
 
         /// <summary>
-        /// Gets the path to LanguageDir Dir.
+        ///     Gets the path to LanguageDir Dir.
         /// </summary>
         public static string LanguageDir { get; private set; }
 
         /// <summary>
-        /// Gets the path to Color Scheme Dir.
+        ///     Gets the path to Color Scheme Dir.
         /// </summary>
         public static string ColorDir { get; private set; }
 
         /// <summary>
-        /// Gets or sets the data directory.
+        ///     Gets or sets the data directory.
         /// </summary>
         public static string OfflineDataDir { get; set; }
 
         /// <summary>
-        /// Gets the default data directory.
+        ///     Gets the default data directory.
         /// </summary>
         public static string DefaultOfflineDataDir { get; private set; }
 
         /// <summary>
-        /// Gets or sets the docs directory.
+        ///     Gets or sets the docs directory.
         /// </summary>
         private static string OfflineDocsDir { get; set; }
 
         /// <summary>
-        /// Gets the path to Default Strategy Dir.
+        ///     Gets the path to Default Strategy Dir.
         /// </summary>
         public static string DefaultStrategyDir { get; private set; }
 
         /// <summary>
-        /// Gets or sets the path to dir Strategy.
+        ///     Gets or sets the path to dir Strategy.
         /// </summary>
         public static string StrategyDir { get; set; }
 
         /// <summary>
-        /// Gets or sets the strategy name with extension.
+        ///     Gets or sets the strategy name with extension.
         /// </summary>
         public static string StrategyName { get; set; }
 
         /// <summary>
-        /// Gets the current strategy full path.
+        ///     Gets the current strategy full path.
         /// </summary>
         public static string StrategyPath
         {
@@ -161,52 +167,52 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the custom indicators folder
+        ///     Gets or sets the custom indicators folder
         /// </summary>
         public static string SourceFolder { get; private set; }
 
         /// <summary>
-        /// Gets or sets the Additional  folder
+        ///     Gets or sets the Additional  folder
         /// </summary>
         public static string AdditionalFolder { get; private set; }
 
         /// <summary>
-        /// Gets or sets the strategy name for Configs.LastStrategy
+        ///     Gets or sets the strategy name for Configs.LastStrategy
         /// </summary>
         public static string LoadedSavedStrategy { get; set; }
 
         /// <summary>
-        /// The current strategy.
+        ///     The current strategy.
         /// </summary>
         public static Strategy Strategy { get; set; }
 
         /// <summary>
-        /// The current instrument.
+        ///     The current instrument.
         /// </summary>
         public static InstrumentProperties InstrProperties { get; set; }
 
         /// <summary>
-        /// The current strategy undo
+        ///     The current strategy undo
         /// </summary>
         public static Stack<Strategy> StackStrategy { get; private set; }
 
         /// <summary>
-        /// The Generator History
+        ///     The Generator History
         /// </summary>
         public static List<Strategy> GeneratorHistory { get; private set; }
 
         /// <summary>
-        /// The Generator History current strategy
+        ///     The Generator History current strategy
         /// </summary>
         public static int GenHistoryIndex { get; set; }
 
         /// <summary>
-        /// The scanner colors
+        ///     The scanner colors
         /// </summary>
         public static Dictionary<DataPeriods, Color> PeriodColor { get; private set; }
 
         /// <summary>
-        /// Debug mode
+        ///     Debug mode
         /// </summary>
         public static bool Debug { get; set; }
 
@@ -231,68 +237,68 @@ namespace Forex_Strategy_Builder
         public static int FirstBar { get; set; }
 
         /// <summary>
-        /// Sets or gets value of the AutoUsePrvBarValue
+        ///     Sets or gets value of the AutoUsePrvBarValue
         /// </summary>
         public static bool AutoUsePrvBarValue { get; set; }
 
         /// <summary>
-        /// Gets the number format.
+        ///     Gets the number format.
         /// </summary>
-        public static string FF
+        public static string Ff
         {
             get { return "F" + InstrProperties.Digits; }
         }
 
         /// <summary>
-        /// Gets the date format.
+        ///     Gets the date format.
         /// </summary>
-        public static string DF { get; private set; }
+        public static string Df { get; private set; }
 
         /// <summary>
-        /// Gets the short date format.
+        ///     Gets the short date format.
         /// </summary>
-        public static string DFS { get; private set; }
+        public static string Dfs { get; private set; }
 
         /// <summary>
-        /// Gets the point character
+        ///     Gets the point character
         /// </summary>
         public static char PointChar { get; private set; }
 
         /// <summary>
-        /// Relative font height
+        ///     Relative font height
         /// </summary>
-        public static float VerticalDLU { get; set; }
+        public static float VerticalDlu { get; set; }
 
         /// <summary>
-        /// Relative font width
+        ///     Relative font width
         /// </summary>
-        public static float HorizontalDLU { get; set; }
+        public static float HorizontalDlu { get; set; }
 
         /// <summary>
-        /// Initial settings.
+        ///     Initial settings.
         /// </summary>
         public static void Start()
         {
             // Sets the date format.
             if (DateTimeFormatInfo.CurrentInfo != null)
-                DF = DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
-            if (DF == "dd/MM yyyy") DF = "dd/MM/yyyy"; // Fixes the Uzbek (Latin) issue
-            DF = DF.Replace(" ", ""); // Fixes the Slovenian issue
+                Df = DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
+            if (Df == "dd/MM yyyy") Df = "dd/MM/yyyy"; // Fixes the Uzbek (Latin) issue
+            Df = Df.Replace(" ", ""); // Fixes the Slovenian issue
             if (DateTimeFormatInfo.CurrentInfo != null)
             {
-                char[] acDS = DateTimeFormatInfo.CurrentInfo.DateSeparator.ToCharArray();
-                string[] asSS = DF.Split(acDS, 3);
-                asSS[0] = asSS[0].Substring(0, 1) + asSS[0].Substring(0, 1);
-                asSS[1] = asSS[1].Substring(0, 1) + asSS[1].Substring(0, 1);
-                asSS[2] = asSS[2].Substring(0, 1) + asSS[2].Substring(0, 1);
-                DF = asSS[0] + acDS[0] + asSS[1] + acDS[0] + asSS[2];
+                char[] acDs = DateTimeFormatInfo.CurrentInfo.DateSeparator.ToCharArray();
+                string[] asSs = Df.Split(acDs, 3);
+                asSs[0] = asSs[0].Substring(0, 1) + asSs[0].Substring(0, 1);
+                asSs[1] = asSs[1].Substring(0, 1) + asSs[1].Substring(0, 1);
+                asSs[2] = asSs[2].Substring(0, 1) + asSs[2].Substring(0, 1);
+                Df = asSs[0] + acDs[0] + asSs[1] + acDs[0] + asSs[2];
 
-                if (asSS[0].ToUpper() == "YY")
-                    DFS = asSS[1] + acDS[0] + asSS[2];
-                else if (asSS[1].ToUpper() == "YY")
-                    DFS = asSS[0] + acDS[0] + asSS[2];
+                if (asSs[0].ToUpper() == "YY")
+                    Dfs = asSs[1] + acDs[0] + asSs[2];
+                else if (asSs[1].ToUpper() == "YY")
+                    Dfs = asSs[0] + acDs[0] + asSs[2];
                 else
-                    DFS = asSS[0] + acDS[0] + asSS[1];
+                    Dfs = asSs[0] + acDs[0] + asSs[1];
             }
 
             // Point character
@@ -321,201 +327,27 @@ namespace Forex_Strategy_Builder
             PeriodColor.Add(DataPeriods.week, Color.DarkViolet);
         }
 
-        #region Market data arrays
-
-        public static DateTime[] Time { get; set; }
-        public static double[] Open { get; set; }
-        public static double[] High { get; set; }
-        public static double[] Low { get; set; }
-        public static double[] Close { get; set; }
-        public static int[] Volume { get; set; }
-
-        #endregion
-
-        #region Intrabar Scanner
-
-        public static Bar[][] IntraBarData { get; set; }
-        public static int[] IntraBarBars { get; set; }
-        public static bool IsIntrabarData { get; set; }
-        public static int[] IntraBars { get; set; }
-
         /// <summary>
-        /// Number of intrabar periods that have been loaded
-        /// </summary>
-        public static int LoadedIntraBarPeriods { get; set; }
-
-        public static DataPeriods[] IntraBarsPeriods { get; set; }
-
-        // Tick data
-        //static Dictionary<DateTime, double[]> tickData;
-        //public static Dictionary<DateTime, double[]> TickData { get { return tickData; } set { tickData = value; } }
-        public static double[][] TickData { get; set; }
-        public static bool IsTickData { get; set; }
-        public static long Ticks { get; set; }
-
-
-        /// <summary>
-        /// Calculates the Modelling Quality
-        /// </summary>
-        public static double ModellingQuality
-        {
-            get
-            {
-                if (!Backtester.IsScanPerformed)
-                    return 0;
-
-                int startGen = 0;
-
-                for (int i = 0; i < Bars; i++)
-                    if (IntraBarsPeriods[i] < Period)
-                    {
-                        startGen = i;
-                        break;
-                    }
-
-                int startGenM1 = Bars - 1;
-
-                for (int i = 0; i < Bars; i++)
-                    if (IntraBarsPeriods[i] == DataPeriods.min1)
-                    {
-                        startGenM1 = i;
-                        break;
-                    }
-
-                double modellingQuality = (0.25 * (startGen - FirstBar) + 0.5 * (startGenM1 - startGen) +
-                                           0.9 * (Bars - startGenM1)) / (Bars - FirstBar) * 100;
-
-                return modellingQuality;
-            }
-        }
-
-        #endregion
-
-        #region Market statistics
-
-        // Statistical information for the instrument data
-        public static double MinPrice { get; set; }
-        public static double MaxPrice { get; set; }
-        public static int DaysOff { get; set; }
-        public static int AverageGap { private get; set; }
-        public static int MaxGap { private get; set; }
-        public static int AverageHighLow { private get; set; }
-        public static int MaxHighLow { private get; set; }
-        public static int AverageCloseOpen { private get; set; }
-        public static int MaxCloseOpen { private get; set; }
-        public static bool DataCut { get; set; }
-
-        /// <summary>
-        /// Gets the market stats parameters
-        /// </summary>
-        public static string[] MarketStatsParam { get; private set; }
-
-        /// <summary>
-        /// Gets the market stats values
-        /// </summary>
-        public static string[] MarketStatsValue { get; private set; }
-
-        /// <summary>
-        /// Gets the market stats flags
-        /// </summary>
-        public static bool[] MarketStatsFlag { get; private set; }
-
-        /// <summary>
-        /// Initializes the stats names
-        /// </summary>
-        public static void InitMarketStatistic()
-        {
-            MarketStatsParam = new[]
-            {
-                Language.T("Symbol"),
-                Language.T("Period"),
-                Language.T("Number of bars"),
-                Language.T("Date of updating"),
-                Language.T("Time of updating"),
-                Language.T("Date of beginning"),
-                Language.T("Time of beginning"),
-                Language.T("Minimum price"),
-                Language.T("Maximum price"),
-                Language.T("Average Gap"),
-                Language.T("Maximum Gap"),
-                Language.T("Average High-Low"),
-                Language.T("Maximum High-Low"),
-                Language.T("Average Close-Open"),
-                Language.T("Maximum Close-Open"),
-                Language.T("Maximum days off"),
-                Language.T("Maximum data bars"),
-                Language.T("No data older than"),
-                Language.T("No data newer than"),
-                Language.T("Fill In Data Gaps"),
-                Language.T("Cut Off Bad Data")
-            };
-
-            MarketStatsValue = new string[21];
-            MarketStatsFlag = new bool[21];
-        }
-
-        /// <summary>
-        /// Generate the Market Statistics
-        /// </summary>
-        public static void GenerateMarketStats()
-        {
-            MarketStatsValue[0] = Symbol;
-            MarketStatsValue[1] = DataPeriodToString(Period);
-            MarketStatsValue[2] = Bars.ToString(CultureInfo.InvariantCulture);
-            MarketStatsValue[3] = Update.ToString(DF);
-            MarketStatsValue[4] = Update.ToString("HH:mm");
-            MarketStatsValue[5] = Time[0].ToString(DF);
-            MarketStatsValue[6] = Time[0].ToString("HH:mm");
-            MarketStatsValue[7] = MinPrice.ToString(CultureInfo.InvariantCulture);
-            MarketStatsValue[8] = MaxPrice.ToString(CultureInfo.InvariantCulture);
-            MarketStatsValue[9] = AverageGap + " " + Language.T("pips");
-            MarketStatsValue[10] = MaxGap + " " + Language.T("pips");
-            MarketStatsValue[11] = AverageHighLow + " " + Language.T("pips");
-            MarketStatsValue[12] = MaxHighLow + " " + Language.T("pips");
-            MarketStatsValue[13] = AverageCloseOpen + " " + Language.T("pips");
-            MarketStatsValue[14] = MaxCloseOpen + " " + Language.T("pips");
-            MarketStatsValue[15] = DaysOff.ToString(CultureInfo.InvariantCulture);
-            MarketStatsValue[16] = Configs.MaxBars.ToString(CultureInfo.InvariantCulture);
-            MarketStatsValue[17] = Configs.UseStartTime ? Configs.DataStartTime.ToShortDateString() : Language.T("No limits");
-            MarketStatsValue[18] = Configs.UseEndTime ? Configs.DataEndTime.ToShortDateString() : Language.T("No limits");
-            MarketStatsValue[19] = Configs.FillInDataGaps ? Language.T("Accomplished") : Language.T("Switched off");
-            MarketStatsValue[20] = Configs.CutBadData ? Language.T("Accomplished") : Language.T("Switched off");
-        }
-
-        #endregion
-
-        #region Usage stats
-
-        private static readonly DateTime FSBStartTime = DateTime.Now;
-        public static int GeneratorStarts { get; set; }
-        public static int OptimizerStarts { get; set; }
-        public static int SavedStrategies { get; set; }
-
-        #endregion
-
-        private static string[] _asStrategyIndicators;
-
-        /// <summary>
-        /// Sets the indicator names
+        ///     Sets the indicator names
         /// </summary>
         public static void SetStrategyIndicators()
         {
-            _asStrategyIndicators = new string[Strategy.Slots];
+            asStrategyIndicators = new string[Strategy.Slots];
             for (int i = 0; i < Strategy.Slots; i++)
-                _asStrategyIndicators[i] = Strategy.Slot[i].IndicatorName;
+                asStrategyIndicators[i] = Strategy.Slot[i].IndicatorName;
         }
 
         /// <summary>
-        /// It tells if the strategy description is relevant.
+        ///     It tells if the strategy description is relevant.
         /// </summary>
         public static bool IsStrDescriptionRelevant()
         {
-            bool isStrategyIndicatorsChanged = Strategy.Slots != _asStrategyIndicators.Length;
+            bool isStrategyIndicatorsChanged = Strategy.Slots != asStrategyIndicators.Length;
 
             if (isStrategyIndicatorsChanged == false)
             {
                 for (int i = 0; i < Strategy.Slots; i++)
-                    if (_asStrategyIndicators[i] != Strategy.Slot[i].IndicatorName)
+                    if (asStrategyIndicators[i] != Strategy.Slot[i].IndicatorName)
                         isStrategyIndicatorsChanged = true;
             }
 
@@ -523,11 +355,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Collects usage statistics and sends them if it's allowed.
+        ///     Collects usage statistics and sends them if it's allowed.
         /// </summary>
         public static void SendStats()
         {
-            const string fileURL = "http://forexsb.com/ustats/set-fsb.php";
+            const string fileUrl = "http://forexsb.com/ustats/set-fsb.php";
 
             string mac = "";
             foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
@@ -553,7 +385,7 @@ namespace Forex_Strategy_Builder
             try
             {
                 var webClient = new WebClient();
-                Stream data = webClient.OpenRead(fileURL + parameters);
+                Stream data = webClient.OpenRead(fileUrl + parameters);
                 if (data != null) data.Close();
             }
             catch (Exception exception)
@@ -563,7 +395,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Converts a data period from DataPeriods type to string.
+        ///     Converts a data period from DataPeriods type to string.
         /// </summary>
         public static string DataPeriodToString(DataPeriods dataPeriod)
         {
@@ -591,7 +423,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Paints a rectangle with gradient
+        ///     Paints a rectangle with gradient
         /// </summary>
         public static void GradientPaint(Graphics g, RectangleF rect, Color color, int depth)
         {
@@ -613,7 +445,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Color change
+        ///     Color change
         /// </summary>
         public static Color GetGradientColor(Color baseColor, int depth)
         {
@@ -626,5 +458,181 @@ namespace Forex_Strategy_Builder
 
             return Color.FromArgb(r, g, b);
         }
+
+        #region Market data arrays
+
+        public static DateTime[] Time { get; set; }
+        public static double[] Open { get; set; }
+        public static double[] High { get; set; }
+        public static double[] Low { get; set; }
+        public static double[] Close { get; set; }
+        public static int[] Volume { get; set; }
+
+        #endregion
+
+        #region Intrabar Scanner
+
+        public static Bar[][] IntraBarData { get; set; }
+        public static int[] IntraBarBars { get; set; }
+        public static bool IsIntrabarData { get; set; }
+        public static int[] IntraBars { get; set; }
+
+        /// <summary>
+        ///     Number of intrabar periods that have been loaded
+        /// </summary>
+        public static int LoadedIntraBarPeriods { get; set; }
+
+        public static DataPeriods[] IntraBarsPeriods { get; set; }
+
+        // Tick data
+        //static Dictionary<DateTime, double[]> tickData;
+        //public static Dictionary<DateTime, double[]> TickData { get { return tickData; } set { tickData = value; } }
+        public static double[][] TickData { get; set; }
+        public static bool IsTickData { get; set; }
+        public static long Ticks { get; set; }
+
+
+        /// <summary>
+        ///     Calculates the Modelling Quality
+        /// </summary>
+        public static double ModellingQuality
+        {
+            get
+            {
+                if (!Backtester.IsScanPerformed)
+                    return 0;
+
+                int startGen = 0;
+
+                for (int i = 0; i < Bars; i++)
+                    if (IntraBarsPeriods[i] < Period)
+                    {
+                        startGen = i;
+                        break;
+                    }
+
+                int startGenM1 = Bars - 1;
+
+                for (int i = 0; i < Bars; i++)
+                    if (IntraBarsPeriods[i] == DataPeriods.min1)
+                    {
+                        startGenM1 = i;
+                        break;
+                    }
+
+                double modellingQuality = (0.25*(startGen - FirstBar) + 0.5*(startGenM1 - startGen) +
+                                           0.9*(Bars - startGenM1))/(Bars - FirstBar)*100;
+
+                return modellingQuality;
+            }
+        }
+
+        #endregion
+
+        #region Market statistics
+
+        // Statistical information for the instrument data
+        public static double MinPrice { get; set; }
+        public static double MaxPrice { get; set; }
+        public static int DaysOff { get; set; }
+        public static int AverageGap { private get; set; }
+        public static int MaxGap { private get; set; }
+        public static int AverageHighLow { private get; set; }
+        public static int MaxHighLow { private get; set; }
+        public static int AverageCloseOpen { private get; set; }
+        public static int MaxCloseOpen { private get; set; }
+        public static bool DataCut { get; set; }
+
+        /// <summary>
+        ///     Gets the market stats parameters
+        /// </summary>
+        public static string[] MarketStatsParam { get; private set; }
+
+        /// <summary>
+        ///     Gets the market stats values
+        /// </summary>
+        public static string[] MarketStatsValue { get; private set; }
+
+        /// <summary>
+        ///     Gets the market stats flags
+        /// </summary>
+        public static bool[] MarketStatsFlag { get; private set; }
+
+        /// <summary>
+        ///     Initializes the stats names
+        /// </summary>
+        public static void InitMarketStatistic()
+        {
+            MarketStatsParam = new[]
+                {
+                    Language.T("Symbol"),
+                    Language.T("Period"),
+                    Language.T("Number of bars"),
+                    Language.T("Date of updating"),
+                    Language.T("Time of updating"),
+                    Language.T("Date of beginning"),
+                    Language.T("Time of beginning"),
+                    Language.T("Minimum price"),
+                    Language.T("Maximum price"),
+                    Language.T("Average Gap"),
+                    Language.T("Maximum Gap"),
+                    Language.T("Average High-Low"),
+                    Language.T("Maximum High-Low"),
+                    Language.T("Average Close-Open"),
+                    Language.T("Maximum Close-Open"),
+                    Language.T("Maximum days off"),
+                    Language.T("Maximum data bars"),
+                    Language.T("No data older than"),
+                    Language.T("No data newer than"),
+                    Language.T("Fill In Data Gaps"),
+                    Language.T("Cut Off Bad Data")
+                };
+
+            MarketStatsValue = new string[21];
+            MarketStatsFlag = new bool[21];
+        }
+
+        /// <summary>
+        ///     Generate the Market Statistics
+        /// </summary>
+        public static void GenerateMarketStats()
+        {
+            MarketStatsValue[0] = Symbol;
+            MarketStatsValue[1] = DataPeriodToString(Period);
+            MarketStatsValue[2] = Bars.ToString(CultureInfo.InvariantCulture);
+            MarketStatsValue[3] = Update.ToString(Df);
+            MarketStatsValue[4] = Update.ToString("HH:mm");
+            MarketStatsValue[5] = Time[0].ToString(Df);
+            MarketStatsValue[6] = Time[0].ToString("HH:mm");
+            MarketStatsValue[7] = MinPrice.ToString(CultureInfo.InvariantCulture);
+            MarketStatsValue[8] = MaxPrice.ToString(CultureInfo.InvariantCulture);
+            MarketStatsValue[9] = AverageGap + " " + Language.T("pips");
+            MarketStatsValue[10] = MaxGap + " " + Language.T("pips");
+            MarketStatsValue[11] = AverageHighLow + " " + Language.T("pips");
+            MarketStatsValue[12] = MaxHighLow + " " + Language.T("pips");
+            MarketStatsValue[13] = AverageCloseOpen + " " + Language.T("pips");
+            MarketStatsValue[14] = MaxCloseOpen + " " + Language.T("pips");
+            MarketStatsValue[15] = DaysOff.ToString(CultureInfo.InvariantCulture);
+            MarketStatsValue[16] = Configs.MaxBars.ToString(CultureInfo.InvariantCulture);
+            MarketStatsValue[17] = Configs.UseStartTime
+                                       ? Configs.DataStartTime.ToShortDateString()
+                                       : Language.T("No limits");
+            MarketStatsValue[18] = Configs.UseEndTime
+                                       ? Configs.DataEndTime.ToShortDateString()
+                                       : Language.T("No limits");
+            MarketStatsValue[19] = Configs.FillInDataGaps ? Language.T("Accomplished") : Language.T("Switched off");
+            MarketStatsValue[20] = Configs.CutBadData ? Language.T("Accomplished") : Language.T("Switched off");
+        }
+
+        #endregion
+
+        #region Usage stats
+
+        private static readonly DateTime FSBStartTime = DateTime.Now;
+        public static int GeneratorStarts { get; set; }
+        public static int OptimizerStarts { get; set; }
+        public static int SavedStrategies { get; set; }
+
+        #endregion
     }
 }

@@ -1,10 +1,12 @@
-﻿// Forex Strategy Builder - MetaTrader4Import
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
-//
-// Contribution by Adam Burgess (February 2012)
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -17,19 +19,19 @@ using System.Media;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public sealed class MetaTrader4Import : Form
     {
-        private readonly BackgroundWorker _bgWorker;
-        private readonly Color _colorText;
-        private readonly List<string> _files = new List<string>();
-        private bool _isImporting;
-        private DateTime _endingDate;
-        private DateTime _startingDate;
+        private readonly BackgroundWorker bgWorker;
+        private readonly Color colorText;
+        private readonly List<string> files = new List<string>();
+        private DateTime endingDate;
+        private bool isImporting;
+        private DateTime startingDate;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public MetaTrader4Import()
         {
@@ -53,7 +55,7 @@ namespace Forex_Strategy_Builder
             LblEndingDate = new Label();
             DtpEndingDate = new DateTimePicker();
 
-            _colorText = LayoutColors.ColorControlText;
+            colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -66,7 +68,7 @@ namespace Forex_Strategy_Builder
 
             // Label Intro
             LblIntro.Parent = PnlSettings;
-            LblIntro.ForeColor = _colorText;
+            LblIntro.ForeColor = colorText;
             LblIntro.BackColor = Color.Transparent;
             LblIntro.AutoSize = true;
             LblIntro.Text = Language.T("Directory containing MetaTrader 4 HST files:");
@@ -74,7 +76,7 @@ namespace Forex_Strategy_Builder
             // Data Directory
             TxbDataDirectory.Parent = PnlSettings;
             TxbDataDirectory.BackColor = LayoutColors.ColorControlBack;
-            TxbDataDirectory.ForeColor = _colorText;
+            TxbDataDirectory.ForeColor = colorText;
             TxbDataDirectory.Text = Configs.MetaTrader4DataPath;
 
             // Button Browse
@@ -86,7 +88,7 @@ namespace Forex_Strategy_Builder
 
             // Label Starting Date
             LblStartingDate.Parent = PnlSettings;
-            LblStartingDate.ForeColor = _colorText;
+            LblStartingDate.ForeColor = colorText;
             LblStartingDate.BackColor = Color.Transparent;
             LblStartingDate.AutoSize = true;
             LblStartingDate.Text = Language.T("Starting Date:");
@@ -98,7 +100,7 @@ namespace Forex_Strategy_Builder
 
             // Label Ending Date
             LblEndingDate.Parent = PnlSettings;
-            LblEndingDate.ForeColor = _colorText;
+            LblEndingDate.ForeColor = colorText;
             LblEndingDate.BackColor = Color.Transparent;
             LblEndingDate.AutoSize = true;
             LblEndingDate.Text = Language.T("Ending Date:");
@@ -119,7 +121,9 @@ namespace Forex_Strategy_Builder
             TxbDestFolder.Parent = PnlSettings;
             TxbDestFolder.BackColor = LayoutColors.ColorControlBack;
             TxbDestFolder.ForeColor = LayoutColors.ColorControlText;
-            TxbDestFolder.Text = String.IsNullOrEmpty(Configs.MT4ImportDestFolder) ? Data.OfflineDataDir : Configs.MT4ImportDestFolder;
+            TxbDestFolder.Text = String.IsNullOrEmpty(Configs.MT4ImportDestFolder)
+                                     ? Data.OfflineDataDir
+                                     : Configs.MT4ImportDestFolder;
 
             // BtnDestFolder
             BtnDestFolder.Parent = PnlSettings;
@@ -173,9 +177,9 @@ namespace Forex_Strategy_Builder
             BtnImport.UseVisualStyleBackColor = true;
 
             // BackGroundWorker
-            _bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
-            _bgWorker.DoWork += BgWorkerDoWork;
-            _bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
+            bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            bgWorker.DoWork += BgWorkerDoWork;
+            bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
         }
 
         private Label LblIntro { get; set; }
@@ -199,14 +203,14 @@ namespace Forex_Strategy_Builder
         private Button BtnClose { get; set; }
 
         /// <summary>
-        /// Perform initializing
+        ///     Perform initializing
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 400);
 
             // Starting DateTime
@@ -223,16 +227,16 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             int textHeight = Font.Height;
             const int nudWidth = 70;
@@ -252,11 +256,11 @@ namespace Forex_Strategy_Builder
             BtnImport.Location = new Point(btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
 
             // ProgressBar
-            ProgressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDLU*9));
+            ProgressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDlu*9));
             ProgressBar.Location = new Point(border, BtnClose.Top - ProgressBar.Height - btnVertSpace);
 
             // ProgressBarFile
-            ProgressBarFile.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDLU*9));
+            ProgressBarFile.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDlu*9));
             ProgressBarFile.Location = new Point(border, ProgressBar.Top - ProgressBar.Height - btnVertSpace);
 
             PnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 160);
@@ -291,15 +295,17 @@ namespace Forex_Strategy_Builder
             LblEndingDate.Location = new Point(btnHrzSpace + border, DtpEndingDate.Top + 2);
 
             // Destination folder
-            LblDestFolder.Location = new Point(btnHrzSpace + border, DtpEndingDate.Bottom + 2 * border);
+            LblDestFolder.Location = new Point(btnHrzSpace + border, DtpEndingDate.Bottom + 2*border);
             BtnDestFolder.Size = new Size(buttonWidth, buttonHeight);
-            BtnDestFolder.Location = new Point(PnlSettings.Width - buttonWidth - btnHrzSpace, LblDestFolder.Bottom + border);
-            TxbDestFolder.Width = BtnDestFolder.Left - 2 * btnHrzSpace - border;
-            TxbDestFolder.Location = new Point(btnHrzSpace + border, BtnDestFolder.Top + (buttonHeight - TxbDestFolder.Height) / 2);
+            BtnDestFolder.Location = new Point(PnlSettings.Width - buttonWidth - btnHrzSpace,
+                                               LblDestFolder.Bottom + border);
+            TxbDestFolder.Width = BtnDestFolder.Left - 2*btnHrzSpace - border;
+            TxbDestFolder.Location = new Point(btnHrzSpace + border,
+                                               BtnDestFolder.Top + (buttonHeight - TxbDestFolder.Height)/2);
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -361,37 +367,37 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Button Browse Click
+        ///     Button Browse Click
         /// </summary>
         private void BtnBrowseClick(object sender, EventArgs e)
         {
             var fd = new FolderBrowserDialog
-                         {
-                             SelectedPath = TxbDataDirectory.Text,
-                             Description = Language.T("Directory containing MetaTrader 4 HST files:")
-                         };
+                {
+                    SelectedPath = TxbDataDirectory.Text,
+                    Description = Language.T("Directory containing MetaTrader 4 HST files:")
+                };
             if (fd.ShowDialog() != DialogResult.OK) return;
             Configs.MetaTrader4DataPath = fd.SelectedPath;
             TxbDataDirectory.Text = fd.SelectedPath;
         }
 
         /// <summary>
-        /// BtnDestFolderClick
+        ///     BtnDestFolderClick
         /// </summary>
         private void BtnDestFolderClick(object sender, EventArgs e)
         {
             var fd = new FolderBrowserDialog
-            {
-                SelectedPath = TxbDestFolder.Text,
-                Description = Language.T("Select a destination folder") + "."
-            };
+                {
+                    SelectedPath = TxbDestFolder.Text,
+                    Description = Language.T("Select a destination folder") + "."
+                };
             if (fd.ShowDialog() != DialogResult.OK) return;
             Configs.MT4ImportDestFolder = fd.SelectedPath;
             TxbDestFolder.Text = fd.SelectedPath;
         }
 
         /// <summary>
-        /// Button Help Click
+        ///     Button Help Click
         /// </summary>
         private void BtnHelpClick(object sender, EventArgs e)
         {
@@ -406,20 +412,20 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Button Import Click
+        ///     Button Import Click
         /// </summary>
         private void BtnImportClick(object sender, EventArgs e)
         {
-            if (_isImporting)
+            if (isImporting)
             {
                 // Cancel the asynchronous operation.
-                _bgWorker.CancelAsync();
+                bgWorker.CancelAsync();
                 return;
             }
 
             Configs.MetaTrader4DataPath = TxbDataDirectory.Text;
             Cursor = Cursors.WaitCursor;
-            _isImporting = true;
+            isImporting = true;
             BtnImport.Text = Language.T("Stop");
             Configs.ImportStartingDate = String.Format("{0:u}", DtpStartingDate.Value);
             Configs.ImportEndingDate = String.Format("{0:u}", DtpEndingDate.Value);
@@ -430,9 +436,9 @@ namespace Forex_Strategy_Builder
             foreach (string file in hstFiles)
                 orderedFiles.Add(GetSortableName(file));
             orderedFiles.Sort();
-            _files.Clear();
+            files.Clear();
             foreach (string file in orderedFiles)
-                _files.Add(Path.Combine(TxbDataDirectory.Text, GetFullName(file)));
+                files.Add(Path.Combine(TxbDataDirectory.Text, GetFullName(file)));
 
             // Setup the Progress Bars
             ProgressBarFile.Minimum = 0;
@@ -441,18 +447,18 @@ namespace Forex_Strategy_Builder
 
             ProgressBar.Minimum = 0;
             ProgressBar.Value = 0;
-            ProgressBar.Maximum = _files.Count;
+            ProgressBar.Maximum = files.Count;
 
             // Setup date Filters
-            _startingDate = DtpStartingDate.Value;
-            _endingDate = DtpEndingDate.Value;
+            startingDate = DtpStartingDate.Value;
+            endingDate = DtpEndingDate.Value;
 
             // Start the bgWorker
-            _bgWorker.RunWorkerAsync();
+            bgWorker.RunWorkerAsync();
         }
 
         /// <summary>
-        /// Does the job
+        ///     Does the job
         /// </summary>
         private void BgWorkerDoWork(object sender, DoWorkEventArgs e)
         {
@@ -460,16 +466,16 @@ namespace Forex_Strategy_Builder
             var worker = sender as BackgroundWorker;
             if (worker == null) return;
 
-            foreach (string file in _files)
+            foreach (string file in files)
                 if (!worker.CancellationPending)
                 {
-                    ImportHSTFile(file);
+                    ImportHstFile(file);
                     UpdateProgressBar(1);
                 }
         }
 
         /// <summary>
-        /// This event handler deals with the results of the background operation.
+        ///     This event handler deals with the results of the background operation.
         /// </summary>
         private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -477,7 +483,7 @@ namespace Forex_Strategy_Builder
                 SystemSounds.Exclamation.Play();
 
             ProgressBar.Style = ProgressBarStyle.Blocks;
-            _isImporting = false;
+            isImporting = false;
             BtnImport.Text = Language.T("Import");
             Cursor = Cursors.Default;
 
@@ -485,7 +491,7 @@ namespace Forex_Strategy_Builder
             ProgressBarFile.Value = ProgressBarFile.Maximum;
         }
 
-        private void ImportHSTFile(string file)
+        private void ImportHstFile(string file)
         {
             string outpath = Path.Combine(TxbDestFolder.Text, Path.GetFileNameWithoutExtension(file) + ".csv");
 
@@ -535,6 +541,7 @@ namespace Forex_Strategy_Builder
                     var br = new BinaryReader(fs, Encoding.ASCII);
 
                     // Read the File Header
+// ReSharper disable UnusedVariable
                     long version = br.ReadInt32(); // database version
                     string copyright = new string(br.ReadChars(64)).TrimEnd('\0'); // copyright info
                     string symbol = new string(br.ReadChars(12)).TrimEnd('\0'); // symbol name
@@ -543,6 +550,7 @@ namespace Forex_Strategy_Builder
                     int timesign = br.ReadInt32(); // timesign of the database creation
                     int lastSync = br.ReadInt32(); // the last synchronization time
                     byte[] res1 = br.ReadBytes(13); // to be used in the future
+// ReSharper restore UnusedVariable
                     var res2 = new List<byte>(); // reserved
                     int chars = 0;
                     while (br.PeekChar() == 0 && chars < 39) // seems to be some additional 'reserved' bytes here
@@ -575,7 +583,7 @@ namespace Forex_Strategy_Builder
                         decimal volume = Math.Round((decimal) br.ReadDouble(), digits); // vol                       
                         DateTime dateTime = dt.GetValueOrDefault();
 
-                        if (dateTime > _startingDate && dateTime < _endingDate)
+                        if (dateTime > startingDate && dateTime < endingDate)
                         {
                             var output = new StringBuilder();
                             output.Append(dateTime.ToString("yyyy"));
@@ -619,7 +627,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Converts a file name in an ASCII sortable format
+        ///     Converts a file name in an ASCII sortable format
         /// </summary>
         /// <param name="file">File Name</param>
         /// <returns>Sortable Name</returns>
@@ -642,7 +650,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Converts a Sortable Name back to the Full File Name
+        ///     Converts a Sortable Name back to the Full File Name
         /// </summary>
         /// <param name="sortableName">Sortable Name</param>
         /// <returns>File Name (without directory information)</returns>

@@ -1,8 +1,12 @@
-// Strategy Generator - GUI
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -11,9 +15,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder.Dialogs.Generator
+namespace ForexStrategyBuilder.Dialogs.Generator
 {
     /// <summary>
     ///     Strategy Generator
@@ -992,8 +996,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     maxCheckBoxWidth = control.Width;
             }
 
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             const int nudWidth = 55;
             pnlLimitations.Width = 3*buttonWidth + 2*btnHrzSpace;
             int borderWidth = (pnlLimitations.Width - pnlLimitations.ClientSize.Width)/2;
@@ -1018,10 +1022,10 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60*buttonWidthMultiplier);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60*buttonWidthMultiplier);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             int rightSideWidth = 3*buttonWidth + 2*btnHrzSpace;
             int rightSideLocation = ClientSize.Width - rightSideWidth - btnHrzSpace;
@@ -1045,7 +1049,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                                              ClientSize.Height - buttonHeight - btnVertSpace);
 
             // Progress Bar
-            progressBar.Size = new Size(ClientSize.Width - leftSideWidth - 3*border, (int) (Data.VerticalDLU*9));
+            progressBar.Size = new Size(ClientSize.Width - leftSideWidth - 3*border, (int) (Data.VerticalDlu*9));
             progressBar.Location = new Point(leftSideWidth + 2*border, btnAccept.Top - progressBar.Height - btnVertSpace);
 
 
@@ -1652,7 +1656,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             if (GeneratedDescription != string.Empty)
                 Data.Strategy.Description = GeneratedDescription;
 
-            var so = new Browser(Language.T("Strategy Overview"), Data.Strategy.GenerateHTMLOverview());
+            var so = new Browser(Language.T("Strategy Overview"), Data.Strategy.GenerateHtmlOverview());
             so.Show();
         }
 
@@ -1867,12 +1871,15 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 top10Slot.CustomSortingValue = bestValue;
                 top10Slot.Click += Top10SlotClick;
                 top10Slot.DoubleClick += Top10SlotClick;
+
+                int balance = Configs.AccountInMoney
+                                  ? (int) Math.Round(Backtester.NetMoneyBalance)
+                                  : Backtester.NetBalance;
                 var top10StrategyInfo = new Top10StrategyInfo
                     {
-                        Balance = String.IsNullOrEmpty(top10Slot.CustomSortingOption)
-                                      ? (Configs.AccountInMoney
-                                             ? (int) Math.Round(Backtester.NetMoneyBalance)
-                                             : Backtester.NetBalance)
+                        Balance = balance,
+                        Value = String.IsNullOrEmpty(top10Slot.CustomSortingOption)
+                                      ? balance
                                       : bestValue,
                         Top10Slot = top10Slot,
                         TheStrategy = Data.Strategy.Clone()
@@ -1939,15 +1946,15 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private void SetCustomSortingUI()
         {
             // Simple Custom Sorting is NOT Enabled
-            if (!customSortingSimpleEnabled || !Configs.AdditionalStatistics)
+            if (!customSortingSimpleEnabled)
             {
                 if (rbnCustomSortingSimple.Checked)
                     rbnCustomSortingNone.Checked = true;
                 rbnCustomSortingSimple.Enabled = false;
             }
 
-            // Simple Custom Sorting is NOT Enabled
-            if (!customSortingAdvancedEnabled || !Configs.AdditionalStatistics)
+            // Advanced Custom Sorting is NOT Enabled
+            if (!customSortingAdvancedEnabled)
             {
                 if (rbnCustomSortingAdvanced.Checked)
                     rbnCustomSortingNone.Checked = true;

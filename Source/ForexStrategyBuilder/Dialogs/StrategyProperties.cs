@@ -1,62 +1,31 @@
-// StrategyProperties Form
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public sealed class StrategyProperties : Form
     {
-        private Button BtnAccept { get; set; }
-        private Button BtnCancel { get; set; }
-        private Button BtnDefault { get; set; }
-        private ComboBox CbxOppDirAction { get; set; }
-        private ComboBox CbxPermaSLType { get; set; }
-        private ComboBox CbxPermaTPType { get; set; }
-        private ComboBox CbxSameDirAction { get; set; }
-        private CheckBox CbxUseMartingale { get; set; }
-        private CheckBox ChbBreakEven { get; set; }
-        private CheckBox ChbPermaSL { get; set; }
-        private CheckBox ChbPermaTP { get; set; }
-        private Color ColorText { get; set; }
-        private Label LblAddingLots { get; set; }
-        private Label LblEntryLots { get; set; }
-        private Label LblMaxOpenLots { get; set; }
-        private Label LblOppDirAction { get; set; }
-        private Label LblPercent1 { get; set; }
-        private Label LblPercent2 { get; set; }
-        private Label LblPercent3 { get; set; }
-        private Label LblReducingLots { get; set; }
-        private Label LblSameDirAction { get; set; }
-        private NUD NUDAddingLots { get; set; }
-        private NUD NUDBreakEven { get; set; }
-        private NUD NUDEntryLots { get; set; }
-        private NUD NUDMartingaleMultiplier { get; set; }
-        private NUD NUDMaxOpenLots { get; set; }
-        private NUD NUDPermaSL { get; set; }
-        private NUD NUDPermaTP { get; set; }
-        private NUD NUDReducingLots { get; set; }
-        private FancyPanel PnlAmounts { get; set; }
-        private FancyPanel PnlAveraging { get; set; }
-        private FancyPanel PnlProtection { get; set; }
-        private SmallBalanceChart BalanceChart { get; set; }
-        private RadioButton RbConstantUnits { get; set; }
-        private RadioButton RbVariableUnits { get; set; }
-
-
-        private int _leftPanelsWidth;
-        private int _rightPanelsWidth;
+        private int leftPanelsWidth;
+        private int rightPanelsWidth;
 
         public StrategyProperties()
         {
-            PnlAveraging = new FancyPanel(Language.T("Handling of Additional Entry Signals"), LayoutColors.ColorSlotCaptionBackAveraging);
+            PnlAveraging = new FancyPanel(Language.T("Handling of Additional Entry Signals"),
+                                          LayoutColors.ColorSlotCaptionBackAveraging);
             PnlAmounts = new FancyPanel(Language.T("Trading Size"), LayoutColors.ColorSlotCaptionBackAveraging);
-            PnlProtection = new FancyPanel(Language.T("Permanent Protection"), LayoutColors.ColorSlotCaptionBackAveraging);
+            PnlProtection = new FancyPanel(Language.T("Permanent Protection"),
+                                           LayoutColors.ColorSlotCaptionBackAveraging);
             BalanceChart = new SmallBalanceChart();
 
             LblPercent1 = new Label();
@@ -68,27 +37,27 @@ namespace Forex_Strategy_Builder
 
             CbxSameDirAction = new ComboBox();
             CbxOppDirAction = new ComboBox();
-            NUDMaxOpenLots = new NUD();
+            FancyNudMaxOpenLots = new FancyNud();
             RbConstantUnits = new RadioButton();
             RbVariableUnits = new RadioButton();
-            NUDEntryLots = new NUD();
-            NUDAddingLots = new NUD();
-            NUDReducingLots = new NUD();
+            FancyNudEntryLots = new FancyNud();
+            FancyNudAddingLots = new FancyNud();
+            FancyNudReducingLots = new FancyNud();
             LblMaxOpenLots = new Label();
             LblEntryLots = new Label();
             LblAddingLots = new Label();
             LblReducingLots = new Label();
             CbxUseMartingale = new CheckBox();
-            NUDMartingaleMultiplier = new NUD();
+            FancyNudMartingaleMultiplier = new FancyNud();
 
             ChbPermaSL = new CheckBox();
             CbxPermaSLType = new ComboBox();
-            NUDPermaSL = new NUD();
+            FancyNudPermaSL = new FancyNud();
             ChbPermaTP = new CheckBox();
             CbxPermaTPType = new ComboBox();
-            NUDPermaTP = new NUD();
+            FancyNudPermaTP = new FancyNud();
             ChbBreakEven = new CheckBox();
-            NUDBreakEven = new NUD();
+            FancyNudBreakEven = new FancyNud();
 
             BtnAccept = new Button();
             BtnDefault = new Button();
@@ -110,7 +79,7 @@ namespace Forex_Strategy_Builder
             PnlProtection.Parent = this;
             BalanceChart.Parent = this;
             BalanceChart.SetChartData();
-        
+
             var toolTip = new ToolTip();
 
             // Label Same dir action
@@ -132,7 +101,7 @@ namespace Forex_Strategy_Builder
             CbxSameDirAction.Name = "cbxSameDirAction";
             CbxSameDirAction.DropDownStyle = ComboBoxStyle.DropDownList;
             var sameItems = new[] {Language.T("Nothing"), Language.T("Winner"), Language.T("Add")};
-            foreach (var item in sameItems)
+            foreach (string item in sameItems)
                 CbxSameDirAction.Items.Add(item);
             CbxSameDirAction.SelectedIndex = 0;
             toolTip.SetToolTip(CbxSameDirAction,
@@ -144,8 +113,9 @@ namespace Forex_Strategy_Builder
             CbxOppDirAction.Parent = PnlAveraging;
             CbxOppDirAction.Name = "cbxOppDirAction";
             CbxOppDirAction.DropDownStyle = ComboBoxStyle.DropDownList;
-            var oppItems = new[] { Language.T("Nothing"), Language.T("Reduce"), Language.T("Close"), Language.T("Reverse") };
-            foreach (var item in oppItems)
+            var oppItems = new[]
+                {Language.T("Nothing"), Language.T("Reduce"), Language.T("Close"), Language.T("Reverse")};
+            foreach (string item in oppItems)
                 CbxOppDirAction.Items.Add(item);
             CbxOppDirAction.SelectedIndex = 0;
             toolTip.SetToolTip(CbxOppDirAction,
@@ -162,16 +132,16 @@ namespace Forex_Strategy_Builder
             LblMaxOpenLots.Text = Language.T("Maximum number of open lots");
 
             // NumericUpDown MaxOpen Lots
-            NUDMaxOpenLots.Parent = PnlAmounts;
-            NUDMaxOpenLots.Name = "nudMaxOpenLots";
-            NUDMaxOpenLots.BeginInit();
-            NUDMaxOpenLots.Minimum = 0.01M;
-            NUDMaxOpenLots.Maximum = 100;
-            NUDMaxOpenLots.Increment = 0.01M;
-            NUDMaxOpenLots.Value = 20;
-            NUDMaxOpenLots.DecimalPlaces = 2;
-            NUDMaxOpenLots.TextAlign = HorizontalAlignment.Center;
-            NUDMaxOpenLots.EndInit();
+            FancyNudMaxOpenLots.Parent = PnlAmounts;
+            FancyNudMaxOpenLots.Name = "nudMaxOpenLots";
+            FancyNudMaxOpenLots.BeginInit();
+            FancyNudMaxOpenLots.Minimum = 0.01M;
+            FancyNudMaxOpenLots.Maximum = 100;
+            FancyNudMaxOpenLots.Increment = 0.01M;
+            FancyNudMaxOpenLots.Value = 20;
+            FancyNudMaxOpenLots.DecimalPlaces = 2;
+            FancyNudMaxOpenLots.TextAlign = HorizontalAlignment.Center;
+            FancyNudMaxOpenLots.EndInit();
 
             // Radio Button Constant Units
             RbConstantUnits.Parent = PnlAmounts;
@@ -189,7 +159,9 @@ namespace Forex_Strategy_Builder
             RbVariableUnits.Checked = false;
             RbVariableUnits.AutoSize = false;
             RbVariableUnits.Name = "rbVariableUnits";
-            RbVariableUnits.Text = Language.T("Trade percent of your account. The percentage values show the part of the account equity used to cover the required margin.");
+            RbVariableUnits.Text =
+                Language.T(
+                    "Trade percent of your account. The percentage values show the part of the account equity used to cover the required margin.");
 
             // Label Entry Lots
             LblEntryLots.Parent = PnlAmounts;
@@ -199,16 +171,16 @@ namespace Forex_Strategy_Builder
             LblEntryLots.Text = Language.T("Number of entry lots for a new position");
 
             // NumericUpDown Entry Lots
-            NUDEntryLots.Parent = PnlAmounts;
-            NUDEntryLots.Name = "nudEntryLots";
-            NUDEntryLots.BeginInit();
-            NUDEntryLots.Minimum = 0.01M;
-            NUDEntryLots.Maximum = 100;
-            NUDEntryLots.Increment = 0.01M;
-            NUDEntryLots.Value = 1;
-            NUDEntryLots.DecimalPlaces = 2;
-            NUDEntryLots.TextAlign = HorizontalAlignment.Center;
-            NUDEntryLots.EndInit();
+            FancyNudEntryLots.Parent = PnlAmounts;
+            FancyNudEntryLots.Name = "nudEntryLots";
+            FancyNudEntryLots.BeginInit();
+            FancyNudEntryLots.Minimum = 0.01M;
+            FancyNudEntryLots.Maximum = 100;
+            FancyNudEntryLots.Increment = 0.01M;
+            FancyNudEntryLots.Value = 1;
+            FancyNudEntryLots.DecimalPlaces = 2;
+            FancyNudEntryLots.TextAlign = HorizontalAlignment.Center;
+            FancyNudEntryLots.EndInit();
 
             // Label Entry Lots %
             LblPercent1.Parent = PnlAmounts;
@@ -223,16 +195,16 @@ namespace Forex_Strategy_Builder
             LblAddingLots.Text = Language.T("In case of addition - number of lots to add");
 
             // NumericUpDown Adding Lots
-            NUDAddingLots.Parent = PnlAmounts;
-            NUDAddingLots.Name = "nudAddingLots";
-            NUDAddingLots.BeginInit();
-            NUDAddingLots.Minimum = 0.01M;
-            NUDAddingLots.Maximum = 100;
-            NUDAddingLots.Increment = 0.01M;
-            NUDAddingLots.Value = 1;
-            NUDAddingLots.DecimalPlaces = 2;
-            NUDAddingLots.TextAlign = HorizontalAlignment.Center;
-            NUDAddingLots.EndInit();
+            FancyNudAddingLots.Parent = PnlAmounts;
+            FancyNudAddingLots.Name = "nudAddingLots";
+            FancyNudAddingLots.BeginInit();
+            FancyNudAddingLots.Minimum = 0.01M;
+            FancyNudAddingLots.Maximum = 100;
+            FancyNudAddingLots.Increment = 0.01M;
+            FancyNudAddingLots.Value = 1;
+            FancyNudAddingLots.DecimalPlaces = 2;
+            FancyNudAddingLots.TextAlign = HorizontalAlignment.Center;
+            FancyNudAddingLots.EndInit();
 
             // Label Adding Lots %
             LblPercent2.Parent = PnlAmounts;
@@ -247,16 +219,16 @@ namespace Forex_Strategy_Builder
             LblReducingLots.Text = Language.T("In case of reduction - number of lots to close");
 
             // NumericUpDown Reducing Lots
-            NUDReducingLots.Parent = PnlAmounts;
-            NUDReducingLots.Name = "nudReducingLots";
-            NUDReducingLots.BeginInit();
-            NUDReducingLots.Minimum = 0.01M;
-            NUDReducingLots.Maximum = 100;
-            NUDReducingLots.Increment = 0.01m;
-            NUDReducingLots.DecimalPlaces = 2;
-            NUDReducingLots.Value = 1;
-            NUDReducingLots.TextAlign = HorizontalAlignment.Center;
-            NUDReducingLots.EndInit();
+            FancyNudReducingLots.Parent = PnlAmounts;
+            FancyNudReducingLots.Name = "nudReducingLots";
+            FancyNudReducingLots.BeginInit();
+            FancyNudReducingLots.Minimum = 0.01M;
+            FancyNudReducingLots.Maximum = 100;
+            FancyNudReducingLots.Increment = 0.01m;
+            FancyNudReducingLots.DecimalPlaces = 2;
+            FancyNudReducingLots.Value = 1;
+            FancyNudReducingLots.TextAlign = HorizontalAlignment.Center;
+            FancyNudReducingLots.EndInit();
 
             // CheckBox Use Martingale
             CbxUseMartingale.Name = "cbxUseMartingale";
@@ -269,16 +241,16 @@ namespace Forex_Strategy_Builder
             CbxUseMartingale.Text = Language.T("Martingale money management multiplier");
 
             // NumericUpDown Martingale Multiplier
-            NUDMartingaleMultiplier.Parent = PnlAmounts;
-            NUDMartingaleMultiplier.Name = "nudMartingaleMultiplier";
-            NUDMartingaleMultiplier.BeginInit();
-            NUDMartingaleMultiplier.Minimum = 0.01M;
-            NUDMartingaleMultiplier.Maximum = 10;
-            NUDMartingaleMultiplier.Increment = 0.01m;
-            NUDMartingaleMultiplier.DecimalPlaces = 2;
-            NUDMartingaleMultiplier.Value = 2;
-            NUDMartingaleMultiplier.TextAlign = HorizontalAlignment.Center;
-            NUDMartingaleMultiplier.EndInit();
+            FancyNudMartingaleMultiplier.Parent = PnlAmounts;
+            FancyNudMartingaleMultiplier.Name = "nudMartingaleMultiplier";
+            FancyNudMartingaleMultiplier.BeginInit();
+            FancyNudMartingaleMultiplier.Minimum = 0.01M;
+            FancyNudMartingaleMultiplier.Maximum = 10;
+            FancyNudMartingaleMultiplier.Increment = 0.01m;
+            FancyNudMartingaleMultiplier.DecimalPlaces = 2;
+            FancyNudMartingaleMultiplier.Value = 2;
+            FancyNudMartingaleMultiplier.TextAlign = HorizontalAlignment.Center;
+            FancyNudMartingaleMultiplier.EndInit();
 
 
             // Label Reducing Lots %
@@ -306,15 +278,15 @@ namespace Forex_Strategy_Builder
             CbxPermaSLType.SelectedIndex = 0;
 
             // NumericUpDown Permanent S/L
-            NUDPermaSL.Name = "nudPermaSL";
-            NUDPermaSL.Parent = PnlProtection;
-            NUDPermaSL.BeginInit();
-            NUDPermaSL.Minimum = 5;
-            NUDPermaSL.Maximum = 5000;
-            NUDPermaSL.Increment = 1;
-            NUDPermaSL.Value = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
-            NUDPermaSL.TextAlign = HorizontalAlignment.Center;
-            NUDPermaSL.EndInit();
+            FancyNudPermaSL.Name = "nudPermaSL";
+            FancyNudPermaSL.Parent = PnlProtection;
+            FancyNudPermaSL.BeginInit();
+            FancyNudPermaSL.Minimum = 5;
+            FancyNudPermaSL.Maximum = 5000;
+            FancyNudPermaSL.Increment = 1;
+            FancyNudPermaSL.Value = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
+            FancyNudPermaSL.TextAlign = HorizontalAlignment.Center;
+            FancyNudPermaSL.EndInit();
 
             // CheckBox Permanent Take Profit
             ChbPermaTP.Name = "chbPermaTP";
@@ -336,15 +308,15 @@ namespace Forex_Strategy_Builder
             CbxPermaTPType.SelectedIndex = 0;
 
             // NumericUpDown Permanent Take Profit
-            NUDPermaTP.Parent = PnlProtection;
-            NUDPermaTP.Name = "nudPermaTP";
-            NUDPermaTP.BeginInit();
-            NUDPermaTP.Minimum = 5;
-            NUDPermaTP.Maximum = 5000;
-            NUDPermaTP.Increment = 1;
-            NUDPermaTP.Value = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
-            NUDPermaTP.TextAlign = HorizontalAlignment.Center;
-            NUDPermaTP.EndInit();
+            FancyNudPermaTP.Parent = PnlProtection;
+            FancyNudPermaTP.Name = "nudPermaTP";
+            FancyNudPermaTP.BeginInit();
+            FancyNudPermaTP.Minimum = 5;
+            FancyNudPermaTP.Maximum = 5000;
+            FancyNudPermaTP.Increment = 1;
+            FancyNudPermaTP.Value = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
+            FancyNudPermaTP.TextAlign = HorizontalAlignment.Center;
+            FancyNudPermaTP.EndInit();
 
             // CheckBox Break Even
             ChbBreakEven.Name = "chbBreakEven";
@@ -357,15 +329,15 @@ namespace Forex_Strategy_Builder
             ChbBreakEven.Text = Language.T("Break Even");
 
             // NumericUpDown Break Even
-            NUDBreakEven.Parent = PnlProtection;
-            NUDBreakEven.Name = "nudBreakEven";
-            NUDBreakEven.BeginInit();
-            NUDBreakEven.Minimum = 5;
-            NUDBreakEven.Maximum = 5000;
-            NUDBreakEven.Increment = 1;
-            NUDBreakEven.Value = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
-            NUDBreakEven.TextAlign = HorizontalAlignment.Center;
-            NUDBreakEven.EndInit();
+            FancyNudBreakEven.Parent = PnlProtection;
+            FancyNudBreakEven.Name = "nudBreakEven";
+            FancyNudBreakEven.BeginInit();
+            FancyNudBreakEven.Minimum = 5;
+            FancyNudBreakEven.Maximum = 5000;
+            FancyNudBreakEven.Increment = 1;
+            FancyNudBreakEven.Value = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
+            FancyNudBreakEven.TextAlign = HorizontalAlignment.Center;
+            FancyNudBreakEven.EndInit();
 
             //Button Default
             BtnDefault.Parent = this;
@@ -389,6 +361,43 @@ namespace Forex_Strategy_Builder
             BtnAccept.UseVisualStyleBackColor = true;
         }
 
+        private Button BtnAccept { get; set; }
+        private Button BtnCancel { get; set; }
+        private Button BtnDefault { get; set; }
+        private ComboBox CbxOppDirAction { get; set; }
+        private ComboBox CbxPermaSLType { get; set; }
+        private ComboBox CbxPermaTPType { get; set; }
+        private ComboBox CbxSameDirAction { get; set; }
+        private CheckBox CbxUseMartingale { get; set; }
+        private CheckBox ChbBreakEven { get; set; }
+        private CheckBox ChbPermaSL { get; set; }
+        private CheckBox ChbPermaTP { get; set; }
+        private Color ColorText { get; set; }
+        private Label LblAddingLots { get; set; }
+        private Label LblEntryLots { get; set; }
+        private Label LblMaxOpenLots { get; set; }
+        private Label LblOppDirAction { get; set; }
+        private Label LblPercent1 { get; set; }
+        private Label LblPercent2 { get; set; }
+        private Label LblPercent3 { get; set; }
+        private Label LblReducingLots { get; set; }
+        private Label LblSameDirAction { get; set; }
+        private FancyNud FancyNudAddingLots { get; set; }
+        private FancyNud FancyNudBreakEven { get; set; }
+        private FancyNud FancyNudEntryLots { get; set; }
+        private FancyNud FancyNudMartingaleMultiplier { get; set; }
+        private FancyNud FancyNudMaxOpenLots { get; set; }
+        private FancyNud FancyNudPermaSL { get; set; }
+        private FancyNud FancyNudPermaTP { get; set; }
+        private FancyNud FancyNudReducingLots { get; set; }
+        private FancyPanel PnlAmounts { get; set; }
+        private FancyPanel PnlAveraging { get; set; }
+        private FancyPanel PnlProtection { get; set; }
+        private SmallBalanceChart BalanceChart { get; set; }
+        private RadioButton RbConstantUnits { get; set; }
+        private RadioButton RbVariableUnits { get; set; }
+
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -400,8 +409,8 @@ namespace Forex_Strategy_Builder
 
         private void SetFormSize()
         {
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
             const int leftComboBxWith = 80;
             const int rightComboBxWith = 95;
@@ -409,53 +418,53 @@ namespace Forex_Strategy_Builder
             const int lblPercentWidth = 15;
             const int border = 2;
 
-            _leftPanelsWidth = 3*buttonWidth + 2*btnHrzSpace;
-            _rightPanelsWidth = 3*buttonWidth + 2*btnHrzSpace;
+            leftPanelsWidth = 3*buttonWidth + 2*btnHrzSpace;
+            rightPanelsWidth = 3*buttonWidth + 2*btnHrzSpace;
 
-            if (_leftPanelsWidth < space + LblSameDirAction.Width + space + leftComboBxWith + space)
-                _leftPanelsWidth = space + LblSameDirAction.Width + space + leftComboBxWith + space;
+            if (leftPanelsWidth < space + LblSameDirAction.Width + space + leftComboBxWith + space)
+                leftPanelsWidth = space + LblSameDirAction.Width + space + leftComboBxWith + space;
 
-            if (_leftPanelsWidth < space + LblOppDirAction.Width + space + leftComboBxWith + space)
-                _leftPanelsWidth = space + LblOppDirAction.Width + space + leftComboBxWith + space;
+            if (leftPanelsWidth < space + LblOppDirAction.Width + space + leftComboBxWith + space)
+                leftPanelsWidth = space + LblOppDirAction.Width + space + leftComboBxWith + space;
 
-            if (_leftPanelsWidth < space + LblMaxOpenLots.Width + space + nudWidth + space)
-                _leftPanelsWidth = space + LblMaxOpenLots.Width + space + nudWidth + space;
+            if (leftPanelsWidth < space + LblMaxOpenLots.Width + space + nudWidth + space)
+                leftPanelsWidth = space + LblMaxOpenLots.Width + space + nudWidth + space;
 
-            RbVariableUnits.Width = _leftPanelsWidth - 2*space;
+            RbVariableUnits.Width = leftPanelsWidth - 2*space;
             Graphics g = CreateGraphics();
             while (g.MeasureString(RbVariableUnits.Text, RbVariableUnits.Font, RbVariableUnits.Width - 10).Height >
                    3*RbVariableUnits.Font.Height)
                 RbVariableUnits.Width++;
             g.Dispose();
-            if (_leftPanelsWidth < space + RbVariableUnits.Width + space)
-                _leftPanelsWidth = space + RbVariableUnits.Width + space;
+            if (leftPanelsWidth < space + RbVariableUnits.Width + space)
+                leftPanelsWidth = space + RbVariableUnits.Width + space;
 
-            if (_leftPanelsWidth < space + LblEntryLots.Width + space + lblPercentWidth + nudWidth + space)
-                _leftPanelsWidth = space + LblEntryLots.Width + space + lblPercentWidth + nudWidth + space;
+            if (leftPanelsWidth < space + LblEntryLots.Width + space + lblPercentWidth + nudWidth + space)
+                leftPanelsWidth = space + LblEntryLots.Width + space + lblPercentWidth + nudWidth + space;
 
-            if (_leftPanelsWidth < space + LblAddingLots.Width + space + lblPercentWidth + nudWidth + space)
-                _leftPanelsWidth = space + LblAddingLots.Width + space + lblPercentWidth + nudWidth + space;
+            if (leftPanelsWidth < space + LblAddingLots.Width + space + lblPercentWidth + nudWidth + space)
+                leftPanelsWidth = space + LblAddingLots.Width + space + lblPercentWidth + nudWidth + space;
 
-            if (_leftPanelsWidth < space + LblReducingLots.Width + space + lblPercentWidth + nudWidth + space)
-                _leftPanelsWidth = space + LblReducingLots.Width + space + lblPercentWidth + nudWidth + space;
+            if (leftPanelsWidth < space + LblReducingLots.Width + space + lblPercentWidth + nudWidth + space)
+                leftPanelsWidth = space + LblReducingLots.Width + space + lblPercentWidth + nudWidth + space;
 
             int maxRightCheckBoxWidth = Math.Max(ChbPermaSL.Width, ChbPermaTP.Width);
             int requiredRightPanelWidth = border + space + maxRightCheckBoxWidth + space + rightComboBxWith + space +
                                           nudWidth + space + border;
-            if (_rightPanelsWidth < requiredRightPanelWidth)
-                _rightPanelsWidth = requiredRightPanelWidth;
+            if (rightPanelsWidth < requiredRightPanelWidth)
+                rightPanelsWidth = requiredRightPanelWidth;
 
-            ClientSize = new Size(space + _leftPanelsWidth + space + _rightPanelsWidth + space, 390);
+            ClientSize = new Size(space + leftPanelsWidth + space + rightPanelsWidth + space, 390);
         }
 
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
-            int buttonWidth = ((_rightPanelsWidth - 2*btnHrzSpace)/3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
+            int buttonWidth = ((rightPanelsWidth - 2*btnHrzSpace)/3);
             int space = btnHrzSpace;
             const int border = 2;
             const int leftComboBxWith = 80;
@@ -464,15 +473,15 @@ namespace Forex_Strategy_Builder
             const int lblPercentWidth = 15;
 
             // pnlAveraging
-            PnlAveraging.Size = new Size(_leftPanelsWidth, 84);
+            PnlAveraging.Size = new Size(leftPanelsWidth, 84);
             PnlAveraging.Location = new Point(space, space);
 
             // pnlAmounts
-            PnlAmounts.Size = new Size(_leftPanelsWidth, 252);
+            PnlAmounts.Size = new Size(leftPanelsWidth, 252);
             PnlAmounts.Location = new Point(space, PnlAveraging.Bottom + space);
 
             // pnlProtection
-            PnlProtection.Size = new Size(_rightPanelsWidth, 110);
+            PnlProtection.Size = new Size(rightPanelsWidth, 110);
             PnlProtection.Location = new Point(PnlAveraging.Right + space, PnlAveraging.Top);
 
             // Averaging
@@ -487,61 +496,61 @@ namespace Forex_Strategy_Builder
             CbxOppDirAction.Location = new Point(comboBxLeft, buttonHeight + 2*space + 19);
 
             // Amounts
-            int nudLeft = _leftPanelsWidth - nudWidth - space - border;
+            int nudLeft = leftPanelsWidth - nudWidth - space - border;
 
             LblMaxOpenLots.Location = new Point(space, 0*buttonHeight + space + 25);
-            NUDMaxOpenLots.Size = new Size(nudWidth, buttonHeight);
-            NUDMaxOpenLots.Location = new Point(nudLeft, 0*buttonHeight + space + 22);
+            FancyNudMaxOpenLots.Size = new Size(nudWidth, buttonHeight);
+            FancyNudMaxOpenLots.Location = new Point(nudLeft, 0*buttonHeight + space + 22);
 
             RbConstantUnits.Location = new Point(space + 3, 55);
             RbVariableUnits.Location = new Point(space + 3, 79);
-            RbVariableUnits.Size = new Size(_leftPanelsWidth - 2*space, 2*buttonHeight);
+            RbVariableUnits.Size = new Size(leftPanelsWidth - 2*space, 2*buttonHeight);
 
             LblEntryLots.Location = new Point(btnHrzSpace, 139);
-            NUDEntryLots.Size = new Size(nudWidth, buttonHeight);
-            NUDEntryLots.Location = new Point(nudLeft, 137);
+            FancyNudEntryLots.Size = new Size(nudWidth, buttonHeight);
+            FancyNudEntryLots.Location = new Point(nudLeft, 137);
             LblPercent1.Width = lblPercentWidth;
-            LblPercent1.Location = new Point(NUDEntryLots.Left - lblPercentWidth, LblEntryLots.Top);
+            LblPercent1.Location = new Point(FancyNudEntryLots.Left - lblPercentWidth, LblEntryLots.Top);
 
             LblAddingLots.Location = new Point(btnHrzSpace, 167);
-            NUDAddingLots.Size = new Size(nudWidth, buttonHeight);
-            NUDAddingLots.Location = new Point(nudLeft, 165);
+            FancyNudAddingLots.Size = new Size(nudWidth, buttonHeight);
+            FancyNudAddingLots.Location = new Point(nudLeft, 165);
             LblPercent2.Width = lblPercentWidth;
-            LblPercent2.Location = new Point(NUDAddingLots.Left - lblPercentWidth, LblAddingLots.Top);
+            LblPercent2.Location = new Point(FancyNudAddingLots.Left - lblPercentWidth, LblAddingLots.Top);
 
             LblReducingLots.Location = new Point(btnHrzSpace, 195);
-            NUDReducingLots.Size = new Size(nudWidth, buttonHeight);
-            NUDReducingLots.Location = new Point(nudLeft, 193);
+            FancyNudReducingLots.Size = new Size(nudWidth, buttonHeight);
+            FancyNudReducingLots.Location = new Point(nudLeft, 193);
             LblPercent3.Width = lblPercentWidth;
-            LblPercent3.Location = new Point(NUDReducingLots.Left - lblPercentWidth, LblReducingLots.Top);
+            LblPercent3.Location = new Point(FancyNudReducingLots.Left - lblPercentWidth, LblReducingLots.Top);
 
             CbxUseMartingale.Location = new Point(btnHrzSpace + 2, 223);
-            NUDMartingaleMultiplier.Size = new Size(nudWidth, buttonHeight);
-            NUDMartingaleMultiplier.Location = new Point(nudLeft, 221);
+            FancyNudMartingaleMultiplier.Size = new Size(nudWidth, buttonHeight);
+            FancyNudMartingaleMultiplier.Location = new Point(nudLeft, 221);
 
-            nudLeft = _rightPanelsWidth - nudWidth - btnHrzSpace - border;
+            nudLeft = rightPanelsWidth - nudWidth - btnHrzSpace - border;
             comboBxLeft = nudLeft - space - rightComboBxWith;
 
             // Permanent Stop Loss
             ChbPermaSL.Location = new Point(border + space, 0*buttonHeight + 1*space + 24);
             CbxPermaSLType.Width = rightComboBxWith;
             CbxPermaSLType.Location = new Point(comboBxLeft, 0*buttonHeight + 1*space + 21);
-            NUDPermaSL.Size = new Size(nudWidth, buttonHeight);
-            NUDPermaSL.Location = new Point(nudLeft, 0*buttonHeight + 1*space + 22);
+            FancyNudPermaSL.Size = new Size(nudWidth, buttonHeight);
+            FancyNudPermaSL.Location = new Point(nudLeft, 0*buttonHeight + 1*space + 22);
 
             // Permanent Take Profit
             ChbPermaTP.Location = new Point(border + space, 1*buttonHeight + 2*space + 22);
-            NUDPermaTP.Size = new Size(nudWidth, buttonHeight);
+            FancyNudPermaTP.Size = new Size(nudWidth, buttonHeight);
             CbxPermaTPType.Width = rightComboBxWith;
             CbxPermaTPType.Location = new Point(comboBxLeft, 1*buttonHeight + 2*space + 19);
-            NUDPermaTP.Location = new Point(nudLeft, 1*buttonHeight + 2*space + 20);
+            FancyNudPermaTP.Location = new Point(nudLeft, 1*buttonHeight + 2*space + 20);
 
             // Break Even
             ChbBreakEven.Location = new Point(border + space, 2*buttonHeight + 3*space + 20);
-            NUDBreakEven.Size = new Size(nudWidth, buttonHeight);
-            NUDBreakEven.Location = new Point(nudLeft, 2*buttonHeight + 3*space + 18);
+            FancyNudBreakEven.Size = new Size(nudWidth, buttonHeight);
+            FancyNudBreakEven.Location = new Point(nudLeft, 2*buttonHeight + 3*space + 18);
 
-            BalanceChart.Size = new Size(_rightPanelsWidth, PnlAmounts.Bottom - PnlProtection.Bottom - space);
+            BalanceChart.Size = new Size(rightPanelsWidth, PnlAmounts.Bottom - PnlProtection.Bottom - space);
             BalanceChart.Location = new Point(PnlAveraging.Right + space, PnlProtection.Bottom + space);
 
             // Button Accept
@@ -564,9 +573,10 @@ namespace Forex_Strategy_Builder
         {
             Data.Strategy.SameSignalAction = SameDirSignalAction.Nothing;
 
-            Data.Strategy.OppSignalAction = Data.Strategy.Slot[Data.Strategy.CloseSlot].IndicatorName == "Close and Reverse" 
-                ? OppositeDirSignalAction.Reverse 
-                : OppositeDirSignalAction.Nothing;
+            Data.Strategy.OppSignalAction = Data.Strategy.Slot[Data.Strategy.CloseSlot].IndicatorName ==
+                                            "Close and Reverse"
+                                                ? OppositeDirSignalAction.Reverse
+                                                : OppositeDirSignalAction.Nothing;
 
             Data.Strategy.UsePermanentSL = false;
             Data.Strategy.PermanentSL = Data.InstrProperties.IsFiveDigits ? 1000 : 100;
@@ -591,33 +601,33 @@ namespace Forex_Strategy_Builder
 
         private void ParamChanged(object sender, EventArgs e)
         {
-            NUDPermaSL.Enabled = ChbPermaSL.Checked;
-            NUDPermaTP.Enabled = ChbPermaTP.Checked;
-            NUDBreakEven.Enabled = ChbBreakEven.Checked;
+            FancyNudPermaSL.Enabled = ChbPermaSL.Checked;
+            FancyNudPermaTP.Enabled = ChbPermaTP.Checked;
+            FancyNudBreakEven.Enabled = ChbBreakEven.Checked;
             CbxPermaSLType.Enabled = ChbPermaSL.Checked;
             CbxPermaTPType.Enabled = ChbPermaTP.Checked;
-            NUDMartingaleMultiplier.Enabled = CbxUseMartingale.Checked;
+            FancyNudMartingaleMultiplier.Enabled = CbxUseMartingale.Checked;
 
             if (!RbVariableUnits.Checked)
-                NUDEntryLots.Value = Math.Min(NUDEntryLots.Value, NUDMaxOpenLots.Value);
+                FancyNudEntryLots.Value = Math.Min(FancyNudEntryLots.Value, FancyNudMaxOpenLots.Value);
 
             Data.Strategy.SameSignalAction = (SameDirSignalAction) CbxSameDirAction.SelectedIndex;
             Data.Strategy.OppSignalAction = (OppositeDirSignalAction) CbxOppDirAction.SelectedIndex;
             Data.Strategy.UseAccountPercentEntry = RbVariableUnits.Checked;
-            Data.Strategy.MaxOpenLots = (double) NUDMaxOpenLots.Value;
-            Data.Strategy.EntryLots = (double) NUDEntryLots.Value;
-            Data.Strategy.AddingLots = (double) NUDAddingLots.Value;
-            Data.Strategy.ReducingLots = (double) NUDReducingLots.Value;
+            Data.Strategy.MaxOpenLots = (double) FancyNudMaxOpenLots.Value;
+            Data.Strategy.EntryLots = (double) FancyNudEntryLots.Value;
+            Data.Strategy.AddingLots = (double) FancyNudAddingLots.Value;
+            Data.Strategy.ReducingLots = (double) FancyNudReducingLots.Value;
             Data.Strategy.UsePermanentSL = ChbPermaSL.Checked;
             Data.Strategy.UsePermanentTP = ChbPermaTP.Checked;
             Data.Strategy.UseBreakEven = ChbBreakEven.Checked;
             Data.Strategy.PermanentSLType = (PermanentProtectionType) CbxPermaSLType.SelectedIndex;
             Data.Strategy.PermanentTPType = (PermanentProtectionType) CbxPermaTPType.SelectedIndex;
-            Data.Strategy.PermanentSL = (int) NUDPermaSL.Value;
-            Data.Strategy.PermanentTP = (int) NUDPermaTP.Value;
-            Data.Strategy.BreakEven = (int) NUDBreakEven.Value;
+            Data.Strategy.PermanentSL = (int) FancyNudPermaSL.Value;
+            Data.Strategy.PermanentTP = (int) FancyNudPermaTP.Value;
+            Data.Strategy.BreakEven = (int) FancyNudBreakEven.Value;
             Data.Strategy.UseMartingale = CbxUseMartingale.Checked;
-            Data.Strategy.MartingaleMultiplier = (double) NUDMartingaleMultiplier.Value;
+            Data.Strategy.MartingaleMultiplier = (double) FancyNudMartingaleMultiplier.Value;
 
             SetLabelPercent();
             CalculateStrategy();
@@ -635,35 +645,35 @@ namespace Forex_Strategy_Builder
             RbConstantUnits.Checked = !Data.Strategy.UseAccountPercentEntry;
             RbVariableUnits.Checked = Data.Strategy.UseAccountPercentEntry;
 
-            NUDMaxOpenLots.Value = (decimal) Data.Strategy.MaxOpenLots;
+            FancyNudMaxOpenLots.Value = (decimal) Data.Strategy.MaxOpenLots;
 
             if (!RbVariableUnits.Checked)
-                NUDEntryLots.Value = (decimal) Math.Min(Data.Strategy.EntryLots, Data.Strategy.MaxOpenLots);
+                FancyNudEntryLots.Value = (decimal) Math.Min(Data.Strategy.EntryLots, Data.Strategy.MaxOpenLots);
             else
-                NUDEntryLots.Value = (decimal) Data.Strategy.EntryLots;
+                FancyNudEntryLots.Value = (decimal) Data.Strategy.EntryLots;
 
-            NUDAddingLots.Value = (decimal) Data.Strategy.AddingLots;
-            NUDReducingLots.Value = (decimal) Data.Strategy.ReducingLots;
+            FancyNudAddingLots.Value = (decimal) Data.Strategy.AddingLots;
+            FancyNudReducingLots.Value = (decimal) Data.Strategy.ReducingLots;
 
             CbxUseMartingale.Checked = Data.Strategy.UseMartingale;
-            NUDMartingaleMultiplier.Value = (decimal) Data.Strategy.MartingaleMultiplier;
-            NUDMartingaleMultiplier.Enabled = CbxUseMartingale.Checked;
+            FancyNudMartingaleMultiplier.Value = (decimal) Data.Strategy.MartingaleMultiplier;
+            FancyNudMartingaleMultiplier.Enabled = CbxUseMartingale.Checked;
 
             ChbPermaSL.Checked = Data.Strategy.UsePermanentSL;
-            NUDPermaSL.Value = Data.Strategy.PermanentSL;
-            NUDPermaSL.Enabled = Data.Strategy.UsePermanentSL;
+            FancyNudPermaSL.Value = Data.Strategy.PermanentSL;
+            FancyNudPermaSL.Enabled = Data.Strategy.UsePermanentSL;
             CbxPermaSLType.Enabled = Data.Strategy.UsePermanentSL;
             CbxPermaSLType.SelectedIndex = (int) Data.Strategy.PermanentSLType;
 
             ChbPermaTP.Checked = Data.Strategy.UsePermanentTP;
-            NUDPermaTP.Value = Data.Strategy.PermanentTP;
-            NUDPermaTP.Enabled = Data.Strategy.UsePermanentTP;
+            FancyNudPermaTP.Value = Data.Strategy.PermanentTP;
+            FancyNudPermaTP.Enabled = Data.Strategy.UsePermanentTP;
             CbxPermaTPType.Enabled = Data.Strategy.UsePermanentTP;
             CbxPermaTPType.SelectedIndex = (int) Data.Strategy.PermanentTPType;
 
             ChbBreakEven.Checked = Data.Strategy.UseBreakEven;
-            NUDBreakEven.Value = Data.Strategy.BreakEven;
-            NUDBreakEven.Enabled = Data.Strategy.UseBreakEven;
+            FancyNudBreakEven.Value = Data.Strategy.BreakEven;
+            FancyNudBreakEven.Enabled = Data.Strategy.UseBreakEven;
 
             SetParamEventHandlers();
             SetLabelPercent();
@@ -675,20 +685,20 @@ namespace Forex_Strategy_Builder
             CbxOppDirAction.SelectedIndexChanged += ParamChanged;
             RbConstantUnits.CheckedChanged += ParamChanged;
             RbVariableUnits.CheckedChanged += ParamChanged;
-            NUDMaxOpenLots.ValueChanged += ParamChanged;
-            NUDEntryLots.ValueChanged += ParamChanged;
-            NUDAddingLots.ValueChanged += ParamChanged;
-            NUDReducingLots.ValueChanged += ParamChanged;
+            FancyNudMaxOpenLots.ValueChanged += ParamChanged;
+            FancyNudEntryLots.ValueChanged += ParamChanged;
+            FancyNudAddingLots.ValueChanged += ParamChanged;
+            FancyNudReducingLots.ValueChanged += ParamChanged;
             ChbPermaSL.CheckedChanged += ParamChanged;
             CbxPermaSLType.SelectedIndexChanged += ParamChanged;
-            NUDPermaSL.ValueChanged += ParamChanged;
+            FancyNudPermaSL.ValueChanged += ParamChanged;
             ChbPermaTP.CheckedChanged += ParamChanged;
             CbxPermaTPType.SelectedIndexChanged += ParamChanged;
-            NUDPermaTP.ValueChanged += ParamChanged;
-            NUDBreakEven.ValueChanged += ParamChanged;
+            FancyNudPermaTP.ValueChanged += ParamChanged;
+            FancyNudBreakEven.ValueChanged += ParamChanged;
             ChbBreakEven.CheckedChanged += ParamChanged;
             CbxUseMartingale.CheckedChanged += ParamChanged;
-            NUDMartingaleMultiplier.ValueChanged += ParamChanged;
+            FancyNudMartingaleMultiplier.ValueChanged += ParamChanged;
         }
 
         private void RemoveParamEventHandlers()
@@ -697,20 +707,20 @@ namespace Forex_Strategy_Builder
             CbxOppDirAction.SelectedIndexChanged -= ParamChanged;
             RbConstantUnits.CheckedChanged -= ParamChanged;
             RbVariableUnits.CheckedChanged -= ParamChanged;
-            NUDMaxOpenLots.ValueChanged -= ParamChanged;
-            NUDEntryLots.ValueChanged -= ParamChanged;
-            NUDAddingLots.ValueChanged -= ParamChanged;
-            NUDReducingLots.ValueChanged -= ParamChanged;
+            FancyNudMaxOpenLots.ValueChanged -= ParamChanged;
+            FancyNudEntryLots.ValueChanged -= ParamChanged;
+            FancyNudAddingLots.ValueChanged -= ParamChanged;
+            FancyNudReducingLots.ValueChanged -= ParamChanged;
             ChbPermaSL.CheckedChanged -= ParamChanged;
             CbxPermaSLType.SelectedIndexChanged -= ParamChanged;
-            NUDPermaSL.ValueChanged -= ParamChanged;
+            FancyNudPermaSL.ValueChanged -= ParamChanged;
             ChbPermaTP.CheckedChanged -= ParamChanged;
             CbxPermaTPType.SelectedIndexChanged -= ParamChanged;
-            NUDPermaTP.ValueChanged -= ParamChanged;
-            NUDBreakEven.ValueChanged -= ParamChanged;
+            FancyNudPermaTP.ValueChanged -= ParamChanged;
+            FancyNudBreakEven.ValueChanged -= ParamChanged;
             ChbBreakEven.CheckedChanged -= ParamChanged;
             CbxUseMartingale.CheckedChanged -= ParamChanged;
-            NUDMartingaleMultiplier.ValueChanged -= ParamChanged;
+            FancyNudMartingaleMultiplier.ValueChanged -= ParamChanged;
         }
 
         private void SetLabelPercent()

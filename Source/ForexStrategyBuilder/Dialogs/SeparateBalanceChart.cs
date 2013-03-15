@@ -1,19 +1,23 @@
-﻿// SeparateBalanceChart
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs
+namespace ForexStrategyBuilder.Dialogs
 {
     public sealed class SeparateBalanceChart : Form
     {
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public SeparateBalanceChart()
         {
@@ -23,12 +27,12 @@ namespace Forex_Strategy_Builder.Dialogs
 
             // Button Close
             BtnClose = new Button
-                           {
-                               Parent = this,
-                               Text = Language.T("Close"),
-                               DialogResult = DialogResult.Cancel,
-                               UseVisualStyleBackColor = true
-                           };
+                {
+                    Parent = this,
+                    Text = Language.T("Close"),
+                    DialogResult = DialogResult.Cancel,
+                    UseVisualStyleBackColor = true
+                };
 
             // Balance chart
             BalanceChart = new SmallBalanceChart {Parent = this, ShowDynamicInfo = true};
@@ -39,7 +43,7 @@ namespace Forex_Strategy_Builder.Dialogs
 
             // Label Dynamic Info
             LblDynInfo = new Label
-                             {Parent = this, ForeColor = LayoutColors.ColorControlText, BackColor = Color.Transparent};
+                {Parent = this, ForeColor = LayoutColors.ColorControlText, BackColor = Color.Transparent};
         }
 
         private Button BtnClose { get; set; }
@@ -47,7 +51,7 @@ namespace Forex_Strategy_Builder.Dialogs
         private Label LblDynInfo { get; set; }
 
         /// <summary>
-        /// Perform initializing.
+        ///     Perform initializing.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -58,14 +62,14 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
 
             // Button Close
@@ -83,7 +87,7 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Form On Paint.
+        ///     Form On Paint.
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -91,7 +95,7 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Show the dynamic info on the status bar.
+        ///     Show the dynamic info on the status bar.
         /// </summary>
         private void BalanceChartMouseMove(object sender, MouseEventArgs e)
         {
@@ -100,7 +104,7 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Deletes the dynamic info on the status bar.
+        ///     Deletes the dynamic info on the status bar.
         /// </summary>
         private void BalanceChartMouseLeave(object sender, EventArgs e)
         {

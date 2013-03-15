@@ -1,8 +1,12 @@
-// Forex Strategy Builder - JForexImport
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -14,275 +18,278 @@ using System.IO;
 using System.Media;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs.JForex
+namespace ForexStrategyBuilder.Dialogs.JForex
 {
     public sealed class JForexImport : Form
     {
-        private readonly BackgroundWorker _bgWorker;
-        private readonly Color _colorText;
-        private readonly List<JForexDataFiles> _files = new List<JForexDataFiles>();
-        private bool _isImporting;
+        private readonly BackgroundWorker bgWorker;
+
+        private readonly Button btnBrowse;
+        private readonly Button btnClose;
+        private readonly Button btnDestFolder;
+        private readonly Button btnHelp;
+        private readonly Button btnImport;
+        private readonly Color colorText;
+        private readonly List<JForexDataFiles> files = new List<JForexDataFiles>();
+        private readonly Label lblDestFolder;
+        private readonly Label lblIntro;
+        private readonly Label lblMarketClose;
+        private readonly Label lblMarketOpen;
+        private readonly NumericUpDown nudMarketClose;
+        private readonly NumericUpDown nudMarketOpen;
+        private readonly FancyPanel pnlInfoBase;
+        private readonly FancyPanel pnlSettings;
+        private readonly ProgressBar progressBar;
+        private readonly TextBox tbxDataDirectory;
+        private readonly TextBox tbxDestFolder;
+        private readonly TextBox tbxInfo;
+        private bool isImporting;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public JForexImport()
         {
-            LblIntro = new Label();
-            TxbDataDirectory = new TextBox();
-            BtnBrowse = new Button();
-            PnlSettings = new FancyPanel();
-            PnlInfoBase = new FancyPanel(Language.T("Imported Files"));
-            TbxInfo = new TextBox();
-            BtnHelp = new Button();
-            BtnClose = new Button();
-            BtnImport = new Button();
-            ProgressBar = new ProgressBar();
+            lblIntro = new Label();
+            tbxDataDirectory = new TextBox();
+            btnBrowse = new Button();
+            pnlSettings = new FancyPanel();
+            pnlInfoBase = new FancyPanel(Language.T("Imported Files"));
+            tbxInfo = new TextBox();
+            btnHelp = new Button();
+            btnClose = new Button();
+            btnImport = new Button();
+            progressBar = new ProgressBar();
 
-            LblMarketClose = new Label();
-            LblMarketOpen = new Label();
-            NUDMarketClose = new NumericUpDown();
-            NUDMarketOpen = new NumericUpDown();
-            LblDestFolder = new Label();
-            TxbDestFolder = new TextBox();
-            BtnDestFolder = new Button();
+            lblMarketClose = new Label();
+            lblMarketOpen = new Label();
+            nudMarketClose = new NumericUpDown();
+            nudMarketOpen = new NumericUpDown();
+            lblDestFolder = new Label();
+            tbxDestFolder = new TextBox();
+            btnDestFolder = new Button();
 
-            _colorText = LayoutColors.ColorControlText;
+            colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
             ShowInTaskbar = false;
             Icon = Data.Icon;
             FormBorderStyle = FormBorderStyle.FixedDialog;
-            AcceptButton = BtnImport;
-            CancelButton = BtnClose;
+            AcceptButton = btnImport;
+            CancelButton = btnClose;
             Text = Language.T("JForex Import");
 
             // Label Intro
-            LblIntro.Parent = PnlSettings;
-            LblIntro.ForeColor = _colorText;
-            LblIntro.BackColor = Color.Transparent;
-            LblIntro.AutoSize = true;
-            LblIntro.Text = Language.T("Directory containing JForex data files:");
+            lblIntro.Parent = pnlSettings;
+            lblIntro.ForeColor = colorText;
+            lblIntro.BackColor = Color.Transparent;
+            lblIntro.AutoSize = true;
+            lblIntro.Text = Language.T("Directory containing JForex data files:");
 
             // Data Directory
-            TxbDataDirectory.Parent = PnlSettings;
-            TxbDataDirectory.BackColor = LayoutColors.ColorControlBack;
-            TxbDataDirectory.ForeColor = _colorText;
-            TxbDataDirectory.Text = Configs.JForexDataPath;
+            tbxDataDirectory.Parent = pnlSettings;
+            tbxDataDirectory.BackColor = LayoutColors.ColorControlBack;
+            tbxDataDirectory.ForeColor = colorText;
+            tbxDataDirectory.Text = Configs.JForexDataPath;
 
             // Button Browse
-            BtnBrowse.Parent = PnlSettings;
-            BtnBrowse.Name = "Browse";
-            BtnBrowse.Text = Language.T("Browse");
-            BtnBrowse.Click += BtnBrowseClick;
-            BtnBrowse.UseVisualStyleBackColor = true;
+            btnBrowse.Parent = pnlSettings;
+            btnBrowse.Name = "Browse";
+            btnBrowse.Text = Language.T("Browse");
+            btnBrowse.Click += BtnBrowseClick;
+            btnBrowse.UseVisualStyleBackColor = true;
 
             // Label Market Close
-            LblMarketClose.Parent = PnlSettings;
-            LblMarketClose.ForeColor = _colorText;
-            LblMarketClose.BackColor = Color.Transparent;
-            LblMarketClose.AutoSize = true;
-            LblMarketClose.Text = Language.T("Market closing hour on Friday:");
+            lblMarketClose.Parent = pnlSettings;
+            lblMarketClose.ForeColor = colorText;
+            lblMarketClose.BackColor = Color.Transparent;
+            lblMarketClose.AutoSize = true;
+            lblMarketClose.Text = Language.T("Market closing hour on Friday:");
 
             // Label Market Open
-            LblMarketOpen.Parent = PnlSettings;
-            LblMarketOpen.ForeColor = _colorText;
-            LblMarketOpen.BackColor = Color.Transparent;
-            LblMarketOpen.AutoSize = true;
-            LblMarketOpen.Text = Language.T("Market opening hour on Sunday:");
+            lblMarketOpen.Parent = pnlSettings;
+            lblMarketOpen.ForeColor = colorText;
+            lblMarketOpen.BackColor = Color.Transparent;
+            lblMarketOpen.AutoSize = true;
+            lblMarketOpen.Text = Language.T("Market opening hour on Sunday:");
 
             // NUDMarketClose
-            NUDMarketClose.BeginInit();
-            NUDMarketClose.Parent = PnlSettings;
-            NUDMarketClose.TextAlign = HorizontalAlignment.Center;
-            NUDMarketClose.Minimum = 0;
-            NUDMarketClose.Maximum = 24;
-            NUDMarketClose.Increment = 1;
-            NUDMarketClose.Value = Configs.MarketClosingHour;
-            NUDMarketClose.EndInit();
+            nudMarketClose.BeginInit();
+            nudMarketClose.Parent = pnlSettings;
+            nudMarketClose.TextAlign = HorizontalAlignment.Center;
+            nudMarketClose.Minimum = 0;
+            nudMarketClose.Maximum = 24;
+            nudMarketClose.Increment = 1;
+            nudMarketClose.Value = Configs.MarketClosingHour;
+            nudMarketClose.EndInit();
 
             // NUDMarketOpen
-            NUDMarketOpen.BeginInit();
-            NUDMarketOpen.Parent = PnlSettings;
-            NUDMarketOpen.TextAlign = HorizontalAlignment.Center;
-            NUDMarketOpen.Minimum = 0;
-            NUDMarketOpen.Maximum = 24;
-            NUDMarketOpen.Increment = 1;
-            NUDMarketOpen.Value = Configs.MarketOpeningHour;
-            NUDMarketOpen.EndInit();
+            nudMarketOpen.BeginInit();
+            nudMarketOpen.Parent = pnlSettings;
+            nudMarketOpen.TextAlign = HorizontalAlignment.Center;
+            nudMarketOpen.Minimum = 0;
+            nudMarketOpen.Maximum = 24;
+            nudMarketOpen.Increment = 1;
+            nudMarketOpen.Value = Configs.MarketOpeningHour;
+            nudMarketOpen.EndInit();
 
-            // LblDestFolder
-            LblDestFolder.Parent = PnlSettings;
-            LblDestFolder.ForeColor = LayoutColors.ColorControlText;
-            LblDestFolder.BackColor = Color.Transparent;
-            LblDestFolder.AutoSize = true;
-            LblDestFolder.Text = Language.T("Select a destination folder") + ":";
+            // lblDestFolder
+            lblDestFolder.Parent = pnlSettings;
+            lblDestFolder.ForeColor = LayoutColors.ColorControlText;
+            lblDestFolder.BackColor = Color.Transparent;
+            lblDestFolder.AutoSize = true;
+            lblDestFolder.Text = Language.T("Select a destination folder") + ":";
 
-            // TxbDestFolder
-            TxbDestFolder.Parent = PnlSettings;
-            TxbDestFolder.BackColor = LayoutColors.ColorControlBack;
-            TxbDestFolder.ForeColor = LayoutColors.ColorControlText;
-            TxbDestFolder.Text = String.IsNullOrEmpty(Configs.JForexImportDestFolder) ? Data.OfflineDataDir : Configs.JForexImportDestFolder;
+            // tbxDestFolder
+            tbxDestFolder.Parent = pnlSettings;
+            tbxDestFolder.BackColor = LayoutColors.ColorControlBack;
+            tbxDestFolder.ForeColor = LayoutColors.ColorControlText;
+            tbxDestFolder.Text = String.IsNullOrEmpty(Configs.JForexImportDestFolder)
+                                     ? Data.OfflineDataDir
+                                     : Configs.JForexImportDestFolder;
 
-            // BtnDestFolder
-            BtnDestFolder.Parent = PnlSettings;
-            BtnDestFolder.Name = "BtnDestFolder";
-            BtnDestFolder.Text = Language.T("Browse");
-            BtnDestFolder.Click += BtnDestFolderClick;
-            BtnDestFolder.UseVisualStyleBackColor = true;
+            // btnDestFolder
+            btnDestFolder.Parent = pnlSettings;
+            btnDestFolder.Name = "btnDestFolder";
+            btnDestFolder.Text = Language.T("Browse");
+            btnDestFolder.Click += BtnDestFolderClick;
+            btnDestFolder.UseVisualStyleBackColor = true;
 
             // pnlSettings
-            PnlSettings.Parent = this;
+            pnlSettings.Parent = this;
 
-            // PnlInfoBase
-            PnlInfoBase.Parent = this;
-            PnlInfoBase.Padding = new Padding(4, (int) PnlInfoBase.CaptionHeight, 2, 2);
+            // pnlInfoBase
+            pnlInfoBase.Parent = this;
+            pnlInfoBase.Padding = new Padding(4, (int) pnlInfoBase.CaptionHeight, 2, 2);
 
             // TbxInfo
-            TbxInfo.Parent = PnlInfoBase;
-            TbxInfo.BorderStyle = BorderStyle.None;
-            TbxInfo.Dock = DockStyle.Fill;
-            TbxInfo.BackColor = LayoutColors.ColorControlBack;
-            TbxInfo.ForeColor = LayoutColors.ColorControlText;
-            TbxInfo.Multiline = true;
-            TbxInfo.AcceptsReturn = true;
-            TbxInfo.AcceptsTab = true;
-            TbxInfo.ScrollBars = ScrollBars.Vertical;
+            tbxInfo.Parent = pnlInfoBase;
+            tbxInfo.BorderStyle = BorderStyle.None;
+            tbxInfo.Dock = DockStyle.Fill;
+            tbxInfo.BackColor = LayoutColors.ColorControlBack;
+            tbxInfo.ForeColor = LayoutColors.ColorControlText;
+            tbxInfo.Multiline = true;
+            tbxInfo.AcceptsReturn = true;
+            tbxInfo.AcceptsTab = true;
+            tbxInfo.ScrollBars = ScrollBars.Vertical;
 
             // ProgressBar
-            ProgressBar.Parent = this;
+            progressBar.Parent = this;
 
             // Button Help
-            BtnHelp.Parent = this;
-            BtnHelp.Name = "Help";
-            BtnHelp.Text = Language.T("Help");
-            BtnHelp.Click += BtnHelpClick;
-            BtnHelp.UseVisualStyleBackColor = true;
+            btnHelp.Parent = this;
+            btnHelp.Name = "Help";
+            btnHelp.Text = Language.T("Help");
+            btnHelp.Click += btnHelpClick;
+            btnHelp.UseVisualStyleBackColor = true;
 
             // Button Close
-            BtnClose.Parent = this;
-            BtnClose.Text = Language.T("Close");
-            BtnClose.DialogResult = DialogResult.Cancel;
-            BtnClose.UseVisualStyleBackColor = true;
+            btnClose.Parent = this;
+            btnClose.Text = Language.T("Close");
+            btnClose.DialogResult = DialogResult.Cancel;
+            btnClose.UseVisualStyleBackColor = true;
 
             // Button Import
-            BtnImport.Parent = this;
-            BtnImport.Name = "Import";
-            BtnImport.Text = Language.T("Import");
-            BtnImport.Click += BtnImportClick;
-            BtnImport.UseVisualStyleBackColor = true;
+            btnImport.Parent = this;
+            btnImport.Name = "Import";
+            btnImport.Text = Language.T("Import");
+            btnImport.Click += BtnImportClick;
+            btnImport.UseVisualStyleBackColor = true;
 
             // BackGroundWorker
-            _bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
-            _bgWorker.DoWork += BgWorkerDoWork;
-            _bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
+            bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            bgWorker.DoWork += BgWorkerDoWork;
+            bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
         }
 
-        private Button BtnBrowse { get; set; }
-        private Button BtnClose { get; set; }
-        private Button BtnHelp { get; set; }
-        private Button BtnImport { get; set; }
-        private Label LblIntro { get; set; }
-        private Label LblMarketClose { get; set; }
-        private Label LblMarketOpen { get; set; }
-        private NumericUpDown NUDMarketClose { get; set; }
-        private NumericUpDown NUDMarketOpen { get; set; }
-        private Label LblDestFolder { get; set; }
-        private TextBox TxbDestFolder { get; set; }
-        private Button BtnDestFolder { get; set; }
-
-        private FancyPanel PnlInfoBase { get; set; }
-        private FancyPanel PnlSettings { get; set; }
-        private ProgressBar ProgressBar { get; set; }
-        private TextBox TbxInfo { get; set; }
-        private TextBox TxbDataDirectory { get; set; }
-
         /// <summary>
-        /// Perform initializing
+        ///     Perform initializing
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 400);
 
-            BtnImport.Focus();
+            btnImport.Focus();
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             const int nudWidth = 70;
 
             // Button Cancel
-            BtnClose.Size = new Size(buttonWidth, buttonHeight);
-            BtnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
+            btnClose.Size = new Size(buttonWidth, buttonHeight);
+            btnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
                                           ClientSize.Height - buttonHeight - btnVertSpace);
 
             // Button Help
-            BtnHelp.Size = new Size(buttonWidth, buttonHeight);
-            BtnHelp.Location = new Point(BtnClose.Left - buttonWidth - btnHrzSpace,
+            btnHelp.Size = new Size(buttonWidth, buttonHeight);
+            btnHelp.Location = new Point(btnClose.Left - buttonWidth - btnHrzSpace,
                                          ClientSize.Height - buttonHeight - btnVertSpace);
 
             // Button Import
-            BtnImport.Size = new Size(buttonWidth, buttonHeight);
-            BtnImport.Location = new Point(btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
+            btnImport.Size = new Size(buttonWidth, buttonHeight);
+            btnImport.Location = new Point(btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
 
             // ProgressBar
-            ProgressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDLU*9));
-            ProgressBar.Location = new Point(border, BtnClose.Top - ProgressBar.Height - btnVertSpace);
+            progressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDlu*9));
+            progressBar.Location = new Point(border, btnClose.Top - progressBar.Height - btnVertSpace);
 
-            PnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 160);
-            PnlSettings.Location = new Point(btnHrzSpace, border);
+            pnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 160);
+            pnlSettings.Location = new Point(btnHrzSpace, border);
 
-            PnlInfoBase.Size = new Size(ClientSize.Width - 2*btnHrzSpace,
-                                        ProgressBar.Top - PnlSettings.Bottom - 2*border);
-            PnlInfoBase.Location = new Point(btnHrzSpace, PnlSettings.Bottom + border);
+            pnlInfoBase.Size = new Size(ClientSize.Width - 2*btnHrzSpace,
+                                        progressBar.Top - pnlSettings.Bottom - 2*border);
+            pnlInfoBase.Location = new Point(btnHrzSpace, pnlSettings.Bottom + border);
 
             // Label Intro
-            LblIntro.Location = new Point(btnHrzSpace + border, btnVertSpace);
+            lblIntro.Location = new Point(btnHrzSpace + border, btnVertSpace);
 
             // Button Browse
-            BtnBrowse.Size = new Size(buttonWidth, buttonHeight);
-            BtnBrowse.Location = new Point(PnlSettings.Width - buttonWidth - btnHrzSpace, LblIntro.Bottom + border);
+            btnBrowse.Size = new Size(buttonWidth, buttonHeight);
+            btnBrowse.Location = new Point(pnlSettings.Width - buttonWidth - btnHrzSpace, lblIntro.Bottom + border);
 
             // TextBox txbDataDirectory
-            TxbDataDirectory.Width = BtnBrowse.Left - 2*btnHrzSpace - border;
-            TxbDataDirectory.Location = new Point(btnHrzSpace + border,
-                                                  BtnBrowse.Top + (buttonHeight - TxbDataDirectory.Height)/2);
+            tbxDataDirectory.Width = btnBrowse.Left - 2*btnHrzSpace - border;
+            tbxDataDirectory.Location = new Point(btnHrzSpace + border,
+                                                  btnBrowse.Top + (buttonHeight - tbxDataDirectory.Height)/2);
 
-            int nudLeft = PnlSettings.ClientSize.Width - nudWidth - btnHrzSpace - border;
-            NUDMarketClose.Size = new Size(nudWidth, buttonHeight);
-            NUDMarketClose.Location = new Point(nudLeft, BtnBrowse.Bottom + border);
-            NUDMarketOpen.Size = new Size(nudWidth, buttonHeight);
-            NUDMarketOpen.Location = new Point(nudLeft, NUDMarketClose.Bottom + border);
+            int nudLeft = pnlSettings.ClientSize.Width - nudWidth - btnHrzSpace - border;
+            nudMarketClose.Size = new Size(nudWidth, buttonHeight);
+            nudMarketClose.Location = new Point(nudLeft, btnBrowse.Bottom + border);
+            nudMarketOpen.Size = new Size(nudWidth, buttonHeight);
+            nudMarketOpen.Location = new Point(nudLeft, nudMarketClose.Bottom + border);
 
             // Labels
-            LblMarketClose.Location = new Point(btnHrzSpace + border, NUDMarketClose.Top + 2);
-            LblMarketOpen.Location = new Point(btnHrzSpace + border, NUDMarketOpen.Top + 2);
+            lblMarketClose.Location = new Point(btnHrzSpace + border, nudMarketClose.Top + 2);
+            lblMarketOpen.Location = new Point(btnHrzSpace + border, nudMarketOpen.Top + 2);
 
             // Destination folder
-            LblDestFolder.Location = new Point(btnHrzSpace + border, NUDMarketOpen.Bottom + 2 * border);
-            BtnDestFolder.Size = new Size(buttonWidth, buttonHeight);
-            BtnDestFolder.Location = new Point(PnlSettings.Width - buttonWidth - btnHrzSpace, LblDestFolder.Bottom + border);
-            TxbDestFolder.Width = BtnDestFolder.Left - 2 * btnHrzSpace - border;
-            TxbDestFolder.Location = new Point(btnHrzSpace + border, BtnDestFolder.Top + (buttonHeight - TxbDestFolder.Height) / 2);
+            lblDestFolder.Location = new Point(btnHrzSpace + border, nudMarketOpen.Bottom + 2*border);
+            btnDestFolder.Size = new Size(buttonWidth, buttonHeight);
+            btnDestFolder.Location = new Point(pnlSettings.Width - buttonWidth - btnHrzSpace,
+                                               lblDestFolder.Bottom + border);
+            tbxDestFolder.Width = btnDestFolder.Left - 2*btnHrzSpace - border;
+            tbxDestFolder.Location = new Point(btnHrzSpace + border,
+                                               btnDestFolder.Top + (buttonHeight - tbxDestFolder.Height)/2);
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -291,46 +298,46 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
 
         private void SetInfoText(string text)
         {
-            if (TbxInfo.InvokeRequired)
+            if (tbxInfo.InvokeRequired)
             {
                 BeginInvoke(new SetInfoTextCallback(SetInfoText), new object[] {text});
             }
             else
             {
-                TbxInfo.AppendText(text);
+                tbxInfo.AppendText(text);
             }
         }
 
         /// <summary>
-        /// Button Browse Click
+        ///     Button Browse Click
         /// </summary>
         private void BtnBrowseClick(object sender, EventArgs e)
         {
             var fd = new FolderBrowserDialog();
             if (fd.ShowDialog() != DialogResult.OK) return;
             Configs.JForexDataPath = fd.SelectedPath;
-            TxbDataDirectory.Text = fd.SelectedPath;
+            tbxDataDirectory.Text = fd.SelectedPath;
         }
 
         /// <summary>
-        /// BtnDestFolderClick
+        ///     btnDestFolderClick
         /// </summary>
         private void BtnDestFolderClick(object sender, EventArgs e)
         {
             var fd = new FolderBrowserDialog
-            {
-                SelectedPath = TxbDestFolder.Text,
-                Description = Language.T("Select a destination folder") + "."
-            };
+                {
+                    SelectedPath = tbxDestFolder.Text,
+                    Description = Language.T("Select a destination folder") + "."
+                };
             if (fd.ShowDialog() != DialogResult.OK) return;
             Configs.JForexImportDestFolder = fd.SelectedPath;
-            TxbDestFolder.Text = fd.SelectedPath;
+            tbxDestFolder.Text = fd.SelectedPath;
         }
 
         /// <summary>
-        /// Button Help Click
+        ///     Button Help Click
         /// </summary>
-        private void BtnHelpClick(object sender, EventArgs e)
+        private void btnHelpClick(object sender, EventArgs e)
         {
             try
             {
@@ -338,45 +345,45 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
             }
             catch (Exception exc)
             {
-                Console.WriteLine("BtnHelpClick: " + exc.Message);
+                Console.WriteLine("btnHelpClick: " + exc.Message);
             }
         }
 
         /// <summary>
-        /// Button Import Click
+        ///     Button Import Click
         /// </summary>
         private void BtnImportClick(object sender, EventArgs e)
         {
-            if (_isImporting)
+            if (isImporting)
             {
                 // Cancel the asynchronous operation.
-                _bgWorker.CancelAsync();
+                bgWorker.CancelAsync();
                 return;
             }
 
-            Configs.JForexDataPath = TxbDataDirectory.Text;
+            Configs.JForexDataPath = tbxDataDirectory.Text;
             Cursor = Cursors.WaitCursor;
-            ProgressBar.Style = ProgressBarStyle.Marquee;
-            _isImporting = true;
-            BtnImport.Text = Language.T("Stop");
-            Configs.MarketClosingHour = (int) NUDMarketClose.Value;
-            Configs.MarketOpeningHour = (int) NUDMarketOpen.Value;
+            progressBar.Style = ProgressBarStyle.Marquee;
+            isImporting = true;
+            btnImport.Text = Language.T("Stop");
+            Configs.MarketClosingHour = (int) nudMarketClose.Value;
+            Configs.MarketOpeningHour = (int) nudMarketOpen.Value;
 
             // Start the bgWorker
-            _bgWorker.RunWorkerAsync();
+            bgWorker.RunWorkerAsync();
         }
 
         /// <summary>
-        /// Does the job
+        ///     Does the job
         /// </summary>
         private void BgWorkerDoWork(object sender, DoWorkEventArgs e)
         {
             // Get the BackgroundWorker that raised this event.
             var worker = sender as BackgroundWorker;
             if (worker == null) return;
-            _files.Clear();
+            files.Clear();
             ReadJForexFiles();
-            foreach (JForexDataFiles file in _files)
+            foreach (JForexDataFiles file in files)
             {
                 if (worker.CancellationPending) break;
                 if (file.Period > 0) ImportBarFile(file);
@@ -386,31 +393,31 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
         }
 
         /// <summary>
-        /// This event handler deals with the results of the background operation.
+        ///     This event handler deals with the results of the background operation.
         /// </summary>
         private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (!e.Cancelled && Configs.PlaySounds)
                 SystemSounds.Exclamation.Play();
 
-            ProgressBar.Style = ProgressBarStyle.Blocks;
-            _isImporting = false;
-            BtnImport.Text = Language.T("Import");
+            progressBar.Style = ProgressBarStyle.Blocks;
+            isImporting = false;
+            btnImport.Text = Language.T("Import");
             Cursor = Cursors.Default;
         }
 
         private void ReadJForexFiles()
         {
-            if (!Directory.Exists(TxbDataDirectory.Text))
+            if (!Directory.Exists(tbxDataDirectory.Text))
                 return;
 
-            string[] dataFiles = Directory.GetFiles(TxbDataDirectory.Text);
+            string[] dataFiles = Directory.GetFiles(tbxDataDirectory.Text);
             foreach (string filePath in dataFiles)
             {
                 if (Path.GetExtension(filePath) != ".csv") continue;
-                var file = new JForexDataFiles(filePath, TxbDestFolder.Text);
+                var file = new JForexDataFiles(filePath, tbxDestFolder.Text);
                 if (file.IsCorrect)
-                    _files.Add(file);
+                    files.Add(file);
             }
         }
 
@@ -433,7 +440,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
 
                     if (delimiter == '#')
                         delimiter = FindDelimiter(line);
-                    
+
                     string[] data = line.Split(new[] {delimiter});
 
                     string timeInput = data.Length == 6 ? data[0] : data[0] + " " + data[1];
@@ -454,7 +461,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
                         Math.Abs(open - close) < 0.000001) continue;
 
                     streamWriter.WriteLine(time.ToString("yyyy-MM-dd\tHH:mm") + "\t" +
-                        open + "\t" + high + "\t" + low + "\t" + close + "\t" + volume);
+                                           open + "\t" + high + "\t" + low + "\t" + close + "\t" + volume);
                     bars++;
                 }
             }
@@ -471,7 +478,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
 
         private char FindDelimiter(string line)
         {
-            var delimiters = new[] { ' ', ',', '.', '/' };
+            var delimiters = new[] {' ', ',', '.', '/'};
 
             foreach (char delimiter in delimiters)
             {
@@ -487,14 +494,14 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
         {
             string stripped = timeString.Remove(timeString.LastIndexOf(':'));
             var dateFormats = new[]
-                                  {
-                                      "yyyy.MM.dd HH:mm",
-                                      "yyyy-MM-dd HH:mm",
-                                      "yyyy/MM/dd HH:mm",
-                                      "dd.MM.yyyy HH:mm",
-                                      "dd-MM-yyyy HH:mm",
-                                      "dd/MM/yyyy HH:mm"
-                                  };
+                {
+                    "yyyy.MM.dd HH:mm",
+                    "yyyy-MM-dd HH:mm",
+                    "yyyy/MM/dd HH:mm",
+                    "dd.MM.yyyy HH:mm",
+                    "dd-MM-yyyy HH:mm",
+                    "dd/MM/yyyy HH:mm"
+                };
 
             foreach (string format in dateFormats)
             {
@@ -535,7 +542,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
                         if (delimiter == '#')
                             delimiter = FindDelimiter(line);
 
-                        string[] data = line.Split(new[] { delimiter });
+                        string[] data = line.Split(new[] {delimiter});
 
                         if (dateFormat == "#")
                             dateFormat = FindDateFormat(data[0] + " " + data[1]);
@@ -601,14 +608,9 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
 
         private bool IsWeekend(DateTime time)
         {
-            bool isWeekend = time.DayOfWeek == DayOfWeek.Friday && time.Hour >= Configs.MarketClosingHour;
-
-            if (time.DayOfWeek == DayOfWeek.Saturday)
-                isWeekend = true;
-            if (time.DayOfWeek == DayOfWeek.Sunday && time.Hour < Configs.MarketOpeningHour)
-                isWeekend = true;
-
-            return isWeekend;
+            return time.DayOfWeek == DayOfWeek.Friday && time.Hour >= Configs.MarketClosingHour ||
+                   time.DayOfWeek == DayOfWeek.Saturday ||
+                   time.DayOfWeek == DayOfWeek.Sunday && time.Hour < Configs.MarketOpeningHour;
         }
 
         private static void FilterReccord(List<double> reccord)
@@ -660,7 +662,7 @@ namespace Forex_Strategy_Builder.Dialogs.JForex
         }
 
         /// <summary>
-        /// Converts a string to a double number.
+        ///     Converts a string to a double number.
         /// </summary>
         private static double StringToDouble(string input)
         {

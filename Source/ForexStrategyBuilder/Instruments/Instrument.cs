@@ -1,19 +1,22 @@
-// Instrument class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.IO;
-using Forex_Strategy_Builder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public class Instrument
     {
-        private readonly InstrumentProperties _instrProperties; // The instrument properties.
-        private Bar[] _aBar; // An array containing the data
+        private readonly InstrumentProperties instrProperties; // The instrument properties.
+        private Bar[] aBar; // An array containing the data
 
         /// <summary>
         ///     Constructor
@@ -24,7 +27,7 @@ namespace Forex_Strategy_Builder
             EndTime = new DateTime(2020, 1, 1, 0, 0, 0);
             StartTime = new DateTime(1990, 1, 1, 0, 0, 0);
             MaxBars = 20000;
-            _instrProperties = instrProperties;
+            this.instrProperties = instrProperties;
             Period = period;
         }
 
@@ -41,10 +44,9 @@ namespace Forex_Strategy_Builder
         public bool Cut { get; private set; }
 
 
-        // General instrument info
         public string Symbol
         {
-            get { return _instrProperties.Symbol; }
+            get { return instrProperties.Symbol; }
         }
 
         private int Period { get; set; }
@@ -52,7 +54,7 @@ namespace Forex_Strategy_Builder
 
         private double Point
         {
-            get { return _instrProperties.Point; }
+            get { return instrProperties.Point; }
         }
 
         public DateTime Update { get; private set; }
@@ -71,32 +73,32 @@ namespace Forex_Strategy_Builder
         // Bar info
         public DateTime Time(int bar)
         {
-            return _aBar[bar].Time;
+            return aBar[bar].Time;
         }
 
         public double Open(int bar)
         {
-            return _aBar[bar].Open;
+            return aBar[bar].Open;
         }
 
         public double High(int bar)
         {
-            return _aBar[bar].High;
+            return aBar[bar].High;
         }
 
         public double Low(int bar)
         {
-            return _aBar[bar].Low;
+            return aBar[bar].Low;
         }
 
         public double Close(int bar)
         {
-            return _aBar[bar].Close;
+            return aBar[bar].Close;
         }
 
         public int Volume(int bar)
         {
-            return _aBar[bar].Volume;
+            return aBar[bar].Volume;
         }
 
         /// <summary>
@@ -106,7 +108,7 @@ namespace Forex_Strategy_Builder
         public int LoadData()
         {
             // The source data file full name
-            string sourceDataFile = DataDir + _instrProperties.BaseFileName + Period + ".csv";
+            string sourceDataFile = DataDir + instrProperties.BaseFileName + Period + ".csv";
 
             // Checks the access to the file
             if (!File.Exists(sourceDataFile))
@@ -123,13 +125,13 @@ namespace Forex_Strategy_Builder
 
             if (parsedBars > 0)
             {
-                _aBar = dp.Bar.ToArray();
+                aBar = dp.Bar.ToArray();
                 Bars = parsedBars;
                 RefineData();
                 DataHorizon();
                 CheckMarketData();
                 SetDataStats();
-                Update = _aBar[Bars - 1].Time;
+                Update = aBar[Bars - 1].Time;
                 respond = 0;
             }
 
@@ -148,13 +150,13 @@ namespace Forex_Strategy_Builder
 
             if (parsedBars > 0)
             {
-                _aBar = dataParser.Bar.ToArray();
+                aBar = dataParser.Bar.ToArray();
                 Bars = parsedBars;
                 RefineData();
                 DataHorizon();
                 CheckMarketData();
                 SetDataStats();
-                Update = _aBar[Bars - 1].Time;
+                Update = aBar[Bars - 1].Time;
                 respond = 0;
             }
 
@@ -171,14 +173,14 @@ namespace Forex_Strategy_Builder
             {
                 for (int bar = 1; bar < Bars; bar++)
                 {
-                    if (_aBar[bar - 1].Time.DayOfWeek > DayOfWeek.Wednesday &&
-                        _aBar[bar].Time.DayOfWeek < DayOfWeek.Wednesday)
+                    if (aBar[bar - 1].Time.DayOfWeek > DayOfWeek.Wednesday &&
+                        aBar[bar].Time.DayOfWeek < DayOfWeek.Wednesday)
                         continue;
-                    _aBar[bar].Open = _aBar[bar - 1].Close;
-                    if (_aBar[bar].Open > _aBar[bar].High || _aBar[bar].Close > _aBar[bar].High)
-                        _aBar[bar].High = _aBar[bar].Open > _aBar[bar].Close ? _aBar[bar].Open : _aBar[bar].Close;
-                    if (_aBar[bar].Open < _aBar[bar].Low || _aBar[bar].Close < _aBar[bar].Low)
-                        _aBar[bar].Low = _aBar[bar].Open < _aBar[bar].Close ? _aBar[bar].Open : _aBar[bar].Close;
+                    aBar[bar].Open = aBar[bar - 1].Close;
+                    if (aBar[bar].Open > aBar[bar].High || aBar[bar].Close > aBar[bar].High)
+                        aBar[bar].High = aBar[bar].Open > aBar[bar].Close ? aBar[bar].Open : aBar[bar].Close;
+                    if (aBar[bar].Open < aBar[bar].Low || aBar[bar].Close < aBar[bar].Low)
+                        aBar[bar].Low = aBar[bar].Open < aBar[bar].Close ? aBar[bar].Open : aBar[bar].Close;
                 }
             }
 
@@ -192,7 +194,7 @@ namespace Forex_Strategy_Builder
 
                 for (int bar = 0; bar < Bars; bar++)
                 {
-                    if (Math.Abs(_aBar[bar].Open - _aBar[bar].Close) < Data.InstrProperties.Point/2)
+                    if (Math.Abs(aBar[bar].Open - aBar[bar].Close) < Data.InstrProperties.Point/2)
                     {
                         if (lastBar == bar - 1 || lastBar == 0)
                         {
@@ -226,11 +228,11 @@ namespace Forex_Strategy_Builder
                 if (firstBar > 0 && Bars - firstBar > Configs.MinBars)
                 {
                     var aBarCopy = new Bar[Bars];
-                    _aBar.CopyTo(aBarCopy, 0);
+                    aBar.CopyTo(aBarCopy, 0);
 
-                    _aBar = new Bar[Bars - firstBar];
+                    aBar = new Bar[Bars - firstBar];
                     for (int bar = firstBar; bar < Bars; bar++)
-                        _aBar[bar - firstBar] = aBarCopy[bar];
+                        aBar[bar - firstBar] = aBarCopy[bar];
 
                     Bars = Bars - firstBar;
                     Cut = true;
@@ -249,11 +251,11 @@ namespace Forex_Strategy_Builder
             int endBar = Bars - 1;
 
             // Set the starting date
-            if (UseStartTime && _aBar[0].Time < StartTime)
+            if (UseStartTime && aBar[0].Time < StartTime)
             {
                 for (int bar = 0; bar < Bars; bar++)
                 {
-                    if (_aBar[bar].Time >= StartTime)
+                    if (aBar[bar].Time >= StartTime)
                     {
                         startBar = bar;
                         break;
@@ -262,12 +264,12 @@ namespace Forex_Strategy_Builder
             }
 
             // Set the end date
-            if (UseEndTime && _aBar[Bars - 1].Time > EndTime)
+            if (UseEndTime && aBar[Bars - 1].Time > EndTime)
             {
                 // We need to cut out the newest bars
                 for (int bar = 0; bar < Bars; bar++)
                 {
-                    if (_aBar[bar].Time >= EndTime)
+                    if (aBar[bar].Time >= EndTime)
                     {
                         endBar = bar - 1;
                         break;
@@ -294,16 +296,16 @@ namespace Forex_Strategy_Builder
             if (startBar > 0 || endBar < Bars - 1)
             {
                 var aBarCopy = new Bar[Bars];
-                _aBar.CopyTo(aBarCopy, 0);
+                aBar.CopyTo(aBarCopy, 0);
 
                 int newBars = endBar - startBar + 1;
 
-                _aBar = new Bar[newBars];
+                aBar = new Bar[newBars];
                 for (int bar = startBar; bar <= endBar; bar++)
-                    _aBar[bar - startBar] = aBarCopy[bar];
+                    aBar[bar - startBar] = aBarCopy[bar];
 
                 Bars = newBars;
-                Update = _aBar[newBars - 1].Time;
+                Update = aBar[newBars - 1].Time;
                 Cut = true;
             }
         }

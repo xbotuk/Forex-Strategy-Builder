@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     /// Bears Power Indicator

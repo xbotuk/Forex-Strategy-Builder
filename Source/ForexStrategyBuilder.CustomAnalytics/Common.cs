@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace Forex_Strategy_Builder.CustomAnalytics
+namespace ForexStrategyBuilder.CustomAnalytics
 {
     /// <summary>
     /// Position
@@ -100,5 +100,4 @@ namespace Forex_Strategy_Builder.CustomAnalytics
         Short,
         Closed
     }
-
 }

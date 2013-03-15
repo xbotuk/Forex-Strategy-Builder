@@ -1,22 +1,26 @@
-﻿// InstrumentProperties Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Contains the instrument properties.
+    ///     Contains the instrument properties.
     /// </summary>
     public class InstrumentProperties
     {
-        private int _digits;
+        private int digits;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public InstrumentProperties(string symbol, InstrumetType instrType)
         {
@@ -53,18 +57,18 @@ namespace Forex_Strategy_Builder
 
         public int Digits
         {
-            get { return _digits; }
+            get { return digits; }
             set
             {
-                _digits = value;
-                Point = 1/Math.Pow(10, _digits);
-                IsFiveDigits = (_digits == 3 || _digits == 5);
+                digits = value;
+                Point = 1/Math.Pow(10, digits);
+                IsFiveDigits = (digits == 3 || digits == 5);
                 Pip = IsFiveDigits ? 10*Point : Point;
             }
         }
 
         /// <summary>
-        /// Gets the Commission type as a string
+        ///     Gets the Commission type as a string
         /// </summary>
         public string CommissionTypeToString
         {
@@ -83,7 +87,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the Commission Scope as a string
+        ///     Gets the Commission Scope as a string
         /// </summary>
         public string CommissionScopeToString
         {
@@ -91,7 +95,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the Commission Time as a string
+        ///     Gets the Commission Time as a string
         /// </summary>
         public string CommissionTimeToString
         {
@@ -143,31 +147,31 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Clones the Instrument_Properties.
+        ///     Clones the Instrument_Properties.
         /// </summary>
         public InstrumentProperties Clone()
         {
             var copy = new InstrumentProperties(Symbol, InstrType)
-                           {
-                               Symbol = Symbol,
-                               InstrType = InstrType,
-                               Comment = Comment,
-                               Digits = Digits,
-                               LotSize = LotSize,
-                               Spread = Spread,
-                               SwapType = SwapType,
-                               SwapLong = SwapLong,
-                               SwapShort = SwapShort,
-                               CommissionType = CommissionType,
-                               CommissionScope = CommissionScope,
-                               CommissionTime = CommissionTime,
-                               Commission = Commission,
-                               PriceIn = PriceIn,
-                               Slippage = Slippage,
-                               RateToEUR = RateToEUR,
-                               RateToUSD = RateToUSD,
-                               BaseFileName = BaseFileName
-                           };
+                {
+                    Symbol = Symbol,
+                    InstrType = InstrType,
+                    Comment = Comment,
+                    Digits = Digits,
+                    LotSize = LotSize,
+                    Spread = Spread,
+                    SwapType = SwapType,
+                    SwapLong = SwapLong,
+                    SwapShort = SwapShort,
+                    CommissionType = CommissionType,
+                    CommissionScope = CommissionScope,
+                    CommissionTime = CommissionTime,
+                    Commission = Commission,
+                    PriceIn = PriceIn,
+                    Slippage = Slippage,
+                    RateToEUR = RateToEUR,
+                    RateToUSD = RateToUSD,
+                    BaseFileName = BaseFileName
+                };
             return copy;
         }
     }

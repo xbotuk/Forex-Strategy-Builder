@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     /// Data Bars Filter Indicator

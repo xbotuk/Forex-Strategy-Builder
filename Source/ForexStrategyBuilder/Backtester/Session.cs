@@ -1,15 +1,19 @@
-// Session class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public class Session
     {
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Session(int maxPos, int maxOrd)
         {
@@ -29,27 +33,27 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// The number of positions
+        ///     The number of positions
         /// </summary>
         public int Positions { get; set; }
 
         /// <summary>
-        /// The positions during the session
+        ///     The positions during the session
         /// </summary>
         public Position[] Position { get; private set; }
 
         /// <summary>
-        /// The number of orders
+        ///     The number of orders
         /// </summary>
         public int Orders { get; set; }
 
         /// <summary>
-        /// The orders during the session
+        ///     The orders during the session
         /// </summary>
         public Order[] Order { get; private set; }
 
         /// <summary>
-        /// The position at the end of the session
+        ///     The position at the end of the session
         /// </summary>
         public Position Summary
         {
@@ -57,27 +61,27 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// The backtest's evaluation
+        ///     The backtest's evaluation
         /// </summary>
         public BacktestEval BacktestEval { get; set; }
 
         /// <summary>
-        /// The count of interpolating steps
+        ///     The count of interpolating steps
         /// </summary>
         public int WayPoints { get; private set; }
 
         /// <summary>
-        /// The price route
+        ///     The price route
         /// </summary>
         public WayPoint[] WayPoint { get; private set; }
 
         /// <summary>
-        /// Is the top of the bar was reached
+        ///     Is the top of the bar was reached
         /// </summary>
         public bool IsTopReached { get; set; }
 
         /// <summary>
-        /// Is the bottom of the bar was reached
+        ///     Is the bottom of the bar was reached
         /// </summary>
         public bool IsBottomReached { get; set; }
 
@@ -86,7 +90,7 @@ namespace Forex_Strategy_Builder
         private int MaxWayPoints { get; set; }
 
         /// <summary>
-        /// Sets a Way Point
+        ///     Sets a Way Point
         /// </summary>
         public void SetWayPoint(double price, WayPointType type)
         {
@@ -101,14 +105,14 @@ namespace Forex_Strategy_Builder
         public Session Copy()
         {
             var session = new Session(MaxPos, MaxOrd)
-                              {
-                                  Positions = Positions,
-                                  Orders = Orders,
-                                  BacktestEval = BacktestEval,
-                                  WayPoints = WayPoints,
-                                  IsTopReached = IsTopReached,
-                                  IsBottomReached = IsBottomReached
-                              };
+                {
+                    Positions = Positions,
+                    Orders = Orders,
+                    BacktestEval = BacktestEval,
+                    WayPoints = WayPoints,
+                    IsTopReached = IsTopReached,
+                    IsBottomReached = IsBottomReached
+                };
 
             for (int i = 0; i < Positions; i++)
                 session.Position[i] = Position[i].Copy();

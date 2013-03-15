@@ -1,28 +1,34 @@
-// IndicatorStore Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.using System;
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public static class IndicatorStore
     {
         private static readonly Dictionary<string, Indicator> OriginalIndicators = new Dictionary<string, Indicator>();
 
         // Stores the custom indicators
-        private static readonly SortableDictionary<string, Indicator> CustomIndicators = new SortableDictionary<string, Indicator>();
+        private static readonly SortableDictionary<string, Indicator> CustomIndicators =
+            new SortableDictionary<string, Indicator>();
 
         // Stores all the indicators
-        private static readonly SortableDictionary<string, Indicator> AllIndicators = new SortableDictionary<string, Indicator>();
+        private static readonly SortableDictionary<string, Indicator> AllIndicators =
+            new SortableDictionary<string, Indicator>();
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         static IndicatorStore()
         {
@@ -38,7 +44,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the names of all the original indicators
+        ///     Gets the names of all the original indicators
         /// </summary>
         public static IEnumerable<string> OriginalIndicatorNames
         {
@@ -46,7 +52,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the names of all custom indicators
+        ///     Gets the names of all custom indicators
         /// </summary>
         public static List<string> CustomIndicatorNames
         {
@@ -54,7 +60,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the names of all indicators.
+        ///     Gets the names of all indicators.
         /// </summary>
         public static List<string> IndicatorNames
         {
@@ -62,38 +68,38 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the names of all Opening Point indicators.
+        ///     Gets the names of all Opening Point indicators.
         /// </summary>
         public static List<string> OpenPointIndicators { get; private set; }
 
         /// <summary>
-        /// Gets the names of all Closing Point indicators.
+        ///     Gets the names of all Closing Point indicators.
         /// </summary>
         public static List<string> ClosePointIndicators { get; private set; }
 
         /// <summary>
-        /// Gets the names of all Opening Filter indicators.
+        ///     Gets the names of all Opening Filter indicators.
         /// </summary>
         public static List<string> OpenFilterIndicators { get; private set; }
 
         /// <summary>
-        /// Gets the names of all Closing Filter indicators.
+        ///     Gets the names of all Closing Filter indicators.
         /// </summary>
         public static List<string> CloseFilterIndicators { get; private set; }
 
         /// <summary>
-        /// Gets the names of all losing Point indicators that allow use of Closing Filter indicators.
+        ///     Gets the names of all losing Point indicators that allow use of Closing Filter indicators.
         /// </summary>
         public static List<string> ClosingIndicatorsWithClosingFilters { get; private set; }
 
         /// <summary>
-        /// Adds all indicators to the store.
+        ///     Adds all indicators to the store.
         /// </summary>
         private static void AddOriginalIndicators()
         {
             OriginalIndicators.Add("Accelerator Oscillator", new Accelerator_Oscillator(SlotTypes.NotDefined));
             OriginalIndicators.Add("Account Percent Stop", new Account_Percent_Stop(SlotTypes.NotDefined));
-            OriginalIndicators.Add("Accumulation Distribution", new Accumulation_Distribution(SlotTypes.NotDefined));
+            OriginalIndicators.Add("Accumulation Distribution", new AccumulationDistribution(SlotTypes.NotDefined));
             OriginalIndicators.Add("ADX", new ADX(SlotTypes.NotDefined));
             OriginalIndicators.Add("Alligator", new Alligator(SlotTypes.NotDefined));
             OriginalIndicators.Add("Aroon Histogram", new Aroon_Histogram(SlotTypes.NotDefined));
@@ -196,7 +202,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the names of all indicators for a given slot type.
+        ///     Gets the names of all indicators for a given slot type.
         /// </summary>
         public static List<string> GetIndicatorNames(SlotTypes slotType)
         {
@@ -210,7 +216,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the names of all indicators for a given slot type.
+        ///     Gets the names of all indicators for a given slot type.
         /// </summary>
         public static List<string> ListIndicatorNames(SlotTypes slotType)
         {
@@ -232,7 +238,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Resets the custom indicators in the custom indicators list.
+        ///     Resets the custom indicators in the custom indicators list.
         /// </summary>
         public static void ResetCustomIndicators(IEnumerable<Indicator> indicatorList)
         {
@@ -249,7 +255,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Clears the indicator list and adds to it the original indicators.
+        ///     Clears the indicator list and adds to it the original indicators.
         /// </summary>
         public static void CombineAllIndicators()
         {
@@ -279,7 +285,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Constructs an indicator with specified name and slot type.
+        ///     Constructs an indicator with specified name and slot type.
         /// </summary>
         public static Indicator ConstructIndicator(string indicatorName, SlotTypes slotType)
         {

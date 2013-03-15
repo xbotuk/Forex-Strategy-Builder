@@ -1,29 +1,33 @@
-﻿// Strategy Optimizer - Report
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs.Optimizer
+namespace ForexStrategyBuilder.Dialogs.Optimizer
 {
     /// <summary>
-    /// The Optimizer
+    ///     The Optimizer
     /// </summary>
     public sealed partial class Optimizer
     {
         /// <summary>
-        /// Prepares the report string.
+        ///     Prepares the report string.
         /// </summary>
         private void InitReport()
         {
             // Prepare report
-            _sbReport = new StringBuilder();
-            _sbReport.Append(
+            sbReport = new StringBuilder();
+            sbReport.Append(
                 "Net Balance" + "," +
                 "Max Drawdown" + "," +
                 "Gross Profit" + "," +
@@ -38,26 +42,26 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 "Equity Percent Drawdown" + ",");
 
             if (Data.Strategy.UsePermanentSL)
-                _sbReport.Append("Permanent SL" + ",");
+                sbReport.Append("Permanent SL" + ",");
             if (Data.Strategy.UsePermanentTP)
-                _sbReport.Append("Permanent TP" + ",");
+                sbReport.Append("Permanent TP" + ",");
             if (Data.Strategy.UseBreakEven)
-                _sbReport.Append("Break Even" + ",");
+                sbReport.Append("Break Even" + ",");
 
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)
                     if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled)
-                        _sbReport.Append(Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Caption + ",");
+                        sbReport.Append(Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Caption + ",");
 
-            _sbReport.AppendLine();
+            sbReport.AppendLine();
         }
 
         /// <summary>
-        ///  Fills a line to the report.
+        ///     Fills a line to the report.
         /// </summary>
         private void FillInReport()
         {
-            _sbReport.Append(
+            sbReport.Append(
                 Backtester.NetMoneyBalance.ToString("F2") + "," +
                 Backtester.MaxMoneyDrawdown.ToString("F2") + "," +
                 Backtester.GrossMoneyProfit.ToString("F2") + "," +
@@ -72,22 +76,22 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
                 Backtester.MoneyEquityPercentDrawdown.ToString("F2") + ",");
 
             if (Data.Strategy.UsePermanentSL)
-                _sbReport.Append(Data.Strategy.PermanentSL + ",");
+                sbReport.Append(Data.Strategy.PermanentSL + ",");
             if (Data.Strategy.UsePermanentTP)
-                _sbReport.Append(Data.Strategy.PermanentTP + ",");
+                sbReport.Append(Data.Strategy.PermanentTP + ",");
             if (Data.Strategy.UseBreakEven)
-                _sbReport.Append(Data.Strategy.BreakEven + ",");
+                sbReport.Append(Data.Strategy.BreakEven + ",");
 
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)
                     if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled)
-                        _sbReport.Append(Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Value + ",");
+                        sbReport.Append(Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Value + ",");
 
-            _sbReport.AppendLine();
+            sbReport.AppendLine();
         }
 
         /// <summary>
-        /// Saves the report in a file.
+        ///     Saves the report in a file.
         /// </summary>
         private void SaveReport()
         {
@@ -104,7 +108,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             {
                 using (var outfile = new StreamWriter(pathReport))
                 {
-                    outfile.Write(_sbReport.ToString());
+                    outfile.Write(sbReport.ToString());
                 }
             }
             catch (Exception ex)

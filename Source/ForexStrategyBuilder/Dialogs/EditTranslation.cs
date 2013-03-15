@@ -1,31 +1,35 @@
-﻿// EditTranslation Form
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Edit Translation
+    ///     Edit Translation
     /// </summary>
     internal sealed class EditTranslation : Form
     {
         private const int Textboxes = 8;
-        private static Dictionary<String, String> _dictLanguage;
-        private string[] _asAlt;
-        private string[] _asMain;
-        private bool _isProgramChange = true;
-        private bool _isTranslChanged;
-        private int _phrases;
+        private static Dictionary<String, String> dictLanguage;
+        private string[] asAlt;
+        private string[] asMain;
+        private bool isProgramChange = true;
+        private bool isTranslChanged;
+        private int phrases;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public EditTranslation()
         {
@@ -60,35 +64,35 @@ namespace Forex_Strategy_Builder
 
             // Input Names
             var asInputNames = new[]
-                                   {
-                                       Language.T("Language"),
-                                       Language.T("File name"),
-                                       Language.T("Author"),
-                                       Language.T("Website"),
-                                       Language.T("Contacts")
-                                   };
+                {
+                    Language.T("Language"),
+                    Language.T("File name"),
+                    Language.T("Author"),
+                    Language.T("Website"),
+                    Language.T("Contacts")
+                };
 
             // Input Values
             var asInputValues = new[]
-                                    {
-                                        Configs.Language,
-                                        Language.LanguageFileName,
-                                        Language.Author,
-                                        Language.AuthorsWebsite,
-                                        Language.AuthorsEmail
-                                    };
+                {
+                    Configs.Language,
+                    Language.LanguageFileName,
+                    Language.Author,
+                    Language.AuthorsWebsite,
+                    Language.AuthorsEmail
+                };
 
             // Common parameters
             for (int i = 0; i < asInputNames.Length; i++)
             {
                 AlblInputNames[i] = new Label
-                                        {
-                                            Parent = PnlCommon,
-                                            ForeColor = LayoutColors.ColorControlText,
-                                            BackColor = Color.Transparent,
-                                            AutoSize = true,
-                                            Text = asInputNames[i]
-                                        };
+                    {
+                        Parent = PnlCommon,
+                        ForeColor = LayoutColors.ColorControlText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Text = asInputNames[i]
+                    };
 
                 AtbxInputValues[i] = new TextBox {Parent = PnlCommon, Text = asInputValues[i]};
             }
@@ -97,7 +101,7 @@ namespace Forex_Strategy_Builder
             for (int i = 0; i < Textboxes; i++)
             {
                 AtbxMain[i] = new TextBox
-                                  {Parent = PnlPhrases, Multiline = true, ReadOnly = true, ForeColor = Color.DarkGray};
+                    {Parent = PnlPhrases, Multiline = true, ReadOnly = true, ForeColor = Color.DarkGray};
 
                 AtbxAlt[i] = new TextBox {Parent = PnlPhrases, Multiline = true, Tag = i};
                 AtbxAlt[i].TextChanged += EditTranslationTextChanged;
@@ -160,7 +164,7 @@ namespace Forex_Strategy_Builder
         private Button BtnCancel { get; set; }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -173,16 +177,16 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
 
             // pnlCommon
@@ -279,41 +283,41 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Inits the params.
+        ///     Inits the params.
         /// </summary>
         private void InitParams()
         {
-            _dictLanguage = Language.Translation;
-            _phrases = _dictLanguage.Values.Count;
+            dictLanguage = Language.Translation;
+            phrases = dictLanguage.Values.Count;
 
-            _asMain = new string[_phrases];
-            _asAlt = new string[_phrases];
-            _dictLanguage.Keys.CopyTo(_asMain, 0);
-            _dictLanguage.Values.CopyTo(_asAlt, 0);
+            asMain = new string[phrases];
+            asAlt = new string[phrases];
+            dictLanguage.Keys.CopyTo(asMain, 0);
+            dictLanguage.Values.CopyTo(asAlt, 0);
 
             ScrollBar.SmallChange = 1;
             ScrollBar.LargeChange = (Textboxes/2);
-            ScrollBar.Maximum = _phrases - Textboxes + ScrollBar.LargeChange - 1;
+            ScrollBar.Maximum = phrases - Textboxes + ScrollBar.LargeChange - 1;
             ScrollBar.Value = 0;
         }
 
         /// <summary>
-        /// The translation is edited;
+        ///     The translation is edited;
         /// </summary>
         private void EditTranslationTextChanged(object sender, EventArgs e)
         {
-            if (_isProgramChange) return;
+            if (isProgramChange) return;
 
             var tb = (TextBox) sender;
             int index = ScrollBar.Value + (int) tb.Tag;
 
-            _asAlt[index] = tb.Text;
-            _isTranslChanged = true;
+            asAlt[index] = tb.Text;
+            isTranslChanged = true;
             BtnAccept.Enabled = Configs.Language != "English";
         }
 
         /// <summary>
-        /// Scroll Bar value changed.
+        ///     Scroll Bar value changed.
         /// </summary>
         private void ScrollBarValueChanged(object sender, EventArgs e)
         {
@@ -321,23 +325,23 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the phrases in the text boxes.
+        ///     Sets the phrases in the text boxes.
         /// </summary>
         private void SetTextBoxes()
         {
-            _isProgramChange = true;
+            isProgramChange = true;
 
             for (int i = 0; i < Textboxes; i++)
             {
-                AtbxMain[i].Text = _asMain[ScrollBar.Value + i];
-                AtbxAlt[i].Text = _asAlt[ScrollBar.Value + i];
+                AtbxMain[i].Text = asMain[ScrollBar.Value + i];
+                AtbxAlt[i].Text = asAlt[ScrollBar.Value + i];
             }
 
-            _isProgramChange = false;
+            isProgramChange = false;
         }
 
         /// <summary>
-        /// Button click
+        ///     Button click
         /// </summary>
         private void BtnClick(object sender, EventArgs e)
         {
@@ -369,7 +373,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Searches a phrase.
+        ///     Searches a phrase.
         /// </summary>
         private void TbxSearchTextChanged(object sender, EventArgs e)
         {
@@ -377,7 +381,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Searches a phrase.
+        ///     Searches a phrase.
         /// </summary>
         private void SearchPhrase(string phrase)
         {
@@ -387,51 +391,51 @@ namespace Forex_Strategy_Builder
             if (phrase == "")
                 return;
 
-            for (int i = ScrollBar.Value + 1; i < _phrases; i++)
+            for (int i = ScrollBar.Value + 1; i < phrases; i++)
             {
-                if (_asMain[i].ToLower().Contains(phrase) || _asAlt[i].ToLower().Contains(phrase))
+                if (asMain[i].ToLower().Contains(phrase) || asAlt[i].ToLower().Contains(phrase))
                 {
-                    ScrollBar.Value = Math.Min(i, _phrases - Textboxes);
+                    ScrollBar.Value = Math.Min(i, phrases - Textboxes);
                     return;
                 }
             }
 
             for (int i = 0; i < ScrollBar.Value + 1; i++)
             {
-                if (_asMain[i].ToLower().Contains(phrase) || _asAlt[i].ToLower().Contains(phrase))
+                if (asMain[i].ToLower().Contains(phrase) || asAlt[i].ToLower().Contains(phrase))
                 {
-                    ScrollBar.Value = Math.Min(i, _phrases - Textboxes);
+                    ScrollBar.Value = Math.Min(i, phrases - Textboxes);
                     return;
                 }
             }
         }
 
         /// <summary>
-        /// Searches for a untranslated phrase.
+        ///     Searches for a untranslated phrase.
         /// </summary>
         private void SearchUntranslatedPhrase()
         {
-            for (int i = ScrollBar.Value + 1; i < _phrases; i++)
+            for (int i = ScrollBar.Value + 1; i < phrases; i++)
             {
-                if (_asMain[i] != _asAlt[i]) continue;
-                ScrollBar.Value = Math.Min(i, _phrases - Textboxes);
+                if (asMain[i] != asAlt[i]) continue;
+                ScrollBar.Value = Math.Min(i, phrases - Textboxes);
                 return;
             }
 
             for (int i = 0; i < ScrollBar.Value + 1; i++)
             {
-                if (_asMain[i] != _asAlt[i]) continue;
-                ScrollBar.Value = Math.Min(i, _phrases - Textboxes);
+                if (asMain[i] != asAlt[i]) continue;
+                ScrollBar.Value = Math.Min(i, phrases - Textboxes);
                 return;
             }
         }
 
         /// <summary>
-        /// Check whether the strategy have been changed.
+        ///     Check whether the strategy have been changed.
         /// </summary>
         private void ActionsFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!_isTranslChanged || Configs.Language == "English") return;
+            if (!isTranslChanged || Configs.Language == "English") return;
             DialogResult dr = MessageBox.Show(Language.T("Do you want to accept the changes?"),
                                               Data.ProgramName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
@@ -445,14 +449,14 @@ namespace Forex_Strategy_Builder
                     Close();
                     break;
                 case DialogResult.No:
-                    _isTranslChanged = false;
+                    isTranslChanged = false;
                     Close();
                     break;
             }
         }
 
         /// <summary>
-        /// Saves the translation
+        ///     Saves the translation
         /// </summary>
         private void SaveTranslation()
         {
@@ -460,16 +464,16 @@ namespace Forex_Strategy_Builder
             string website = AtbxInputValues[3].Text;
             string contacts = AtbxInputValues[4].Text;
 
-            for (int i = 0; i < _phrases; i++)
-                _dictLanguage[_asMain[i]] = _asAlt[i];
+            for (int i = 0; i < phrases; i++)
+                dictLanguage[asMain[i]] = asAlt[i];
 
-            Language.SaveLangFile(_dictLanguage, author, website, contacts);
+            Language.SaveLangFile(dictLanguage, author, website, contacts);
 
-            _isTranslChanged = false;
+            isTranslChanged = false;
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {

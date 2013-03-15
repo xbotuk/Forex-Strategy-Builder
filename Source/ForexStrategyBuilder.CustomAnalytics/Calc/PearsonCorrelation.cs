@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Forex_Strategy_Builder.CustomAnalytics
+namespace ForexStrategyBuilder.CustomAnalytics
 {
     /// <summary>
     ///     Generator Custom Math

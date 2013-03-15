@@ -1,19 +1,23 @@
-﻿// FancyMessageBox
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     internal class FancyMessageBox : Form
     {
         /// <summary>
-        /// Public Constructor
+        ///     Public Constructor
         /// </summary>
         public FancyMessageBox(string text, string title)
         {
@@ -21,7 +25,7 @@ namespace Forex_Strategy_Builder
             BoxWidth = 380;
             PanelBase = new FancyPanel();
             PanelControl = new Panel();
-            HTMLViewer = new WebBrowser();
+            HtmlViewer = new WebBrowser();
             ButtonClose = new Button();
 
             Text = title;
@@ -34,14 +38,14 @@ namespace Forex_Strategy_Builder
 
             PanelBase.Parent = this;
 
-            HTMLViewer.Parent = PanelBase;
-            HTMLViewer.AllowNavigation = false;
-            HTMLViewer.AllowWebBrowserDrop = false;
-            HTMLViewer.DocumentText = GetHTMLContent(text, title);
-            HTMLViewer.Dock = DockStyle.Fill;
-            HTMLViewer.TabStop = false;
-            HTMLViewer.IsWebBrowserContextMenuEnabled = false;
-            HTMLViewer.WebBrowserShortcutsEnabled = true;
+            HtmlViewer.Parent = PanelBase;
+            HtmlViewer.AllowNavigation = false;
+            HtmlViewer.AllowWebBrowserDrop = false;
+            HtmlViewer.DocumentText = GetHTMLContent(text, title);
+            HtmlViewer.Dock = DockStyle.Fill;
+            HtmlViewer.TabStop = false;
+            HtmlViewer.IsWebBrowserContextMenuEnabled = false;
+            HtmlViewer.WebBrowserShortcutsEnabled = true;
 
             PanelControl.Parent = this;
             PanelControl.Dock = DockStyle.Bottom;
@@ -54,7 +58,7 @@ namespace Forex_Strategy_Builder
             ButtonClose.UseVisualStyleBackColor = true;
         }
 
-        private WebBrowser HTMLViewer { get; set; }
+        private WebBrowser HtmlViewer { get; set; }
         private Button ButtonClose { get; set; }
         private FancyPanel PanelBase { get; set; }
         private Panel PanelControl { get; set; }
@@ -102,10 +106,10 @@ namespace Forex_Strategy_Builder
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
 
             PanelControl.Height = buttonHeight + 2*btnVertSpace;

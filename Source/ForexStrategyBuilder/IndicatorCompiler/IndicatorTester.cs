@@ -1,18 +1,22 @@
-﻿// IndicatorTester Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Text;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public static class IndicatorTester
     {
         /// <summary>
-        /// Tests general parameters of a custom indicator.
+        ///     Tests general parameters of a custom indicator.
         /// </summary>
         /// <param name="indicator">The indicator.</param>
         /// <param name="errorsList">List of the errors</param>
@@ -45,21 +49,24 @@ namespace Forex_Strategy_Builder
             // Tests the CustomIndicator property.
             if (!indicator.CustomIndicator)
             {
-                sb.AppendLine("\tThe indicator '" + indicator.IndicatorName + "' is not marked as custom. Set CustomIndicator = true;");
+                sb.AppendLine("\tThe indicator '" + indicator.IndicatorName +
+                              "' is not marked as custom. Set CustomIndicator = true;");
                 isOk = false;
             }
 
             // Tests the SeparatedChartMaxValue properties.
             if (!indicator.SeparatedChart && Math.Abs(indicator.SeparatedChartMaxValue - double.MinValue) > 0.000001)
             {
-                sb.AppendLine("\tSet SeparatedChart = true; or remove the property: SeparatedChartMaxValue = " + indicator.SeparatedChartMaxValue);
+                sb.AppendLine("\tSet SeparatedChart = true; or remove the property: SeparatedChartMaxValue = " +
+                              indicator.SeparatedChartMaxValue);
                 isOk = false;
             }
 
             // Tests the SeparatedChartMinValue properties.
             if (!indicator.SeparatedChart && Math.Abs(indicator.SeparatedChartMinValue - double.MaxValue) > 0.000001)
             {
-                sb.AppendLine("\tSet SeparatedChart = true; or remove the property: SeparatedChartMinValue = " + indicator.SeparatedChartMinValue);
+                sb.AppendLine("\tSet SeparatedChart = true; or remove the property: SeparatedChartMinValue = " +
+                              indicator.SeparatedChartMinValue);
                 isOk = false;
             }
 
@@ -223,7 +230,7 @@ namespace Forex_Strategy_Builder
 
             try
             {
-                var description = indicator.ToString();
+                string description = indicator.ToString();
                 Console.WriteLine(description);
             }
             catch (Exception exc)
@@ -238,7 +245,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs thorough indicator test.
+        ///     Performs thorough indicator test.
         /// </summary>
         /// <param name="indicatorName">The indicator name.</param>
         /// <param name="errorsList">Error message.</param>

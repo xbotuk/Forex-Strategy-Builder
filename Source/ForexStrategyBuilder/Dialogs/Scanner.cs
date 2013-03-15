@@ -1,8 +1,12 @@
-// Forex Strategy Builder - Scanner
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.ComponentModel;
@@ -11,33 +15,25 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// The Scanner
+    ///     The Scanner
     /// </summary>
     public sealed class Scanner : Form
     {
         // Controls
-        private SmallBalanceChart BalanceChart { get; set; }
-        private Panel InfoPanel { get; set; }
-        private ProgressBar ProgressBar { get; set; }
-        private Label LblProgress { get; set; }
-        private Button BtnClose { get; set; }
-        private CheckBox ChbAutoscan { get; set; }
-        private CheckBox ChbTickScan { get; set; }
-        private BackgroundWorker BgWorker { get; set; }
 
-        private readonly Color _colorText;
-        private readonly Font _fontInfo;
-        private readonly int _infoRowHeight;
-        private readonly bool _isTickDataFile;
-        private bool _isLoadingNow;
-        private int _progressPercent;
-        private string _warningMessage;
+        private readonly Color colorText;
+        private readonly Font fontInfo;
+        private readonly int infoRowHeight;
+        private readonly bool isTickDataFile;
+        private bool isLoadingNow;
+        private int progressPercent;
+        private string warningMessage;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Scanner()
         {
@@ -59,10 +55,10 @@ namespace Forex_Strategy_Builder
             BackColor = LayoutColors.ColorFormBack;
             FormClosing += ScannerFormClosing;
 
-            _colorText = LayoutColors.ColorControlText;
-            _fontInfo = new Font(Font.FontFamily, 9);
-            _infoRowHeight = Math.Max(_fontInfo.Height, 18);
-            _isTickDataFile = CheckTickDataFile();
+            colorText = LayoutColors.ColorControlText;
+            fontInfo = new Font(Font.FontFamily, 9);
+            infoRowHeight = Math.Max(fontInfo.Height, 18);
+            isTickDataFile = CheckTickDataFile();
 
             // pnlInfo
             InfoPanel.Parent = this;
@@ -82,7 +78,7 @@ namespace Forex_Strategy_Builder
 
             // Automatic Scan checkbox.
             ChbAutoscan.Parent = this;
-            ChbAutoscan.ForeColor = _colorText;
+            ChbAutoscan.ForeColor = colorText;
             ChbAutoscan.BackColor = Color.Transparent;
             ChbAutoscan.Text = Language.T("Automatic Scan");
             ChbAutoscan.Checked = Configs.Autoscan;
@@ -91,12 +87,12 @@ namespace Forex_Strategy_Builder
 
             // Tick Scan checkbox.
             ChbTickScan.Parent = this;
-            ChbTickScan.ForeColor = _colorText;
+            ChbTickScan.ForeColor = colorText;
             ChbTickScan.BackColor = Color.Transparent;
             ChbTickScan.Text = Language.T("Use Ticks");
-            ChbTickScan.Checked = Configs.UseTickData && _isTickDataFile;
+            ChbTickScan.Checked = Configs.UseTickData && isTickDataFile;
             ChbTickScan.AutoSize = true;
-            ChbTickScan.Visible = _isTickDataFile;
+            ChbTickScan.Visible = isTickDataFile;
             ChbTickScan.CheckedChanged += ChbTickScanCheckedChanged;
 
             //Button Close
@@ -112,19 +108,28 @@ namespace Forex_Strategy_Builder
             BgWorker.ProgressChanged += BgWorkerProgressChanged;
             BgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
 
-            _isLoadingNow = false;
+            isLoadingNow = false;
 
-            if (!_isTickDataFile)
+            if (!isTickDataFile)
                 Configs.UseTickData = false;
         }
 
+        private SmallBalanceChart BalanceChart { get; set; }
+        private Panel InfoPanel { get; set; }
+        private ProgressBar ProgressBar { get; set; }
+        private Label LblProgress { get; set; }
+        private Button BtnClose { get; set; }
+        private CheckBox ChbAutoscan { get; set; }
+        private CheckBox ChbTickScan { get; set; }
+        private BackgroundWorker BgWorker { get; set; }
+
         /// <summary>
-        /// Sets scanner compact mode.
+        ///     Sets scanner compact mode.
         /// </summary>
         public bool CompactMode { private get; set; }
 
         /// <summary>
-        /// Perform initializing
+        ///     Perform initializing
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -150,22 +155,22 @@ namespace Forex_Strategy_Builder
                 BalanceChart.SetChartData();
                 Width = 460;
                 Height = 540;
-                if (!_isTickDataFile)
-                    Height -= _infoRowHeight;
+                if (!isTickDataFile)
+                    Height -= infoRowHeight;
             }
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
 
             if (CompactMode)
@@ -173,10 +178,10 @@ namespace Forex_Strategy_Builder
                 //Button Close
                 BtnClose.Size = new Size(buttonWidth, buttonHeight);
                 BtnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
-                                               ClientSize.Height - buttonHeight - btnVertSpace);
+                                              ClientSize.Height - buttonHeight - btnVertSpace);
 
                 // ProgressBar
-                ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
+                ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDlu*9));
                 ProgressBar.Location = new Point(space, btnVertSpace);
 
                 // Label Progress
@@ -187,14 +192,14 @@ namespace Forex_Strategy_Builder
                 //Button Close
                 BtnClose.Size = new Size(buttonWidth, buttonHeight);
                 BtnClose.Location = new Point(ClientSize.Width - buttonWidth - btnHrzSpace,
-                                               ClientSize.Height - buttonHeight - btnVertSpace);
+                                              ClientSize.Height - buttonHeight - btnVertSpace);
 
                 // ProgressBar
-                ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDLU*9));
+                ProgressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDlu*9));
                 ProgressBar.Location = new Point(space, BtnClose.Top - ProgressBar.Height - btnVertSpace);
 
                 // Panel Info
-                int pnlInfoHeight = _isTickDataFile ? _infoRowHeight*11 + 2 : _infoRowHeight*10 + 2;
+                int pnlInfoHeight = isTickDataFile ? infoRowHeight*11 + 2 : infoRowHeight*10 + 2;
                 InfoPanel.Size = new Size(ClientSize.Width - 2*space, pnlInfoHeight);
                 InfoPanel.Location = new Point(space, space);
 
@@ -214,7 +219,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads data and recalculates.
+        ///     Loads data and recalculates.
         /// </summary>
         protected override void OnShown(EventArgs e)
         {
@@ -237,18 +242,18 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Stops the background worker.
+        ///     Stops the background worker.
         /// </summary>
         private void ScannerFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!_isLoadingNow) return;
+            if (!isLoadingNow) return;
             // Cancels the asynchronous operation.
             BgWorker.CancelAsync();
             e.Cancel = true;
         }
 
         /// <summary>
-        /// Repaint the panel Info
+        ///     Repaint the panel Info
         /// </summary>
         private void PnlInfoPaint(object sender, PaintEventArgs e)
         {
@@ -275,50 +280,50 @@ namespace Forex_Strategy_Builder
             const int xp6 = 370;
             int xp7 = pnl.ClientSize.Width - border;
 
-            var size = new Size(xp7 - xp0, _infoRowHeight);
+            var size = new Size(xp7 - xp0, infoRowHeight);
 
             var sf = new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Near};
 
             // Caption background
             var pntStart = new PointF(0, 0);
-            SizeF szfCaption = new Size(pnl.ClientSize.Width - 0, 2*_infoRowHeight);
+            SizeF szfCaption = new Size(pnl.ClientSize.Width - 0, 2*infoRowHeight);
             var rectfCaption = new RectangleF(pntStart, szfCaption);
             Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
 
             // Caption Text
             var stringFormatCaption = new StringFormat
-                                          {
-                                              LineAlignment = StringAlignment.Center,
-                                              Trimming = StringTrimming.EllipsisCharacter,
-                                              FormatFlags = StringFormatFlags.NoWrap,
-                                              Alignment = StringAlignment.Near
-                                          };
+                {
+                    LineAlignment = StringAlignment.Center,
+                    Trimming = StringTrimming.EllipsisCharacter,
+                    FormatFlags = StringFormatFlags.NoWrap,
+                    Alignment = StringAlignment.Near
+                };
             string stringCaptionText = Language.T("Intrabar Data");
             float captionWidth = Math.Min(InfoPanel.ClientSize.Width, xp7 - xp0);
-            float captionTextWidth = g.MeasureString(stringCaptionText, _fontInfo).Width;
+            float captionTextWidth = g.MeasureString(stringCaptionText, fontInfo).Width;
             float captionTextX = Math.Max((captionWidth - captionTextWidth)/2f, 0);
             var pfCaptionText = new PointF(captionTextX, 0);
-            var sfCaptionText = new SizeF(captionWidth - captionTextX, _infoRowHeight);
+            var sfCaptionText = new SizeF(captionWidth - captionTextX, infoRowHeight);
             rectfCaption = new RectangleF(pfCaptionText, sfCaptionText);
 
             Brush brush = new SolidBrush(LayoutColors.ColorCaptionText);
             // First caption row
-            g.DrawString(stringCaptionText, _fontInfo, brush, rectfCaption, stringFormatCaption);
+            g.DrawString(stringCaptionText, fontInfo, brush, rectfCaption, stringFormatCaption);
 
             // Second title row
-            g.DrawString(Language.T("Period"), _fontInfo, brush, (xp1 + xp0)/2f, _infoRowHeight, sf);
-            g.DrawString(Language.T("Bars"), _fontInfo, brush, (xp2 + xp1)/2f, _infoRowHeight, sf);
-            g.DrawString(Language.T("From"), _fontInfo, brush, (xp3 + xp2)/2f, _infoRowHeight, sf);
-            g.DrawString(Language.T("Until"), _fontInfo, brush, (xp4 + xp3)/2f, _infoRowHeight, sf);
-            g.DrawString(Language.T("Coverage"), _fontInfo, brush, (xp5 + xp4)/2f, _infoRowHeight, sf);
-            g.DrawString("%", _fontInfo, brush, (xp6 + xp5)/2f, _infoRowHeight, sf);
-            g.DrawString(Language.T("Label"), _fontInfo, brush, (xp7 + xp6)/2f, _infoRowHeight, sf);
+            g.DrawString(Language.T("Period"), fontInfo, brush, (xp1 + xp0)/2f, infoRowHeight, sf);
+            g.DrawString(Language.T("Bars"), fontInfo, brush, (xp2 + xp1)/2f, infoRowHeight, sf);
+            g.DrawString(Language.T("From"), fontInfo, brush, (xp3 + xp2)/2f, infoRowHeight, sf);
+            g.DrawString(Language.T("Until"), fontInfo, brush, (xp4 + xp3)/2f, infoRowHeight, sf);
+            g.DrawString(Language.T("Coverage"), fontInfo, brush, (xp5 + xp4)/2f, infoRowHeight, sf);
+            g.DrawString("%", fontInfo, brush, (xp6 + xp5)/2f, infoRowHeight, sf);
+            g.DrawString(Language.T("Label"), fontInfo, brush, (xp7 + xp6)/2f, infoRowHeight, sf);
 
             brush = new SolidBrush(LayoutColors.ColorControlText);
             int allPeriods = Enum.GetValues(typeof (DataPeriods)).Length;
             for (int period = 0; period <= allPeriods; period++)
             {
-                int y = (period + 2)*_infoRowHeight;
+                int y = (period + 2)*infoRowHeight;
                 var point = new Point(xp0, y);
 
                 if (Math.Abs(period%2f - 0) > 0.0001)
@@ -326,9 +331,9 @@ namespace Forex_Strategy_Builder
             }
 
             // Tick statistics
-            if (_isTickDataFile)
+            if (isTickDataFile)
             {
-                g.DrawString(Language.T("Tick"), _fontInfo, brush, (xp1 + xp0)/2, 2*_infoRowHeight, sf);
+                g.DrawString(Language.T("Tick"), fontInfo, brush, (xp1 + xp0)/2, 2*infoRowHeight, sf);
                 if (Data.IsTickData && Configs.UseTickData)
                 {
                     int firstBarWithTicks = -1;
@@ -346,13 +351,17 @@ namespace Forex_Strategy_Builder
                     }
                     double percentage = 100d*tickBars/Data.Bars;
 
-                    int y = 2*_infoRowHeight;
-                    string ticks = (Data.Ticks > 999999) ? (Data.Ticks/1000).ToString(CultureInfo.InvariantCulture) + "K" : Data.Ticks.ToString(CultureInfo.InvariantCulture);
-                    g.DrawString(ticks, _fontInfo, brush, (xp2 + xp1)/2, y, sf);
-                    g.DrawString((firstBarWithTicks + 1).ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp3 + xp2)/2, y, sf);
-                    g.DrawString((lastBarWithTicks + 1).ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp4 + xp3)/2, y, sf);
-                    g.DrawString(tickBars.ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp5 + xp4)/2, y, sf);
-                    g.DrawString(percentage.ToString("F2"), _fontInfo, brush, (xp6 + xp5)/2, y, sf);
+                    int y = 2*infoRowHeight;
+                    string ticks = (Data.Ticks > 999999)
+                                       ? (Data.Ticks/1000).ToString(CultureInfo.InvariantCulture) + "K"
+                                       : Data.Ticks.ToString(CultureInfo.InvariantCulture);
+                    g.DrawString(ticks, fontInfo, brush, (xp2 + xp1)/2, y, sf);
+                    g.DrawString((firstBarWithTicks + 1).ToString(CultureInfo.InvariantCulture), fontInfo, brush,
+                                 (xp3 + xp2)/2, y, sf);
+                    g.DrawString((lastBarWithTicks + 1).ToString(CultureInfo.InvariantCulture), fontInfo, brush,
+                                 (xp4 + xp3)/2, y, sf);
+                    g.DrawString(tickBars.ToString(CultureInfo.InvariantCulture), fontInfo, brush, (xp5 + xp4)/2, y, sf);
+                    g.DrawString(percentage.ToString("F2"), fontInfo, brush, (xp6 + xp5)/2, y, sf);
 
                     var rectf = new RectangleF(xp6 + 10, y + 4, xp7 - xp6 - 20, 9);
                     Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriods.min1], 60);
@@ -363,8 +372,8 @@ namespace Forex_Strategy_Builder
 
             for (int prd = 0; prd < allPeriods; prd++)
             {
-                int startY = _isTickDataFile ? 3 : 2;
-                int y = (prd + startY)*_infoRowHeight;
+                int startY = isTickDataFile ? 3 : 2;
+                int y = (prd + startY)*infoRowHeight;
 
                 var period = (DataPeriods) Enum.GetValues(typeof (DataPeriods)).GetValue(prd);
                 int intraBars = Data.IntraBars == null || !Data.IsIntrabarData ? 0 : Data.IntraBars[prd];
@@ -428,15 +437,16 @@ namespace Forex_Strategy_Builder
                     percentage = 100;
                 }
 
-                g.DrawString(Data.DataPeriodToString(period), _fontInfo, brush, (xp1 + xp0)/2, y, sf);
+                g.DrawString(Data.DataPeriodToString(period), fontInfo, brush, (xp1 + xp0)/2, y, sf);
 
                 if (coveredBars > 0 || period == Data.Period)
                 {
-                    g.DrawString(intraBars.ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp2 + xp1)/2, y, sf);
-                    g.DrawString(fromBar.ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp3 + xp2)/2, y, sf);
-                    g.DrawString(untilBar.ToString(CultureInfo.InvariantCulture), _fontInfo, brush, (xp4 + xp3)/2, y, sf);
-                    g.DrawString(coveredBars.ToString(CultureInfo.InvariantCulture) + (isMultyAreas ? "*" : ""), _fontInfo, brush, (xp5 + xp4)/2, y, sf);
-                    g.DrawString(percentage.ToString("F2"), _fontInfo, brush, (xp6 + xp5)/2, y, sf);
+                    g.DrawString(intraBars.ToString(CultureInfo.InvariantCulture), fontInfo, brush, (xp2 + xp1)/2, y, sf);
+                    g.DrawString(fromBar.ToString(CultureInfo.InvariantCulture), fontInfo, brush, (xp3 + xp2)/2, y, sf);
+                    g.DrawString(untilBar.ToString(CultureInfo.InvariantCulture), fontInfo, brush, (xp4 + xp3)/2, y, sf);
+                    g.DrawString(coveredBars.ToString(CultureInfo.InvariantCulture) + (isMultyAreas ? "*" : ""),
+                                 fontInfo, brush, (xp5 + xp4)/2, y, sf);
+                    g.DrawString(percentage.ToString("F2"), fontInfo, brush, (xp6 + xp5)/2, y, sf);
 
                     var rectf = new RectangleF(xp6 + 10, y + 4, xp7 - xp6 - 20, 9);
                     Data.GradientPaint(g, rectf, Data.PeriodColor[period], 60);
@@ -444,29 +454,29 @@ namespace Forex_Strategy_Builder
             }
 
             var penLine = new Pen(LayoutColors.ColorJournalLines);
-            g.DrawLine(penLine, xp1, 2*_infoRowHeight, xp1, pnl.ClientSize.Height);
-            g.DrawLine(penLine, xp2, 2*_infoRowHeight, xp2, pnl.ClientSize.Height);
-            g.DrawLine(penLine, xp3, 2*_infoRowHeight, xp3, pnl.ClientSize.Height);
-            g.DrawLine(penLine, xp4, 2*_infoRowHeight, xp4, pnl.ClientSize.Height);
-            g.DrawLine(penLine, xp5, 2*_infoRowHeight, xp5, pnl.ClientSize.Height);
-            g.DrawLine(penLine, xp6, 2*_infoRowHeight, xp6, pnl.ClientSize.Height);
+            g.DrawLine(penLine, xp1, 2*infoRowHeight, xp1, pnl.ClientSize.Height);
+            g.DrawLine(penLine, xp2, 2*infoRowHeight, xp2, pnl.ClientSize.Height);
+            g.DrawLine(penLine, xp3, 2*infoRowHeight, xp3, pnl.ClientSize.Height);
+            g.DrawLine(penLine, xp4, 2*infoRowHeight, xp4, pnl.ClientSize.Height);
+            g.DrawLine(penLine, xp5, 2*infoRowHeight, xp5, pnl.ClientSize.Height);
+            g.DrawLine(penLine, xp6, 2*infoRowHeight, xp6, pnl.ClientSize.Height);
 
             // Border
             var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
                                     border);
-            g.DrawLine(penBorder, 1, 2*_infoRowHeight, 1, pnl.ClientSize.Height);
-            g.DrawLine(penBorder, pnl.ClientSize.Width - border + 1, 2*_infoRowHeight, pnl.ClientSize.Width - border + 1,
+            g.DrawLine(penBorder, 1, 2*infoRowHeight, 1, pnl.ClientSize.Height);
+            g.DrawLine(penBorder, pnl.ClientSize.Width - border + 1, 2*infoRowHeight, pnl.ClientSize.Width - border + 1,
                        pnl.ClientSize.Height);
             g.DrawLine(penBorder, 0, pnl.ClientSize.Height - border + 1, pnl.ClientSize.Width,
                        pnl.ClientSize.Height - border + 1);
         }
 
         /// <summary>
-        /// Starts intrabar data loading.
+        ///     Starts intrabar data loading.
         /// </summary>
         private void StartLoading()
         {
-            if (_isLoadingNow)
+            if (isLoadingNow)
             {
                 // Cancel the asynchronous operation.
                 BgWorker.CancelAsync();
@@ -475,9 +485,9 @@ namespace Forex_Strategy_Builder
 
             Cursor = Cursors.WaitCursor;
             ProgressBar.Value = 0;
-            _warningMessage = string.Empty;
-            _isLoadingNow = true;
-            _progressPercent = 0;
+            warningMessage = string.Empty;
+            isLoadingNow = true;
+            progressPercent = 0;
             LblProgress.Visible = true;
             ChbAutoscan.Visible = false;
             ChbTickScan.Visible = false;
@@ -489,7 +499,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Does the job
+        ///     Does the job
         /// </summary>
         private void BgWorkerDoWork(object sender, DoWorkEventArgs e)
         {
@@ -500,7 +510,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// This event handler updates the progress bar.
+        ///     This event handler updates the progress bar.
         /// </summary>
         private void BgWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -511,7 +521,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// This event handler deals with the results of the background operation.
+        ///     This event handler deals with the results of the background operation.
         /// </summary>
         private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -522,8 +532,8 @@ namespace Forex_Strategy_Builder
                 ShowScanningResult();
             CompleteScanning();
 
-            if (_warningMessage != string.Empty && Configs.CheckData)
-                MessageBox.Show(_warningMessage + Environment.NewLine + Environment.NewLine +
+            if (warningMessage != string.Empty && Configs.CheckData)
+                MessageBox.Show(warningMessage + Environment.NewLine + Environment.NewLine +
                                 Language.T("The data is probably incomplete and the scanning may not be reliable!") +
                                 Environment.NewLine +
                                 Language.T("You can try also \"Cut Off Bad Data\"."),
@@ -534,7 +544,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Updates the chart and info panel.
+        ///     Updates the chart and info panel.
         /// </summary>
         private void ShowScanningResult()
         {
@@ -544,11 +554,11 @@ namespace Forex_Strategy_Builder
             InfoPanel.Invalidate();
 
             ChbAutoscan.Visible = true;
-            ChbTickScan.Visible = Configs.UseTickData || _isTickDataFile;
+            ChbTickScan.Visible = Configs.UseTickData || isTickDataFile;
         }
 
         /// <summary>
-        /// Resets controls after loading data.
+        ///     Resets controls after loading data.
         /// </summary>
         private void CompleteScanning()
         {
@@ -559,12 +569,12 @@ namespace Forex_Strategy_Builder
 
             BtnClose.Text = Language.T("Close");
             Cursor = Cursors.Default;
-            _isLoadingNow = false;
+            isLoadingNow = false;
             BtnClose.Focus();
         }
 
         /// <summary>
-        /// Loads the data.
+        ///     Loads the data.
         /// </summary>
         private void LoadData(BackgroundWorker worker)
         {
@@ -593,7 +603,7 @@ namespace Forex_Strategy_Builder
             }
 
             // Load the intrabar data (Starts from 1 Min)
-            for (int prd = 0; prd < allPeriods && _isLoadingNow; prd++)
+            for (int prd = 0; prd < allPeriods && isLoadingNow; prd++)
             {
                 if (worker.CancellationPending) break;
 
@@ -622,9 +632,9 @@ namespace Forex_Strategy_Builder
                 // Report progress as a percentage of the total task.
                 int percentComplete = periodsToLoad > 0 ? 100*(prd + 1)/periodsToLoad : 100;
                 percentComplete = percentComplete > 100 ? 100 : percentComplete;
-                if (percentComplete > _progressPercent)
+                if (percentComplete > progressPercent)
                 {
-                    _progressPercent = percentComplete;
+                    progressPercent = percentComplete;
                     worker.ReportProgress(percentComplete);
                 }
             }
@@ -648,15 +658,15 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the Intrabar data.
+        ///     Loads the Intrabar data.
         /// </summary>
         private int LoadIntrabarData(DataPeriods period)
         {
             var instrument = new Instrument(Data.InstrProperties.Clone(), (int) period)
-                                 {
-                                     DataDir = Data.OfflineDataDir,
-                                     MaxBars = Configs.MaxIntraBars
-                                 };
+                {
+                    DataDir = Data.OfflineDataDir,
+                    MaxBars = Configs.MaxIntraBars
+                };
 
 
             // Loads the data
@@ -668,13 +678,13 @@ namespace Forex_Strategy_Builder
                 if (Data.Period != DataPeriods.week)
                 {
                     if (instrument.DaysOff > 5)
-                        _warningMessage += Environment.NewLine + Language.T("Data for:") + " " + Data.Symbol + " " +
-                                           Data.DataPeriodToString(period) + " - " + Language.T("Maximum days off:") +
-                                           " " + instrument.DaysOff;
+                        warningMessage += Environment.NewLine + Language.T("Data for:") + " " + Data.Symbol + " " +
+                                          Data.DataPeriodToString(period) + " - " + Language.T("Maximum days off:") +
+                                          " " + instrument.DaysOff;
                     if (Data.Update - instrument.Update > new TimeSpan(24, 0, 0))
-                        _warningMessage += Environment.NewLine + Language.T("Data for:") + " " + Data.Symbol + " " +
-                                           Data.DataPeriodToString(period) + " - " + Language.T("Updated on:") + " " +
-                                           instrument.Update.ToString(CultureInfo.InvariantCulture);
+                        warningMessage += Environment.NewLine + Language.T("Data for:") + " " + Data.Symbol + " " +
+                                          Data.DataPeriodToString(period) + " - " + Language.T("Updated on:") + " " +
+                                          instrument.Update.ToString(CultureInfo.InvariantCulture);
                 }
 
                 int startBigBar;
@@ -718,7 +728,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Checks the intrabar data.
+        ///     Checks the intrabar data.
         /// </summary>
         private void CheckIntrabarData()
         {
@@ -731,15 +741,15 @@ namespace Forex_Strategy_Builder
                 if (inraBarDataStarts > 0 && Data.IntraBarsPeriods[bar] == Data.Period)
                 {
                     inraBarDataStarts = 0;
-                    _warningMessage += Environment.NewLine +
-                                       Language.T("There is no intrabar data from bar No:") + " " +
-                                       (bar + 1) + " - " + Data.Time[bar];
+                    warningMessage += Environment.NewLine +
+                                      Language.T("There is no intrabar data from bar No:") + " " +
+                                      (bar + 1) + " - " + Data.Time[bar];
                 }
             }
         }
 
         /// <summary>
-        /// Repairs the intrabar data.
+        ///     Repairs the intrabar data.
         /// </summary>
         private void RepairIntrabarData()
         {
@@ -832,7 +842,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads available tick data.
+        ///     Loads available tick data.
         /// </summary>
         private void LoadTickData()
         {
@@ -889,8 +899,8 @@ namespace Forex_Strategy_Builder
             fileStream.Close();
 
             Data.IsTickData = false;
-            var barsWithTicks = 0;
-            for (var b = 0; b < Data.Bars; b++)
+            int barsWithTicks = 0;
+            for (int b = 0; b < Data.Bars; b++)
                 if (Data.TickData[b] != null)
                     barsWithTicks++;
 
@@ -902,7 +912,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Determines whether a tick data file exists.
+        ///     Determines whether a tick data file exists.
         /// </summary>
         private bool CheckTickDataFile()
         {
@@ -910,7 +920,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Adds tick data to Data
+        ///     Adds tick data to Data
         /// </summary>
         private void AddTickData(int bar, double[] bidTicks)
         {
@@ -922,13 +932,13 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Export tick data to a .CSV file.
+        ///     Export tick data to a .CSV file.
         /// </summary>
         private void ExportTickToCSV()
         {
             using (var sw = new StreamWriter(Data.OfflineDataDir + Data.Symbol + "0.csv"))
             {
-                for (var bar = 0; bar < Data.Bars; bar++)
+                for (int bar = 0; bar < Data.Bars; bar++)
                 {
                     if (Data.TickData[bar] == null)
                     {
@@ -939,7 +949,7 @@ namespace Forex_Strategy_Builder
                     else
                     {
                         sw.Write((bar + 1) + "\t" + Data.Time[bar].ToString("yyyy-MM-dd HH:mm") + "\t");
-                        foreach (var tick in Data.TickData[bar])
+                        foreach (double tick in Data.TickData[bar])
                             sw.Write(tick.ToString("F5") + "\t");
                         sw.WriteLine();
                     }
@@ -949,7 +959,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the lblProgress.Text.
+        ///     Sets the lblProgress.Text.
         /// </summary>
         private void SetLabelProgressText(string text)
         {
@@ -964,7 +974,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Auto scan checkbox.
+        ///     Auto scan checkbox.
         /// </summary>
         private void ChbAutoscanCheckedChanged(object sender, EventArgs e)
         {
@@ -972,7 +982,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Tick scan checkbox.
+        ///     Tick scan checkbox.
         /// </summary>
         private void ChbTickScanCheckedChanged(object sender, EventArgs e)
         {

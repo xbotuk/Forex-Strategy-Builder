@@ -1,20 +1,24 @@
-﻿// Indicator component
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System.Drawing;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Indicator's component.
+    ///     Indicator's component.
     /// </summary>
     public class IndicatorComp
     {
         /// <summary>
-        /// Public constructor
+        ///     Public constructor
         /// </summary>
         public IndicatorComp()
         {
@@ -30,66 +34,66 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// The component's name
+        ///     The component's name
         /// </summary>
         public string CompName { get; set; }
 
         /// <summary>
-        /// The component's data type
+        ///     The component's data type
         /// </summary>
         public IndComponentType DataType { get; set; }
 
         /// <summary>
-        /// The component's chart type
+        ///     The component's chart type
         /// </summary>
         public IndChartType ChartType { get; set; }
 
         /// <summary>
-        /// The component's chart color
+        ///     The component's chart color
         /// </summary>
         public Color ChartColor { get; set; }
 
         /// <summary>
-        /// The component's first bar
+        ///     The component's first bar
         /// </summary>
         public int FirstBar { get; set; }
 
         /// <summary>
-        /// The indicator uses the previous bar value
+        ///     The indicator uses the previous bar value
         /// </summary>
         public int UsePreviousBar { get; set; }
 
         /// <summary>
-        /// Whether the component has to be shown on dynamic info or not?
+        ///     Whether the component has to be shown on dynamic info or not?
         /// </summary>
         public bool ShowInDynInfo { get; set; }
 
         /// <summary>
-        /// Whether the component depends of the position entry price.
+        ///     Whether the component depends of the position entry price.
         /// </summary>
         public PositionPriceDependence PosPriceDependence { get; set; }
 
         /// <summary>
-        /// The component's data value
+        ///     The component's data value
         /// </summary>
         public double[] Value { get; set; }
 
         /// <summary>
-        /// Returns a copy.
+        ///     Returns a copy.
         /// </summary>
         public IndicatorComp Clone()
         {
             var indicatorComp = new IndicatorComp
-                                    {
-                                        CompName = CompName,
-                                        DataType = DataType,
-                                        ChartType = ChartType,
-                                        ChartColor = ChartColor,
-                                        FirstBar = FirstBar,
-                                        UsePreviousBar = UsePreviousBar,
-                                        ShowInDynInfo = ShowInDynInfo,
-                                        PosPriceDependence = PosPriceDependence
-                                    };
+                {
+                    CompName = CompName,
+                    DataType = DataType,
+                    ChartType = ChartType,
+                    ChartColor = ChartColor,
+                    FirstBar = FirstBar,
+                    UsePreviousBar = UsePreviousBar,
+                    ShowInDynInfo = ShowInDynInfo,
+                    PosPriceDependence = PosPriceDependence
+                };
 
 
             if (Value != null)

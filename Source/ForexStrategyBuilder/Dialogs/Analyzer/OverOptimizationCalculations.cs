@@ -1,62 +1,66 @@
-﻿// Strategy Analyzer - OverOptimization Calculations
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs.Analyzer
+namespace ForexStrategyBuilder.Dialogs.Analyzer
 {
     public sealed partial class OverOptimization
     {
-        private int _computedCycles; // Currently completed cycles.
-        private int _countStratParams;
-        private int _cycles; // Count of the cycles.
-        private int _deviationSteps;
+        private int computedCycles; // Currently completed cycles.
+        private int countStratParams;
+        private int cycles; // Count of the cycles.
+        private int deviationSteps;
 
-        private string _listParametersName;
-        private List<string> _paramNames;
+        private string listParametersName;
+        private List<string> paramNames;
 
-        private string _pathReportFile;
+        private string pathReportFile;
 
-        private int _progressPercent; // Reached progress in %.
-        private OverOptimizationDataTable _tableParameters;
-        private OverOptimizationDataTable[] _tableReport;
-        private int _tablesCount; // The count of data tables.
+        private int progressPercent; // Reached progress in %.
+        private OverOptimizationDataTable tableParameters;
+        private OverOptimizationDataTable[] tableReport;
+        private int tablesCount; // The count of data tables.
 
         /// <summary>
-        /// Counts the numeric parameters of the strategy.
+        ///     Counts the numeric parameters of the strategy.
         /// </summary>
         private void CountStrategyParams()
         {
-            _countStratParams = 0;
+            countStratParams = 0;
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)
                     if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled)
-                        _countStratParams++;
+                        countStratParams++;
         }
 
         /// <summary>
-        /// Sets table with parameter values.
+        ///     Sets table with parameter values.
         /// </summary>
         private void SetParametersValues(int percentDeviation, int countParam)
         {
-            _paramNames = new List<string>();
-            _listParametersName = "Index" + Configs.ColumnSeparator + "Parameter name" + Environment.NewLine;
-            _countStratParams = 0;
-            _cycles = 0;
-            _deviationSteps = 2*percentDeviation + 1;
+            paramNames = new List<string>();
+            listParametersName = "Index" + Configs.ColumnSeparator + "Parameter name" + Environment.NewLine;
+            countStratParams = 0;
+            cycles = 0;
+            deviationSteps = 2*percentDeviation + 1;
 
-            _tableParameters = new OverOptimizationDataTable(percentDeviation, countParam)
-                                   {Name = "Values of the Parameters"};
+            tableParameters = new OverOptimizationDataTable(percentDeviation, countParam)
+                {Name = "Values of the Parameters"};
 
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 for (int numParam = 0; numParam < 6; numParam++)
-                    if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled && _countStratParams < countParam)
+                    if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled && countStratParams < countParam)
                     {
                         NumericParam currentParam = Data.Strategy.Slot[slot].IndParam.NumParam[numParam];
                         double minVal = currentParam.Min;
@@ -65,7 +69,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                         double originalValue = currentParam.Value;
                         double deltaStep = originalValue/100.0;
 
-                        for (int p = 0; p < _deviationSteps; p++)
+                        for (int p = 0; p < deviationSteps; p++)
                         {
                             int index = p - percentDeviation;
                             double value = originalValue + index*deltaStep;
@@ -78,65 +82,65 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                             if (value > maxVal)
                                 value = maxVal;
 
-                            _tableParameters.SetData(index, _countStratParams, value);
-                            _cycles++;
+                            tableParameters.SetData(index, countStratParams, value);
+                            cycles++;
                         }
 
-                        _paramNames.Add(currentParam.Caption);
-                        _listParametersName += (_countStratParams + 1) + Configs.ColumnSeparator + currentParam.Caption +
-                                               Environment.NewLine;
-                        _countStratParams++;
+                        paramNames.Add(currentParam.Caption);
+                        listParametersName += (countStratParams + 1) + Configs.ColumnSeparator + currentParam.Caption +
+                                              Environment.NewLine;
+                        countStratParams++;
                     }
 
-            for (int prm = _countStratParams; prm < countParam; prm++)
-                _listParametersName += (prm + 1) + Environment.NewLine;
-            _listParametersName += Environment.NewLine;
+            for (int prm = countStratParams; prm < countParam; prm++)
+                listParametersName += (prm + 1) + Environment.NewLine;
+            listParametersName += Environment.NewLine;
         }
 
         /// <summary>
-        /// Calculates Data Tables.
+        ///     Calculates Data Tables.
         /// </summary>
         private void CalculateStatsTables(int percentDeviation, int countParam)
         {
             string unit = " " + Configs.AccountCurrency;
 
             var tableNames = new[]
-                                 {
-                                     Language.T("Account balance") + unit,
-                                     Language.T("Profit per day") + unit,
-                                     Language.T("Maximum drawdown") + unit,
-                                     Language.T("Gross profit") + unit,
-                                     Language.T("Gross loss") + unit,
-                                     Language.T("Executed orders"),
-                                     Language.T("Traded lots"),
-                                     Language.T("Time in position") + " %",
-                                     Language.T("Sent orders"),
-                                     Language.T("Charged spread") + unit,
-                                     Language.T("Charged rollover") + unit,
-                                     Language.T("Winning trades"),
-                                     Language.T("Losing trades"),
-                                     Language.T("Win/loss ratio"),
-                                     Language.T("Max equity drawdown") + " %"
-                                 };
+                {
+                    Language.T("Account balance") + unit,
+                    Language.T("Profit per day") + unit,
+                    Language.T("Maximum drawdown") + unit,
+                    Language.T("Gross profit") + unit,
+                    Language.T("Gross loss") + unit,
+                    Language.T("Executed orders"),
+                    Language.T("Traded lots"),
+                    Language.T("Time in position") + " %",
+                    Language.T("Sent orders"),
+                    Language.T("Charged spread") + unit,
+                    Language.T("Charged rollover") + unit,
+                    Language.T("Winning trades"),
+                    Language.T("Losing trades"),
+                    Language.T("Win/loss ratio"),
+                    Language.T("Max equity drawdown") + " %"
+                };
 
-            _tablesCount = tableNames.Length;
-            _tableReport = new OverOptimizationDataTable[_tablesCount];
+            tablesCount = tableNames.Length;
+            tableReport = new OverOptimizationDataTable[tablesCount];
 
             for (int t = 0; t < tableNames.Length; t++)
             {
-                _tableReport[t] = new OverOptimizationDataTable(percentDeviation, countParam) {Name = tableNames[t]};
+                tableReport[t] = new OverOptimizationDataTable(percentDeviation, countParam) {Name = tableNames[t]};
             }
 
             int parNumber = 0;
-            bool isBGWorkCanceled = false;
-            for (int slot = 0; slot < Data.Strategy.Slots && !isBGWorkCanceled; slot++)
-                for (int numParam = 0; numParam < 6 && !isBGWorkCanceled; numParam++)
+            bool isBgWorkCanceled = false;
+            for (int slot = 0; slot < Data.Strategy.Slots && !isBgWorkCanceled; slot++)
+                for (int numParam = 0; numParam < 6 && !isBgWorkCanceled; numParam++)
                     if (Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Enabled && parNumber < countParam)
                     {
-                        for (int index = percentDeviation; index >= -percentDeviation && !isBGWorkCanceled; index--)
+                        for (int index = percentDeviation; index >= -percentDeviation && !isBgWorkCanceled; index--)
                         {
-                            isBGWorkCanceled = _bgWorker.CancellationPending;
-                            Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Value = _tableParameters.GetData(
+                            isBgWorkCanceled = bgWorker.CancellationPending;
+                            Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Value = tableParameters.GetData(
                                 index, parNumber);
 
                             CalculateIndicator(slot);
@@ -144,47 +148,47 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                             Backtester.CalculateAccountStats();
 
                             var statValues = new[]
-                                                 {
-                                                     Backtester.NetMoneyBalance,
-                                                     Backtester.MoneyProfitPerDay,
-                                                     Backtester.MaxMoneyDrawdown,
-                                                     Backtester.GrossMoneyProfit,
-                                                     Backtester.GrossMoneyLoss,
-                                                     Backtester.ExecutedOrders,
-                                                     Backtester.TradedLots,
-                                                     Backtester.TimeInPosition,
-                                                     Backtester.SentOrders,
-                                                     Backtester.TotalChargedMoneySpread,
-                                                     Backtester.TotalChargedMoneyRollOver,
-                                                     Backtester.WinningTrades,
-                                                     Backtester.LosingTrades,
-                                                     Backtester.WinLossRatio,
-                                                     Backtester.MoneyEquityPercentDrawdown
-                                                 };
+                                {
+                                    Backtester.NetMoneyBalance,
+                                    Backtester.MoneyProfitPerDay,
+                                    Backtester.MaxMoneyDrawdown,
+                                    Backtester.GrossMoneyProfit,
+                                    Backtester.GrossMoneyLoss,
+                                    Backtester.ExecutedOrders,
+                                    Backtester.TradedLots,
+                                    Backtester.TimeInPosition,
+                                    Backtester.SentOrders,
+                                    Backtester.TotalChargedMoneySpread,
+                                    Backtester.TotalChargedMoneyRollOver,
+                                    Backtester.WinningTrades,
+                                    Backtester.LosingTrades,
+                                    Backtester.WinLossRatio,
+                                    Backtester.MoneyEquityPercentDrawdown
+                                };
 
-                            for (int tn = 0; tn < _tablesCount; tn++)
-                                _tableReport[tn].SetData(index, parNumber, statValues[tn]);
+                            for (int tn = 0; tn < tablesCount; tn++)
+                                tableReport[tn].SetData(index, parNumber, statValues[tn]);
 
                             // Report progress as a percentage of the total task.
-                            _computedCycles++;
-                            int percentComplete = Math.Min(100*_computedCycles/_cycles, 100);
-                            if (percentComplete > _progressPercent)
+                            computedCycles++;
+                            int percentComplete = Math.Min(100*computedCycles/cycles, 100);
+                            if (percentComplete > progressPercent)
                             {
-                                _progressPercent = percentComplete;
-                                _bgWorker.ReportProgress(percentComplete);
+                                progressPercent = percentComplete;
+                                bgWorker.ReportProgress(percentComplete);
                             }
                         }
 
                         // Set default value
-                        Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Value = _tableParameters.GetData(0,
-                                                                                                              parNumber);
+                        Data.Strategy.Slot[slot].IndParam.NumParam[numParam].Value = tableParameters.GetData(0,
+                                                                                                             parNumber);
                         CalculateIndicator(slot);
                         parNumber++;
                     }
         }
 
         /// <summary>
-        /// Calculates the indicator in the designated slot.
+        ///     Calculates the indicator in the designated slot.
         /// </summary>
         private void CalculateIndicator(int slot)
         {
@@ -231,19 +235,19 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Generates the Over-optimization report.
+        ///     Generates the Over-optimization report.
         /// </summary>
         private string GenerateReport()
         {
-            string report = _listParametersName + _tableParameters.DataToString();
-            foreach (OverOptimizationDataTable table in _tableReport)
+            string report = listParametersName + tableParameters.DataToString();
+            foreach (OverOptimizationDataTable table in tableReport)
                 report += table.DataToString();
 
             return report;
         }
 
         /// <summary>
-        /// Saves the report in a file.
+        ///     Saves the report in a file.
         /// </summary>
         private void SaveReport(string report)
         {
@@ -261,7 +265,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                 using (var outfile = new StreamWriter(pathReport))
                 {
                     outfile.Write(report);
-                    _pathReportFile = pathReport;
+                    pathReportFile = pathReport;
                 }
             }
             catch (Exception ex)

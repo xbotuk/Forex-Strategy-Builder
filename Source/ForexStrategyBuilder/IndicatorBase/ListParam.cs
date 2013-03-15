@@ -1,20 +1,24 @@
-﻿// List parameters
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Describes a parameter that has to be selected from a list.
+    ///     Describes a parameter that has to be selected from a list.
     /// </summary>
     public class ListParam
     {
         /// <summary>
-        /// Zeroing the parameters.
+        ///     Zeroing the parameters.
         /// </summary>
         public ListParam()
         {
@@ -27,49 +31,49 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the text describing the parameter.
+        ///     Gets or sets the text describing the parameter.
         /// </summary>
         public string Caption { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of parameter values.
+        ///     Gets or sets the list of parameter values.
         /// </summary>
         public string[] ItemList { get; set; }
 
         /// <summary>
-        /// Gets or sets the text associated whit this parameter.
+        ///     Gets or sets the text associated whit this parameter.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
-        /// Gets or sets the index specifying the currently selected item.
+        ///     Gets or sets the index specifying the currently selected item.
         /// </summary>
         public int Index { get; set; }
 
         /// <summary>
-        /// Gets or sets the value indicating whether the control can respond to user interaction.
+        ///     Gets or sets the value indicating whether the control can respond to user interaction.
         /// </summary>
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the text of tool tip associated with this control.
+        ///     Gets or sets the text of tool tip associated with this control.
         /// </summary>
         public string ToolTip { get; set; }
 
         /// <summary>
-        /// Returns a copy
+        ///     Returns a copy
         /// </summary>
         public ListParam Clone()
         {
             var listParam = new ListParam
-                                {
-                                    Caption = Caption,
-                                    ItemList = new string[ItemList.Length],
-                                    Index = Index,
-                                    Text = Text,
-                                    Enabled = Enabled,
-                                    ToolTip = ToolTip
-                                };
+                {
+                    Caption = Caption,
+                    ItemList = new string[ItemList.Length],
+                    Index = Index,
+                    Text = Text,
+                    Enabled = Enabled,
+                    ToolTip = ToolTip
+                };
             ItemList.CopyTo(listParam.ItemList, 0);
             return listParam;
         }

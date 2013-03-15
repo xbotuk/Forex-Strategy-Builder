@@ -1,18 +1,22 @@
-﻿// Journal_Ord Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Common;
-using Forex_Strategy_Builder.CustomControls;
-using Forex_Strategy_Builder.Utils;
+using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.CustomControls;
+using ForexStrategyBuilder.Utils;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public class JournalOrders : ContextPanel
     {
@@ -228,8 +232,8 @@ namespace Forex_Strategy_Builder
                                           ? (order.OrdDir == OrderDirection.Sell ? "-" : "") +
                                             (order.OrdLots*Data.InstrProperties.LotSize)
                                           : order.OrdLots.ToString(CultureInfo.InvariantCulture);
-                journalData[row, 4] = order.OrdPrice.ToString(Data.FF);
-                journalData[row, 5] = (order.OrdPrice2 > 0 ? order.OrdPrice2.ToString(Data.FF) : "-");
+                journalData[row, 4] = order.OrdPrice.ToString(Data.Ff);
+                journalData[row, 5] = (order.OrdPrice2 > 0 ? order.OrdPrice2.ToString(Data.Ff) : "-");
                 journalData[row, 6] = Language.T(order.OrdStatus.ToString());
                 journalData[row, 7] = order.OrdNote;
 
@@ -245,7 +249,7 @@ namespace Forex_Strategy_Builder
             for (int wayPoint = 0; wayPoint < StatsBuffer.WayPoints(selectedBar); wayPoint++)
             {
                 int ordNumb = StatsBuffer.WayPoint(selectedBar, wayPoint).OrdNumb;
-                WayPointType wpType = StatsBuffer.WayPoint(selectedBar, wayPoint).WPType;
+                WayPointType wpType = StatsBuffer.WayPoint(selectedBar, wayPoint).WpType;
 
                 if (ordNumb == -1) continue; // There is no order
                 if (ordNumb < StatsBuffer.OrdNumb(selectedBar, 0)) continue; // For a transferred position

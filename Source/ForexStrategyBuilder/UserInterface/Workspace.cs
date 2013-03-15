@@ -1,8 +1,12 @@
-// Workspace form.
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
@@ -10,7 +14,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     ///     This is the base application form.
@@ -52,8 +56,8 @@ namespace Forex_Strategy_Builder
         private void SetGraphicalMeasures(Graphics g)
         {
             SizeF sizeString = g.MeasureString("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890", Font);
-            Data.HorizontalDLU = (sizeString.Width/62)/4;
-            Data.VerticalDLU = sizeString.Height/8;
+            Data.HorizontalDlu = (sizeString.Width/62)/4;
+            Data.VerticalDlu = sizeString.Height/8;
         }
 
         private void CreateControls()

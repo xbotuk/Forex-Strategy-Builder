@@ -1,21 +1,25 @@
-// Indicator parameters
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Text;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Describes an indicator fully
+    ///     Describes an indicator fully
     /// </summary>
     public class IndicatorParam
     {
         /// <summary>
-        /// Creates an empty parameter.
+        ///     Creates an empty parameter.
         /// </summary>
         public IndicatorParam()
         {
@@ -40,67 +44,67 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the number of current slot.
+        ///     Gets or sets the number of current slot.
         /// </summary>
         private int SlotNumber { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the slot.
+        ///     Gets or sets the type of the slot.
         /// </summary>
         public SlotTypes SlotType { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the indicator is defined.
+        ///     Gets or sets a value indicating whether the indicator is defined.
         /// </summary>
         private bool IsDefined { get; set; }
 
         /// <summary>
-        /// Gets or sets the indicator name.
+        ///     Gets or sets the indicator name.
         /// </summary>
         public string IndicatorName { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the indicator
+        ///     Gets or sets the type of the indicator
         /// </summary>
         public TypeOfIndicator IndicatorType { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the time execution of the indicator
+        ///     Gets or sets the type of the time execution of the indicator
         /// </summary>
         public ExecutionTime ExecutionTime { get; set; }
 
         /// <summary>
-        /// Gets or sets a parameter represented by a ComboBox.
+        ///     Gets or sets a parameter represented by a ComboBox.
         /// </summary>
         public ListParam[] ListParam { get; private set; }
 
         /// <summary>
-        /// Gets or sets a parameter represented by a NumericUpDown.
+        ///     Gets or sets a parameter represented by a NumericUpDown.
         /// </summary>
         public NumericParam[] NumParam { get; private set; }
 
         /// <summary>
-        /// Gets or sets a parameter represented by a CheckBox.
+        ///     Gets or sets a parameter represented by a CheckBox.
         /// </summary>
         public CheckParam[] CheckParam { get; private set; }
 
         /// <summary>
-        /// Returns a copy
+        ///     Returns a copy
         /// </summary>
         public IndicatorParam Clone()
         {
             var indicatorParam = new IndicatorParam
-                                     {
-                                         SlotNumber = SlotNumber,
-                                         IsDefined = IsDefined,
-                                         SlotType = SlotType,
-                                         IndicatorName = IndicatorName,
-                                         IndicatorType = IndicatorType,
-                                         ExecutionTime = ExecutionTime,
-                                         ListParam = new ListParam[5],
-                                         NumParam = new NumericParam[6],
-                                         CheckParam = new CheckParam[2]
-                                     };
+                {
+                    SlotNumber = SlotNumber,
+                    IsDefined = IsDefined,
+                    SlotType = SlotType,
+                    IndicatorName = IndicatorName,
+                    IndicatorType = IndicatorType,
+                    ExecutionTime = ExecutionTime,
+                    ListParam = new ListParam[5],
+                    NumParam = new NumericParam[6],
+                    CheckParam = new CheckParam[2]
+                };
 
             for (int i = 0; i < 5; i++)
                 indicatorParam.ListParam[i] = ListParam[i].Clone();
@@ -115,7 +119,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Represents the indicator parameters in a readable form.
+        ///     Represents the indicator parameters in a readable form.
         /// </summary>
         public override string ToString()
         {

@@ -1,25 +1,29 @@
-// Data Directory class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// DataDirectory
+    ///     DataDirectory
     /// </summary>
     public sealed class DataDirectory : Form
     {
-        private readonly Color _colorText;
-        private readonly Font _font;
+        private readonly Color colorText;
+        private readonly Font font;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public DataDirectory()
         {
@@ -30,8 +34,8 @@ namespace Forex_Strategy_Builder
             BtnCancel = new Button();
             BtnAccept = new Button();
 
-            _font = Font;
-            _colorText = LayoutColors.ColorControlText;
+            font = Font;
+            colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -43,14 +47,14 @@ namespace Forex_Strategy_Builder
 
             // Label Intro
             LblIntro.Parent = this;
-            LblIntro.ForeColor = _colorText;
+            LblIntro.ForeColor = colorText;
             LblIntro.BackColor = Color.Transparent;
             LblIntro.Text = Language.T("Offline data directory:");
 
             // Data Directory
             TxbDataDirectory.Parent = this;
             TxbDataDirectory.BackColor = LayoutColors.ColorControlBack;
-            TxbDataDirectory.ForeColor = _colorText;
+            TxbDataDirectory.ForeColor = colorText;
             TxbDataDirectory.Text = Data.OfflineDataDir;
 
             //Button Browse
@@ -89,7 +93,7 @@ namespace Forex_Strategy_Builder
         private Button BtnCancel { get; set; }
 
         /// <summary>
-        /// Gets the selected Data Directory
+        ///     Gets the selected Data Directory
         /// </summary>
         public string DataFolder
         {
@@ -97,7 +101,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -110,20 +114,20 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
 
             // Label Intro
-            LblIntro.Size = new Size(ClientSize.Width - 2*btnVertSpace, _font.Height);
+            LblIntro.Size = new Size(ClientSize.Width - 2*btnVertSpace, font.Height);
             LblIntro.Location = new Point(btnHrzSpace, btnVertSpace);
 
             //Button Browse
@@ -152,7 +156,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -160,17 +164,21 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Button Browse Click
+        ///     Button Browse Click
         /// </summary>
         private void BtnBrowseClick(object sender, EventArgs e)
         {
-            var fd = new FolderBrowserDialog {SelectedPath = Data.OfflineDataDir, Description = Language.T("Offline data directory:")};
+            var fd = new FolderBrowserDialog
+                {
+                    SelectedPath = Data.OfflineDataDir,
+                    Description = Language.T("Offline data directory:")
+                };
             if (fd.ShowDialog() != DialogResult.OK) return;
             TxbDataDirectory.Text = fd.SelectedPath;
         }
 
         /// <summary>
-        /// Button Default Click
+        ///     Button Default Click
         /// </summary>
         private void BtnDefaultClick(object sender, EventArgs e)
         {

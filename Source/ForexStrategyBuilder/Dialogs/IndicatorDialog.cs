@@ -1,17 +1,21 @@
-// Forex Strategy Builder - Indicator Dialog class.
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     //    ###################################################################################
     //    # +-----------+ |--------------------------- Slot Type -------------------(!)(i)| #
@@ -46,55 +50,55 @@ namespace Forex_Strategy_Builder
     //    ###################################################################################
 
     /// <summary>
-    /// Form dialog contains controls for adjusting the indicator's parameters.
+    ///     Form dialog contains controls for adjusting the indicator's parameters.
     /// </summary>
     public sealed class IndicatorDialog : Form
     {
         private const int Border = 2;
-        private readonly List<IndicatorSlot> _closingConditions = new List<IndicatorSlot>();
-        private readonly OppositeDirSignalAction _oppSignalBehaviour;
-        private readonly int _slot;
-        private readonly string _slotCation;
-        private readonly SlotTypes _slotType;
-        private readonly ToolTip _toolTip = new ToolTip();
-        private bool _closingSlotsRemoved;
-        private string _description;
-        private string _indicatorName;
-        private bool _isChartRecalculation = true;
-        private bool _isPaint;
-        private bool _oppSignalSet;
-        private string _warningMessage = "";
+        private readonly List<IndicatorSlot> closingConditions = new List<IndicatorSlot>();
+        private readonly OppositeDirSignalAction oppSignalBehaviour;
+        private readonly int slot;
+        private readonly string slotCation;
+        private readonly SlotTypes slotType;
+        private readonly ToolTip toolTip = new ToolTip();
+        private bool closingSlotsRemoved;
+        private string description;
+        private string indicatorName;
+        private bool isChartRecalculation = true;
+        private bool isPaint;
+        private bool oppSignalSet;
+        private string warningMessage = "";
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public IndicatorDialog(int slotNumb, SlotTypes slotType, bool isDefined)
         {
-            _slot = slotNumb;
-            _slotType = slotType;
+            slot = slotNumb;
+            this.slotType = slotType;
 
             if (slotType == SlotTypes.Open)
             {
-                _slotCation = Language.T("Opening Point of the Position");
-                PnlParameters = new FancyPanel(_slotCation, LayoutColors.ColorSlotCaptionBackOpen);
+                slotCation = Language.T("Opening Point of the Position");
+                PnlParameters = new FancyPanel(slotCation, LayoutColors.ColorSlotCaptionBackOpen);
                 PnlTreeViewBase = new FancyPanel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackOpen);
             }
             else if (slotType == SlotTypes.OpenFilter)
             {
-                _slotCation = Language.T("Opening Logic Condition");
-                PnlParameters = new FancyPanel(_slotCation, LayoutColors.ColorSlotCaptionBackOpenFilter);
+                slotCation = Language.T("Opening Logic Condition");
+                PnlParameters = new FancyPanel(slotCation, LayoutColors.ColorSlotCaptionBackOpenFilter);
                 PnlTreeViewBase = new FancyPanel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackOpenFilter);
             }
             else if (slotType == SlotTypes.Close)
             {
-                _slotCation = Language.T("Closing Point of the Position");
-                PnlParameters = new FancyPanel(_slotCation, LayoutColors.ColorSlotCaptionBackClose);
+                slotCation = Language.T("Closing Point of the Position");
+                PnlParameters = new FancyPanel(slotCation, LayoutColors.ColorSlotCaptionBackClose);
                 PnlTreeViewBase = new FancyPanel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackClose);
             }
             else
             {
-                _slotCation = Language.T("Closing Logic Condition");
-                PnlParameters = new FancyPanel(_slotCation, LayoutColors.ColorSlotCaptionBackCloseFilter);
+                slotCation = Language.T("Closing Logic Condition");
+                PnlParameters = new FancyPanel(slotCation, LayoutColors.ColorSlotCaptionBackCloseFilter);
                 PnlTreeViewBase = new FancyPanel(Language.T("Indicators"), LayoutColors.ColorSlotCaptionBackCloseFilter);
             }
 
@@ -113,7 +117,7 @@ namespace Forex_Strategy_Builder
             ALblList = new Label[5];
             ACbxList = new ComboBox[5];
             ALblNumeric = new Label[6];
-            ANudNumeric = new NUD[6];
+            AFancyNudNumeric = new FancyNud[6];
             AChbCheck = new CheckBox[2];
 
             BackColor = LayoutColors.ColorFormBack;
@@ -172,12 +176,12 @@ namespace Forex_Strategy_Builder
 
             // Label ALblList[0]
             ALblList[0] = new Label
-                              {
-                                  Parent = PnlParameters,
-                                  TextAlign = ContentAlignment.BottomCenter,
-                                  ForeColor = LayoutColors.ColorControlText,
-                                  BackColor = Color.Transparent
-                              };
+                {
+                    Parent = PnlParameters,
+                    TextAlign = ContentAlignment.BottomCenter,
+                    ForeColor = LayoutColors.ColorControlText,
+                    BackColor = Color.Transparent
+                };
 
             // ComboBox ACbxList[0]
             ACbxList[0] = new ComboBox {Parent = PnlParameters, DropDownStyle = ComboBoxStyle.DropDownList};
@@ -185,13 +189,13 @@ namespace Forex_Strategy_Builder
 
             // Logical Group
             LblGroup = new Label
-                           {
-                               Parent = PnlParameters,
-                               TextAlign = ContentAlignment.BottomCenter,
-                               ForeColor = LayoutColors.ColorControlText,
-                               BackColor = Color.Transparent,
-                               Text = Language.T("Group")
-                           };
+                {
+                    Parent = PnlParameters,
+                    TextAlign = ContentAlignment.BottomCenter,
+                    ForeColor = LayoutColors.ColorControlText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Group")
+                };
 
             CbxGroup = new ComboBox {Parent = PnlParameters};
             if (slotType == SlotTypes.OpenFilter)
@@ -200,25 +204,25 @@ namespace Forex_Strategy_Builder
                 CbxGroup.Items.AddRange(new object[] {"a", "b", "c", "d", "e", "f", "g", "h", "all"});
             CbxGroup.SelectedIndexChanged += GroupChanged;
             CbxGroup.DropDownStyle = ComboBoxStyle.DropDownList;
-            _toolTip.SetToolTip(CbxGroup, Language.T("The logical group of the slot."));
+            toolTip.SetToolTip(CbxGroup, Language.T("The logical group of the slot."));
 
             // ListParams
             for (int i = 1; i < 5; i++)
             {
                 ALblList[i] = new Label
-                                  {
-                                      Parent = PnlParameters,
-                                      TextAlign = ContentAlignment.BottomCenter,
-                                      ForeColor = LayoutColors.ColorControlText,
-                                      BackColor = Color.Transparent
-                                  };
+                    {
+                        Parent = PnlParameters,
+                        TextAlign = ContentAlignment.BottomCenter,
+                        ForeColor = LayoutColors.ColorControlText,
+                        BackColor = Color.Transparent
+                    };
 
                 ACbxList[i] = new ComboBox
-                                  {
-                                      Parent = PnlParameters,
-                                      Enabled = false,
-                                      DropDownStyle = ComboBoxStyle.DropDownList
-                                  };
+                    {
+                        Parent = PnlParameters,
+                        Enabled = false,
+                        DropDownStyle = ComboBoxStyle.DropDownList
+                    };
                 ACbxList[i].SelectedIndexChanged += ParamChanged;
             }
 
@@ -226,30 +230,30 @@ namespace Forex_Strategy_Builder
             for (int i = 0; i < 6; i++)
             {
                 ALblNumeric[i] = new Label
-                                     {
-                                         Parent = PnlParameters,
-                                         TextAlign = ContentAlignment.MiddleRight,
-                                         ForeColor = LayoutColors.ColorControlText,
-                                         BackColor = Color.Transparent
-                                     };
+                    {
+                        Parent = PnlParameters,
+                        TextAlign = ContentAlignment.MiddleRight,
+                        ForeColor = LayoutColors.ColorControlText,
+                        BackColor = Color.Transparent
+                    };
 
-                ANudNumeric[i] = new NUD
-                                     {Parent = PnlParameters, TextAlign = HorizontalAlignment.Center, Enabled = false};
-                ANudNumeric[i].ValueChanged += ParamChanged;
+                AFancyNudNumeric[i] = new FancyNud
+                    {Parent = PnlParameters, TextAlign = HorizontalAlignment.Center, Enabled = false};
+                AFancyNudNumeric[i].ValueChanged += ParamChanged;
             }
 
             // CheckParams
             for (int i = 0; i < 2; i++)
             {
                 AChbCheck[i] = new CheckBox
-                                   {
-                                       Parent = PnlParameters,
-                                       CheckAlign = ContentAlignment.MiddleLeft,
-                                       TextAlign = ContentAlignment.MiddleLeft,
-                                       ForeColor = LayoutColors.ColorControlText,
-                                       BackColor = Color.Transparent,
-                                       Enabled = false
-                                   };
+                    {
+                        Parent = PnlParameters,
+                        CheckAlign = ContentAlignment.MiddleLeft,
+                        TextAlign = ContentAlignment.MiddleLeft,
+                        ForeColor = LayoutColors.ColorControlText,
+                        BackColor = Color.Transparent,
+                        Enabled = false
+                    };
                 AChbCheck[i].CheckedChanged += ParamChanged;
             }
 
@@ -283,9 +287,9 @@ namespace Forex_Strategy_Builder
             // ComboBoxindicator index selection.
             if (isDefined)
             {
-                TreeNode[] atrn = TrvIndicators.Nodes.Find(Data.Strategy.Slot[_slot].IndParam.IndicatorName, true);
+                TreeNode[] atrn = TrvIndicators.Nodes.Find(Data.Strategy.Slot[slot].IndParam.IndicatorName, true);
                 TrvIndicators.SelectedNode = atrn[0];
-                UpdateFromIndicatorParam(Data.Strategy.Slot[_slot].IndParam);
+                UpdateFromIndicatorParam(Data.Strategy.Slot[slot].IndParam);
                 SetLogicalGroup();
                 CalculateIndicator(false);
                 BalanceChart.SetChartData();
@@ -309,11 +313,11 @@ namespace Forex_Strategy_Builder
                 TrvIndicatorsLoadIndicator();
             }
 
-            _oppSignalBehaviour = Data.Strategy.OppSignalAction;
+            oppSignalBehaviour = Data.Strategy.OppSignalAction;
 
             if (slotType == SlotTypes.Close && Data.Strategy.CloseFilters > 0)
                 for (int iSlot = Data.Strategy.CloseSlot + 1; iSlot < Data.Strategy.Slots; iSlot++)
-                    _closingConditions.Add(Data.Strategy.Slot[iSlot].Clone());
+                    closingConditions.Add(Data.Strategy.Slot[iSlot].Clone());
         }
 
         private FancyPanel PnlTreeViewBase { get; set; }
@@ -328,7 +332,7 @@ namespace Forex_Strategy_Builder
         private Label[] ALblList { get; set; }
         private ComboBox[] ACbxList { get; set; }
         private Label[] ALblNumeric { get; set; }
-        private NUD[] ANudNumeric { get; set; }
+        private FancyNud[] AFancyNudNumeric { get; set; }
         private CheckBox[] AChbCheck { get; set; }
         private SmallBalanceChart BalanceChart { get; set; }
         private Button BtnAccept { get; set; }
@@ -337,7 +341,7 @@ namespace Forex_Strategy_Builder
         private Button BtnCancel { get; set; }
 
         /// <summary>
-        /// Gets or sets the caption of a ComboBox control.
+        ///     Gets or sets the caption of a ComboBox control.
         /// </summary>
         private Label[] ListLabel
         {
@@ -345,7 +349,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the parameters of a ComboBox control.
+        ///     Gets or sets the parameters of a ComboBox control.
         /// </summary>
         private ComboBox[] ListParam
         {
@@ -353,7 +357,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the caption of a NumericUpDown control.
+        ///     Gets or sets the caption of a NumericUpDown control.
         /// </summary>
         private Label[] NumLabel
         {
@@ -361,15 +365,15 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the parameters of a NumericUpDown control.
+        ///     Gets or sets the parameters of a NumericUpDown control.
         /// </summary>
-        private NUD[] NumParam
+        private FancyNud[] NumParam
         {
-            get { return ANudNumeric; }
+            get { return AFancyNudNumeric; }
         }
 
         /// <summary>
-        /// Gets or sets the parameters of a CheckBox control.
+        ///     Gets or sets the parameters of a CheckBox control.
         /// </summary>
         private CheckBox[] CheckParam
         {
@@ -379,7 +383,7 @@ namespace Forex_Strategy_Builder
 // ---------------------------------------------------------------------------
 
         /// <summary>
-        /// OnLoad
+        ///     OnLoad
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -390,16 +394,16 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
             int textHeight = Font.Height;
             int controlHeight = Font.Height + 4;
@@ -458,7 +462,7 @@ namespace Forex_Strategy_Builder
             CbxGroup.Location = new Point(LblGroup.Left, ALblList[0].Bottom + space);
 
             int rightShift = Configs.UseLogicalGroups &&
-                             (_slotType == SlotTypes.OpenFilter || _slotType == SlotTypes.CloseFilter)
+                             (slotType == SlotTypes.OpenFilter || slotType == SlotTypes.CloseFilter)
                                  ? (LblGroup.Width + space)
                                  : 0;
 
@@ -495,8 +499,8 @@ namespace Forex_Strategy_Builder
                     ALblNumeric[i].Location = new Point((iLblWidth + nudWidth + 2*space)*n + space + Border,
                                                         (controlHeight + 2*space)*m + 2*space + ACbxList[3].Bottom);
 
-                    ANudNumeric[i].Size = new Size(nudWidth, controlHeight);
-                    ANudNumeric[i].Location = new Point(ALblNumeric[i].Right + space, ALblNumeric[i].Top);
+                    AFancyNudNumeric[i].Size = new Size(nudWidth, controlHeight);
+                    AFancyNudNumeric[i].Location = new Point(ALblNumeric[i].Right + space, ALblNumeric[i].Top);
                 }
 
             // CheckParams
@@ -504,7 +508,8 @@ namespace Forex_Strategy_Builder
             {
                 int iChbWidth = (PnlParameters.ClientSize.Width - 3*space - 2*Border)/2;
                 AChbCheck[i].Size = new Size(iChbWidth, controlHeight);
-                AChbCheck[i].Location = new Point((space + iChbWidth)*i + space + Border, ANudNumeric[4].Bottom + space);
+                AChbCheck[i].Location = new Point((space + iChbWidth)*i + space + Border,
+                                                  AFancyNudNumeric[4].Bottom + space);
             }
 
             PnlParameters.ClientSize = new Size(PnlParameters.ClientSize.Width, AChbCheck[0].Bottom + space + Border);
@@ -515,26 +520,26 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the controls' parameters.
+        ///     Sets the controls' parameters.
         /// </summary>
         private void UpdateFromIndicatorParam(IndicatorParam ip)
         {
-            _indicatorName = ip.IndicatorName;
-            LblIndicator.Text = _indicatorName;
+            indicatorName = ip.IndicatorName;
+            LblIndicator.Text = indicatorName;
 
-            _isPaint = false;
-            _isChartRecalculation = false;
+            isPaint = false;
+            isChartRecalculation = false;
 
             // List parameters
             for (int i = 0; i < 5; i++)
             {
                 ListParam[i].Items.Clear();
-                foreach (var item in ip.ListParam[i].ItemList)
+                foreach (string item in ip.ListParam[i].ItemList)
                     ListParam[i].Items.Add(item);
                 ListLabel[i].Text = ip.ListParam[i].Caption;
                 ListParam[i].SelectedIndex = ip.ListParam[i].Index;
                 ListParam[i].Enabled = ip.ListParam[i].Enabled;
-                _toolTip.SetToolTip(ListParam[i], ip.ListParam[i].ToolTip);
+                toolTip.SetToolTip(ListParam[i], ip.ListParam[i].ToolTip);
             }
 
             // Numeric parameters
@@ -549,9 +554,9 @@ namespace Forex_Strategy_Builder
                 NumParam[i].Increment = (decimal) Math.Pow(10, -ip.NumParam[i].Point);
                 NumParam[i].Enabled = ip.NumParam[i].Enabled;
                 NumParam[i].EndInit();
-                _toolTip.SetToolTip(NumParam[i],
-                                    ip.NumParam[i].ToolTip + Environment.NewLine + "Minimum: " + NumParam[i].Minimum +
-                                    " Maximum: " + NumParam[i].Maximum);
+                toolTip.SetToolTip(NumParam[i],
+                                   ip.NumParam[i].ToolTip + Environment.NewLine + "Minimum: " + NumParam[i].Minimum +
+                                   " Maximum: " + NumParam[i].Maximum);
             }
 
             // Check parameters
@@ -559,7 +564,7 @@ namespace Forex_Strategy_Builder
             {
                 CheckParam[i].Text = ip.CheckParam[i].Caption;
                 CheckParam[i].Checked = ip.CheckParam[i].Checked;
-                _toolTip.SetToolTip(CheckParam[i], ip.CheckParam[i].ToolTip);
+                toolTip.SetToolTip(CheckParam[i], ip.CheckParam[i].ToolTip);
 
                 if (Data.AutoUsePrvBarValue && ip.CheckParam[i].Caption == "Use previous bar value")
                     CheckParam[i].Enabled = false;
@@ -567,17 +572,17 @@ namespace Forex_Strategy_Builder
                     CheckParam[i].Enabled = ip.CheckParam[i].Enabled;
             }
 
-            _isPaint = true;
-            _isChartRecalculation = true;
+            isPaint = true;
+            isChartRecalculation = true;
         }
 
         /// <summary>
-        /// Sets the logical group of the slot.
+        ///     Sets the logical group of the slot.
         /// </summary>
         private void SetLogicalGroup()
         {
-            if (_slotType != SlotTypes.OpenFilter && _slotType != SlotTypes.CloseFilter) return;
-            string group = Data.Strategy.Slot[_slot].LogicalGroup;
+            if (slotType != SlotTypes.OpenFilter && slotType != SlotTypes.CloseFilter) return;
+            string group = Data.Strategy.Slot[slot].LogicalGroup;
             if (string.IsNullOrEmpty(@group))
                 SetDefaultGroup();
             else
@@ -590,34 +595,34 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the default logical group of the slot.
+        ///     Sets the default logical group of the slot.
         /// </summary>
         private void SetDefaultGroup()
         {
-            if (_slotType == SlotTypes.OpenFilter)
+            if (slotType == SlotTypes.OpenFilter)
             {
-                if (_indicatorName == "Data Bars Filter" ||
-                    _indicatorName == "Date Filter" ||
-                    _indicatorName == "Day of Month" ||
-                    _indicatorName == "Enter Once" ||
-                    _indicatorName == "Entry Time" ||
-                    _indicatorName == "Long or Short" ||
-                    _indicatorName == "Lot Limiter" ||
-                    _indicatorName == "Random Filter")
+                if (indicatorName == "Data Bars Filter" ||
+                    indicatorName == "Date Filter" ||
+                    indicatorName == "Day of Month" ||
+                    indicatorName == "Enter Once" ||
+                    indicatorName == "Entry Time" ||
+                    indicatorName == "Long or Short" ||
+                    indicatorName == "Lot Limiter" ||
+                    indicatorName == "Random Filter")
                     CbxGroup.SelectedIndex = CbxGroup.Items.Count - 1; // "All" group.
                 else
                     CbxGroup.SelectedIndex = 0;
             }
 
-            if (_slotType == SlotTypes.CloseFilter)
+            if (slotType == SlotTypes.CloseFilter)
             {
-                int index = _slot - Data.Strategy.CloseSlot - 1;
+                int index = slot - Data.Strategy.CloseSlot - 1;
                 CbxGroup.SelectedIndex = index;
             }
         }
 
         /// <summary>
-        /// Sets the trvIndicators nodes
+        ///     Sets the trvIndicators nodes
         /// </summary>
         private void SetTreeViewIndicators()
         {
@@ -626,40 +631,40 @@ namespace Forex_Strategy_Builder
             var trnAdditional = new TreeNode {Name = "trnAdditional", Text = Language.T("Additional"), Tag = false};
 
             var trnOscillatorOfIndicators = new TreeNode
-                                                {
-                                                    Name = "trnOscillatorOfIndicators",
-                                                    Text = Language.T("Oscillator of Indicators"),
-                                                    Tag = false
-                                                };
+                {
+                    Name = "trnOscillatorOfIndicators",
+                    Text = Language.T("Oscillator of Indicators"),
+                    Tag = false
+                };
 
-            var trnIndicatorsMAOscillator = new TreeNode
-                                                {
-                                                    Name = "trnIndicatorMA",
-                                                    Text = Language.T("Indicator's MA Oscillator"),
-                                                    Tag = false
-                                                };
+            var trnIndicatorsMaOscillator = new TreeNode
+                {
+                    Name = "trnIndicatorMA",
+                    Text = Language.T("Indicator's MA Oscillator"),
+                    Tag = false
+                };
 
             var trnDateTime = new TreeNode {Name = "trnDateTime", Text = Language.T("Date/Time Functions"), Tag = false};
 
             var trnCustomIndicators = new TreeNode
-                                          {
-                                              Name = "trnCustomIndicators",
-                                              Text = Language.T("Custom Indicators"),
-                                              Tag = false
-                                          };
+                {
+                    Name = "trnCustomIndicators",
+                    Text = Language.T("Custom Indicators"),
+                    Tag = false
+                };
 
             TrvIndicators.Nodes.AddRange(new[]
-                                             {
-                                                 trnAll, trnIndicators, trnAdditional, trnOscillatorOfIndicators,
-                                                 trnIndicatorsMAOscillator, trnDateTime, trnCustomIndicators
-                                             });
+                {
+                    trnAll, trnIndicators, trnAdditional, trnOscillatorOfIndicators,
+                    trnIndicatorsMaOscillator, trnDateTime, trnCustomIndicators
+                });
 
-            foreach (string name in IndicatorStore.GetIndicatorNames(_slotType))
+            foreach (string name in IndicatorStore.GetIndicatorNames(slotType))
             {
                 var trn = new TreeNode {Tag = true, Name = name, Text = name};
                 trnAll.Nodes.Add(trn);
 
-                Indicator indicator = IndicatorStore.ConstructIndicator(name, _slotType);
+                Indicator indicator = IndicatorStore.ConstructIndicator(name, slotType);
                 TypeOfIndicator type = indicator.IndParam.IndicatorType;
 
                 if (indicator.CustomIndicator)
@@ -682,7 +687,7 @@ namespace Forex_Strategy_Builder
                         trnOscillatorOfIndicators.Nodes.Add(trnGroups);
                         break;
                     case TypeOfIndicator.IndicatorsMA:
-                        trnIndicatorsMAOscillator.Nodes.Add(trnGroups);
+                        trnIndicatorsMaOscillator.Nodes.Add(trnGroups);
                         break;
                     case TypeOfIndicator.DateTime:
                         trnDateTime.Nodes.Add(trnGroups);
@@ -692,7 +697,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the default parameters for the chosen indicator.
+        ///     Loads the default parameters for the chosen indicator.
         /// </summary>
         private void TrvIndicatorsNodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -703,7 +708,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the default parameters for the chosen indicator.
+        ///     Loads the default parameters for the chosen indicator.
         /// </summary>
         private void TrvIndicatorsKeyPress(object sender, KeyPressEventArgs e)
         {
@@ -717,11 +722,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads an Indicator
+        ///     Loads an Indicator
         /// </summary>
         private void TrvIndicatorsLoadIndicator()
         {
-            Indicator indicator = IndicatorStore.ConstructIndicator(TrvIndicators.SelectedNode.Text, _slotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(TrvIndicators.SelectedNode.Text, slotType);
             UpdateFromIndicatorParam(indicator.IndParam);
             SetDefaultGroup();
             CalculateIndicator(true);
@@ -729,11 +734,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the default parameters for the selected indicator.
+        ///     Loads the default parameters for the selected indicator.
         /// </summary>
         private void BtnDefaultClick(object sender, EventArgs e)
         {
-            Indicator indicator = IndicatorStore.ConstructIndicator(_indicatorName, _slotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
             UpdateFromIndicatorParam(indicator.IndParam);
             SetDefaultGroup();
             CalculateIndicator(true);
@@ -741,7 +746,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shows help for the selected indicator.
+        ///     Shows help for the selected indicator.
         /// </summary>
         private void BtnHelpClick(object sender, EventArgs e)
         {
@@ -756,25 +761,25 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Closes the dialog.
+        ///     Closes the dialog.
         /// </summary>
         private void BtnOkClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Sets the slot group.
+        ///     Sets the slot group.
         /// </summary>
         private void GroupChanged(object sender, EventArgs e)
         {
-            if (_slotType == SlotTypes.OpenFilter || _slotType == SlotTypes.CloseFilter)
-                Data.Strategy.Slot[_slot].LogicalGroup = CbxGroup.Text;
+            if (slotType == SlotTypes.OpenFilter || slotType == SlotTypes.CloseFilter)
+                Data.Strategy.Slot[slot].LogicalGroup = CbxGroup.Text;
 
             ParamChanged(sender, e);
         }
 
         /// <summary>
-        /// Calculates strategy when a parameter was changed.
+        ///     Calculates strategy when a parameter was changed.
         /// </summary>
         private void ParamChanged(object sender, EventArgs e)
         {
@@ -785,7 +790,7 @@ namespace Forex_Strategy_Builder
         // Updates the balance chart.
         private void UpdateBalanceChart()
         {
-            if (!_isChartRecalculation)
+            if (!isChartRecalculation)
                 return;
 
             BalanceChart.SetChartData();
@@ -794,16 +799,16 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates the selected indicator.
+        ///     Calculates the selected indicator.
         /// </summary>
         private void CalculateIndicator(bool bCalculateStrategy)
         {
-            if (!Data.IsData || !Data.IsResult || !_isPaint) return;
+            if (!Data.IsData || !Data.IsResult || !isPaint) return;
 
             SetOppositeSignalBehaviour();
             SetClosingLogicConditions();
 
-            Indicator indicator = IndicatorStore.ConstructIndicator(_indicatorName, _slotType);
+            Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
 
             // List parameters
             for (int i = 0; i < 5; i++)
@@ -829,20 +834,20 @@ namespace Forex_Strategy_Builder
                                                            CheckParam[i].Enabled;
             }
 
-            if (!CalculateIndicator(_slotType, indicator))
+            if (!CalculateIndicator(slotType, indicator))
                 return;
 
             if (bCalculateStrategy)
             {
                 //Sets Data.Strategy
-                Data.Strategy.Slot[_slot].IndicatorName = indicator.IndicatorName;
-                Data.Strategy.Slot[_slot].IndParam = indicator.IndParam;
-                Data.Strategy.Slot[_slot].Component = indicator.Component;
-                Data.Strategy.Slot[_slot].SeparatedChart = indicator.SeparatedChart;
-                Data.Strategy.Slot[_slot].SpecValue = indicator.SpecialValues;
-                Data.Strategy.Slot[_slot].MinValue = indicator.SeparatedChartMinValue;
-                Data.Strategy.Slot[_slot].MaxValue = indicator.SeparatedChartMaxValue;
-                Data.Strategy.Slot[_slot].IsDefined = true;
+                Data.Strategy.Slot[slot].IndicatorName = indicator.IndicatorName;
+                Data.Strategy.Slot[slot].IndParam = indicator.IndParam;
+                Data.Strategy.Slot[slot].Component = indicator.Component;
+                Data.Strategy.Slot[slot].SeparatedChart = indicator.SeparatedChart;
+                Data.Strategy.Slot[slot].SpecValue = indicator.SpecialValues;
+                Data.Strategy.Slot[slot].MinValue = indicator.SeparatedChartMinValue;
+                Data.Strategy.Slot[slot].MaxValue = indicator.SeparatedChartMaxValue;
+                Data.Strategy.Slot[slot].IsDefined = true;
 
                 // Search the indicators' components to determine Data.FirstBar
                 Data.FirstBar = Data.Strategy.SetFirstBar();
@@ -852,7 +857,7 @@ namespace Forex_Strategy_Builder
                 {
                     for (int i = 0; i < 2; i++)
                         if (indicator.IndParam.CheckParam[i].Caption == "Use previous bar value")
-                            AChbCheck[i].Checked = Data.Strategy.Slot[_slot].IndParam.CheckParam[i].Checked;
+                            AChbCheck[i].Checked = Data.Strategy.Slot[slot].IndParam.CheckParam[i].Checked;
                 }
 
                 Backtester.Calculate();
@@ -865,7 +870,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates an indicator and returns OK status.
+        ///     Calculates an indicator and returns OK status.
         /// </summary>
         private bool CalculateIndicator(SlotTypes type, Indicator indicator)
         {
@@ -901,119 +906,119 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the indicator overview.
+        ///     Sets the indicator overview.
         /// </summary>
         private void SetIndicatorNotification(Indicator indicator)
         {
             // Warning message.
-            _warningMessage = indicator.WarningMessage;
-            LblIndicatorWarning.Visible = !string.IsNullOrEmpty(_warningMessage);
+            warningMessage = indicator.WarningMessage;
+            LblIndicatorWarning.Visible = !string.IsNullOrEmpty(warningMessage);
 
             // Set description.
-            indicator.SetDescription(_slotType);
-            _description = "Long position:" + Environment.NewLine;
-            if (_slotType == SlotTypes.Open)
+            indicator.SetDescription(slotType);
+            description = "Long position:" + Environment.NewLine;
+            if (slotType == SlotTypes.Open)
             {
-                _description += "   Open a long position " + indicator.EntryPointLongDescription + "." +
-                                Environment.NewLine + Environment.NewLine;
-                _description += "Short position:" + Environment.NewLine;
-                _description += "   Open a short position " + indicator.EntryPointShortDescription + ".";
+                description += "   Open a long position " + indicator.EntryPointLongDescription + "." +
+                               Environment.NewLine + Environment.NewLine;
+                description += "Short position:" + Environment.NewLine;
+                description += "   Open a short position " + indicator.EntryPointShortDescription + ".";
             }
-            else if (_slotType == SlotTypes.OpenFilter)
+            else if (slotType == SlotTypes.OpenFilter)
             {
-                _description += "   Open a long position when " + indicator.EntryFilterLongDescription + "." +
-                                Environment.NewLine + Environment.NewLine;
-                _description += "Short position:" + Environment.NewLine;
-                _description += "   Open a short position when " + indicator.EntryFilterShortDescription + ".";
+                description += "   Open a long position when " + indicator.EntryFilterLongDescription + "." +
+                               Environment.NewLine + Environment.NewLine;
+                description += "Short position:" + Environment.NewLine;
+                description += "   Open a short position when " + indicator.EntryFilterShortDescription + ".";
             }
-            else if (_slotType == SlotTypes.Close)
+            else if (slotType == SlotTypes.Close)
             {
-                _description += "   Close a long position " + indicator.ExitPointLongDescription + "." +
-                                Environment.NewLine + Environment.NewLine;
-                _description += "Short position:" + Environment.NewLine;
-                _description += "   Close a short position " + indicator.ExitPointShortDescription + ".";
+                description += "   Close a long position " + indicator.ExitPointLongDescription + "." +
+                               Environment.NewLine + Environment.NewLine;
+                description += "Short position:" + Environment.NewLine;
+                description += "   Close a short position " + indicator.ExitPointShortDescription + ".";
             }
             else
             {
-                _description += "   Close a long position when " + indicator.ExitFilterLongDescription + "." +
-                                Environment.NewLine + Environment.NewLine;
-                _description += "Short position:" + Environment.NewLine;
-                _description += "   Close a short position when " + indicator.ExitFilterShortDescription + ".";
+                description += "   Close a long position when " + indicator.ExitFilterLongDescription + "." +
+                               Environment.NewLine + Environment.NewLine;
+                description += "Short position:" + Environment.NewLine;
+                description += "   Close a short position when " + indicator.ExitFilterShortDescription + ".";
             }
 
             for (int i = 0; i < 2; i++)
                 if (indicator.IndParam.CheckParam[i].Caption == "Use previous bar value")
-                    _description += Environment.NewLine + "-------------" + Environment.NewLine + "* Use the value of " +
-                                    indicator.IndicatorName + " from the previous bar.";
+                    description += Environment.NewLine + "-------------" + Environment.NewLine + "* Use the value of " +
+                                   indicator.IndicatorName + " from the previous bar.";
 
-            _toolTip.SetToolTip(LblIndicatorInfo, _description);
+            toolTip.SetToolTip(LblIndicatorInfo, description);
         }
 
         /// <summary>
-        /// Sets or restores the closing logic conditions.
+        ///     Sets or restores the closing logic conditions.
         /// </summary>
         private void SetClosingLogicConditions()
         {
-            bool isClosingFiltersAllowed = IndicatorStore.ClosingIndicatorsWithClosingFilters.Contains(_indicatorName);
+            bool isClosingFiltersAllowed = IndicatorStore.ClosingIndicatorsWithClosingFilters.Contains(indicatorName);
 
             // Removes or recovers closing logic slots.
-            if (_slotType == SlotTypes.Close && !isClosingFiltersAllowed && Data.Strategy.CloseFilters > 0)
+            if (slotType == SlotTypes.Close && !isClosingFiltersAllowed && Data.Strategy.CloseFilters > 0)
             {
                 // Removes all the closing logic conditions.
                 Data.Strategy.RemoveAllCloseFilters();
-                _closingSlotsRemoved = true;
+                closingSlotsRemoved = true;
             }
-            else if (_slotType == SlotTypes.Close && isClosingFiltersAllowed && _closingSlotsRemoved)
+            else if (slotType == SlotTypes.Close && isClosingFiltersAllowed && closingSlotsRemoved)
             {
-                foreach (IndicatorSlot inslot in _closingConditions)
+                foreach (IndicatorSlot inslot in closingConditions)
                 {
                     // Recovers all the closing logic conditions.
                     Data.Strategy.AddCloseFilter();
                     Data.Strategy.Slot[Data.Strategy.Slots - 1] = inslot.Clone();
                 }
-                _closingSlotsRemoved = false;
+                closingSlotsRemoved = false;
             }
         }
 
         /// <summary>
-        /// Sets or restores the opposite signal behavior.
+        ///     Sets or restores the opposite signal behavior.
         /// </summary>
         private void SetOppositeSignalBehaviour()
         {
             // Changes opposite signal behavior.
-            if (_slotType == SlotTypes.Close && _indicatorName == "Close and Reverse" &&
-                _oppSignalBehaviour != OppositeDirSignalAction.Reverse)
+            if (slotType == SlotTypes.Close && indicatorName == "Close and Reverse" &&
+                oppSignalBehaviour != OppositeDirSignalAction.Reverse)
             {
                 // Sets the strategy opposite signal to Reverse.
                 Data.Strategy.OppSignalAction = OppositeDirSignalAction.Reverse;
-                _oppSignalSet = true;
+                oppSignalSet = true;
             }
-            else if (_slotType == SlotTypes.Close && _indicatorName != "Close and Reverse" && _oppSignalSet)
+            else if (slotType == SlotTypes.Close && indicatorName != "Close and Reverse" && oppSignalSet)
             {
                 // Recovers the original opposite signal.
-                Data.Strategy.OppSignalAction = _oppSignalBehaviour;
-                _oppSignalSet = false;
+                Data.Strategy.OppSignalAction = oppSignalBehaviour;
+                oppSignalSet = false;
             }
         }
 
         /// <summary>
-        /// Shows the indicator description
+        ///     Shows the indicator description
         /// </summary>
         private void LblIndicatorInfoClick(object sender, EventArgs e)
         {
-            MessageBox.Show(_description, _slotCation, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(description, slotCation, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /// <summary>
-        /// Shows the indicator warning
+        ///     Shows the indicator warning
         /// </summary>
         private void LblIndicatorWarningClick(object sender, EventArgs e)
         {
-            MessageBox.Show(_warningMessage, _indicatorName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(warningMessage, indicatorName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         /// <summary>
-        /// Changes the background color of a label when the mouse leaves.
+        ///     Changes the background color of a label when the mouse leaves.
         /// </summary>
         private void LabelMouseLeave(object sender, EventArgs e)
         {
@@ -1022,7 +1027,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Changes the background color of a label when the mouse enters.
+        ///     Changes the background color of a label when the mouse enters.
         /// </summary>
         private void LabelMouseEnter(object sender, EventArgs e)
         {

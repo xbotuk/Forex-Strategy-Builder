@@ -1,20 +1,24 @@
-﻿// Numeric parameters
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Describes a parameter represented by means of a NumericUpDown control.
+    ///     Describes a parameter represented by means of a NumericUpDown control.
     /// </summary>
     public class NumericParam
     {
         /// <summary>
-        /// The default constructor.
+        ///     The default constructor.
         /// </summary>
         public NumericParam()
         {
@@ -28,17 +32,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the text describing the parameter.
+        ///     Gets or sets the text describing the parameter.
         /// </summary>
         public string Caption { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of parameter.
+        ///     Gets or sets the value of parameter.
         /// </summary>
         public double Value { get; set; }
 
         /// <summary>
-        /// Gets the value of parameter as a string.
+        ///     Gets the value of parameter as a string.
         /// </summary>
         public string ValueToString
         {
@@ -46,32 +50,32 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets or sets the minimum value of parameter.
+        ///     Gets or sets the minimum value of parameter.
         /// </summary>
         public double Min { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum value of parameter.
+        ///     Gets or sets the maximum value of parameter.
         /// </summary>
         public double Max { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of meaning decimal points of parameter.
+        ///     Gets or sets the number of meaning decimal points of parameter.
         /// </summary>
         public int Point { get; set; }
 
         /// <summary>
-        /// Gets or sets the value indicating whether the control can respond to user interaction.
+        ///     Gets or sets the value indicating whether the control can respond to user interaction.
         /// </summary>
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the text of tool tip associated with this control.
+        ///     Gets or sets the text of tool tip associated with this control.
         /// </summary>
         public string ToolTip { get; set; }
 
         /// <summary>
-        /// Gets the corrected value of parameter as a string.
+        ///     Gets the corrected value of parameter as a string.
         /// </summary>
         public string AnotherValueToString(double anotherValue)
         {
@@ -79,20 +83,20 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Returns a copy
+        ///     Returns a copy
         /// </summary>
         public NumericParam Clone()
         {
             var numericParam = new NumericParam
-                                   {
-                                       Caption = Caption,
-                                       Value = Value,
-                                       Min = Min,
-                                       Max = Max,
-                                       Point = Point,
-                                       Enabled = Enabled,
-                                       ToolTip = ToolTip
-                                   };
+                {
+                    Caption = Caption,
+                    Value = Value,
+                    Min = Min,
+                    Max = Max,
+                    Point = Point,
+                    Enabled = Enabled,
+                    ToolTip = ToolTip
+                };
 
 
             return numericParam;

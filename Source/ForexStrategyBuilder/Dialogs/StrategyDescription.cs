@@ -1,22 +1,26 @@
-﻿// Strategy Description
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public sealed class StrategyDescription : Form
     {
-        private String _oldInfo;
+        private String oldInfo;
 
         /// <summary>
-        /// Make a form
+        ///     Make a form
         /// </summary>
         public StrategyDescription()
         {
@@ -99,7 +103,7 @@ namespace Forex_Strategy_Builder
             BtnClear.Click += BtnClearClick;
             BtnClear.UseVisualStyleBackColor = true;
 
-            _oldInfo = Data.Strategy.Description;
+            oldInfo = Data.Strategy.Description;
         }
 
         private Panel PnlBase { get; set; }
@@ -112,7 +116,7 @@ namespace Forex_Strategy_Builder
         private Button BtnClear { get; set; }
 
         /// <summary>
-        /// Initialization
+        ///     Initialization
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -122,16 +126,16 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
 
             // Label Warning
@@ -159,7 +163,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -167,7 +171,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Accept Ctrl-A
+        ///     Accept Ctrl-A
         /// </summary>
         private void TxboxInfo_KeyDown(object sender, KeyEventArgs e)
         {
@@ -180,17 +184,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Accept the changes.
+        ///     Accept the changes.
         /// </summary>
         private void BtnAcceptClick(object sender, EventArgs e)
         {
             Data.Strategy.Description = TxboxInfo.Text;
-            _oldInfo = TxboxInfo.Text;
+            oldInfo = TxboxInfo.Text;
             Close();
         }
 
         /// <summary>
-        /// Closes the form.
+        ///     Closes the form.
         /// </summary>
         private void BtnCloseClick(object sender, EventArgs e)
         {
@@ -198,7 +202,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Cleans the info.
+        ///     Cleans the info.
         /// </summary>
         private void BtnClearClick(object sender, EventArgs e)
         {
@@ -206,11 +210,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Check whether the strategy have been changed.
+        ///     Check whether the strategy have been changed.
         /// </summary>
         private void ActionsFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_oldInfo == TxboxInfo.Text) return;
+            if (oldInfo == TxboxInfo.Text) return;
             DialogResult dr = MessageBox.Show(Language.T("Do you want to accept the changes?"),
                                               Data.ProgramName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
@@ -221,11 +225,11 @@ namespace Forex_Strategy_Builder
                     break;
                 case DialogResult.Yes:
                     Data.Strategy.Description = TxboxInfo.Text;
-                    _oldInfo = TxboxInfo.Text;
+                    oldInfo = TxboxInfo.Text;
                     Close();
                     break;
                 case DialogResult.No:
-                    _oldInfo = TxboxInfo.Text;
+                    oldInfo = TxboxInfo.Text;
                     Close();
                     break;
             }

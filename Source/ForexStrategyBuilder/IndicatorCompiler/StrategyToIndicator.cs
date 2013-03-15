@@ -1,17 +1,21 @@
-﻿// Export Strategy to Indicator Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public static class StrategyToIndicator
     {
@@ -41,12 +45,12 @@ namespace Forex_Strategy_Builder
             strategy = strategy.Replace("#LISTSHORT#", sbShort.ToString());
 
             var savedlg = new SaveFileDialog
-                              {
-                                  InitialDirectory = Data.SourceFolder,
-                                  AddExtension = true,
-                                  Title = Language.T("Custom Indicators"),
-                                  Filter = Language.T("Custom Indicators") + " (*.cs)|*.cs"
-                              };
+                {
+                    InitialDirectory = Data.SourceFolder,
+                    AddExtension = true,
+                    Title = Language.T("Custom Indicators"),
+                    Filter = Language.T("Custom Indicators") + " (*.cs)|*.cs"
+                };
 
             if (savedlg.ShowDialog() == DialogResult.OK)
             {

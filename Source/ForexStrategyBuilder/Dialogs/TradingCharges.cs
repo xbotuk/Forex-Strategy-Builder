@@ -1,25 +1,29 @@
-// Forex Strategy Builder - Trading Charges
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Market Settings
+    ///     Market Settings
     /// </summary>
     public sealed class TradingCharges : Form
     {
-        private readonly Color _colorText;
-        private bool _editInstrument;
+        private readonly Color colorText;
+        private bool editInstrument;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public TradingCharges()
         {
@@ -31,17 +35,17 @@ namespace Forex_Strategy_Builder
             LblCommission = new Label();
             LblSlippage = new Label();
 
-            NUDSpread = new NumericUpDown();
-            NUDSwapLong = new NumericUpDown();
-            NUDSwapShort = new NumericUpDown();
-            NUDCommission = new NumericUpDown();
-            NUDSlippage = new NumericUpDown();
+            NudSpread = new NumericUpDown();
+            NudSwapLong = new NumericUpDown();
+            NudSwapShort = new NumericUpDown();
+            NudCommission = new NumericUpDown();
+            NudSlippage = new NumericUpDown();
 
             BtnEditInstrument = new Button();
             BtnAccept = new Button();
             BtnCancel = new Button();
 
-            _colorText = LayoutColors.ColorControlText;
+            colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -59,14 +63,14 @@ namespace Forex_Strategy_Builder
 
             // Label Spread
             LblSpread.Parent = PnlBase;
-            LblSpread.ForeColor = _colorText;
+            LblSpread.ForeColor = colorText;
             LblSpread.BackColor = Color.Transparent;
             LblSpread.AutoSize = true;
             LblSpread.Text = Language.T("Spread") + " [" + Language.T("pips") + "]";
 
             // Label Swap Long
             LblSwapLong.Parent = PnlBase;
-            LblSwapLong.ForeColor = _colorText;
+            LblSwapLong.ForeColor = colorText;
             LblSwapLong.BackColor = Color.Transparent;
             LblSwapLong.AutoSize = true;
             LblSwapLong.Text = Language.T("Swap number for a long position rollover") + " [" +
@@ -78,7 +82,7 @@ namespace Forex_Strategy_Builder
 
             // Label Swap Short
             LblSwapShort.Parent = PnlBase;
-            LblSwapShort.ForeColor = _colorText;
+            LblSwapShort.ForeColor = colorText;
             LblSwapShort.BackColor = Color.Transparent;
             LblSwapShort.AutoSize = true;
             LblSwapShort.Text = Language.T("Swap number for a short position rollover") + " [" +
@@ -90,7 +94,7 @@ namespace Forex_Strategy_Builder
 
             // Label Commission
             LblCommission.Parent = PnlBase;
-            LblCommission.ForeColor = _colorText;
+            LblCommission.ForeColor = colorText;
             LblCommission.BackColor = Color.Transparent;
             LblCommission.AutoSize = true;
             LblCommission.Text = Language.T("Commission in") + " " +
@@ -103,73 +107,77 @@ namespace Forex_Strategy_Builder
 
             // Label Slippage
             LblSlippage.Parent = PnlBase;
-            LblSlippage.ForeColor = _colorText;
+            LblSlippage.ForeColor = colorText;
             LblSlippage.BackColor = Color.Transparent;
             LblSlippage.AutoSize = true;
             LblSlippage.Text = Language.T("Slippage") + " [" + Language.T("pips") + "]";
 
             // NumericUpDown Spread
-            NUDSpread.BeginInit();
-            NUDSpread.Parent = PnlBase;
-            NUDSpread.Name = Language.T("Spread");
-            NUDSpread.TextAlign = HorizontalAlignment.Center;
-            NUDSpread.Minimum = 0;
-            NUDSpread.Maximum = 500;
-            NUDSpread.Increment = 0.01M;
-            NUDSpread.DecimalPlaces = 2;
-            NUDSpread.Value = 4;
-            NUDSpread.EndInit();
-            toolTip.SetToolTip(NUDSpread, Language.T("Difference between Bid and Ask prices."));
+            NudSpread.BeginInit();
+            NudSpread.Parent = PnlBase;
+            NudSpread.Name = Language.T("Spread");
+            NudSpread.TextAlign = HorizontalAlignment.Center;
+            NudSpread.Minimum = 0;
+            NudSpread.Maximum = 500;
+            NudSpread.Increment = 0.01M;
+            NudSpread.DecimalPlaces = 2;
+            NudSpread.Value = 4;
+            NudSpread.EndInit();
+            toolTip.SetToolTip(NudSpread, Language.T("Difference between Bid and Ask prices."));
 
             // NumericUpDown Swap Long
-            NUDSwapLong.BeginInit();
-            NUDSwapLong.Parent = PnlBase;
-            NUDSwapLong.Name = "SwapLong";
-            NUDSwapLong.TextAlign = HorizontalAlignment.Center;
-            NUDSwapLong.Minimum = -500;
-            NUDSwapLong.Maximum = 500;
-            NUDSwapLong.Increment = 0.01M;
-            NUDSwapLong.DecimalPlaces = 2;
-            NUDSwapLong.Value = 1;
-            NUDSwapLong.EndInit();
-            toolTip.SetToolTip(NUDSwapLong, Language.T("A position changes its average price with the selected number during a rollover."));
+            NudSwapLong.BeginInit();
+            NudSwapLong.Parent = PnlBase;
+            NudSwapLong.Name = "SwapLong";
+            NudSwapLong.TextAlign = HorizontalAlignment.Center;
+            NudSwapLong.Minimum = -500;
+            NudSwapLong.Maximum = 500;
+            NudSwapLong.Increment = 0.01M;
+            NudSwapLong.DecimalPlaces = 2;
+            NudSwapLong.Value = 1;
+            NudSwapLong.EndInit();
+            toolTip.SetToolTip(NudSwapLong,
+                               Language.T(
+                                   "A position changes its average price with the selected number during a rollover."));
 
             // NumericUpDown Swap Short
-            NUDSwapShort.BeginInit();
-            NUDSwapShort.Parent = PnlBase;
-            NUDSwapShort.Name = "SwapShort";
-            NUDSwapShort.TextAlign = HorizontalAlignment.Center;
-            NUDSwapShort.Minimum = -500;
-            NUDSwapShort.Maximum = 500;
-            NUDSwapShort.Increment = 0.01M;
-            NUDSwapShort.DecimalPlaces = 2;
-            NUDSwapShort.Value = -1;
-            NUDSwapShort.EndInit();
-            toolTip.SetToolTip(NUDSwapShort, Language.T("A position changes its average price with the selected number during a rollover."));
+            NudSwapShort.BeginInit();
+            NudSwapShort.Parent = PnlBase;
+            NudSwapShort.Name = "SwapShort";
+            NudSwapShort.TextAlign = HorizontalAlignment.Center;
+            NudSwapShort.Minimum = -500;
+            NudSwapShort.Maximum = 500;
+            NudSwapShort.Increment = 0.01M;
+            NudSwapShort.DecimalPlaces = 2;
+            NudSwapShort.Value = -1;
+            NudSwapShort.EndInit();
+            toolTip.SetToolTip(NudSwapShort,
+                               Language.T(
+                                   "A position changes its average price with the selected number during a rollover."));
 
             // NumericUpDown Commission
-            NUDCommission.BeginInit();
-            NUDCommission.Parent = PnlBase;
-            NUDCommission.Name = Language.T("Commission");
-            NUDCommission.TextAlign = HorizontalAlignment.Center;
-            NUDCommission.Minimum = -500;
-            NUDCommission.Maximum = 500;
-            NUDCommission.Increment = 0.01M;
-            NUDCommission.DecimalPlaces = 2;
-            NUDCommission.Value = 0;
-            NUDCommission.EndInit();
+            NudCommission.BeginInit();
+            NudCommission.Parent = PnlBase;
+            NudCommission.Name = Language.T("Commission");
+            NudCommission.TextAlign = HorizontalAlignment.Center;
+            NudCommission.Minimum = -500;
+            NudCommission.Maximum = 500;
+            NudCommission.Increment = 0.01M;
+            NudCommission.DecimalPlaces = 2;
+            NudCommission.Value = 0;
+            NudCommission.EndInit();
 
             // NumericUpDown Slippage
-            NUDSlippage.BeginInit();
-            NUDSlippage.Parent = PnlBase;
-            NUDSlippage.Name = "Slippage";
-            NUDSlippage.TextAlign = HorizontalAlignment.Center;
-            NUDSlippage.Minimum = 0;
-            NUDSlippage.Maximum = 200;
-            NUDSlippage.Increment = 1;
-            NUDSlippage.Value = 0;
-            NUDSlippage.EndInit();
-            toolTip.SetToolTip(NUDSlippage, Language.T("Number of pips you lose due to an inaccurate order execution."));
+            NudSlippage.BeginInit();
+            NudSlippage.Parent = PnlBase;
+            NudSlippage.Name = "Slippage";
+            NudSlippage.TextAlign = HorizontalAlignment.Center;
+            NudSlippage.Minimum = 0;
+            NudSlippage.Maximum = 200;
+            NudSlippage.Increment = 1;
+            NudSlippage.Value = 0;
+            NudSlippage.EndInit();
+            toolTip.SetToolTip(NudSlippage, Language.T("Number of pips you lose due to an inaccurate order execution."));
 
             //Button btnEditInstrument
             BtnEditInstrument.Parent = this;
@@ -200,11 +208,11 @@ namespace Forex_Strategy_Builder
         private Label LblCommission { get; set; }
         private Label LblSlippage { get; set; }
 
-        private NumericUpDown NUDSpread { get; set; }
-        private NumericUpDown NUDSwapLong { get; set; }
-        private NumericUpDown NUDSwapShort { get; set; }
-        private NumericUpDown NUDCommission { get; set; }
-        private NumericUpDown NUDSlippage { get; set; }
+        private NumericUpDown NudSpread { get; set; }
+        private NumericUpDown NudSwapLong { get; set; }
+        private NumericUpDown NudSwapShort { get; set; }
+        private NumericUpDown NudCommission { get; set; }
+        private NumericUpDown NudSlippage { get; set; }
 
         private Button BtnEditInstrument { get; set; }
         private Button BtnAccept { get; set; }
@@ -212,60 +220,60 @@ namespace Forex_Strategy_Builder
 
 
         /// <summary>
-        /// Spread
+        ///     Spread
         /// </summary>
         public double Spread
         {
-            get { return (double) NUDSpread.Value; }
-            set { NUDSpread.Value = (decimal) value; }
+            get { return (double) NudSpread.Value; }
+            set { NudSpread.Value = (decimal) value; }
         }
 
         /// <summary>
-        /// Swap Long
+        ///     Swap Long
         /// </summary>
         public double SwapLong
         {
-            get { return (double) NUDSwapLong.Value; }
-            set { NUDSwapLong.Value = (decimal) value; }
+            get { return (double) NudSwapLong.Value; }
+            set { NudSwapLong.Value = (decimal) value; }
         }
 
         /// <summary>
-        /// Swap Short
+        ///     Swap Short
         /// </summary>
         public double SwapShort
         {
-            get { return (double) NUDSwapShort.Value; }
-            set { NUDSwapShort.Value = (decimal) value; }
+            get { return (double) NudSwapShort.Value; }
+            set { NudSwapShort.Value = (decimal) value; }
         }
 
         /// <summary>
-        /// Commission
+        ///     Commission
         /// </summary>
         public double Commission
         {
-            get { return (double) NUDCommission.Value; }
-            set { NUDCommission.Value = (decimal) value; }
+            get { return (double) NudCommission.Value; }
+            set { NudCommission.Value = (decimal) value; }
         }
 
         /// <summary>
-        /// Slippage
+        ///     Slippage
         /// </summary>
         public int Slippage
         {
-            get { return (int) NUDSlippage.Value; }
-            set { NUDSlippage.Value = value; }
+            get { return (int) NudSlippage.Value; }
+            set { NudSlippage.Value = value; }
         }
 
         /// <summary>
-        /// Whether to edit the instrument
+        ///     Whether to edit the instrument
         /// </summary>
         public bool EditInstrument
         {
-            get { return _editInstrument; }
+            get { return editInstrument; }
         }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -277,14 +285,14 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
             const int border = 2;
             const int nudWidth = 70;
@@ -301,18 +309,18 @@ namespace Forex_Strategy_Builder
             LblCommission.Location = new Point(btnHrzSpace + border, 3*buttonHeight + 4*space + 8);
             LblSlippage.Location = new Point(btnHrzSpace + border, 4*buttonHeight + 5*space + 8);
 
-            // NUD Parameters
+            // FancyNud Parameters
             int nudLeft = PnlBase.ClientSize.Width - nudWidth - btnHrzSpace - border;
-            NUDSpread.Size = new Size(nudWidth, buttonHeight);
-            NUDSpread.Location = new Point(nudLeft, 0*buttonHeight + 1*space + 6);
-            NUDSwapLong.Size = new Size(nudWidth, buttonHeight);
-            NUDSwapLong.Location = new Point(nudLeft, 1*buttonHeight + 2*space + 6);
-            NUDSwapShort.Size = new Size(nudWidth, buttonHeight);
-            NUDSwapShort.Location = new Point(nudLeft, 2*buttonHeight + 3*space + 6);
-            NUDCommission.Size = new Size(nudWidth, buttonHeight);
-            NUDCommission.Location = new Point(nudLeft, 3*buttonHeight + 4*space + 6);
-            NUDSlippage.Size = new Size(nudWidth, buttonHeight);
-            NUDSlippage.Location = new Point(nudLeft, 4*buttonHeight + 5*space + 6);
+            NudSpread.Size = new Size(nudWidth, buttonHeight);
+            NudSpread.Location = new Point(nudLeft, 0*buttonHeight + 1*space + 6);
+            NudSwapLong.Size = new Size(nudWidth, buttonHeight);
+            NudSwapLong.Location = new Point(nudLeft, 1*buttonHeight + 2*space + 6);
+            NudSwapShort.Size = new Size(nudWidth, buttonHeight);
+            NudSwapShort.Location = new Point(nudLeft, 2*buttonHeight + 3*space + 6);
+            NudCommission.Size = new Size(nudWidth, buttonHeight);
+            NudCommission.Location = new Point(nudLeft, 3*buttonHeight + 4*space + 6);
+            NudSlippage.Size = new Size(nudWidth, buttonHeight);
+            NudSlippage.Location = new Point(nudLeft, 4*buttonHeight + 5*space + 6);
 
             // Button btnEditInstrument
             BtnEditInstrument.Size = new Size(buttonWidth, buttonHeight);
@@ -344,7 +352,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -352,11 +360,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shows Instrument Editor
+        ///     Shows Instrument Editor
         /// </summary>
         private void BtnEditInstrumentClick(object sender, EventArgs e)
         {
-            _editInstrument = true;
+            editInstrument = true;
             Close();
         }
     }

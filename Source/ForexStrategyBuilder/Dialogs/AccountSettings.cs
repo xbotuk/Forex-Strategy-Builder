@@ -1,29 +1,33 @@
-// Account Settings class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Account Settings
+    ///     Account Settings
     /// </summary>
     public sealed class AccountSettings : Form
     {
-        private readonly Color _colorText;
-        private string _accountCurrency;
-        private int _initialAccount;
-        private int _leverage;
-        private double _rateToEUR;
-        private double _rateToUSD;
+        private readonly Color colorText;
+        private string accountCurrency;
+        private int initialAccount;
+        private int leverage;
+        private double rateToEUR;
+        private double rateToUSD;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public AccountSettings()
         {
@@ -36,16 +40,16 @@ namespace Forex_Strategy_Builder
             LblExchangeRateInfo = new Label();
 
             CbxAccountCurrency = new ComboBox();
-            NUDInitialAccount = new NumericUpDown();
+            NudInitialAccount = new NumericUpDown();
             CbxLeverage = new ComboBox();
-            NUDExchangeRate = new NumericUpDown();
+            NudExchangeRate = new NumericUpDown();
             TbxExchangeRate = new TextBox();
 
             BtnDefault = new Button();
             BtnCancel = new Button();
             BtnAccept = new Button();
 
-            _colorText = LayoutColors.ColorControlText;
+            colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -60,40 +64,42 @@ namespace Forex_Strategy_Builder
 
             // Label Account Currency
             LblAccountCurrency.Parent = PnlBase;
-            LblAccountCurrency.ForeColor = _colorText;
+            LblAccountCurrency.ForeColor = colorText;
             LblAccountCurrency.BackColor = Color.Transparent;
             LblAccountCurrency.Text = Language.T("Account currency");
             LblAccountCurrency.AutoSize = true;
 
             // Label Initial Account
             LblInitialAccount.Parent = PnlBase;
-            LblInitialAccount.ForeColor = _colorText;
+            LblInitialAccount.ForeColor = colorText;
             LblInitialAccount.BackColor = Color.Transparent;
             LblInitialAccount.Text = Language.T("Initial account");
             LblInitialAccount.AutoSize = true;
 
             // Label Leverage
             LblLeverage.Parent = PnlBase;
-            LblLeverage.ForeColor = _colorText;
+            LblLeverage.ForeColor = colorText;
             LblLeverage.BackColor = Color.Transparent;
             LblLeverage.Text = Language.T("Leverage");
             LblLeverage.AutoSize = true;
 
             // Label Exchange Rate
             LblExchangeRate.Parent = PnlBase;
-            LblExchangeRate.ForeColor = _colorText;
+            LblExchangeRate.ForeColor = colorText;
             LblExchangeRate.BackColor = Color.Transparent;
             LblExchangeRate.Text = Language.T("Account exchange rate");
             LblExchangeRate.AutoSize = true;
 
             // Label Exchange Rate Info
             LblExchangeRateInfo.Parent = PnlBase;
-            LblExchangeRateInfo.ForeColor = _colorText;
+            LblExchangeRateInfo.ForeColor = colorText;
             LblExchangeRateInfo.BackColor = Color.Transparent;
             LblExchangeRateInfo.Text =
-                Language.T("Forex Strategy Builder uses the account exchange rate to calculate the trading statistics in your account currency.") +
+                Language.T(
+                    "Forex Strategy Builder uses the account exchange rate to calculate the trading statistics in your account currency.") +
                 " " +
-                Language.T("When your account currency does not take part in the trading couple the account exchange rate is a fixed figure.");
+                Language.T(
+                    "When your account currency does not take part in the trading couple the account exchange rate is a fixed figure.");
 
             // ComboBox Account Currency
             CbxAccountCurrency.Parent = PnlBase;
@@ -103,40 +109,41 @@ namespace Forex_Strategy_Builder
             CbxAccountCurrency.SelectedIndex = 0;
 
             // NumericUpDown Initial Account
-            NUDInitialAccount.Parent = PnlBase;
-            NUDInitialAccount.Name = "nudInitialAccount";
-            NUDInitialAccount.BeginInit();
-            NUDInitialAccount.Minimum = 100;
-            NUDInitialAccount.Maximum = 100000;
-            NUDInitialAccount.Increment = 1000;
-            NUDInitialAccount.Value = _initialAccount;
-            NUDInitialAccount.EndInit();
+            NudInitialAccount.Parent = PnlBase;
+            NudInitialAccount.Name = "nudInitialAccount";
+            NudInitialAccount.BeginInit();
+            NudInitialAccount.Minimum = 100;
+            NudInitialAccount.Maximum = 100000;
+            NudInitialAccount.Increment = 1000;
+            NudInitialAccount.Value = initialAccount;
+            NudInitialAccount.EndInit();
 
             // ComboBox Leverage
             CbxLeverage.Parent = PnlBase;
             CbxLeverage.Name = "cbxLeverage";
             CbxLeverage.DropDownStyle = ComboBoxStyle.DropDownList;
-            CbxLeverage.Items.AddRange(new object[] { "1/1", "1/10", "1/20", "1/30", "1/50", "1/100", "1/200", "1/300", "1/400", "1/500" });
+            CbxLeverage.Items.AddRange(new object[]
+                {"1/1", "1/10", "1/20", "1/30", "1/50", "1/100", "1/200", "1/300", "1/400", "1/500"});
             CbxLeverage.SelectedIndex = 5;
 
             // tbxExchangeRate
             TbxExchangeRate.Parent = PnlBase;
             TbxExchangeRate.BackColor = LayoutColors.ColorControlBack;
-            TbxExchangeRate.ForeColor = _colorText;
+            TbxExchangeRate.ForeColor = colorText;
             TbxExchangeRate.ReadOnly = true;
             TbxExchangeRate.Visible = false;
             TbxExchangeRate.Text = Language.T("Deal price");
 
             // NumericUpDown Exchange Rate
-            NUDExchangeRate.BeginInit();
-            NUDExchangeRate.Parent = PnlBase;
-            NUDExchangeRate.Name = "nudExchangeRate";
-            NUDExchangeRate.Minimum = 0;
-            NUDExchangeRate.Maximum = 100000;
-            NUDExchangeRate.Increment = 0.0001M;
-            NUDExchangeRate.DecimalPlaces = 4;
-            NUDExchangeRate.Value = 1;
-            NUDExchangeRate.EndInit();
+            NudExchangeRate.BeginInit();
+            NudExchangeRate.Parent = PnlBase;
+            NudExchangeRate.Name = "nudExchangeRate";
+            NudExchangeRate.Minimum = 0;
+            NudExchangeRate.Maximum = 100000;
+            NudExchangeRate.Increment = 0.0001M;
+            NudExchangeRate.DecimalPlaces = 4;
+            NudExchangeRate.Value = 1;
+            NudExchangeRate.EndInit();
 
             //Button Default
             BtnDefault.Parent = this;
@@ -170,93 +177,94 @@ namespace Forex_Strategy_Builder
         private Label LblInitialAccount { get; set; }
         private Label LblLeverage { get; set; }
 
-        private NumericUpDown NUDExchangeRate { get; set; }
-        private NumericUpDown NUDInitialAccount { get; set; }
+        private NumericUpDown NudExchangeRate { get; set; }
+        private NumericUpDown NudInitialAccount { get; set; }
         private FancyPanel PnlBase { get; set; }
         private TextBox TbxExchangeRate { get; set; }
 
         /// <summary>
-        /// Account Currency
+        ///     Account Currency
         /// </summary>
         public string AccountCurrency
         {
-            get { return _accountCurrency; }
-            set { _accountCurrency = value; }
+            get { return accountCurrency; }
+            set { accountCurrency = value; }
         }
 
         /// <summary>
-        /// Initial Account
+        ///     Initial Account
         /// </summary>
         public int InitialAccount
         {
-            get { return _initialAccount; }
-            set { _initialAccount = value; }
+            get { return initialAccount; }
+            set { initialAccount = value; }
         }
 
         /// <summary>
-        /// Leverage
+        ///     Leverage
         /// </summary>
         public int Leverage
         {
-            get { return _leverage; }
-            set { _leverage = value; }
+            get { return leverage; }
+            set { leverage = value; }
         }
 
         /// <summary>
-        /// Exchange Rate to USD
+        ///     Exchange Rate to USD
         /// </summary>
         public double RateToUSD
         {
-            get { return _rateToUSD; }
-            set { _rateToUSD = value; }
+            get { return rateToUSD; }
+            set { rateToUSD = value; }
         }
 
         /// <summary>
-        /// Exchange Rate to EUR
+        ///     Exchange Rate to EUR
         /// </summary>
-        public double RateToEUR
+        public double RateToEur
         {
-            get { return _rateToEUR; }
-            set { _rateToEUR = value; }
+            get { return rateToEUR; }
+            set { rateToEUR = value; }
         }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
 
             ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 257);
 
             CbxAccountCurrency.SelectedIndexChanged += ParamChanged;
-            NUDInitialAccount.ValueChanged += ParamChanged;
+            NudInitialAccount.ValueChanged += ParamChanged;
             CbxLeverage.SelectedIndexChanged += ParamChanged;
-            NUDExchangeRate.ValueChanged += ParamChanged;
+            NudExchangeRate.ValueChanged += ParamChanged;
 
             BtnAccept.Focus();
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
             int nudWidth = buttonWidth - space - 1;
             const int border = 2;
 
             // pnlBase
-            PnlBase.Size = new Size(ClientSize.Width - 2*space, ClientSize.Height - 2*btnVertSpace - buttonHeight - space);
+            PnlBase.Size = new Size(ClientSize.Width - 2*space,
+                                    ClientSize.Height - 2*btnVertSpace - buttonHeight - space);
             PnlBase.Location = new Point(space, space);
 
             // Labels
@@ -272,12 +280,12 @@ namespace Forex_Strategy_Builder
             int nudLeft = PnlBase.ClientSize.Width - nudWidth - btnHrzSpace - border;
             CbxAccountCurrency.Size = new Size(nudWidth, buttonHeight);
             CbxAccountCurrency.Location = new Point(nudLeft, 0*buttonHeight + 1*space + 4);
-            NUDInitialAccount.Size = new Size(nudWidth, buttonHeight);
-            NUDInitialAccount.Location = new Point(nudLeft, 1*buttonHeight + 2*space + 4);
+            NudInitialAccount.Size = new Size(nudWidth, buttonHeight);
+            NudInitialAccount.Location = new Point(nudLeft, 1*buttonHeight + 2*space + 4);
             CbxLeverage.Size = new Size(nudWidth, buttonHeight);
             CbxLeverage.Location = new Point(nudLeft, 2*buttonHeight + 3*space + 4);
-            NUDExchangeRate.Size = new Size(nudWidth, buttonHeight);
-            NUDExchangeRate.Location = new Point(nudLeft, 3*buttonHeight + 4*space + 4);
+            NudExchangeRate.Size = new Size(nudWidth, buttonHeight);
+            NudExchangeRate.Location = new Point(nudLeft, 3*buttonHeight + 4*space + 4);
             TbxExchangeRate.Size = new Size(nudWidth, buttonHeight);
             TbxExchangeRate.Location = new Point(nudLeft, 3*buttonHeight + 4*space + 4);
 
@@ -298,7 +306,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -306,24 +314,24 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the controls' text
+        ///     Sets the controls' text
         /// </summary>
         public void SetParams()
         {
             // ComboBox Account Currency
-            CbxAccountCurrency.SelectedItem = _accountCurrency;
+            CbxAccountCurrency.SelectedItem = accountCurrency;
 
             // NumericUpDown Initial Account
-            NUDInitialAccount.Value = _initialAccount;
+            NudInitialAccount.Value = initialAccount;
 
             // ComboBox Leverage
-            CbxLeverage.SelectedItem = "1/" + _leverage;
+            CbxLeverage.SelectedItem = "1/" + leverage;
 
             SetAcountExchangeRate();
         }
 
         /// <summary>
-        /// Calculates the account exchange rate.
+        ///     Calculates the account exchange rate.
         /// </summary>
         private void SetAcountExchangeRate()
         {
@@ -333,39 +341,39 @@ namespace Forex_Strategy_Builder
             {
                 TbxExchangeRate.Text = Language.T("Not used");
                 TbxExchangeRate.Visible = true;
-                NUDExchangeRate.Value = 1;
-                NUDExchangeRate.Visible = false;
+                NudExchangeRate.Value = 1;
+                NudExchangeRate.Visible = false;
                 if (CbxAccountCurrency.Text == "USD")
-                    _rateToUSD = 1;
+                    rateToUSD = 1;
                 else if (CbxAccountCurrency.Text == "EUR")
-                    _rateToEUR = 1;
+                    rateToEUR = 1;
             }
             else if (Data.InstrProperties.InstrType == InstrumetType.Forex &&
                      Data.InstrProperties.Symbol.StartsWith(CbxAccountCurrency.Text))
             {
                 TbxExchangeRate.Text = Language.T("Deal price");
                 TbxExchangeRate.Visible = true;
-                NUDExchangeRate.Value = 0;
-                NUDExchangeRate.Visible = false;
+                NudExchangeRate.Value = 0;
+                NudExchangeRate.Visible = false;
                 if (CbxAccountCurrency.Text == "USD")
-                    _rateToUSD = 0;
+                    rateToUSD = 0;
                 else if (CbxAccountCurrency.Text == "EUR")
-                    _rateToEUR = 0;
+                    rateToEUR = 0;
             }
             else
             {
                 LblExchangeRate.Text += " " + CbxAccountCurrency.Text + Data.InstrProperties.PriceIn;
                 TbxExchangeRate.Visible = false;
                 if (CbxAccountCurrency.Text == "USD")
-                    NUDExchangeRate.Value = (decimal) _rateToUSD;
+                    NudExchangeRate.Value = (decimal) rateToUSD;
                 else if (CbxAccountCurrency.Text == "EUR")
-                    NUDExchangeRate.Value = (decimal) _rateToEUR;
-                NUDExchangeRate.Visible = true;
+                    NudExchangeRate.Value = (decimal) rateToEUR;
+                NudExchangeRate.Visible = true;
             }
         }
 
         /// <summary>
-        /// Sets the params values
+        ///     Sets the params values
         /// </summary>
         private void ParamChanged(object sender, EventArgs e)
         {
@@ -374,40 +382,40 @@ namespace Forex_Strategy_Builder
             // ComboBox Account Currency
             if (name == "cbxAccountCurrency")
             {
-                _accountCurrency = CbxAccountCurrency.Text;
+                accountCurrency = CbxAccountCurrency.Text;
                 SetAcountExchangeRate();
             }
 
             // NumericUpDown Initial Account
             if (name == "nudInitialAccount")
             {
-                _initialAccount = (int) NUDInitialAccount.Value;
+                initialAccount = (int) NudInitialAccount.Value;
             }
 
             // ComboBox Leverage
             if (name == "cbxLeverage")
             {
-                _leverage = int.Parse(CbxLeverage.Text.Substring(2));
+                leverage = int.Parse(CbxLeverage.Text.Substring(2));
             }
 
             // NumericUpDown Exchange Rate
             if (name == "nudExchangeRate")
             {
                 if (CbxAccountCurrency.Text == "USD")
-                    _rateToUSD = (double) NUDExchangeRate.Value;
+                    rateToUSD = (double) NudExchangeRate.Value;
                 else if (CbxAccountCurrency.Text == "EUR")
-                    _rateToEUR = (double) NUDExchangeRate.Value;
+                    rateToEUR = (double) NudExchangeRate.Value;
             }
         }
 
         /// <summary>
-        /// Button Default Click
+        ///     Button Default Click
         /// </summary>
         private void BtnDefaultClick(object sender, EventArgs e)
         {
-            _accountCurrency = "USD";
-            _initialAccount = 10000;
-            _leverage = 100;
+            accountCurrency = "USD";
+            initialAccount = 10000;
+            leverage = 100;
 
             SetParams();
         }

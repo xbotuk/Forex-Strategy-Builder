@@ -1,57 +1,61 @@
-// Backtester - Calculator
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Class Backtester
+    ///     Class Backtester
     /// </summary>
     public partial class Backtester : Data
     {
         // Private fields
-        private static int _totalPositions;
-        private static Session[] _session;
-        private static OrderCoordinates[] _ordCoord;
-        private static PositionCoordinates[] _posCoord;
-        private static StrategyPriceType _openStrPriceType;
-        private static StrategyPriceType _closeStrPriceType;
+        private static int totalPositions;
+        private static Session[] session;
+        private static OrderCoordinates[] ordCoord;
+        private static PositionCoordinates[] posCoord;
+        private static StrategyPriceType openStrPriceType;
+        private static StrategyPriceType closeStrPriceType;
 
         // Environment
-        private static ExecutionTime _openTimeExec;
-        private static ExecutionTime _closeTimeExec;
-        private static bool _isScanning;
-        private static double _maximumLots = 100;
+        private static ExecutionTime openTimeExec;
+        private static ExecutionTime closeTimeExec;
+        private static bool isScanning;
+        private static double maximumLots = 100;
 
         // Additional
-        private static double _micron = InstrProperties.Point/2;
-        private static DateTime _lastEntryTime;
+        private static double micron = InstrProperties.Point/2;
+        private static DateTime lastEntryTime;
 
         // Logical Groups
-        private static Dictionary<string, bool> _groupsAllowLong;
-        private static Dictionary<string, bool> _groupsAllowShort;
-        private static List<string> _openingLogicGroups;
-        private static List<string> _closingLogicGroups;
+        private static Dictionary<string, bool> groupsAllowLong;
+        private static Dictionary<string, bool> groupsAllowShort;
+        private static List<string> openingLogicGroups;
+        private static List<string> closingLogicGroups;
 
         // N Bars Exit indicator - Krog
-        private static bool _hasNBarsExit;
-        private static int _slotNBarsExit;
+        private static bool hasNBarsExit;
+        private static int slotNBarsExit;
 
         // Enter Once indicator
-        private static bool _hasEnterOnce;
-        private static int _slotEnterOnce;
+        private static bool hasEnterOnce;
+        private static int slotEnterOnce;
 
         // Martingale
-        private static int _consecutiveLosses;
+        private static int consecutiveLosses;
 
         /// <summary>
-        /// Gets the maximum number of orders.
+        ///     Gets the maximum number of orders.
         /// </summary>
         private static int MaxOrders
         {
@@ -69,7 +73,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the maximum number of positions.
+        ///     Gets the maximum number of positions.
         /// </summary>
         private static int MaxPositions
         {
@@ -78,122 +82,122 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Resets the variables and prepares the arrays
+        ///     Resets the variables and prepares the arrays
         /// </summary>
         private static void ResetStart()
         {
             MarginCallBar = 0;
             SentOrders = 0;
-            _totalPositions = 0;
+            totalPositions = 0;
             IsScanPerformed = false;
-            _micron = InstrProperties.Point/2d;
-            _lastEntryTime = new DateTime();
+            micron = InstrProperties.Point/2d;
+            lastEntryTime = new DateTime();
 
             // Sets the maximum lots
-            _maximumLots = 100;
+            maximumLots = 100;
             foreach (IndicatorSlot slot in Strategy.Slot)
                 if (slot.IndicatorName == "Lot Limiter")
-                    _maximumLots = (int) slot.IndParam.NumParam[0].Value;
+                    maximumLots = (int) slot.IndParam.NumParam[0].Value;
 
-            _maximumLots = Math.Min(_maximumLots, Strategy.MaxOpenLots);
+            maximumLots = Math.Min(maximumLots, Strategy.MaxOpenLots);
 
-            _session = new Session[Bars];
+            session = new Session[Bars];
             for (int bar = 0; bar < Bars; bar++)
-                _session[bar] = new Session(MaxPositions, MaxOrders);
+                session[bar] = new Session(MaxPositions, MaxOrders);
 
             for (int bar = 0; bar < FirstBar; bar++)
             {
-                _session[bar].Summary.MoneyBalance = Configs.InitialAccount;
-                _session[bar].Summary.MoneyEquity = Configs.InitialAccount;
+                session[bar].Summary.MoneyBalance = Configs.InitialAccount;
+                session[bar].Summary.MoneyEquity = Configs.InitialAccount;
             }
 
-            _ordCoord = new OrderCoordinates[Bars*MaxOrders];
-            _posCoord = new PositionCoordinates[Bars*MaxPositions];
+            ordCoord = new OrderCoordinates[Bars*MaxOrders];
+            posCoord = new PositionCoordinates[Bars*MaxPositions];
 
-            _openTimeExec = Strategy.Slot[Strategy.OpenSlot].IndParam.ExecutionTime;
-            _closeTimeExec = Strategy.Slot[Strategy.CloseSlot].IndParam.ExecutionTime;
+            openTimeExec = Strategy.Slot[Strategy.OpenSlot].IndParam.ExecutionTime;
+            closeTimeExec = Strategy.Slot[Strategy.CloseSlot].IndParam.ExecutionTime;
 
-            _openStrPriceType = StrategyPriceType.Unknown;
-            if (_openTimeExec == ExecutionTime.AtBarOpening)
-                _openStrPriceType = StrategyPriceType.Open;
-            else if (_openTimeExec == ExecutionTime.AtBarClosing)
-                _openStrPriceType = StrategyPriceType.Close;
+            openStrPriceType = StrategyPriceType.Unknown;
+            if (openTimeExec == ExecutionTime.AtBarOpening)
+                openStrPriceType = StrategyPriceType.Open;
+            else if (openTimeExec == ExecutionTime.AtBarClosing)
+                openStrPriceType = StrategyPriceType.Close;
             else
-                _openStrPriceType = StrategyPriceType.Indicator;
+                openStrPriceType = StrategyPriceType.Indicator;
 
-            _closeStrPriceType = StrategyPriceType.Unknown;
-            if (_closeTimeExec == ExecutionTime.AtBarOpening)
-                _closeStrPriceType = StrategyPriceType.Open;
-            else if (_closeTimeExec == ExecutionTime.AtBarClosing)
-                _closeStrPriceType = StrategyPriceType.Close;
-            else if (_closeTimeExec == ExecutionTime.CloseAndReverse)
-                _closeStrPriceType = StrategyPriceType.CloseAndReverce;
+            closeStrPriceType = StrategyPriceType.Unknown;
+            if (closeTimeExec == ExecutionTime.AtBarOpening)
+                closeStrPriceType = StrategyPriceType.Open;
+            else if (closeTimeExec == ExecutionTime.AtBarClosing)
+                closeStrPriceType = StrategyPriceType.Close;
+            else if (closeTimeExec == ExecutionTime.CloseAndReverse)
+                closeStrPriceType = StrategyPriceType.CloseAndReverce;
             else
-                _closeStrPriceType = StrategyPriceType.Indicator;
+                closeStrPriceType = StrategyPriceType.Indicator;
 
             if (Configs.UseLogicalGroups)
             {
                 Strategy.Slot[Strategy.OpenSlot].LogicalGroup = "All";
-                    // Allows calculation of open slot for each group.
+                // Allows calculation of open slot for each group.
                 Strategy.Slot[Strategy.CloseSlot].LogicalGroup = "All";
-                    // Allows calculation of close slot for each group.
+                // Allows calculation of close slot for each group.
 
-                _groupsAllowLong = new Dictionary<string, bool>();
-                _groupsAllowShort = new Dictionary<string, bool>();
+                groupsAllowLong = new Dictionary<string, bool>();
+                groupsAllowShort = new Dictionary<string, bool>();
                 for (int slot = Strategy.OpenSlot; slot < Strategy.CloseSlot; slot++)
                 {
-                    if (!_groupsAllowLong.ContainsKey(Strategy.Slot[slot].LogicalGroup))
-                        _groupsAllowLong.Add(Strategy.Slot[slot].LogicalGroup, false);
-                    if (!_groupsAllowShort.ContainsKey(Strategy.Slot[slot].LogicalGroup))
-                        _groupsAllowShort.Add(Strategy.Slot[slot].LogicalGroup, false);
+                    if (!groupsAllowLong.ContainsKey(Strategy.Slot[slot].LogicalGroup))
+                        groupsAllowLong.Add(Strategy.Slot[slot].LogicalGroup, false);
+                    if (!groupsAllowShort.ContainsKey(Strategy.Slot[slot].LogicalGroup))
+                        groupsAllowShort.Add(Strategy.Slot[slot].LogicalGroup, false);
                 }
 
                 // List of logical groups
-                _openingLogicGroups = new List<string>();
-                foreach (var kvp in _groupsAllowLong)
-                    _openingLogicGroups.Add(kvp.Key);
+                openingLogicGroups = new List<string>();
+                foreach (var kvp in groupsAllowLong)
+                    openingLogicGroups.Add(kvp.Key);
 
                 // Logical groups of the closing conditions.
-                _closingLogicGroups = new List<string>();
+                closingLogicGroups = new List<string>();
                 for (int slot = Strategy.CloseSlot + 1; slot < Strategy.Slots; slot++)
                 {
                     string group = Strategy.Slot[slot].LogicalGroup;
-                    if (!_closingLogicGroups.Contains(group) && group != "all")
-                        _closingLogicGroups.Add(group); // Adds all groups except "all"
+                    if (!closingLogicGroups.Contains(group) && group != "all")
+                        closingLogicGroups.Add(group); // Adds all groups except "all"
                 }
 
-                if (_closingLogicGroups.Count == 0)
-                    _closingLogicGroups.Add("all"); // If all the slots are in "all" group, adds "all" to the list.
+                if (closingLogicGroups.Count == 0)
+                    closingLogicGroups.Add("all"); // If all the slots are in "all" group, adds "all" to the list.
             }
 
             // Search for N Bars
-            _hasNBarsExit = false;
-            _slotNBarsExit = -1;
+            hasNBarsExit = false;
+            slotNBarsExit = -1;
             foreach (IndicatorSlot slot in Strategy.Slot)
                 if (slot.IndicatorName == "N Bars Exit")
                 {
-                    _hasNBarsExit = true;
-                    _slotNBarsExit = slot.SlotNumber;
+                    hasNBarsExit = true;
+                    slotNBarsExit = slot.SlotNumber;
                     break;
                 }
 
             // Search for Enter Once indicator
-            _hasEnterOnce = false;
-            _slotEnterOnce = -1;
+            hasEnterOnce = false;
+            slotEnterOnce = -1;
             foreach (IndicatorSlot slot in Strategy.Slot)
                 if (slot.IndicatorName == "Enter Once")
                 {
-                    _hasEnterOnce = true;
-                    _slotEnterOnce = slot.SlotNumber;
+                    hasEnterOnce = true;
+                    slotEnterOnce = slot.SlotNumber;
                     break;
                 }
 
             // Martingale
-            _consecutiveLosses = 0;
+            consecutiveLosses = 0;
         }
 
         /// <summary>
-        /// Resets the variables at the end of the test.
+        ///     Resets the variables at the end of the test.
         /// </summary>
         private static void ResetStop()
         {
@@ -203,7 +207,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the position.
+        ///     Sets the position.
         /// </summary>
         private static void SetPosition(int bar, OrderDirection ordDir, double lots, double price, int ordNumb)
         {
@@ -213,21 +217,21 @@ namespace Forex_Strategy_Builder
             bool isAbsoluteSL = Strategy.UsePermanentSL && Strategy.PermanentSLType == PermanentProtectionType.Absolute;
             bool isAbsoluteTP = Strategy.UsePermanentTP && Strategy.PermanentTPType == PermanentProtectionType.Absolute;
 
-            if (_session[bar].Positions == 0 || _session[bar].Summary.PosLots < 0.0001)
+            if (session[bar].Positions == 0 || session[bar].Summary.PosLots < 0.0001)
             {
                 // Open new position when either we have not opened one or it has been closed
                 if (ordDir == OrderDirection.Buy)
                 {
                     // Opens a long position
-                    sessionPosition = _session[bar].Positions;
-                    position = _session[bar].Position[sessionPosition] = new Position();
+                    sessionPosition = session[bar].Positions;
+                    position = session[bar].Position[sessionPosition] = new Position();
 
                     position.Transaction = Transaction.Open;
                     position.PosDir = PosDirection.Long;
                     position.OpeningBar = bar;
                     position.FormOrdNumb = ordNumb;
                     position.FormOrdPrice = price;
-                    position.PosNumb = _totalPositions;
+                    position.PosNumb = totalPositions;
                     position.PosLots = lots;
                     position.AbsoluteSL = isAbsoluteSL ? price - Strategy.PermanentSL*InstrProperties.Point : 0;
                     position.AbsoluteTP = isAbsoluteTP ? price + Strategy.PermanentTP*InstrProperties.Point : 0;
@@ -240,7 +244,7 @@ namespace Forex_Strategy_Builder
                                         (InstrProperties.Spread + InstrProperties.Slippage)*InstrProperties.Point;
                     position.FloatingPL = lots*(Close[bar] - position.PosPrice)/InstrProperties.Point;
                     position.ProfitLoss = 0;
-                    position.Balance = PosFromNumb(_totalPositions - 1).Balance - position.Commission;
+                    position.Balance = PosFromNumb(totalPositions - 1).Balance - position.Commission;
                     position.Equity = position.Balance + position.FloatingPL;
 
                     position.MoneySpread = lots*InstrProperties.Spread*pipsToMoneyRate;
@@ -249,13 +253,13 @@ namespace Forex_Strategy_Builder
                     position.MoneyFloatingPL = lots*(Close[bar] - position.PosPrice)*InstrProperties.LotSize/
                                                AccountExchangeRate(price);
                     position.MoneyProfitLoss = 0;
-                    position.MoneyBalance = PosFromNumb(_totalPositions - 1).MoneyBalance - position.MoneyCommission;
+                    position.MoneyBalance = PosFromNumb(totalPositions - 1).MoneyBalance - position.MoneyCommission;
                     position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
-                    _posCoord[_totalPositions].Bar = bar;
-                    _posCoord[_totalPositions].Pos = sessionPosition;
-                    _session[bar].Positions++;
-                    _totalPositions++;
+                    posCoord[totalPositions].Bar = bar;
+                    posCoord[totalPositions].Pos = sessionPosition;
+                    session[bar].Positions++;
+                    totalPositions++;
 
                     return;
                 }
@@ -263,15 +267,15 @@ namespace Forex_Strategy_Builder
                 if (ordDir == OrderDirection.Sell)
                 {
                     // Opens a short position
-                    sessionPosition = _session[bar].Positions;
-                    position = _session[bar].Position[sessionPosition] = new Position();
+                    sessionPosition = session[bar].Positions;
+                    position = session[bar].Position[sessionPosition] = new Position();
 
                     position.Transaction = Transaction.Open;
                     position.PosDir = PosDirection.Short;
                     position.OpeningBar = bar;
                     position.FormOrdNumb = ordNumb;
                     position.FormOrdPrice = price;
-                    position.PosNumb = _totalPositions;
+                    position.PosNumb = totalPositions;
                     position.PosLots = lots;
                     position.AbsoluteSL = isAbsoluteSL ? price + Strategy.PermanentSL*InstrProperties.Point : 0;
                     position.AbsoluteTP = isAbsoluteTP ? price - Strategy.PermanentTP*InstrProperties.Point : 0;
@@ -284,7 +288,7 @@ namespace Forex_Strategy_Builder
                                         (InstrProperties.Spread + InstrProperties.Slippage)*InstrProperties.Point;
                     position.FloatingPL = lots*(position.PosPrice - Close[bar])/InstrProperties.Point;
                     position.ProfitLoss = 0;
-                    position.Balance = PosFromNumb(_totalPositions - 1).Balance - position.Commission;
+                    position.Balance = PosFromNumb(totalPositions - 1).Balance - position.Commission;
                     position.Equity = position.Balance + position.FloatingPL;
 
                     position.MoneySpread = lots*InstrProperties.Spread*pipsToMoneyRate;
@@ -293,20 +297,20 @@ namespace Forex_Strategy_Builder
                     position.MoneyFloatingPL = lots*(position.PosPrice - Close[bar])*InstrProperties.LotSize/
                                                AccountExchangeRate(price);
                     position.MoneyProfitLoss = 0;
-                    position.MoneyBalance = PosFromNumb(_totalPositions - 1).MoneyBalance - position.MoneyCommission;
+                    position.MoneyBalance = PosFromNumb(totalPositions - 1).MoneyBalance - position.MoneyCommission;
                     position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
-                    _posCoord[_totalPositions].Bar = bar;
-                    _posCoord[_totalPositions].Pos = sessionPosition;
-                    _session[bar].Positions++;
-                    _totalPositions++;
+                    posCoord[totalPositions].Bar = bar;
+                    posCoord[totalPositions].Pos = sessionPosition;
+                    session[bar].Positions++;
+                    totalPositions++;
 
                     return;
                 }
             }
 
-            int sessionPosOld = _session[bar].Positions - 1;
-            Position positionOld = _session[bar].Position[sessionPosOld];
+            int sessionPosOld = session[bar].Positions - 1;
+            Position positionOld = session[bar].Position[sessionPosOld];
             PosDirection posDirOld = positionOld.PosDir;
             double lotsOld = positionOld.PosLots;
             double priceOld = positionOld.PosPrice;
@@ -319,9 +323,9 @@ namespace Forex_Strategy_Builder
             int openingBarOld = positionOld.OpeningBar;
 
             sessionPosition = sessionPosOld + 1;
-            position = _session[bar].Position[sessionPosition] = new Position();
+            position = session[bar].Position[sessionPosition] = new Position();
 
-            position.PosNumb = _totalPositions;
+            position.PosNumb = totalPositions;
             position.FormOrdPrice = price;
             position.FormOrdNumb = ordNumb;
             position.Balance = posBalanceOld;
@@ -329,10 +333,10 @@ namespace Forex_Strategy_Builder
             position.MoneyBalance = positionOld.MoneyBalance;
             position.MoneyEquity = positionOld.MoneyEquity;
 
-            _posCoord[_totalPositions].Bar = bar;
-            _posCoord[_totalPositions].Pos = sessionPosition;
-            _session[bar].Positions++;
-            _totalPositions++;
+            posCoord[totalPositions].Bar = bar;
+            posCoord[totalPositions].Pos = sessionPosition;
+            session[bar].Positions++;
+            totalPositions++;
 
             // Closing of a long position
             if (posDirOld == PosDirection.Long && ordDir == OrderDirection.Sell && Math.Abs(lotsOld - lots) < 0.001)
@@ -356,11 +360,12 @@ namespace Forex_Strategy_Builder
                 position.MoneyCommission = CommissionInMoney(lots, price, true);
                 position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
                 position.MoneyFloatingPL = 0;
-                position.MoneyProfitLoss = lots*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) - position.MoneySlippage;
+                position.MoneyProfitLoss = lots*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) -
+                                           position.MoneySlippage;
                 position.MoneyBalance += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance;
 
-                _consecutiveLosses = position.ProfitLoss < 0 ? _consecutiveLosses + 1 : 0;
+                consecutiveLosses = position.ProfitLoss < 0 ? consecutiveLosses + 1 : 0;
                 return;
             }
 
@@ -386,11 +391,12 @@ namespace Forex_Strategy_Builder
                 position.MoneyCommission = CommissionInMoney(lots, price, true);
                 position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
                 position.MoneyFloatingPL = 0;
-                position.MoneyProfitLoss = lots*(priceOld - price)*InstrProperties.LotSize/AccountExchangeRate(price) - position.MoneySlippage;
+                position.MoneyProfitLoss = lots*(priceOld - price)*InstrProperties.LotSize/AccountExchangeRate(price) -
+                                           position.MoneySlippage;
                 position.MoneyBalance += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance;
 
-                _consecutiveLosses = position.ProfitLoss < 0 ? _consecutiveLosses + 1 : 0;
+                consecutiveLosses = position.ProfitLoss < 0 ? consecutiveLosses + 1 : 0;
                 return;
             }
 
@@ -408,7 +414,10 @@ namespace Forex_Strategy_Builder
                 position.Spread = lots*InstrProperties.Spread;
                 position.Commission = Commission(lots, price, false);
                 position.Slippage = lots*InstrProperties.Slippage;
-                position.PosPrice = (lotsOld*priceOld + lots*(price + (InstrProperties.Spread + InstrProperties.Slippage)*InstrProperties.Point))/(lotsOld + lots);
+                position.PosPrice = (lotsOld*priceOld +
+                                     lots*
+                                     (price + (InstrProperties.Spread + InstrProperties.Slippage)*InstrProperties.Point))/
+                                    (lotsOld + lots);
                 position.FloatingPL = (lotsOld + lots)*(Close[bar] - position.PosPrice)/InstrProperties.Point;
                 position.ProfitLoss = 0;
                 position.Balance -= position.Commission;
@@ -417,7 +426,8 @@ namespace Forex_Strategy_Builder
                 position.MoneySpread = lots*InstrProperties.Spread*pipsToMoneyRate;
                 position.MoneyCommission = CommissionInMoney(lots, price, false);
                 position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
-                position.MoneyFloatingPL = (lotsOld + lots)*(Close[bar] - position.PosPrice)*InstrProperties.LotSize/AccountExchangeRate(price);
+                position.MoneyFloatingPL = (lotsOld + lots)*(Close[bar] - position.PosPrice)*InstrProperties.LotSize/
+                                           AccountExchangeRate(price);
                 position.MoneyProfitLoss = 0;
                 position.MoneyBalance -= position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
@@ -438,7 +448,10 @@ namespace Forex_Strategy_Builder
                 position.Spread = lots*InstrProperties.Spread;
                 position.Commission = Commission(lots, price, false);
                 position.Slippage = lots*InstrProperties.Slippage;
-                position.PosPrice = (lotsOld*priceOld + lots*(price - (InstrProperties.Spread + InstrProperties.Slippage)*InstrProperties.Point))/(lotsOld + lots);
+                position.PosPrice = (lotsOld*priceOld +
+                                     lots*
+                                     (price - (InstrProperties.Spread + InstrProperties.Slippage)*InstrProperties.Point))/
+                                    (lotsOld + lots);
                 position.FloatingPL = (lotsOld + lots)*(position.PosPrice - Close[bar])/InstrProperties.Point;
                 position.ProfitLoss = 0;
                 position.Balance -= position.Commission;
@@ -447,7 +460,8 @@ namespace Forex_Strategy_Builder
                 position.MoneySpread = lots*InstrProperties.Spread*pipsToMoneyRate;
                 position.MoneyCommission = CommissionInMoney(lots, price, false);
                 position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
-                position.MoneyFloatingPL = (lotsOld + lots)*(position.PosPrice - Close[bar])*InstrProperties.LotSize/AccountExchangeRate(price);
+                position.MoneyFloatingPL = (lotsOld + lots)*(position.PosPrice - Close[bar])*InstrProperties.LotSize/
+                                           AccountExchangeRate(price);
                 position.MoneyProfitLoss = 0;
                 position.MoneyBalance -= position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
@@ -475,12 +489,14 @@ namespace Forex_Strategy_Builder
 
                 position.MoneyCommission = CommissionInMoney(lots, price, true);
                 position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
-                position.MoneyFloatingPL = (lotsOld - lots)*(Close[bar] - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price);
-                position.MoneyProfitLoss = lots*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) - position.MoneySlippage;
+                position.MoneyFloatingPL = (lotsOld - lots)*(Close[bar] - priceOld)*InstrProperties.LotSize/
+                                           AccountExchangeRate(price);
+                position.MoneyProfitLoss = lots*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) -
+                                           position.MoneySlippage;
                 position.MoneyBalance += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
-                _consecutiveLosses = 0;
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -512,7 +528,7 @@ namespace Forex_Strategy_Builder
                 position.MoneyBalance += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
-                _consecutiveLosses = 0;
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -537,14 +553,17 @@ namespace Forex_Strategy_Builder
                 position.Equity = position.Balance + position.FloatingPL;
 
                 position.MoneySpread = (lots - lotsOld)*InstrProperties.Spread*pipsToMoneyRate;
-                position.MoneyCommission = CommissionInMoney(lotsOld, price, true) + CommissionInMoney(lots - lotsOld, price, false);
+                position.MoneyCommission = CommissionInMoney(lotsOld, price, true) +
+                                           CommissionInMoney(lots - lotsOld, price, false);
                 position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
-                position.MoneyFloatingPL = (lots - lotsOld)*(position.PosPrice - Close[bar])*InstrProperties.LotSize/AccountExchangeRate(price);
-                position.MoneyProfitLoss = lotsOld*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) - lotsOld*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneyFloatingPL = (lots - lotsOld)*(position.PosPrice - Close[bar])*InstrProperties.LotSize/
+                                           AccountExchangeRate(price);
+                position.MoneyProfitLoss = lotsOld*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) -
+                                           lotsOld*InstrProperties.Slippage*pipsToMoneyRate;
                 position.MoneyBalance += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
-                _consecutiveLosses = 0;
+                consecutiveLosses = 0;
                 return;
             }
 
@@ -579,125 +598,125 @@ namespace Forex_Strategy_Builder
                 position.MoneyBalance += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
-                _consecutiveLosses = 0;
+                consecutiveLosses = 0;
             }
         }
 
         /// <summary>
-        /// Checks all orders in the current bar and cancels the invalid ones.
+        ///     Checks all orders in the current bar and cancels the invalid ones.
         /// </summary>
         private static void CancelInvalidOrders(int bar)
         {
             // Cancelling the EOP orders
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
-                if (_session[bar].Order[ord].OrdStatus == OrderStatus.Confirmed)
-                    _session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
+            for (int ord = 0; ord < session[bar].Orders; ord++)
+                if (session[bar].Order[ord].OrdStatus == OrderStatus.Confirmed)
+                    session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
 
             // Cancelling the invalid IF orders
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
-                if (_session[bar].Order[ord].OrdStatus == OrderStatus.Confirmed &&
-                    _session[bar].Order[ord].OrdCond == OrderCondition.If &&
-                    OrdFromNumb(_session[bar].Order[ord].OrdIF).OrdStatus != OrderStatus.Executed)
-                    _session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
+            for (int ord = 0; ord < session[bar].Orders; ord++)
+                if (session[bar].Order[ord].OrdStatus == OrderStatus.Confirmed &&
+                    session[bar].Order[ord].OrdCond == OrderCondition.If &&
+                    OrdFromNumb(session[bar].Order[ord].OrdIf).OrdStatus != OrderStatus.Executed)
+                    session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
         }
 
         /// <summary>
-        /// Cancel all no executed entry orders
+        ///     Cancel all no executed entry orders
         /// </summary>
         private static void CancelNoexecutedEntryOrders(int bar)
         {
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                if (_session[bar].Order[ord].OrdSender == OrderSender.Open &&
-                    _session[bar].Order[ord].OrdStatus != OrderStatus.Executed)
+                if (session[bar].Order[ord].OrdSender == OrderSender.Open &&
+                    session[bar].Order[ord].OrdStatus != OrderStatus.Executed)
                 {
-                    _session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
+                    session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
                 }
             }
         }
 
         /// <summary>
-        /// Cancel all no executed exit orders
+        ///     Cancel all no executed exit orders
         /// </summary>
         private static void CancelNoexecutedExitOrders(int bar)
         {
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                if (_session[bar].Order[ord].OrdSender == OrderSender.Close &&
-                    _session[bar].Order[ord].OrdStatus != OrderStatus.Executed)
+                if (session[bar].Order[ord].OrdSender == OrderSender.Close &&
+                    session[bar].Order[ord].OrdStatus != OrderStatus.Executed)
                 {
-                    _session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
+                    session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
                 }
             }
         }
 
         /// <summary>
-        /// Executes an entry at the beginning of the bar
+        ///     Executes an entry at the beginning of the bar
         /// </summary>
         private static void ExecuteEntryAtOpeningPrice(int bar)
         {
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                if (_session[bar].Order[ord].OrdSender == OrderSender.Open)
+                if (session[bar].Order[ord].OrdSender == OrderSender.Open)
                 {
-                    ExecOrd(bar, _session[bar].Order[ord], Open[bar], BacktestEval.Correct);
+                    ExecOrd(bar, session[bar].Order[ord], Open[bar], BacktestEval.Correct);
                 }
             }
         }
 
         /// <summary>
-        /// Executes an entry at the closing of the bar
+        ///     Executes an entry at the closing of the bar
         /// </summary>
         private static void ExecuteEntryAtClosingPrice(int bar)
         {
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                if (_session[bar].Order[ord].OrdSender == OrderSender.Open)
+                if (session[bar].Order[ord].OrdSender == OrderSender.Open)
                 {
-                    ExecOrd(bar, _session[bar].Order[ord], Close[bar], BacktestEval.Correct);
+                    ExecOrd(bar, session[bar].Order[ord], Close[bar], BacktestEval.Correct);
                 }
             }
         }
 
         /// <summary>
-        /// Executes an exit at the closing of the bar
+        ///     Executes an exit at the closing of the bar
         /// </summary>
         private static void ExecuteExitAtClosingPrice(int bar)
         {
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                if (_session[bar].Order[ord].OrdSender == OrderSender.Close && CheckOrd(bar, ord))
+                if (session[bar].Order[ord].OrdSender == OrderSender.Close && CheckOrd(bar, ord))
                 {
-                    ExecOrd(bar, _session[bar].Order[ord], Close[bar], BacktestEval.Correct);
+                    ExecOrd(bar, session[bar].Order[ord], Close[bar], BacktestEval.Correct);
                 }
             }
         }
 
         /// <summary>
-        /// Checks and perform actions in case of a Margin Call
+        ///     Checks and perform actions in case of a Margin Call
         /// </summary>
         private static void MarginCallCheckAtBarClosing(int bar)
         {
             if (!Configs.TradeUntilMarginCall ||
-                _session[bar].Summary.FreeMargin >= 0)
+                session[bar].Summary.FreeMargin >= 0)
                 return;
 
-            if (_session[bar].Summary.PosDir == PosDirection.None ||
-                _session[bar].Summary.PosDir == PosDirection.Closed)
+            if (session[bar].Summary.PosDir == PosDirection.None ||
+                session[bar].Summary.PosDir == PosDirection.Closed)
                 return;
 
             CancelNoexecutedExitOrders(bar);
 
             const int ifOrd = 0;
-            int toPos = _session[bar].Summary.PosNumb;
-            double lots = _session[bar].Summary.PosLots;
+            int toPos = session[bar].Summary.PosNumb;
+            double lots = session[bar].Summary.PosLots;
             string note = Language.T("Close due to a Margin Call");
 
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
             {
                 OrdSellMarket(bar, ifOrd, toPos, lots, Close[bar], OrderSender.Close, OrderOrigin.MarginCall, note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short)
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
             {
                 OrdBuyMarket(bar, ifOrd, toPos, lots, Close[bar], OrderSender.Close, OrderOrigin.MarginCall, note);
             }
@@ -710,29 +729,29 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Checks the order
+        ///     Checks the order
         /// </summary>
         /// <returns>True if the order is valid.</returns>
         private static bool CheckOrd(int bar, int iOrd)
         {
-            if (_session[bar].Order[iOrd].OrdStatus != OrderStatus.Confirmed)
+            if (session[bar].Order[iOrd].OrdStatus != OrderStatus.Confirmed)
                 return false;
-            if (_session[bar].Order[iOrd].OrdCond != OrderCondition.If)
+            if (session[bar].Order[iOrd].OrdCond != OrderCondition.If)
                 return true;
-            if (OrdFromNumb(_session[bar].Order[iOrd].OrdIF).OrdStatus == OrderStatus.Executed)
+            if (OrdFromNumb(session[bar].Order[iOrd].OrdIf).OrdStatus == OrderStatus.Executed)
                 return true;
             return false;
         }
 
         /// <summary>
-        /// Tunes and Executes an order
+        ///     Tunes and Executes an order
         /// </summary>
         private static void ExecOrd(int bar, Order order, double price, BacktestEval testEval)
         {
-            Position position = _session[bar].Summary;
+            Position position = session[bar].Summary;
             PosDirection posDir = position.PosDir;
             OrderDirection ordDir = order.OrdDir;
-            WayPointType wayPointType = WayPointType.None;
+            var wayPointType = WayPointType.None;
 
             // Orders modification on a fly
             // Checks whether we are on the market
@@ -750,7 +769,7 @@ namespace Forex_Strategy_Builder
                         {
                             case SameDirSignalAction.Add:
                                 order.OrdLots = TradingSize(Strategy.AddingLots, bar);
-                                if (position.PosLots + TradingSize(Strategy.AddingLots, bar) <= _maximumLots)
+                                if (position.PosLots + TradingSize(Strategy.AddingLots, bar) <= maximumLots)
                                 {
                                     // Adding
                                     wayPointType = WayPointType.Add;
@@ -765,7 +784,7 @@ namespace Forex_Strategy_Builder
                                 break;
                             case SameDirSignalAction.Winner:
                                 order.OrdLots = TradingSize(Strategy.AddingLots, bar);
-                                if (position.PosLots + TradingSize(Strategy.AddingLots, bar) <= _maximumLots &&
+                                if (position.PosLots + TradingSize(Strategy.AddingLots, bar) <= maximumLots &&
                                     (position.PosDir == PosDirection.Long && position.PosPrice < order.OrdPrice ||
                                      position.PosDir == PosDirection.Short && position.PosPrice > order.OrdPrice))
                                 {
@@ -860,12 +879,12 @@ namespace Forex_Strategy_Builder
                 {
                     // Open a new position
                     double entryAmount = TradingSize(Strategy.EntryLots, bar);
-                    if (Strategy.UseMartingale && _consecutiveLosses > 0)
+                    if (Strategy.UseMartingale && consecutiveLosses > 0)
                     {
-                        entryAmount = entryAmount*Math.Pow(Strategy.MartingaleMultiplier, _consecutiveLosses);
+                        entryAmount = entryAmount*Math.Pow(Strategy.MartingaleMultiplier, consecutiveLosses);
                         entryAmount = NormalizeEntryLots(entryAmount);
                     }
-                    order.OrdLots = Math.Min(entryAmount, _maximumLots);
+                    order.OrdLots = Math.Min(entryAmount, maximumLots);
                     wayPointType = WayPointType.Entry;
                 }
                 else // if (order.OrdSender == OrderSender.Close)
@@ -877,26 +896,26 @@ namespace Forex_Strategy_Builder
             }
 
             // Enter Once can cancel an entry order
-            if (_hasEnterOnce && order.OrdSender == OrderSender.Open && order.OrdStatus == OrderStatus.Confirmed)
+            if (hasEnterOnce && order.OrdSender == OrderSender.Open && order.OrdStatus == OrderStatus.Confirmed)
             {
                 bool toCancel = false;
-                switch (Strategy.Slot[_slotEnterOnce].IndParam.ListParam[0].Text)
+                switch (Strategy.Slot[slotEnterOnce].IndParam.ListParam[0].Text)
                 {
                     case "Enter no more than once a bar":
-                        toCancel = Time[bar] == _lastEntryTime;
+                        toCancel = Time[bar] == lastEntryTime;
                         break;
                     case "Enter no more than once a day":
-                        toCancel = Time[bar].DayOfYear == _lastEntryTime.DayOfYear;
+                        toCancel = Time[bar].DayOfYear == lastEntryTime.DayOfYear;
                         break;
                     case "Enter no more than once a week":
                         int lastEntryWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(
-                            _lastEntryTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+                            lastEntryTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
                         int currentWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(
                             Time[bar], CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
                         toCancel = lastEntryWeek == currentWeek;
                         break;
                     case "Enter no more than once a month":
-                        toCancel = Time[bar].Month == _lastEntryTime.Month;
+                        toCancel = Time[bar].Month == lastEntryTime.Month;
                         break;
                 }
 
@@ -908,7 +927,7 @@ namespace Forex_Strategy_Builder
                     FindCancelExitOrder(bar, order); // Canceling of its exit order
                 }
                 else
-                    _lastEntryTime = Time[bar];
+                    lastEntryTime = Time[bar];
             }
 
             // Do not trade after Margin Call or after -1000000 Loss
@@ -935,38 +954,38 @@ namespace Forex_Strategy_Builder
                 switch (testEval)
                 {
                     case BacktestEval.Error:
-                        _session[bar].BacktestEval = BacktestEval.Error;
+                        session[bar].BacktestEval = BacktestEval.Error;
                         break;
                     case BacktestEval.None:
                         break;
                     case BacktestEval.Ambiguous:
-                        _session[bar].BacktestEval = BacktestEval.Ambiguous;
+                        session[bar].BacktestEval = BacktestEval.Ambiguous;
                         break;
                     case BacktestEval.Unknown:
-                        if (_session[bar].BacktestEval != BacktestEval.Ambiguous)
-                            _session[bar].BacktestEval = BacktestEval.Unknown;
+                        if (session[bar].BacktestEval != BacktestEval.Ambiguous)
+                            session[bar].BacktestEval = BacktestEval.Unknown;
                         break;
                     case BacktestEval.Correct:
-                        if (_session[bar].BacktestEval == BacktestEval.None)
-                            _session[bar].BacktestEval = BacktestEval.Correct;
+                        if (session[bar].BacktestEval == BacktestEval.None)
+                            session[bar].BacktestEval = BacktestEval.Correct;
                         break;
                 }
 
                 // If entry order closes or reverses the position the exit orders of the
                 // initial position have to be cancelled
                 if (order.OrdSender == OrderSender.Open &&
-                    (_session[bar].Summary.Transaction == Transaction.Close ||
-                     _session[bar].Summary.Transaction == Transaction.Reverse))
+                    (session[bar].Summary.Transaction == Transaction.Close ||
+                     session[bar].Summary.Transaction == Transaction.Reverse))
                 {
-                    int initialNumber = _session[bar].Position[_session[bar].Positions - 2].FormOrdNumb;
+                    int initialNumber = session[bar].Position[session[bar].Positions - 2].FormOrdNumb;
                     // If the position was opened during the current bar, we can find its exit order
                     bool isFound = false;
-                    for (int ord = 0; ord < _session[bar].Orders; ord++)
+                    for (int ord = 0; ord < session[bar].Orders; ord++)
                     {
-                        if (_session[bar].Order[ord].OrdIF == initialNumber &&
-                            _session[bar].Order[ord].OrdSender == OrderSender.Close)
+                        if (session[bar].Order[ord].OrdIf == initialNumber &&
+                            session[bar].Order[ord].OrdSender == OrderSender.Close)
                         {
-                            _session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
+                            session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
                             isFound = true;
                             break;
                         }
@@ -976,28 +995,28 @@ namespace Forex_Strategy_Builder
                     // so its exit order is not conditional
                     if (!isFound)
                     {
-                        for (int ord = 0; ord < _session[bar].Orders; ord++)
+                        for (int ord = 0; ord < session[bar].Orders; ord++)
                         {
-                            if (_session[bar].Order[ord].OrdSender == OrderSender.Close &&
-                                _session[bar].Order[ord].OrdIF == 0)
+                            if (session[bar].Order[ord].OrdSender == OrderSender.Close &&
+                                session[bar].Order[ord].OrdIf == 0)
                             {
-                                _session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
+                                session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
                                 break;
                             }
                         }
                     }
 
                     // Setting the exit order of the current position
-                    switch (_session[bar].Summary.Transaction)
+                    switch (session[bar].Summary.Transaction)
                     {
                         case Transaction.Close:
                             {
                                 // In case of closing we have to cancel the exit order
-                                int number = _session[bar].Summary.FormOrdNumb;
-                                for (int ord = 0; ord < _session[bar].Orders; ord++)
+                                int number = session[bar].Summary.FormOrdNumb;
+                                for (int ord = 0; ord < session[bar].Orders; ord++)
                                 {
-                                    if (_session[bar].Order[ord].OrdIF != number) continue;
-                                    _session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
+                                    if (session[bar].Order[ord].OrdIf != number) continue;
+                                    session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
                                     break;
                                 }
                             }
@@ -1005,11 +1024,11 @@ namespace Forex_Strategy_Builder
                         case Transaction.Reduce:
                             {
                                 // In case of reducing we have to change the direction of the exit order
-                                int number = _session[bar].Summary.FormOrdNumb;
-                                for (int ord = 0; ord < _session[bar].Orders; ord++)
+                                int number = session[bar].Summary.FormOrdNumb;
+                                for (int ord = 0; ord < session[bar].Orders; ord++)
                                 {
-                                    if (_session[bar].Order[ord].OrdIF != number) continue;
-                                    _session[bar].Order[ord].OrdDir = _session[bar].Summary.PosDir == PosDirection.Long 
+                                    if (session[bar].Order[ord].OrdIf != number) continue;
+                                    session[bar].Order[ord].OrdDir = session[bar].Summary.PosDir == PosDirection.Long
                                                                          ? OrderDirection.Sell
                                                                          : OrderDirection.Buy;
                                     break;
@@ -1020,39 +1039,39 @@ namespace Forex_Strategy_Builder
                 }
             }
 
-            _session[bar].SetWayPoint(price, wayPointType);
+            session[bar].SetWayPoint(price, wayPointType);
             if (order.OrdStatus == OrderStatus.Cancelled)
             {
-                _session[bar].WayPoint[_session[bar].WayPoints - 1].OrdNumb = order.OrdNumb;
+                session[bar].WayPoint[session[bar].WayPoints - 1].OrdNumb = order.OrdNumb;
             }
         }
 
         /// <summary>
-        /// Finds and cancels the exit order of an entry order
+        ///     Finds and cancels the exit order of an entry order
         /// </summary>
         private static void FindCancelExitOrder(int bar, Order order)
         {
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
-                if (_session[bar].Order[ord].OrdIF == order.OrdNumb)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
+                if (session[bar].Order[ord].OrdIf == order.OrdNumb)
                 {
-                    _session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
+                    session[bar].Order[ord].OrdStatus = OrderStatus.Cancelled;
                     break;
                 }
         }
 
         /// <summary>
-        /// Transfers the orders and positions from the previous bar.
+        ///     Transfers the orders and positions from the previous bar.
         /// </summary>
         private static void TransferFromPreviousBar(int bar)
         {
             // Check the previous bar for an open position
-            if (_session[bar - 1].Summary.PosDir == PosDirection.Long ||
-                _session[bar - 1].Summary.PosDir == PosDirection.Short)
+            if (session[bar - 1].Summary.PosDir == PosDirection.Long ||
+                session[bar - 1].Summary.PosDir == PosDirection.Short)
             {
                 // Yes, we have a position
                 // We copy the position from the previous bar
-                int sessionPosition = _session[bar].Positions;
-                Position position = _session[bar].Position[sessionPosition] = _session[bar - 1].Summary.Copy();
+                int sessionPosition = session[bar].Positions;
+                Position position = session[bar].Position[sessionPosition] = session[bar - 1].Summary.Copy();
 
                 // How many days we transfer the positions with
                 int days = Time[bar].DayOfYear - Time[bar - 1].DayOfYear;
@@ -1112,7 +1131,7 @@ namespace Forex_Strategy_Builder
                                                AccountExchangeRate(Close[bar]);
                 }
 
-                position.PosNumb = _totalPositions;
+                position.PosNumb = totalPositions;
                 position.Transaction = Transaction.Transfer;
                 position.RequiredMargin = RequiredMargin(position.PosLots, bar);
                 position.Spread = 0;
@@ -1126,14 +1145,14 @@ namespace Forex_Strategy_Builder
                 position.MoneyProfitLoss = 0;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
-                _posCoord[_totalPositions].Bar = bar;
-                _posCoord[_totalPositions].Pos = sessionPosition;
-                _session[bar].Positions++;
-                _totalPositions++;
+                posCoord[totalPositions].Bar = bar;
+                posCoord[totalPositions].Pos = sessionPosition;
+                session[bar].Positions++;
+                totalPositions++;
 
                 // Saves the Trailing Stop price
                 if (Strategy.Slot[Strategy.CloseSlot].IndicatorName == "Trailing Stop" &&
-                    _session[bar - 1].Summary.Transaction != Transaction.Transfer)
+                    session[bar - 1].Summary.Transaction != Transaction.Transfer)
                 {
                     double deltaStop = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*
                                        InstrProperties.Point;
@@ -1144,7 +1163,7 @@ namespace Forex_Strategy_Builder
 
                 // Saves the Trailing Stop Limit price
                 if (Strategy.Slot[Strategy.CloseSlot].IndicatorName == "Trailing Stop Limit" &&
-                    _session[bar - 1].Summary.Transaction != Transaction.Transfer)
+                    session[bar - 1].Summary.Transaction != Transaction.Transfer)
                 {
                     double deltaStop = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*
                                        InstrProperties.Point;
@@ -1155,7 +1174,7 @@ namespace Forex_Strategy_Builder
 
                 // Saves the ATR Stop price
                 if (Strategy.Slot[Strategy.CloseSlot].IndicatorName == "ATR Stop" &&
-                    _session[bar - 1].Summary.Transaction != Transaction.Transfer)
+                    session[bar - 1].Summary.Transaction != Transaction.Transfer)
                 {
                     double deltaStop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar - 1];
                     double stop = position.FormOrdPrice +
@@ -1165,7 +1184,7 @@ namespace Forex_Strategy_Builder
 
                 // Saves the Account Percent Stop price
                 if (Strategy.Slot[Strategy.CloseSlot].IndicatorName == "Account Percent Stop" &&
-                    _session[bar - 1].Summary.Transaction != Transaction.Transfer)
+                    session[bar - 1].Summary.Transaction != Transaction.Transfer)
                 {
                     double deltaMoney = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*
                                         MoneyBalance(bar - 1)/(100*position.PosLots);
@@ -1178,26 +1197,26 @@ namespace Forex_Strategy_Builder
             else
             {
                 // When there is no position transfer the old balance and equity
-                _session[bar].Summary.Balance = _session[bar - 1].Summary.Balance;
-                _session[bar].Summary.Equity = _session[bar - 1].Summary.Equity;
-                _session[bar].Summary.MoneyBalance = _session[bar - 1].Summary.MoneyBalance;
-                _session[bar].Summary.MoneyEquity = _session[bar - 1].Summary.MoneyEquity;
+                session[bar].Summary.Balance = session[bar - 1].Summary.Balance;
+                session[bar].Summary.Equity = session[bar - 1].Summary.Equity;
+                session[bar].Summary.MoneyBalance = session[bar - 1].Summary.MoneyBalance;
+                session[bar].Summary.MoneyEquity = session[bar - 1].Summary.MoneyEquity;
             }
 
             // Transfer all confirmed orders
-            for (int iOrd = 0; iOrd < _session[bar - 1].Orders; iOrd++)
-                if (_session[bar - 1].Order[iOrd].OrdStatus == OrderStatus.Confirmed)
+            for (int iOrd = 0; iOrd < session[bar - 1].Orders; iOrd++)
+                if (session[bar - 1].Order[iOrd].OrdStatus == OrderStatus.Confirmed)
                 {
-                    int iSessionOrder = _session[bar].Orders;
-                    Order order = _session[bar].Order[iSessionOrder] = _session[bar - 1].Order[iOrd].Copy();
-                    _ordCoord[order.OrdNumb].Bar = bar;
-                    _ordCoord[order.OrdNumb].Ord = iSessionOrder;
-                    _session[bar].Orders++;
+                    int iSessionOrder = session[bar].Orders;
+                    Order order = session[bar].Order[iSessionOrder] = session[bar - 1].Order[iOrd].Copy();
+                    ordCoord[order.OrdNumb].Bar = bar;
+                    ordCoord[order.OrdNumb].Ord = iSessionOrder;
+                    session[bar].Orders++;
                 }
         }
 
         /// <summary>
-        /// Sets an entry order
+        ///     Sets an entry order
         /// </summary>
         private static void SetEntryOrders(int bar, double price, PosDirection posDir, double lots)
         {
@@ -1210,7 +1229,7 @@ namespace Forex_Strategy_Builder
 
             if (posDir == PosDirection.Long)
             {
-                if (_openStrPriceType == StrategyPriceType.Open || _openStrPriceType == StrategyPriceType.Close)
+                if (openStrPriceType == StrategyPriceType.Open || openStrPriceType == StrategyPriceType.Close)
                     OrdBuyMarket(bar, ifOrder, toPos, lots, price, OrderSender.Open, OrderOrigin.Strategy, note);
                 else if (price > Open[bar])
                     OrdBuyStop(bar, ifOrder, toPos, lots, price, OrderSender.Open, OrderOrigin.Strategy, note);
@@ -1221,7 +1240,7 @@ namespace Forex_Strategy_Builder
             }
             else
             {
-                if (_openStrPriceType == StrategyPriceType.Open || _openStrPriceType == StrategyPriceType.Close)
+                if (openStrPriceType == StrategyPriceType.Open || openStrPriceType == StrategyPriceType.Close)
                     OrdSellMarket(bar, ifOrder, toPos, lots, price, OrderSender.Open, OrderOrigin.Strategy, note);
                 else if (price < Open[bar])
                     OrdSellStop(bar, ifOrder, toPos, lots, price, OrderSender.Open, OrderOrigin.Strategy, note);
@@ -1233,48 +1252,52 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets an exit order
+        ///     Sets an exit order
         /// </summary>
         private static void SetExitOrders(int bar, double priceStopLong, double priceStopShort)
         {
             // When there is a Long Position we send a Stop Order to it
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
             {
-                double lots = _session[bar].Summary.PosLots;
+                double lots = session[bar].Summary.PosLots;
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
+                int toPos = session[bar].Summary.PosNumb;
                 string note = Language.T("Exit Order to position") + " " + (toPos + 1);
 
-                if (_closeStrPriceType == StrategyPriceType.Close)
-                    OrdSellMarket(bar, ifOrder, toPos, lots, priceStopLong, OrderSender.Close, OrderOrigin.Strategy, note);
+                if (closeStrPriceType == StrategyPriceType.Close)
+                    OrdSellMarket(bar, ifOrder, toPos, lots, priceStopLong, OrderSender.Close, OrderOrigin.Strategy,
+                                  note);
                     // The Stop Price can't be higher from the bar's opening price
                 else if (priceStopLong < Open[bar])
                     OrdSellStop(bar, ifOrder, toPos, lots, priceStopLong, OrderSender.Close, OrderOrigin.Strategy, note);
                 else
-                    OrdSellMarket(bar, ifOrder, toPos, lots, priceStopLong, OrderSender.Close, OrderOrigin.Strategy, note);
+                    OrdSellMarket(bar, ifOrder, toPos, lots, priceStopLong, OrderSender.Close, OrderOrigin.Strategy,
+                                  note);
             }
 
             // When there is a Short Position we send a Stop Order to it
-            if (_session[bar].Summary.PosDir == PosDirection.Short)
+            if (session[bar].Summary.PosDir == PosDirection.Short)
             {
-                double lots = _session[bar].Summary.PosLots;
+                double lots = session[bar].Summary.PosLots;
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
+                int toPos = session[bar].Summary.PosNumb;
                 string note = Language.T("Exit Order to position") + " " + (toPos + 1);
 
-                if (_closeStrPriceType == StrategyPriceType.Close)
-                    OrdBuyMarket(bar, ifOrder, toPos, lots, priceStopShort, OrderSender.Close, OrderOrigin.Strategy, note);
+                if (closeStrPriceType == StrategyPriceType.Close)
+                    OrdBuyMarket(bar, ifOrder, toPos, lots, priceStopShort, OrderSender.Close, OrderOrigin.Strategy,
+                                 note);
                     // The Stop Price can't be lower from the bar's opening price
                 else if (priceStopShort > Open[bar])
                     OrdBuyStop(bar, ifOrder, toPos, lots, priceStopShort, OrderSender.Close, OrderOrigin.Strategy, note);
                 else
-                    OrdBuyMarket(bar, ifOrder, toPos, lots, priceStopShort, OrderSender.Close, OrderOrigin.Strategy, note);
+                    OrdBuyMarket(bar, ifOrder, toPos, lots, priceStopShort, OrderSender.Close, OrderOrigin.Strategy,
+                                 note);
             }
 
             // We send IfOrder Order Stop for each Entry Order
-            for (int iOrd = 0; iOrd < _session[bar].Orders; iOrd++)
+            for (int iOrd = 0; iOrd < session[bar].Orders; iOrd++)
             {
-                Order entryOrder = _session[bar].Order[iOrd];
+                Order entryOrder = session[bar].Order[iOrd];
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
                     int ifOrder = entryOrder.OrdNumb;
@@ -1283,21 +1306,23 @@ namespace Forex_Strategy_Builder
                     string note = Language.T("Exit Order to order") + " " + (ifOrder + 1);
 
                     if (entryOrder.OrdDir == OrderDirection.Buy)
-                        OrdSellStop(bar, ifOrder, toPos, lots, priceStopLong, OrderSender.Close, OrderOrigin.Strategy, note);
+                        OrdSellStop(bar, ifOrder, toPos, lots, priceStopLong, OrderSender.Close, OrderOrigin.Strategy,
+                                    note);
                     else
-                        OrdBuyStop(bar, ifOrder, toPos, lots, priceStopShort, OrderSender.Close, OrderOrigin.Strategy, note);
+                        OrdBuyStop(bar, ifOrder, toPos, lots, priceStopShort, OrderSender.Close, OrderOrigin.Strategy,
+                                   note);
                 }
             }
         }
 
         /// <summary>
-        /// Checks the slots for a permission to open a position.
-        /// If there are no filters that forbid it, sets the entry orders.
+        ///     Checks the slots for a permission to open a position.
+        ///     If there are no filters that forbid it, sets the entry orders.
         /// </summary>
         private static void AnalyseEntry(int bar)
         {
             // Do not send entry order when we are not on time
-            if (_openTimeExec == ExecutionTime.AtBarOpening &&
+            if (openTimeExec == ExecutionTime.AtBarOpening &&
                 Strategy.Slot[Strategy.OpenSlot].Component[0].Value[bar] < 0.5)
                 return;
 
@@ -1322,7 +1347,7 @@ namespace Forex_Strategy_Builder
 
             if (Configs.UseLogicalGroups)
             {
-                foreach (string group in _openingLogicGroups)
+                foreach (string group in openingLogicGroups)
                 {
                     bool groupOpenLong = canOpenLong;
                     bool groupOpenShort = canOpenShort;
@@ -1330,31 +1355,31 @@ namespace Forex_Strategy_Builder
                     EntryLogicConditions(bar, group, openLongPrice, openShortPrice, ref groupOpenLong,
                                          ref groupOpenShort);
 
-                    _groupsAllowLong[group] = groupOpenLong;
-                    _groupsAllowShort[group] = groupOpenShort;
+                    groupsAllowLong[group] = groupOpenLong;
+                    groupsAllowShort[group] = groupOpenShort;
                 }
 
                 bool groupLongEntry = false;
-                foreach (var groupLong in _groupsAllowLong)
-                    if ((_groupsAllowLong.Count > 1 && groupLong.Key != "All") || _groupsAllowLong.Count == 1)
+                foreach (var groupLong in groupsAllowLong)
+                    if ((groupsAllowLong.Count > 1 && groupLong.Key != "All") || groupsAllowLong.Count == 1)
                         groupLongEntry = groupLongEntry || groupLong.Value;
 
                 bool groupShortEntry = false;
-                foreach (var groupShort in _groupsAllowShort)
-                    if ((_groupsAllowShort.Count > 1 && groupShort.Key != "All") || _groupsAllowShort.Count == 1)
+                foreach (var groupShort in groupsAllowShort)
+                    if ((groupsAllowShort.Count > 1 && groupShort.Key != "All") || groupsAllowShort.Count == 1)
                         groupShortEntry = groupShortEntry || groupShort.Value;
 
-                canOpenLong = canOpenLong && groupLongEntry && _groupsAllowLong["All"];
-                canOpenShort = canOpenShort && groupShortEntry && _groupsAllowShort["All"];
+                canOpenLong = canOpenLong && groupLongEntry && groupsAllowLong["All"];
+                canOpenShort = canOpenShort && groupShortEntry && groupsAllowShort["All"];
             }
             else
             {
                 EntryLogicConditions(bar, "A", openLongPrice, openShortPrice, ref canOpenLong, ref canOpenShort);
             }
 
-            if (canOpenLong && canOpenShort && Math.Abs(openLongPrice - openShortPrice) < _micron)
+            if (canOpenLong && canOpenShort && Math.Abs(openLongPrice - openShortPrice) < micron)
             {
-                _session[bar].BacktestEval = BacktestEval.Ambiguous;
+                session[bar].BacktestEval = BacktestEval.Ambiguous;
             }
             else
             {
@@ -1366,9 +1391,10 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Checks if the opening logic conditions allow long or short entry.
+        ///     Checks if the opening logic conditions allow long or short entry.
         /// </summary>
-        private static void EntryLogicConditions(int bar, string group, double buyPrice, double sellPrice, ref bool canOpenLong, ref bool canOpenShort)
+        private static void EntryLogicConditions(int bar, string group, double buyPrice, double sellPrice,
+                                                 ref bool canOpenLong, ref bool canOpenShort)
         {
             for (int slot = 0; slot < Strategy.CloseSlot + 1; slot++)
             {
@@ -1390,24 +1416,24 @@ namespace Forex_Strategy_Builder
                     switch (component.PosPriceDependence)
                     {
                         case PositionPriceDependence.PriceBuyHigher:
-                            canOpenLong = canOpenLong && buyPrice > indVal + _micron;
+                            canOpenLong = canOpenLong && buyPrice > indVal + micron;
                             break;
                         case PositionPriceDependence.PriceBuyLower:
-                            canOpenLong = canOpenLong && buyPrice < indVal - _micron;
+                            canOpenLong = canOpenLong && buyPrice < indVal - micron;
                             break;
                         case PositionPriceDependence.PriceSellHigher:
-                            canOpenShort = canOpenShort && sellPrice > indVal + _micron;
+                            canOpenShort = canOpenShort && sellPrice > indVal + micron;
                             break;
                         case PositionPriceDependence.PriceSellLower:
-                            canOpenShort = canOpenShort && sellPrice < indVal - _micron;
+                            canOpenShort = canOpenShort && sellPrice < indVal - micron;
                             break;
                         case PositionPriceDependence.BuyHigherSellLower:
-                            canOpenLong = canOpenLong && buyPrice > indVal + _micron;
-                            canOpenShort = canOpenShort && sellPrice < indVal - _micron;
+                            canOpenLong = canOpenLong && buyPrice > indVal + micron;
+                            canOpenShort = canOpenShort && sellPrice < indVal - micron;
                             break;
                         case PositionPriceDependence.BuyLowerSelHigher:
-                            canOpenLong = canOpenLong && buyPrice < indVal - _micron;
-                            canOpenShort = canOpenShort && sellPrice > indVal + _micron;
+                            canOpenLong = canOpenLong && buyPrice < indVal - micron;
+                            canOpenShort = canOpenShort && sellPrice > indVal + micron;
                             break;
                     }
                 }
@@ -1415,11 +1441,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the close orders for the indicated bar.
+        ///     Sets the close orders for the indicated bar.
         /// </summary>
         private static void AnalyseExit(int bar)
         {
-            if (_closeTimeExec == ExecutionTime.AtBarClosing &&
+            if (closeTimeExec == ExecutionTime.AtBarClosing &&
                 Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar] < 0.001)
                 return;
 
@@ -1451,20 +1477,20 @@ namespace Forex_Strategy_Builder
             #region Indicator "N Bars Exit"  // KROG 
 
             // check have N Bars exit close filter
-            if (_hasNBarsExit)
+            if (hasNBarsExit)
             {
                 // check there is a position open
-                if (_session[bar].Summary.PosDir == PosDirection.Long ||
-                    _session[bar].Summary.PosDir == PosDirection.Short)
+                if (session[bar].Summary.PosDir == PosDirection.Long ||
+                    session[bar].Summary.PosDir == PosDirection.Short)
                 {
-                    var nExit = (int) Strategy.Slot[_slotNBarsExit].IndParam.NumParam[0].Value;
-                    int posDuration = bar - _session[bar].Summary.OpeningBar;
+                    var nExit = (int) Strategy.Slot[slotNBarsExit].IndParam.NumParam[0].Value;
+                    int posDuration = bar - session[bar].Summary.OpeningBar;
 
                     // check if N Bars should close; else set Component Value to 0
-                    Strategy.Slot[_slotNBarsExit].Component[0].Value[bar] = posDuration >= nExit ? 1 : 0;
+                    Strategy.Slot[slotNBarsExit].Component[0].Value[bar] = posDuration >= nExit ? 1 : 0;
                 }
                 else // if no position, set to zero
-                    Strategy.Slot[_slotNBarsExit].Component[0].Value[bar] = 0;
+                    Strategy.Slot[slotNBarsExit].Component[0].Value[bar] = 0;
             }
 
             #endregion
@@ -1498,8 +1524,8 @@ namespace Forex_Strategy_Builder
             }
 
             // If we do not have a position we do not have anything to close.
-            if (_session[bar].Summary.PosDir != PosDirection.Long &&
-                _session[bar].Summary.PosDir != PosDirection.Short)
+            if (session[bar].Summary.PosDir != PosDirection.Long &&
+                session[bar].Summary.PosDir != PosDirection.Short)
                 return;
 
             if (Configs.UseLogicalGroups)
@@ -1526,8 +1552,10 @@ namespace Forex_Strategy_Builder
                     IndComponentType compDataType = Strategy.Slot[slot].Component[comp].DataType;
 
                     if (compDataType == IndComponentType.ForceClose ||
-                        compDataType == IndComponentType.ForceCloseLong && _session[bar].Summary.PosDir == PosDirection.Long ||
-                        compDataType == IndComponentType.ForceCloseShort && _session[bar].Summary.PosDir == PosDirection.Short)
+                        compDataType == IndComponentType.ForceCloseLong &&
+                        session[bar].Summary.PosDir == PosDirection.Long ||
+                        compDataType == IndComponentType.ForceCloseShort &&
+                        session[bar].Summary.PosDir == PosDirection.Short)
                     {
                         SetExitOrders(bar, priceExitLong, priceExitShort);
                         stopSearching = true;
@@ -1538,7 +1566,7 @@ namespace Forex_Strategy_Builder
 
         private static void AnalyseExitOrdersLogicalGroups(int bar, double priceExitShort, double priceExitLong)
         {
-            foreach (string group in _closingLogicGroups)
+            foreach (string group in closingLogicGroups)
             {
                 bool isGroupAllowExit = false;
                 for (int slot = Strategy.CloseSlot + 1; slot < Strategy.Slots; slot++)
@@ -1553,8 +1581,10 @@ namespace Forex_Strategy_Builder
                             continue;
 
                         if (component.DataType == IndComponentType.ForceClose ||
-                            component.DataType == IndComponentType.ForceCloseLong && _session[bar].Summary.PosDir == PosDirection.Long ||
-                            component.DataType == IndComponentType.ForceCloseShort && _session[bar].Summary.PosDir == PosDirection.Short)
+                            component.DataType == IndComponentType.ForceCloseLong &&
+                            session[bar].Summary.PosDir == PosDirection.Long ||
+                            component.DataType == IndComponentType.ForceCloseShort &&
+                            session[bar].Summary.PosDir == PosDirection.Short)
                         {
                             isSlotAllowExit = true;
                             break;
@@ -1580,12 +1610,12 @@ namespace Forex_Strategy_Builder
             double deltaStop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar];
 
             // If there is a transferred position, sends a Stop Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                _session[bar].Summary.Transaction == Transaction.Transfer)
+            if (session[bar].Summary.PosDir == PosDirection.Long &&
+                session[bar].Summary.Transaction == Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.Slot[Strategy.CloseSlot].Component[1].Value[bar - 1];
 
                 if (stop > Open[bar])
@@ -1595,12 +1625,12 @@ namespace Forex_Strategy_Builder
                 OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.Strategy, note);
                 Strategy.Slot[Strategy.CloseSlot].Component[1].Value[bar] = stop;
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short &&
-                     _session[bar].Summary.Transaction == Transaction.Transfer)
+            else if (session[bar].Summary.PosDir == PosDirection.Short &&
+                     session[bar].Summary.Transaction == Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.Slot[Strategy.CloseSlot].Component[1].Value[bar - 1];
 
                 if (stop < Open[bar])
@@ -1612,13 +1642,13 @@ namespace Forex_Strategy_Builder
             }
 
             // If there is a new position, sends an ATR Stop Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                _session[bar].Summary.Transaction != Transaction.Transfer)
+            if (session[bar].Summary.PosDir == PosDirection.Long &&
+                session[bar].Summary.Transaction != Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice - deltaStop;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice - deltaStop;
                 string note = Language.T("ATR Stop to position") + " " + (toPos + 1);
 
                 if (Close[bar - 1] > stop && stop > Open[bar])
@@ -1626,13 +1656,13 @@ namespace Forex_Strategy_Builder
                 else
                     OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.Strategy, note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short &&
-                     _session[bar].Summary.Transaction != Transaction.Transfer)
+            else if (session[bar].Summary.PosDir == PosDirection.Short &&
+                     session[bar].Summary.Transaction != Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice + deltaStop;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice + deltaStop;
                 string note = Language.T("ATR Stop to position") + " " + (toPos + 1);
 
                 if (Open[bar] > stop && stop > Close[bar - 1])
@@ -1642,9 +1672,9 @@ namespace Forex_Strategy_Builder
             }
 
             // If there are Open orders, sends an IfOrder ATR Stop for each of them.
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                Order entryOrder = _session[bar].Order[ord];
+                Order entryOrder = session[bar].Order[ord];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -1671,13 +1701,13 @@ namespace Forex_Strategy_Builder
         private static void AnalyseStopLimitExit(int bar)
         {
             // If there is a position, sends a StopLimit Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice;
-                double dLimit = _session[bar].Summary.FormOrdPrice;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice;
+                double dLimit = session[bar].Summary.FormOrdPrice;
                 stop -= Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
                 dLimit += Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[1].Value*InstrProperties.Point;
                 string note = Language.T("Stop Limit to position") + " " + (toPos + 1);
@@ -1685,15 +1715,16 @@ namespace Forex_Strategy_Builder
                 if (Open[bar] > dLimit && dLimit > Close[bar - 1] || Close[bar - 1] > stop && stop > Open[bar])
                     OrdSellMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.Strategy, note);
                 else
-                    OrdSellStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
+                    OrdSellStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy,
+                                     note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short)
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice;
-                double dLimit = _session[bar].Summary.FormOrdPrice;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice;
+                double dLimit = session[bar].Summary.FormOrdPrice;
                 stop += Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
                 dLimit -= Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[1].Value*InstrProperties.Point;
                 string note = Language.T("Stop Limit to position") + " " + (toPos + 1);
@@ -1701,13 +1732,14 @@ namespace Forex_Strategy_Builder
                 if (Open[bar] > stop && stop > Close[bar - 1] || Close[bar - 1] > dLimit && dLimit > Open[bar])
                     OrdBuyMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.Strategy, note);
                 else
-                    OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
+                    OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy,
+                                    note);
             }
 
             // If there are Entry orders, sends an IfOrder stop for each of them.
-            for (int iOrd = 0; iOrd < _session[bar].Orders; iOrd++)
+            for (int iOrd = 0; iOrd < session[bar].Orders; iOrd++)
             {
-                Order entryOrder = _session[bar].Order[iOrd];
+                Order entryOrder = session[bar].Order[iOrd];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -1722,13 +1754,15 @@ namespace Forex_Strategy_Builder
                     {
                         stop -= Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
                         dLimit += Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[1].Value*InstrProperties.Point;
-                        OrdSellStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
+                        OrdSellStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close,
+                                         OrderOrigin.Strategy, note);
                     }
                     else
                     {
                         stop += Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
                         dLimit -= Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[1].Value*InstrProperties.Point;
-                        OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
+                        OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy,
+                                        note);
                     }
                 }
             }
@@ -1740,12 +1774,12 @@ namespace Forex_Strategy_Builder
             double deltaStop = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
 
             // If there is a position, sends a Stop Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice - deltaStop;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice - deltaStop;
                 string note = Language.T("Stop Loss to position") + " " + (toPos + 1);
 
                 if (Close[bar - 1] > stop && stop > Open[bar])
@@ -1753,12 +1787,12 @@ namespace Forex_Strategy_Builder
                 else
                     OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.Strategy, note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short)
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice + deltaStop;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice + deltaStop;
                 string note = Language.T("Stop Loss to position") + " " + (toPos + 1);
 
                 if (Open[bar] > stop && stop > Close[bar - 1])
@@ -1768,9 +1802,9 @@ namespace Forex_Strategy_Builder
             }
 
             // If there are Entry orders, sends an IfOrder stop for each of them.
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                Order entryOrder = _session[bar].Order[ord];
+                Order entryOrder = session[bar].Order[ord];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -1799,12 +1833,12 @@ namespace Forex_Strategy_Builder
             double dDeltaLimit = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
 
             // If there is a position, sends a Limit Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double dLimit = _session[bar].Summary.FormOrdPrice + dDeltaLimit;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double dLimit = session[bar].Summary.FormOrdPrice + dDeltaLimit;
                 string note = Language.T("Take Profit to position") + " " + (toPos + 1);
 
                 if (Open[bar] > dLimit && dLimit > Close[bar - 1])
@@ -1812,12 +1846,12 @@ namespace Forex_Strategy_Builder
                 else
                     OrdSellLimit(bar, ifOrder, toPos, lots, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short)
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double dLimit = _session[bar].Summary.FormOrdPrice - dDeltaLimit;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double dLimit = session[bar].Summary.FormOrdPrice - dDeltaLimit;
                 string note = Language.T("Take Profit to position") + " " + (toPos + 1);
 
                 if (Close[bar - 1] > dLimit && dLimit > Open[bar])
@@ -1827,9 +1861,9 @@ namespace Forex_Strategy_Builder
             }
 
             // If there are Open orders, sends an IfOrder Limit for each of them.
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                Order entryOrder = _session[bar].Order[ord];
+                Order entryOrder = session[bar].Order[ord];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -1858,12 +1892,12 @@ namespace Forex_Strategy_Builder
             double deltaStop = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
 
             // If there is a transferred position, sends a Stop Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                _session[bar].Summary.Transaction == Transaction.Transfer)
+            if (session[bar].Summary.PosDir == PosDirection.Long &&
+                session[bar].Summary.Transaction == Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar - 1];
 
                 // When the position is modified after the previous bar high
@@ -1872,9 +1906,9 @@ namespace Forex_Strategy_Builder
                 int wayPointHigh = 0;
                 for (int wayPoint = 0; wayPoint < WayPoints(bar - 1); wayPoint++)
                 {
-                    if (WayPoint(bar - 1, wayPoint).OrdNumb == _session[bar - 1].Summary.FormOrdNumb)
+                    if (WayPoint(bar - 1, wayPoint).OrdNumb == session[bar - 1].Summary.FormOrdNumb)
                         wayPointOrder = wayPoint;
-                    if (WayPoint(bar - 1, wayPoint).WPType == WayPointType.High)
+                    if (WayPoint(bar - 1, wayPoint).WpType == WayPointType.High)
                         wayPointHigh = wayPoint;
                 }
 
@@ -1888,12 +1922,12 @@ namespace Forex_Strategy_Builder
                 OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.Strategy, note);
                 Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar] = stop;
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short &&
-                     _session[bar].Summary.Transaction == Transaction.Transfer)
+            else if (session[bar].Summary.PosDir == PosDirection.Short &&
+                     session[bar].Summary.Transaction == Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar - 1];
 
                 // When the position is modified after the previous bar low
@@ -1902,9 +1936,9 @@ namespace Forex_Strategy_Builder
                 int wayPointLow = 0;
                 for (int wayPoint = 0; wayPoint < WayPoints(bar - 1); wayPoint++)
                 {
-                    if (WayPoint(bar - 1, wayPoint).OrdNumb == _session[bar - 1].Summary.FormOrdNumb)
+                    if (WayPoint(bar - 1, wayPoint).OrdNumb == session[bar - 1].Summary.FormOrdNumb)
                         wayPointOrder = wayPoint;
-                    if (WayPoint(bar - 1, wayPoint).WPType == WayPointType.Low)
+                    if (WayPoint(bar - 1, wayPoint).WpType == WayPointType.Low)
                         wayPointLow = wayPoint;
                 }
 
@@ -1920,31 +1954,31 @@ namespace Forex_Strategy_Builder
             }
 
             // If there is a new position, sends a Trailing Stop Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                _session[bar].Summary.Transaction != Transaction.Transfer)
+            if (session[bar].Summary.PosDir == PosDirection.Long &&
+                session[bar].Summary.Transaction != Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice - deltaStop;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice - deltaStop;
                 string note = Language.T("Trailing Stop to position") + " " + (toPos + 1);
                 OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.Strategy, note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short &&
-                     _session[bar].Summary.Transaction != Transaction.Transfer)
+            else if (session[bar].Summary.PosDir == PosDirection.Short &&
+                     session[bar].Summary.Transaction != Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice + deltaStop;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice + deltaStop;
                 string note = Language.T("Trailing Stop to position") + " " + (toPos + 1);
                 OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.Strategy, note);
             }
 
             // If there are Open orders, sends an IfOrder Trailing Stop for each of them.
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                Order entryOrder = _session[bar].Order[ord];
+                Order entryOrder = session[bar].Order[ord];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -1974,14 +2008,14 @@ namespace Forex_Strategy_Builder
             double dDeltaLimit = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[1].Value*InstrProperties.Point;
 
             // If there is a transferred position, sends a Stop Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                _session[bar].Summary.Transaction == Transaction.Transfer)
+            if (session[bar].Summary.PosDir == PosDirection.Long &&
+                session[bar].Summary.Transaction == Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar - 1];
-                double dLimit = _session[bar].Summary.FormOrdPrice + dDeltaLimit;
+                double dLimit = session[bar].Summary.FormOrdPrice + dDeltaLimit;
 
                 // When the position is modified after the previous bar high
                 // we do not modify the Trailing Stop
@@ -1989,9 +2023,9 @@ namespace Forex_Strategy_Builder
                 int iWayPointHigh = 0;
                 for (int wayPoint = 0; wayPoint < WayPoints(bar - 1); wayPoint++)
                 {
-                    if (WayPoint(bar - 1, wayPoint).OrdNumb == _session[bar - 1].Summary.FormOrdNumb)
+                    if (WayPoint(bar - 1, wayPoint).OrdNumb == session[bar - 1].Summary.FormOrdNumb)
                         wayPointOrder = wayPoint;
-                    if (WayPoint(bar - 1, wayPoint).WPType == WayPointType.High)
+                    if (WayPoint(bar - 1, wayPoint).WpType == WayPointType.High)
                         iWayPointHigh = wayPoint;
                 }
 
@@ -2009,14 +2043,14 @@ namespace Forex_Strategy_Builder
                                      OrderOrigin.Strategy, note);
                 Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar] = stop;
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short &&
-                     _session[bar].Summary.Transaction == Transaction.Transfer)
+            else if (session[bar].Summary.PosDir == PosDirection.Short &&
+                     session[bar].Summary.Transaction == Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar - 1];
-                double dLimit = _session[bar].Summary.FormOrdPrice - dDeltaLimit;
+                double dLimit = session[bar].Summary.FormOrdPrice - dDeltaLimit;
 
                 // When the position is modified after the previous bar low
                 // we do not modify the Trailing Stop
@@ -2024,9 +2058,9 @@ namespace Forex_Strategy_Builder
                 int wayPointLow = 0;
                 for (int wayPoint = 0; wayPoint < WayPoints(bar - 1); wayPoint++)
                 {
-                    if (WayPoint(bar - 1, wayPoint).OrdNumb == _session[bar - 1].Summary.FormOrdNumb)
+                    if (WayPoint(bar - 1, wayPoint).OrdNumb == session[bar - 1].Summary.FormOrdNumb)
                         wayPointOrder = wayPoint;
-                    if (WayPoint(bar - 1, wayPoint).WPType == WayPointType.Low)
+                    if (WayPoint(bar - 1, wayPoint).WpType == WayPointType.Low)
                         wayPointLow = wayPoint;
                 }
 
@@ -2040,38 +2074,39 @@ namespace Forex_Strategy_Builder
                 if (Open[bar] > stop && stop > Close[bar - 1] || Close[bar - 1] > dLimit && dLimit > Open[bar])
                     OrdBuyMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.Strategy, note);
                 else
-                    OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
+                    OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy,
+                                    note);
                 Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar] = stop;
             }
 
             // If there is a new position, sends a Trailing Stop Limit Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                _session[bar].Summary.Transaction != Transaction.Transfer)
+            if (session[bar].Summary.PosDir == PosDirection.Long &&
+                session[bar].Summary.Transaction != Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice - deltaStop;
-                double dLimit = _session[bar].Summary.FormOrdPrice + dDeltaLimit;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice - deltaStop;
+                double dLimit = session[bar].Summary.FormOrdPrice + dDeltaLimit;
                 string note = Language.T("Trailing Stop Limit to position") + " " + (toPos + 1);
                 OrdSellStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short &&
-                     _session[bar].Summary.Transaction != Transaction.Transfer)
+            else if (session[bar].Summary.PosDir == PosDirection.Short &&
+                     session[bar].Summary.Transaction != Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
-                double stop = _session[bar].Summary.FormOrdPrice + deltaStop;
-                double dLimit = _session[bar].Summary.FormOrdPrice - dDeltaLimit;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
+                double stop = session[bar].Summary.FormOrdPrice + deltaStop;
+                double dLimit = session[bar].Summary.FormOrdPrice - dDeltaLimit;
                 string note = Language.T("Trailing Stop Limit to position") + " " + (toPos + 1);
                 OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
             }
 
             // If there are Open orders, sends an IfOrder Trailing Stop for each of them.
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                Order entryOrder = _session[bar].Order[ord];
+                Order entryOrder = session[bar].Order[ord];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -2086,13 +2121,15 @@ namespace Forex_Strategy_Builder
                     {
                         stop -= deltaStop;
                         dLimit += dDeltaLimit;
-                        OrdSellStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
+                        OrdSellStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close,
+                                         OrderOrigin.Strategy, note);
                     }
                     else
                     {
                         stop += deltaStop;
                         dLimit -= dDeltaLimit;
-                        OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy, note);
+                        OrdBuyStopLimit(bar, ifOrder, toPos, lots, stop, dLimit, OrderSender.Close, OrderOrigin.Strategy,
+                                        note);
                     }
                 }
             }
@@ -2101,12 +2138,12 @@ namespace Forex_Strategy_Builder
         private static void AnalyseAccountPercentStopExit(int bar)
         {
             // If there is a transferred position, sends a Stop Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                _session[bar].Summary.Transaction == Transaction.Transfer)
+            if (session[bar].Summary.PosDir == PosDirection.Long &&
+                session[bar].Summary.Transaction == Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar - 1];
 
                 if (stop > Open[bar])
@@ -2116,12 +2153,12 @@ namespace Forex_Strategy_Builder
                 OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.Strategy, note);
                 Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar] = stop;
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short &&
-                     _session[bar].Summary.Transaction == Transaction.Transfer)
+            else if (session[bar].Summary.PosDir == PosDirection.Short &&
+                     session[bar].Summary.Transaction == Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar - 1];
 
                 if (stop < Open[bar])
@@ -2134,16 +2171,16 @@ namespace Forex_Strategy_Builder
 
 
             // If there is a new position, sends a Stop Order for it.
-            if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                _session[bar].Summary.Transaction != Transaction.Transfer)
+            if (session[bar].Summary.PosDir == PosDirection.Long &&
+                session[bar].Summary.Transaction != Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double deltaMoney = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*MoneyBalance(bar)/
                                     (100*lots);
                 double deltaStop = Math.Max(MoneyToPips(deltaMoney, bar), 5)*InstrProperties.Point;
-                double stop = _session[bar].Summary.FormOrdPrice - deltaStop;
+                double stop = session[bar].Summary.FormOrdPrice - deltaStop;
                 string note = Language.T("Stop order to position") + " " + (toPos + 1);
 
                 if (Close[bar - 1] > stop && stop > Open[bar])
@@ -2151,16 +2188,16 @@ namespace Forex_Strategy_Builder
                 else
                     OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.Strategy, note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short &&
-                     _session[bar].Summary.Transaction != Transaction.Transfer)
+            else if (session[bar].Summary.PosDir == PosDirection.Short &&
+                     session[bar].Summary.Transaction != Transaction.Transfer)
             {
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double deltaMoney = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*
                                     MoneyBalance(bar)/(100*lots);
                 double deltaStop = Math.Max(MoneyToPips(deltaMoney, bar), 5)*InstrProperties.Point;
-                double stop = _session[bar].Summary.FormOrdPrice + deltaStop;
+                double stop = session[bar].Summary.FormOrdPrice + deltaStop;
                 string note = Language.T("Stop order to position") + " " + (toPos + 1);
 
                 if (Open[bar] > stop && stop > Close[bar - 1])
@@ -2170,9 +2207,9 @@ namespace Forex_Strategy_Builder
             }
 
             // If there are Open orders, sends an if order for each of them.
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                Order entryOrder = _session[bar].Order[ord];
+                Order entryOrder = session[bar].Order[ord];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -2200,50 +2237,52 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets Permanent Stop Loss close orders for the indicated bar
+        ///     Sets Permanent Stop Loss close orders for the indicated bar
         /// </summary>
         private static void AnalysePermanentSLExit(int bar)
         {
             double deltaStop = Strategy.PermanentSL*InstrProperties.Point;
 
             // If there is a position, sends a Stop Order for it
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
             {
                 // Sets Permanent S/L for a Long Position
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.PermanentSLType == PermanentProtectionType.Absolute
-                                  ? _session[bar].Summary.AbsoluteSL
-                                  : _session[bar].Summary.FormOrdPrice - deltaStop;
+                                  ? session[bar].Summary.AbsoluteSL
+                                  : session[bar].Summary.FormOrdPrice - deltaStop;
                 string note = Language.T("Permanent S/L to position") + " " + (toPos + 1);
 
                 if (Close[bar - 1] > stop && stop > Open[bar])
-                    OrdSellMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.PermanentStopLoss, note);
+                    OrdSellMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.PermanentStopLoss,
+                                  note);
                 else
                     OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentStopLoss, note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short)
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
             {
                 // Sets Permanent S/L for a Short Position
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.PermanentSLType == PermanentProtectionType.Absolute
-                                  ? _session[bar].Summary.AbsoluteSL
-                                  : _session[bar].Summary.FormOrdPrice + deltaStop;
+                                  ? session[bar].Summary.AbsoluteSL
+                                  : session[bar].Summary.FormOrdPrice + deltaStop;
                 string note = Language.T("Permanent S/L to position") + " " + (toPos + 1);
 
                 if (Open[bar] > stop && stop > Close[bar - 1])
-                    OrdBuyMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.PermanentStopLoss, note);
+                    OrdBuyMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.PermanentStopLoss,
+                                 note);
                 else
                     OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentStopLoss, note);
             }
 
             // If there are Entry orders, sends an IfOrder stop for each of them.
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                Order entryOrder = _session[bar].Order[ord];
+                Order entryOrder = session[bar].Order[ord];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -2254,58 +2293,63 @@ namespace Forex_Strategy_Builder
                     string note = Language.T("Permanent S/L to order") + " " + (ifOrder + 1);
 
                     if (entryOrder.OrdDir == OrderDirection.Buy)
-                        OrdSellStop(bar, ifOrder, toPos, lots, ordPrice - deltaStop, OrderSender.Close, OrderOrigin.PermanentStopLoss, note);
+                        OrdSellStop(bar, ifOrder, toPos, lots, ordPrice - deltaStop, OrderSender.Close,
+                                    OrderOrigin.PermanentStopLoss, note);
                     else
-                        OrdBuyStop(bar, ifOrder, toPos, lots, ordPrice + deltaStop, OrderSender.Close, OrderOrigin.PermanentStopLoss, note);
+                        OrdBuyStop(bar, ifOrder, toPos, lots, ordPrice + deltaStop, OrderSender.Close,
+                                   OrderOrigin.PermanentStopLoss, note);
                 }
             }
         }
 
         /// <summary>
-        /// Sets Permanent Take Profit close orders for the indicated bar
+        ///     Sets Permanent Take Profit close orders for the indicated bar
         /// </summary>
         private static void AnalysePermanentTPExit(int bar)
         {
             double deltaStop = Strategy.PermanentTP*InstrProperties.Point;
 
             // If there is a position, sends a Stop Order for it
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
             {
                 // Sets Permanent T/P for a Long Position
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.PermanentTPType == PermanentProtectionType.Absolute
-                                  ? _session[bar].Summary.AbsoluteTP
-                                  : _session[bar].Summary.FormOrdPrice + deltaStop;
+                                  ? session[bar].Summary.AbsoluteTP
+                                  : session[bar].Summary.FormOrdPrice + deltaStop;
                 string note = Language.T("Permanent T/P to position") + " " + (toPos + 1);
 
                 if (Open[bar] > stop && stop > Close[bar - 1])
-                    OrdSellMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.PermanentTakeProfit, note);
+                    OrdSellMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close,
+                                  OrderOrigin.PermanentTakeProfit, note);
                 else
-                    OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentTakeProfit, note);
+                    OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentTakeProfit,
+                                note);
             }
-            else if (_session[bar].Summary.PosDir == PosDirection.Short)
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
             {
                 // Sets Permanent T/P for a Short Position
                 const int ifOrder = 0;
-                int toPos = _session[bar].Summary.PosNumb;
-                double lots = _session[bar].Summary.PosLots;
+                int toPos = session[bar].Summary.PosNumb;
+                double lots = session[bar].Summary.PosLots;
                 double stop = Strategy.PermanentTPType == PermanentProtectionType.Absolute
-                                  ? _session[bar].Summary.AbsoluteTP
-                                  : _session[bar].Summary.FormOrdPrice - deltaStop;
+                                  ? session[bar].Summary.AbsoluteTP
+                                  : session[bar].Summary.FormOrdPrice - deltaStop;
                 string note = Language.T("Permanent T/P to position") + " " + (toPos + 1);
 
                 if (Close[bar - 1] > stop && stop > Open[bar])
-                    OrdBuyMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close, OrderOrigin.PermanentTakeProfit, note);
+                    OrdBuyMarket(bar, ifOrder, toPos, lots, Open[bar], OrderSender.Close,
+                                 OrderOrigin.PermanentTakeProfit, note);
                 else
                     OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentTakeProfit, note);
             }
 
             // If there are Entry orders, sends an IfOrder stop for each of them.
-            for (int ord = 0; ord < _session[bar].Orders; ord++)
+            for (int ord = 0; ord < session[bar].Orders; ord++)
             {
-                Order entryOrder = _session[bar].Order[ord];
+                Order entryOrder = session[bar].Order[ord];
 
                 if (entryOrder.OrdSender == OrderSender.Open && entryOrder.OrdStatus == OrderStatus.Confirmed)
                 {
@@ -2318,24 +2362,26 @@ namespace Forex_Strategy_Builder
                     if (entryOrder.OrdDir == OrderDirection.Buy)
                     {
                         stop += deltaStop;
-                        OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentTakeProfit, note);
+                        OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentTakeProfit,
+                                    note);
                     }
                     else
                     {
                         stop -= deltaStop;
-                        OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentTakeProfit, note);
+                        OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.PermanentTakeProfit,
+                                   note);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Sets Break Even close order for the current position.
+        ///     Sets Break Even close order for the current position.
         /// </summary>
         private static bool SetBreakEvenExit(int bar, double price, int lastPosBreakEven)
         {
             // First cancel no executed Break Even exits if any.
-            if (_session[bar].Summary.PosNumb > lastPosBreakEven)
+            if (session[bar].Summary.PosNumb > lastPosBreakEven)
             {
                 for (int ord = 0; ord < Orders(bar); ord++)
                 {
@@ -2343,7 +2389,7 @@ namespace Forex_Strategy_Builder
                     if (order.OrdOrigin == OrderOrigin.BreakEven && order.OrdStatus != OrderStatus.Executed)
                     {
                         order.OrdStatus = OrderStatus.Cancelled;
-                        _session[bar].Summary.IsBreakEvenActivated = false;
+                        session[bar].Summary.IsBreakEvenActivated = false;
                     }
                 }
             }
@@ -2351,75 +2397,75 @@ namespace Forex_Strategy_Builder
             double targetBreakEven = Strategy.BreakEven*InstrProperties.Point;
 
             // Check if Break Even has to be activated (if position has profit).
-            if (!_session[bar].Summary.IsBreakEvenActivated)
+            if (!session[bar].Summary.IsBreakEvenActivated)
             {
-                if (_session[bar].Summary.PosDir == PosDirection.Long &&
-                    price >= _session[bar].Summary.PosPrice + targetBreakEven ||
-                    _session[bar].Summary.PosDir == PosDirection.Short &&
-                    price <= _session[bar].Summary.PosPrice - targetBreakEven)
-                    _session[bar].Summary.IsBreakEvenActivated = true;
+                if (session[bar].Summary.PosDir == PosDirection.Long &&
+                    price >= session[bar].Summary.PosPrice + targetBreakEven ||
+                    session[bar].Summary.PosDir == PosDirection.Short &&
+                    price <= session[bar].Summary.PosPrice - targetBreakEven)
+                    session[bar].Summary.IsBreakEvenActivated = true;
                 else
                     return false;
             }
 
             // Set Break Even to the current position.
             const int ifOrder = 0;
-            int toPos = _session[bar].Summary.PosNumb;
-            double lots = _session[bar].Summary.PosLots;
-            double stop = _session[bar].Summary.PosPrice;
+            int toPos = session[bar].Summary.PosNumb;
+            double lots = session[bar].Summary.PosLots;
+            double stop = session[bar].Summary.PosPrice;
             string note = Language.T("Break Even to position") + " " + (toPos + 1);
 
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
                 OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
-            else if (_session[bar].Summary.PosDir == PosDirection.Short)
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
                 OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
 
             return true;
         }
 
         /// <summary>
-        /// Calculates at what price to activate Break Even and sends a fictive order.
+        ///     Calculates at what price to activate Break Even and sends a fictive order.
         /// </summary>
         private static void SetBreakEvenActivation(int bar)
         {
             double price = 0;
             double targetBreakEven = Strategy.BreakEven*InstrProperties.Point;
 
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
-                price = _session[bar].Summary.PosPrice + targetBreakEven;
+            if (session[bar].Summary.PosDir == PosDirection.Long)
+                price = session[bar].Summary.PosPrice + targetBreakEven;
 
-            if (_session[bar].Summary.PosDir == PosDirection.Short)
-                price = _session[bar].Summary.PosPrice - targetBreakEven;
+            if (session[bar].Summary.PosDir == PosDirection.Short)
+                price = session[bar].Summary.PosPrice - targetBreakEven;
 
             const int ifOrder = 0;
-            int toPos = _session[bar].Summary.PosNumb;
+            int toPos = session[bar].Summary.PosNumb;
             const double lots = 0;
             string note = Language.T("Break Even activation to position") + " " + (toPos + 1);
 
-            if (_session[bar].Summary.PosDir == PosDirection.Long)
+            if (session[bar].Summary.PosDir == PosDirection.Long)
                 OrdSellStop(bar, ifOrder, toPos, lots, price, OrderSender.Close, OrderOrigin.BreakEvenActivation, note);
-            else if (_session[bar].Summary.PosDir == PosDirection.Short)
+            else if (session[bar].Summary.PosDir == PosDirection.Short)
                 OrdBuyStop(bar, ifOrder, toPos, lots, price, OrderSender.Close, OrderOrigin.BreakEvenActivation, note);
         }
 
         /// <summary>
-        /// The main calculating cycle
+        ///     The main calculating cycle
         /// </summary>
         private static void Calculation()
         {
             ResetStart();
 
-            if (_closeStrPriceType == StrategyPriceType.CloseAndReverce)
+            if (closeStrPriceType == StrategyPriceType.CloseAndReverce)
             {
                 // Close and Reverse.
-                switch (_openStrPriceType)
+                switch (openStrPriceType)
                 {
                     case StrategyPriceType.Open:
                         for (int bar = FirstBar; bar < Bars; bar++)
                         {
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             AnalyseEntry(bar);
                             ExecuteEntryAtOpeningPrice(bar);
                             CancelNoexecutedEntryOrders(bar);
@@ -2430,7 +2476,7 @@ namespace Forex_Strategy_Builder
                             BarInterpolation(bar);
                             CancelNoexecutedExitOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
-                            _session[bar].SetWayPoint(Close[bar], WayPointType.Close);
+                            session[bar].SetWayPoint(Close[bar], WayPointType.Close);
                         }
                         break;
                     case StrategyPriceType.Close:
@@ -2438,7 +2484,7 @@ namespace Forex_Strategy_Builder
                         {
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             if (Strategy.UsePermanentSL)
                                 AnalysePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
@@ -2448,7 +2494,7 @@ namespace Forex_Strategy_Builder
                             ExecuteEntryAtClosingPrice(bar);
                             CancelInvalidOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
-                            _session[bar].SetWayPoint(Close[bar], WayPointType.Close);
+                            session[bar].SetWayPoint(Close[bar], WayPointType.Close);
                         }
                         break;
                     default:
@@ -2456,7 +2502,7 @@ namespace Forex_Strategy_Builder
                         {
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             AnalyseEntry(bar);
                             if (Strategy.UsePermanentSL)
                                 AnalysePermanentSLExit(bar);
@@ -2465,7 +2511,7 @@ namespace Forex_Strategy_Builder
                             BarInterpolation(bar);
                             CancelInvalidOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
-                            _session[bar].SetWayPoint(Close[bar], WayPointType.Close);
+                            session[bar].SetWayPoint(Close[bar], WayPointType.Close);
                         }
                         break;
                 }
@@ -2475,17 +2521,17 @@ namespace Forex_Strategy_Builder
                 return;
             }
 
-            switch (_openStrPriceType)
+            switch (openStrPriceType)
             {
                 case StrategyPriceType.Open:
-                    if (_closeStrPriceType == StrategyPriceType.Close)
+                    if (closeStrPriceType == StrategyPriceType.Close)
                     {
                         // Opening price - Closing price
                         for (int bar = FirstBar; bar < Bars; bar++)
                         {
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             AnalyseEntry(bar);
                             ExecuteEntryAtOpeningPrice(bar);
                             CancelNoexecutedEntryOrders(bar);
@@ -2499,7 +2545,7 @@ namespace Forex_Strategy_Builder
                             ExecuteExitAtClosingPrice(bar);
                             CancelNoexecutedExitOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
-                            _session[bar].SetWayPoint(Close[bar], WayPointType.Close);
+                            session[bar].SetWayPoint(Close[bar], WayPointType.Close);
                         }
                     }
                     else
@@ -2509,7 +2555,7 @@ namespace Forex_Strategy_Builder
                         {
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             AnalyseEntry(bar);
                             ExecuteEntryAtOpeningPrice(bar);
                             CancelNoexecutedEntryOrders(bar);
@@ -2521,12 +2567,12 @@ namespace Forex_Strategy_Builder
                             BarInterpolation(bar);
                             CancelInvalidOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
-                            _session[bar].SetWayPoint(Close[bar], WayPointType.Close);
+                            session[bar].SetWayPoint(Close[bar], WayPointType.Close);
                         }
                     }
                     break;
                 case StrategyPriceType.Close:
-                    if (_closeStrPriceType == StrategyPriceType.Close)
+                    if (closeStrPriceType == StrategyPriceType.Close)
                     {
                         // Closing price - Closing price
                         for (int bar = FirstBar; bar < Bars; bar++)
@@ -2535,10 +2581,10 @@ namespace Forex_Strategy_Builder
                             ExecuteEntryAtClosingPrice(bar - 1);
                             CancelNoexecutedEntryOrders(bar - 1);
                             MarginCallCheckAtBarClosing(bar - 1);
-                            _session[bar - 1].SetWayPoint(Close[bar - 1], WayPointType.Close);
+                            session[bar - 1].SetWayPoint(Close[bar - 1], WayPointType.Close);
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             if (Strategy.UsePermanentSL)
                                 AnalysePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
@@ -2559,10 +2605,10 @@ namespace Forex_Strategy_Builder
                             ExecuteEntryAtClosingPrice(bar - 1);
                             CancelNoexecutedEntryOrders(bar - 1);
                             MarginCallCheckAtBarClosing(bar - 1);
-                            _session[bar - 1].SetWayPoint(Close[bar - 1], WayPointType.Close);
+                            session[bar - 1].SetWayPoint(Close[bar - 1], WayPointType.Close);
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             if (Strategy.UsePermanentSL)
                                 AnalysePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
@@ -2574,14 +2620,14 @@ namespace Forex_Strategy_Builder
                     }
                     break;
                 default:
-                    if (_closeStrPriceType == StrategyPriceType.Close)
+                    if (closeStrPriceType == StrategyPriceType.Close)
                     {
                         // Indicator - Closing price
                         for (int bar = FirstBar; bar < Bars; bar++)
                         {
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             AnalyseEntry(bar);
                             if (Strategy.UsePermanentSL)
                                 AnalysePermanentSLExit(bar);
@@ -2593,7 +2639,7 @@ namespace Forex_Strategy_Builder
                             ExecuteExitAtClosingPrice(bar);
                             CancelNoexecutedExitOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
-                            _session[bar].SetWayPoint(Close[bar], WayPointType.Close);
+                            session[bar].SetWayPoint(Close[bar], WayPointType.Close);
                         }
                     }
                     else
@@ -2603,7 +2649,7 @@ namespace Forex_Strategy_Builder
                         {
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
-                            _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                            session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             AnalyseEntry(bar);
                             if (Strategy.UsePermanentSL)
                                 AnalysePermanentSLExit(bar);
@@ -2613,7 +2659,7 @@ namespace Forex_Strategy_Builder
                             BarInterpolation(bar);
                             CancelInvalidOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
-                            _session[bar].SetWayPoint(Close[bar], WayPointType.Close);
+                            session[bar].SetWayPoint(Close[bar], WayPointType.Close);
                         }
                     }
                     break;
@@ -2621,19 +2667,19 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs an intrabar scanning.
+        ///     Performs an intrabar scanning.
         /// </summary>
         public static void Scan()
         {
-            _isScanning = true;
+            isScanning = true;
             Calculation();
             IsScanPerformed = true;
             CalculateAccountStats();
-            _isScanning = false;
+            isScanning = false;
         }
 
         /// <summary>
-        /// Calculate strategy
+        ///     Calculate strategy
         /// </summary>
         public static void Calculate()
         {
@@ -2644,30 +2690,30 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculate statistics
+        ///     Calculate statistics
         /// </summary>
         private static bool FastCalculating(int startBar)
         {
             bool isFastCalc = false;
 
-            if (_session[startBar].Positions != 0)
+            if (session[startBar].Positions != 0)
                 return false;
 
             if (Configs.TradeUntilMarginCall &&
-                _session[startBar].Summary.FreeMargin <
+                session[startBar].Summary.FreeMargin <
                 RequiredMargin(TradingSize(Strategy.EntryLots, startBar), startBar) ||
-                _session[startBar].Summary.FreeMargin < -1000000)
+                session[startBar].Summary.FreeMargin < -1000000)
             {
                 for (int bar = startBar; bar < Bars; bar++)
                 {
-                    _session[bar].Summary.Balance = _session[bar - 1].Summary.Balance;
-                    _session[bar].Summary.Equity = _session[bar - 1].Summary.Equity;
-                    _session[bar].Summary.MoneyBalance = _session[bar - 1].Summary.MoneyBalance;
-                    _session[bar].Summary.MoneyEquity = _session[bar - 1].Summary.MoneyEquity;
+                    session[bar].Summary.Balance = session[bar - 1].Summary.Balance;
+                    session[bar].Summary.Equity = session[bar - 1].Summary.Equity;
+                    session[bar].Summary.MoneyBalance = session[bar - 1].Summary.MoneyBalance;
+                    session[bar].Summary.MoneyEquity = session[bar - 1].Summary.MoneyEquity;
 
-                    _session[bar].SetWayPoint(Open[bar], WayPointType.Open);
+                    session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                     ArrangeBarsHighLow(bar);
-                    _session[bar].SetWayPoint(Close[bar], WayPointType.Close);
+                    session[bar].SetWayPoint(Close[bar], WayPointType.Close);
                 }
 
                 isFastCalc = true;
@@ -2677,7 +2723,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Arranges the order of hitting the bar's Top and Bottom.
+        ///     Arranges the order of hitting the bar's Top and Bottom.
         /// </summary>
         private static void ArrangeBarsHighLow(int bar)
         {
@@ -2686,18 +2732,18 @@ namespace Forex_Strategy_Builder
             bool isTopFirst = false;
             bool isOrderFound = false;
 
-            if (_isScanning && IntraBarsPeriods[bar] != Period)
+            if (isScanning && IntraBarsPeriods[bar] != Period)
             {
                 for (int b = 0; b < IntraBarBars[bar]; b++)
                 {
-                    if (IntraBarData[bar][b].High + _micron > high)
+                    if (IntraBarData[bar][b].High + micron > high)
                     {
                         // Top found
                         isTopFirst = true;
                         isOrderFound = true;
                     }
 
-                    if (IntraBarData[bar][b].Low - _micron < low)
+                    if (IntraBarData[bar][b].Low - micron < low)
                     {
                         // Bottom found
                         if (isOrderFound)
@@ -2714,20 +2760,20 @@ namespace Forex_Strategy_Builder
                 }
             }
 
-            if (!_isScanning || !isOrderFound)
+            if (!isScanning || !isOrderFound)
             {
                 isTopFirst = Open[bar] > Close[bar];
             }
 
             if (isTopFirst)
             {
-                _session[bar].SetWayPoint(high, WayPointType.High);
-                _session[bar].SetWayPoint(low, WayPointType.Low);
+                session[bar].SetWayPoint(high, WayPointType.High);
+                session[bar].SetWayPoint(low, WayPointType.Low);
             }
             else
             {
-                _session[bar].SetWayPoint(low, WayPointType.Low);
-                _session[bar].SetWayPoint(high, WayPointType.High);
+                session[bar].SetWayPoint(low, WayPointType.Low);
+                session[bar].SetWayPoint(high, WayPointType.High);
             }
         }
     }

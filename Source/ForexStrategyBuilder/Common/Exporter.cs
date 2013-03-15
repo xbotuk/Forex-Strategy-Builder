@@ -1,25 +1,29 @@
-// Exporter class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public class Exporter
     {
         /// <summary>
-        /// Exports the data
+        ///     Exports the data
         /// </summary>
-        public void ExportCSVData()
+        public void ExportCsvData()
         {
-            string ff = Data.FF; // Format modifier to print float numbers
-            string df = Data.DF; // Format modifier to print date
+            string ff = Data.Ff; // Format modifier to print float numbers
+            string df = Data.Df; // Format modifier to print date
             var sb = new StringBuilder();
             for (int bar = 0; bar < Data.Bars; bar++)
             {
@@ -37,18 +41,18 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Exports the data
+        ///     Exports the data
         /// </summary>
         public void ExportDataOnly()
         {
             string stage = String.Empty;
             if (Data.IsProgramBeta)
                 stage = " " + Language.T("Beta");
-            else if (Data.IsProgramRC)
+            else if (Data.IsProgramReleaseCandidate)
                 stage = " " + "RC";
 
-            string ff = Data.FF; // Format modifier to print float numbers
-            string df = Data.DF; // Format modifier to print date
+            string ff = Data.Ff; // Format modifier to print float numbers
+            string df = Data.Df; // Format modifier to print date
             var sb = new StringBuilder();
 
             sb.Append("Forex Strategy Builder v" + Data.ProgramVersion + stage + Environment.NewLine);
@@ -82,18 +86,18 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Exports data and indicators values
+        ///     Exports data and indicators values
         /// </summary>
         public void ExportIndicators()
         {
             string stage = String.Empty;
             if (Data.IsProgramBeta)
                 stage = " " + Language.T("Beta");
-            else if (Data.IsProgramRC)
+            else if (Data.IsProgramReleaseCandidate)
                 stage = " " + "RC";
 
-            string ff = Data.FF; // Format modifier to print float numbers
-            string df = Data.DF; // Format modifier to print date
+            string ff = Data.Ff; // Format modifier to print float numbers
+            string df = Data.Df; // Format modifier to print date
             var sb = new StringBuilder();
 
             sb.Append("Forex Strategy Builder v" + Data.ProgramVersion + stage + Environment.NewLine);
@@ -185,18 +189,18 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Exports the bar summary
+        ///     Exports the bar summary
         /// </summary>
         public void ExportBarSummary()
         {
             string stage = String.Empty;
             if (Data.IsProgramBeta)
                 stage = " " + Language.T("Beta");
-            else if (Data.IsProgramRC)
+            else if (Data.IsProgramReleaseCandidate)
                 stage = " " + "RC";
 
-            string ff = Data.FF; // Format modifier to print float numbers
-            string df = Data.DF; // Format modifier to print date
+            string ff = Data.Ff; // Format modifier to print float numbers
+            string df = Data.Df; // Format modifier to print date
             var sb = new StringBuilder();
 
             sb.Append("Forex Strategy Builder v" + Data.ProgramVersion + stage + Environment.NewLine);
@@ -260,17 +264,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Exports the positions info
+        ///     Exports the positions info
         /// </summary>
         public void ExportPositions(bool showTransfers)
         {
             string stage = String.Empty;
             if (Data.IsProgramBeta)
                 stage = " " + Language.T("Beta");
-            else if (Data.IsProgramRC)
+            else if (Data.IsProgramReleaseCandidate)
                 stage = " " + "RC";
 
-            string ff = Data.FF; // Format modifier to print float numbers
+            string ff = Data.Ff; // Format modifier to print float numbers
             var sb = new StringBuilder();
 
             sb.Append("Forex Strategy Builder v" + Data.ProgramVersion + stage + Environment.NewLine);
@@ -320,17 +324,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Exports the positions info in currency
+        ///     Exports the positions info in currency
         /// </summary>
         public void ExportPositionsInMoney(bool showTransfers)
         {
             string stage = String.Empty;
             if (Data.IsProgramBeta)
                 stage = " " + Language.T("Beta");
-            else if (Data.IsProgramRC)
+            else if (Data.IsProgramReleaseCandidate)
                 stage = " " + "RC";
 
-            string ff = Data.FF; // Format modifier to print float numbers
+            string ff = Data.Ff; // Format modifier to print float numbers
             var sb = new StringBuilder();
 
             sb.Append("Forex Strategy Builder v" + Data.ProgramVersion + stage + Environment.NewLine);
@@ -382,7 +386,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Exports histogram data as CSV file
+        ///     Exports histogram data as CSV file
         /// </summary>
         /// <param name="s">string</param>
         public void ExportHistogramData(string s)
@@ -390,7 +394,7 @@ namespace Forex_Strategy_Builder
             string stage = String.Empty;
             if (Data.IsProgramBeta)
                 stage = " " + Language.T("Beta");
-            else if (Data.IsProgramRC)
+            else if (Data.IsProgramReleaseCandidate)
                 stage = " " + "RC";
 
             var sb = new StringBuilder();
@@ -414,17 +418,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Saves the data file
+        ///     Saves the data file
         /// </summary>
         private void SaveData(string fileName, StringBuilder data)
         {
             var sfdExport = new SaveFileDialog
-                                {
-                                    AddExtension = true,
-                                    InitialDirectory = Data.ProgramDir,
-                                    Title = Language.T("Export"),
-                                    FileName = fileName
-                                };
+                {
+                    AddExtension = true,
+                    InitialDirectory = Data.ProgramDir,
+                    Title = Language.T("Export"),
+                    FileName = fileName
+                };
             if (fileName.EndsWith(".csv"))
             {
                 sfdExport.InitialDirectory = Data.OfflineDataDir;

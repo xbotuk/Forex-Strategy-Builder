@@ -1,420 +1,431 @@
-﻿// Strategy Optimizer - GUI
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder.Dialogs.Optimizer
+namespace ForexStrategyBuilder.Dialogs.Optimizer
 {
     /// <summary>
-    /// The Optimizer - GUI
+    ///     The Optimizer - GUI
     /// </summary>
     public sealed partial class Optimizer
     {
         /// <summary>
-        /// Initializes main controls of optimizer.
+        ///     Initializes main controls of optimizer.
         /// </summary>
         private void InitializeControls()
         {
-            PnlParamsBase = new Panel();
-            PnlParamsBase2 = new Panel();
-            PnlCaptions = new Panel();
-            PnlParams = new Panel();
-            PnlLimitations = new FancyPanel(Language.T("Limitations"));
-            PnlSettings = new FancyPanel(Language.T("Settings"));
-            ScrollBar = new VScrollBar();
-            BalanceChart = new SmallBalanceChart();
-            ProgressBar = new ProgressBar();
-            BtnOptimize = new Button();
-            BtnAccept = new Button();
-            BtnCancel = new Button();
+            pnlParamsBase = new Panel();
+            pnlParamsBase2 = new Panel();
+            pnlCaptions = new Panel();
+            pnlParams = new Panel();
+            pnlLimitations = new FancyPanel(Language.T("Limitations"));
+            pnlSettings = new FancyPanel(Language.T("Settings"));
+            scrollBar = new VScrollBar();
+            balanceChart = new SmallBalanceChart();
+            progressBar = new ProgressBar();
+            btnOptimize = new Button();
+            btnAccept = new Button();
+            btnCancel = new Button();
 
-            LblNoParams = new Label();
+            lblNoParams = new Label();
 
-            _fontIndicator = new Font(Font.FontFamily, 11);
-            _colorText = LayoutColors.ColorControlText;
+            fontIndicator = new Font(Font.FontFamily, 11);
+            colorText = LayoutColors.ColorControlText;
 
             // Panel Parameters Base
-            PnlParamsBase.Parent = this;
-            PnlParamsBase.BackColor = LayoutColors.ColorControlBack;
-            PnlParamsBase.Paint += PnlParamsBasePaint;
+            pnlParamsBase.Parent = this;
+            pnlParamsBase.BackColor = LayoutColors.ColorControlBack;
+            pnlParamsBase.Paint += PnlParamsBasePaint;
 
             // Panel Captions
-            PnlCaptions.Parent = PnlParamsBase;
-            PnlCaptions.Dock = DockStyle.Top;
-            PnlCaptions.BackColor = LayoutColors.ColorCaptionBack;
-            PnlCaptions.ForeColor = LayoutColors.ColorCaptionText;
-            PnlCaptions.Paint += PnlCaptionsPaint;
+            pnlCaptions.Parent = pnlParamsBase;
+            pnlCaptions.Dock = DockStyle.Top;
+            pnlCaptions.BackColor = LayoutColors.ColorCaptionBack;
+            pnlCaptions.ForeColor = LayoutColors.ColorCaptionText;
+            pnlCaptions.Paint += PnlCaptionsPaint;
 
             // Panel Parameters Base 2
-            PnlParamsBase2.Parent = PnlParamsBase;
-            PnlParamsBase2.BackColor = LayoutColors.ColorControlBack;
-            PnlParamsBase2.Resize += PnlParamsBase2Resize;
+            pnlParamsBase2.Parent = pnlParamsBase;
+            pnlParamsBase2.BackColor = LayoutColors.ColorControlBack;
+            pnlParamsBase2.Resize += PnlParamsBase2Resize;
 
             // ScrollBar
-            ScrollBar.Parent = PnlParamsBase2;
-            ScrollBar.Dock = DockStyle.Right;
-            ScrollBar.TabStop = true;
-            ScrollBar.ValueChanged += ScrollBarValueChanged;
-            ScrollBar.MouseWheel += ScrollBarMouseWheel;
+            scrollBar.Parent = pnlParamsBase2;
+            scrollBar.Dock = DockStyle.Right;
+            scrollBar.TabStop = true;
+            scrollBar.ValueChanged += ScrollBarValueChanged;
+            scrollBar.MouseWheel += ScrollBarMouseWheel;
 
             // Panel Parameters
-            PnlParams.Parent = PnlParamsBase2;
-            PnlParams.BackColor = LayoutColors.ColorControlBack;
+            pnlParams.Parent = pnlParamsBase2;
+            pnlParams.BackColor = LayoutColors.ColorControlBack;
 
             // Label No Parameters
-            LblNoParams.Parent = PnlParams;
-            LblNoParams.Text = Language.T("There are no parameters suitable for optimization.");
-            LblNoParams.AutoSize = true;
-            LblNoParams.Visible = false;
+            lblNoParams.Parent = pnlParams;
+            lblNoParams.Text = Language.T("There are no parameters suitable for optimization.");
+            lblNoParams.AutoSize = true;
+            lblNoParams.Visible = false;
 
             // Panel Limitations
-            PnlLimitations.Parent = this;
-            PnlLimitations.Visible = false;
+            pnlLimitations.Parent = this;
+            pnlLimitations.Visible = false;
 
             // Panel Settings
-            PnlSettings.Parent = this;
-            PnlSettings.Visible = false;
+            pnlSettings.Parent = this;
+            pnlSettings.Visible = false;
 
             // Small Balance Chart
-            BalanceChart.Parent = this;
-            BalanceChart.BackColor = LayoutColors.ColorControlBack;
-            BalanceChart.SetChartData();
+            balanceChart.Parent = this;
+            balanceChart.BackColor = LayoutColors.ColorControlBack;
+            balanceChart.SetChartData();
 
             // ProgressBar
-            ProgressBar.Parent = this;
-            ProgressBar.Minimum = 1;
-            ProgressBar.Maximum = 100;
-            ProgressBar.Step = 1;
+            progressBar.Parent = this;
+            progressBar.Minimum = 1;
+            progressBar.Maximum = 100;
+            progressBar.Step = 1;
 
             // Button Optimize
-            BtnOptimize.Parent = this;
-            BtnOptimize.Name = "btnOptimize";
-            BtnOptimize.Text = Language.T("Optimize");
-            BtnOptimize.TabIndex = 0;
-            BtnOptimize.Click += BtnOptimizeClick;
-            BtnOptimize.UseVisualStyleBackColor = true;
+            btnOptimize.Parent = this;
+            btnOptimize.Name = "btnOptimize";
+            btnOptimize.Text = Language.T("Optimize");
+            btnOptimize.TabIndex = 0;
+            btnOptimize.Click += BtnOptimizeClick;
+            btnOptimize.UseVisualStyleBackColor = true;
 
             // Button Accept
-            BtnAccept.Parent = this;
-            BtnAccept.Name = "btnAccept";
-            BtnAccept.Text = Language.T("Accept");
-            BtnAccept.TabIndex = 1;
-            BtnAccept.Enabled = false;
-            BtnAccept.DialogResult = DialogResult.OK;
-            BtnAccept.UseVisualStyleBackColor = true;
+            btnAccept.Parent = this;
+            btnAccept.Name = "btnAccept";
+            btnAccept.Text = Language.T("Accept");
+            btnAccept.TabIndex = 1;
+            btnAccept.Enabled = false;
+            btnAccept.DialogResult = DialogResult.OK;
+            btnAccept.UseVisualStyleBackColor = true;
 
             // Button Cancel
-            BtnCancel.Parent = this;
-            BtnCancel.Text = Language.T("Cancel");
-            BtnCancel.TabIndex = 2;
-            BtnCancel.DialogResult = DialogResult.Cancel;
-            BtnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Parent = this;
+            btnCancel.Text = Language.T("Cancel");
+            btnCancel.TabIndex = 2;
+            btnCancel.DialogResult = DialogResult.Cancel;
+            btnCancel.UseVisualStyleBackColor = true;
 
             // BackGroundWorker
-            BgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
-            BgWorker.DoWork += BgWorkerDoWork;
-            BgWorker.ProgressChanged += BgWorkerProgressChanged;
-            BgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
+            bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            bgWorker.DoWork += BgWorkerDoWork;
+            bgWorker.ProgressChanged += BgWorkerProgressChanged;
+            bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
         }
 
         /// <summary>
-        /// Sets controls in panel Limitations
+        ///     Sets controls in panel Limitations
         /// </summary>
         private void SetPanelLimitations()
         {
-            ChbAmbiguousBars = new CheckBox
-                                   {
-                                       Parent = PnlLimitations,
-                                       ForeColor = _colorText,
-                                       BackColor = Color.Transparent,
-                                       Text = Language.T("Maximum number of ambiguous bars"),
-                                       Checked = false,
-                                       AutoSize = true
-                                   };
+            chbAmbiguousBars = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Maximum number of ambiguous bars"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDAmbiguousBars = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDAmbiguousBars.BeginInit();
-            NUDAmbiguousBars.Minimum = 0;
-            NUDAmbiguousBars.Maximum = 100;
-            NUDAmbiguousBars.Increment = 1;
-            NUDAmbiguousBars.Value = 10;
-            NUDAmbiguousBars.EndInit();
+            nudAmbiguousBars = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudAmbiguousBars.BeginInit();
+            nudAmbiguousBars.Minimum = 0;
+            nudAmbiguousBars.Maximum = 100;
+            nudAmbiguousBars.Increment = 1;
+            nudAmbiguousBars.Value = 10;
+            nudAmbiguousBars.EndInit();
 
-            ChbMaxDrawdown = new CheckBox
-                                 {
-                                     Parent = PnlLimitations,
-                                     ForeColor = _colorText,
-                                     BackColor = Color.Transparent,
-                                     Checked = false,
-                                     Text = Language.T("Maximum equity drawdown") + " [" +
-                                            (Configs.AccountInMoney
-                                                 ? Configs.AccountCurrency + "]"
-                                                 : Language.T("pips") + "]"),
-                                     AutoSize = true
-                                 };
+            chbMaxDrawdown = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Checked = false,
+                    Text = Language.T("Maximum equity drawdown") + " [" +
+                           (Configs.AccountInMoney
+                                ? Configs.AccountCurrency + "]"
+                                : Language.T("pips") + "]"),
+                    AutoSize = true
+                };
 
-            NUDMaxDrawdown = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDMaxDrawdown.BeginInit();
-            NUDMaxDrawdown.Minimum = 0;
-            NUDMaxDrawdown.Maximum = Configs.InitialAccount;
-            NUDMaxDrawdown.Increment = 10;
-            NUDMaxDrawdown.Value = Configs.InitialAccount/4M;
-            NUDMaxDrawdown.EndInit();
+            nudMaxDrawdown = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudMaxDrawdown.BeginInit();
+            nudMaxDrawdown.Minimum = 0;
+            nudMaxDrawdown.Maximum = Configs.InitialAccount;
+            nudMaxDrawdown.Increment = 10;
+            nudMaxDrawdown.Value = Configs.InitialAccount/4M;
+            nudMaxDrawdown.EndInit();
 
-            ChbEquityPercent = new CheckBox
-                                   {
-                                       Parent = PnlLimitations,
-                                       ForeColor = _colorText,
-                                       BackColor = Color.Transparent,
-                                       Text = Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency +"]",
-                                       Checked = false,
-                                       AutoSize = true
-                                   };
+            chbEquityPercent = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency + "]",
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDEquityPercent = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDEquityPercent.BeginInit();
-            NUDEquityPercent.Minimum = 1;
-            NUDEquityPercent.Maximum = 100;
-            NUDEquityPercent.Increment = 1;
-            NUDEquityPercent.Value = 25;
-            NUDEquityPercent.EndInit();
+            nudEquityPercent = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudEquityPercent.BeginInit();
+            nudEquityPercent.Minimum = 1;
+            nudEquityPercent.Maximum = 100;
+            nudEquityPercent.Increment = 1;
+            nudEquityPercent.Value = 25;
+            nudEquityPercent.EndInit();
 
-            ChbMinTrades = new CheckBox
-                               {
-                                   Parent = PnlLimitations,
-                                   ForeColor = _colorText,
-                                   BackColor = Color.Transparent,
-                                   Text = Language.T("Minimum number of trades"),
-                                   Checked = true,
-                                   AutoSize = true
-                               };
+            chbMinTrades = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Minimum number of trades"),
+                    Checked = true,
+                    AutoSize = true
+                };
 
-            NUDMinTrades = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDMinTrades.BeginInit();
-            NUDMinTrades.Minimum = 10;
-            NUDMinTrades.Maximum = 1000;
-            NUDMinTrades.Increment = 10;
-            NUDMinTrades.Value = 100;
-            NUDMinTrades.EndInit();
+            nudMinTrades = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudMinTrades.BeginInit();
+            nudMinTrades.Minimum = 10;
+            nudMinTrades.Maximum = 1000;
+            nudMinTrades.Increment = 10;
+            nudMinTrades.Value = 100;
+            nudMinTrades.EndInit();
 
-            ChbMaxTrades = new CheckBox
-                               {
-                                   Parent = PnlLimitations,
-                                   ForeColor = _colorText,
-                                   BackColor = Color.Transparent,
-                                   Text = Language.T("Maximum number of trades"),
-                                   Checked = false,
-                                   AutoSize = true
-                               };
+            chbMaxTrades = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Maximum number of trades"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDMaxTrades = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDMaxTrades.BeginInit();
-            NUDMaxTrades.Minimum = 10;
-            NUDMaxTrades.Maximum = 10000;
-            NUDMaxTrades.Increment = 10;
-            NUDMaxTrades.Value = 1000;
-            NUDMaxTrades.EndInit();
+            nudMaxTrades = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudMaxTrades.BeginInit();
+            nudMaxTrades.Minimum = 10;
+            nudMaxTrades.Maximum = 10000;
+            nudMaxTrades.Increment = 10;
+            nudMaxTrades.Value = 1000;
+            nudMaxTrades.EndInit();
 
-            ChbWinLossRatio = new CheckBox
-                                  {
-                                      Parent = PnlLimitations,
-                                      ForeColor = _colorText,
-                                      BackColor = Color.Transparent,
-                                      Text = Language.T("Minimum win / loss trades ratio"),
-                                      Checked = false,
-                                      AutoSize = true
-                                  };
+            chbWinLossRatio = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Minimum win / loss trades ratio"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDWinLossRatio = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDWinLossRatio.BeginInit();
-            NUDWinLossRatio.Minimum = 0.10M;
-            NUDWinLossRatio.Maximum = 1;
-            NUDWinLossRatio.Increment = 0.01M;
-            NUDWinLossRatio.Value = 0.30M;
-            NUDWinLossRatio.DecimalPlaces = 2;
-            NUDWinLossRatio.EndInit();
+            nudWinLossRatio = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudWinLossRatio.BeginInit();
+            nudWinLossRatio.Minimum = 0.10M;
+            nudWinLossRatio.Maximum = 1;
+            nudWinLossRatio.Increment = 0.01M;
+            nudWinLossRatio.Value = 0.30M;
+            nudWinLossRatio.DecimalPlaces = 2;
+            nudWinLossRatio.EndInit();
 
-            ChbOOSPatternFilter = new CheckBox
-                                      {
-                                          Parent = PnlLimitations,
-                                          ForeColor = _colorText,
-                                          BackColor = Color.Transparent,
-                                          Text = Language.T("Filter bad OOS performance"),
-                                          Checked = false,
-                                          AutoSize = true
-                                      };
+            chbOOSPatternFilter = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Filter bad OOS performance"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDOOSPatternPercent = new NumericUpDown {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDOOSPatternPercent.BeginInit();
-            NUDOOSPatternPercent.Minimum = 1;
-            NUDOOSPatternPercent.Maximum = 50;
-            NUDOOSPatternPercent.Value = 20;
-            NUDOOSPatternPercent.EndInit();
-            _toolTip.SetToolTip(NUDOOSPatternPercent, Language.T("Deviation percent."));
+            nudoosPatternPercent = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudoosPatternPercent.BeginInit();
+            nudoosPatternPercent.Minimum = 1;
+            nudoosPatternPercent.Maximum = 50;
+            nudoosPatternPercent.Value = 20;
+            nudoosPatternPercent.EndInit();
+            toolTip.SetToolTip(nudoosPatternPercent, Language.T("Deviation percent."));
 
-            ChbSmoothBalanceLines = new CheckBox
-                                        {
-                                            Parent = PnlLimitations,
-                                            ForeColor = _colorText,
-                                            BackColor = Color.Transparent,
-                                            Text = Language.T("Filter non-linear balance pattern"),
-                                            Checked = false,
-                                            AutoSize = true
-                                        };
+            chbSmoothBalanceLines = new CheckBox
+                {
+                    Parent = pnlLimitations,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Filter non-linear balance pattern"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            NUDSmoothBalancePercent = new NumericUpDown
-                                          {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDSmoothBalancePercent.BeginInit();
-            NUDSmoothBalancePercent.Minimum = 1;
-            NUDSmoothBalancePercent.Maximum = 50;
-            NUDSmoothBalancePercent.Value = 20;
-            NUDSmoothBalancePercent.EndInit();
-            _toolTip.SetToolTip(NUDSmoothBalancePercent, Language.T("Deviation percent."));
+            nudSmoothBalancePercent = new NumericUpDown
+                {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudSmoothBalancePercent.BeginInit();
+            nudSmoothBalancePercent.Minimum = 1;
+            nudSmoothBalancePercent.Maximum = 50;
+            nudSmoothBalancePercent.Value = 20;
+            nudSmoothBalancePercent.EndInit();
+            toolTip.SetToolTip(nudSmoothBalancePercent, Language.T("Deviation percent."));
 
-            NUDSmoothBalanceCheckPoints = new NumericUpDown
-                                              {Parent = PnlLimitations, TextAlign = HorizontalAlignment.Center};
-            NUDSmoothBalanceCheckPoints.BeginInit();
-            NUDSmoothBalanceCheckPoints.Minimum = 1;
-            NUDSmoothBalanceCheckPoints.Maximum = 50;
-            NUDSmoothBalanceCheckPoints.Value = 1;
-            NUDSmoothBalanceCheckPoints.EndInit();
-            _toolTip.SetToolTip(NUDSmoothBalanceCheckPoints, Language.T("Check points count."));
+            nudSmoothBalanceCheckPoints = new NumericUpDown
+                {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
+            nudSmoothBalanceCheckPoints.BeginInit();
+            nudSmoothBalanceCheckPoints.Minimum = 1;
+            nudSmoothBalanceCheckPoints.Maximum = 50;
+            nudSmoothBalanceCheckPoints.Value = 1;
+            nudSmoothBalanceCheckPoints.EndInit();
+            toolTip.SetToolTip(nudSmoothBalanceCheckPoints, Language.T("Check points count."));
         }
 
         /// <summary>
-        /// Sets controls in panel Settings
+        ///     Sets controls in panel Settings
         /// </summary>
         private void SetPanelSettings()
         {
-            ChbOutOfSample = new CheckBox
-                                 {
-                                     Parent = PnlSettings,
-                                     ForeColor = _colorText,
-                                     BackColor = Color.Transparent,
-                                     Text = Language.T("Out of sample testing, percent of OOS bars"),
-                                     Checked = false,
-                                     AutoSize = true
-                                 };
-            ChbOutOfSample.CheckedChanged += ChbOutOfSampleCheckedChanged;
+            chbOutOfSample = new CheckBox
+                {
+                    Parent = pnlSettings,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Out of sample testing, percent of OOS bars"),
+                    Checked = false,
+                    AutoSize = true
+                };
+            chbOutOfSample.CheckedChanged += ChbOutOfSampleCheckedChanged;
 
-            NUDOutOfSample = new NumericUpDown {Parent = PnlSettings, TextAlign = HorizontalAlignment.Center};
-            NUDOutOfSample.BeginInit();
-            NUDOutOfSample.Minimum = 10;
-            NUDOutOfSample.Maximum = 60;
-            NUDOutOfSample.Increment = 1;
-            NUDOutOfSample.Value = 30;
-            NUDOutOfSample.EndInit();
-            NUDOutOfSample.ValueChanged += NudOutOfSampleValueChanged;
+            nudOutOfSample = new NumericUpDown {Parent = pnlSettings, TextAlign = HorizontalAlignment.Center};
+            nudOutOfSample.BeginInit();
+            nudOutOfSample.Minimum = 10;
+            nudOutOfSample.Maximum = 60;
+            nudOutOfSample.Increment = 1;
+            nudOutOfSample.Value = 30;
+            nudOutOfSample.EndInit();
+            nudOutOfSample.ValueChanged += NudOutOfSampleValueChanged;
 
-            ChbOptimizerWritesReport = new CheckBox
-                                           {
-                                               Parent = PnlSettings,
-                                               ForeColor = _colorText,
-                                               BackColor = Color.Transparent,
-                                               Text = Language.T("Optimizer writes a report for each optimized strategy"),
-                                               Checked = false,
-                                               AutoSize = true
-                                           };
+            chbOptimizerWritesReport = new CheckBox
+                {
+                    Parent = pnlSettings,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Optimizer writes a report for each optimized strategy"),
+                    Checked = false,
+                    AutoSize = true
+                };
 
-            ChbHideFSB = new CheckBox
-                             {
-                                 Parent = PnlSettings,
-                                 ForeColor = _colorText,
-                                 BackColor = Color.Transparent,
-                                 Text = Language.T("Hide FSB when Optimizer starts"),
-                                 Checked = true,
-                                 AutoSize = true
-                             };
+            chbHideFSB = new CheckBox
+                {
+                    Parent = pnlSettings,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Hide FSB when Optimizer starts"),
+                    Checked = true,
+                    AutoSize = true
+                };
 
-            BtnResetSettings = new Button
-                                   {
-                                       Parent = PnlSettings,
-                                       UseVisualStyleBackColor = true,
-                                       Text = Language.T("Reset all parameters and settings")
-                                   };
-            BtnResetSettings.Click += BtnResetClick;
+            btnResetSettings = new Button
+                {
+                    Parent = pnlSettings,
+                    UseVisualStyleBackColor = true,
+                    Text = Language.T("Reset all parameters and settings")
+                };
+            btnResetSettings.Click += BtnResetClick;
         }
 
         /// <summary>
-        /// Sets ups the chart's buttons.
+        ///     Sets ups the chart's buttons.
         /// </summary>
         private void SetupButtons()
         {
-            TsOptimizerButtons = new ToolStrip {Parent = this};
+            tsOptimizerButtons = new ToolStrip {Parent = this};
 
-            AOptimizerButtons = new ToolStripButton[Enum.GetValues(typeof (OptimizerButtons)).Length];
-            for (int i = 0; i < AOptimizerButtons.Length; i++)
+            aOptimizerButtons = new ToolStripButton[Enum.GetValues(typeof (OptimizerButtons)).Length];
+            for (int i = 0; i < aOptimizerButtons.Length; i++)
             {
-                AOptimizerButtons[i] = new ToolStripButton {Tag = (OptimizerButtons) i};
-                AOptimizerButtons[i].Click += ButtonsClick;
-                AOptimizerButtons[i].DisplayStyle = ToolStripItemDisplayStyle.Text;
-                TsOptimizerButtons.Items.Add(AOptimizerButtons[i]);
-                if (i == (int)OptimizerButtons.SelectRandom ||
-                    i == (int)OptimizerButtons.SetStep20 ||
-                    i == (int)OptimizerButtons.ResetStrategy)
-                    TsOptimizerButtons.Items.Add(new ToolStripSeparator());
+                aOptimizerButtons[i] = new ToolStripButton {Tag = (OptimizerButtons) i};
+                aOptimizerButtons[i].Click += ButtonsClick;
+                aOptimizerButtons[i].DisplayStyle = ToolStripItemDisplayStyle.Text;
+                tsOptimizerButtons.Items.Add(aOptimizerButtons[i]);
+                if (i == (int) OptimizerButtons.SelectRandom ||
+                    i == (int) OptimizerButtons.SetStep20 ||
+                    i == (int) OptimizerButtons.ResetStrategy)
+                    tsOptimizerButtons.Items.Add(new ToolStripSeparator());
             }
 
             // Select All
-            AOptimizerButtons[(int) OptimizerButtons.SelectAll].Image = Resources.optimizer_select_all;
-            AOptimizerButtons[(int) OptimizerButtons.SelectAll].DisplayStyle = ToolStripItemDisplayStyle.Image;
-            AOptimizerButtons[(int) OptimizerButtons.SelectAll].ToolTipText = Language.T("Select all parameters.");
+            aOptimizerButtons[(int) OptimizerButtons.SelectAll].Image = Resources.optimizer_select_all;
+            aOptimizerButtons[(int) OptimizerButtons.SelectAll].DisplayStyle = ToolStripItemDisplayStyle.Image;
+            aOptimizerButtons[(int) OptimizerButtons.SelectAll].ToolTipText = Language.T("Select all parameters.");
 
             // Select None
-            AOptimizerButtons[(int) OptimizerButtons.SelectNone].Image = Resources.optimizer_select_none;
-            AOptimizerButtons[(int) OptimizerButtons.SelectNone].DisplayStyle = ToolStripItemDisplayStyle.Image;
-            AOptimizerButtons[(int) OptimizerButtons.SelectNone].ToolTipText = Language.T("Select none of the parameters.");
+            aOptimizerButtons[(int) OptimizerButtons.SelectNone].Image = Resources.optimizer_select_none;
+            aOptimizerButtons[(int) OptimizerButtons.SelectNone].DisplayStyle = ToolStripItemDisplayStyle.Image;
+            aOptimizerButtons[(int) OptimizerButtons.SelectNone].ToolTipText =
+                Language.T("Select none of the parameters.");
 
             // Select Random
-            AOptimizerButtons[(int) OptimizerButtons.SelectRandom].Image = Resources.optimizer_select_random;
-            AOptimizerButtons[(int) OptimizerButtons.SelectRandom].DisplayStyle = ToolStripItemDisplayStyle.Image;
-            AOptimizerButtons[(int) OptimizerButtons.SelectRandom].ToolTipText = Language.T("Select a random number of parameters.");
+            aOptimizerButtons[(int) OptimizerButtons.SelectRandom].Image = Resources.optimizer_select_random;
+            aOptimizerButtons[(int) OptimizerButtons.SelectRandom].DisplayStyle = ToolStripItemDisplayStyle.Image;
+            aOptimizerButtons[(int) OptimizerButtons.SelectRandom].ToolTipText =
+                Language.T("Select a random number of parameters.");
 
             // Set step 5
-            AOptimizerButtons[(int) OptimizerButtons.SetStep5].Text = "±5";
-            AOptimizerButtons[(int) OptimizerButtons.SetStep5].ToolTipText = Language.T("Set Min / Max ± # steps.").Replace("#", "5");
+            aOptimizerButtons[(int) OptimizerButtons.SetStep5].Text = "±5";
+            aOptimizerButtons[(int) OptimizerButtons.SetStep5].ToolTipText =
+                Language.T("Set Min / Max ± # steps.").Replace("#", "5");
 
             // Set step 10
-            AOptimizerButtons[(int) OptimizerButtons.SetStep10].Text = "±10";
-            AOptimizerButtons[(int) OptimizerButtons.SetStep10].ToolTipText = Language.T("Set Min / Max ± # steps.").Replace("#", "10");
+            aOptimizerButtons[(int) OptimizerButtons.SetStep10].Text = "±10";
+            aOptimizerButtons[(int) OptimizerButtons.SetStep10].ToolTipText =
+                Language.T("Set Min / Max ± # steps.").Replace("#", "10");
 
             // Set step 15
-            AOptimizerButtons[(int) OptimizerButtons.SetStep15].Text = "±15";
-            AOptimizerButtons[(int) OptimizerButtons.SetStep15].ToolTipText = Language.T("Set Min / Max ± # steps.").Replace("#", "15");
+            aOptimizerButtons[(int) OptimizerButtons.SetStep15].Text = "±15";
+            aOptimizerButtons[(int) OptimizerButtons.SetStep15].ToolTipText =
+                Language.T("Set Min / Max ± # steps.").Replace("#", "15");
 
             // Set step 20
-            AOptimizerButtons[(int) OptimizerButtons.SetStep20].Text = "±20";
-            AOptimizerButtons[(int) OptimizerButtons.SetStep20].ToolTipText = Language.T("Set Min / Max ± # steps.").Replace("#", "20");
+            aOptimizerButtons[(int) OptimizerButtons.SetStep20].Text = "±20";
+            aOptimizerButtons[(int) OptimizerButtons.SetStep20].ToolTipText =
+                Language.T("Set Min / Max ± # steps.").Replace("#", "20");
 
             // Reset Strategy
-            AOptimizerButtons[(int) OptimizerButtons.ResetStrategy].Image = Resources.refresh;
-            AOptimizerButtons[(int) OptimizerButtons.ResetStrategy].DisplayStyle = ToolStripItemDisplayStyle.Image;
-            AOptimizerButtons[(int) OptimizerButtons.ResetStrategy].ToolTipText = Language.T("Reset strategy parameters.");
+            aOptimizerButtons[(int) OptimizerButtons.ResetStrategy].Image = Resources.refresh;
+            aOptimizerButtons[(int) OptimizerButtons.ResetStrategy].DisplayStyle = ToolStripItemDisplayStyle.Image;
+            aOptimizerButtons[(int) OptimizerButtons.ResetStrategy].ToolTipText =
+                Language.T("Reset strategy parameters.");
 
             // Show Parameters
-            AOptimizerButtons[(int) OptimizerButtons.ShowParams].Text = Language.T("Parameters");
-            AOptimizerButtons[(int) OptimizerButtons.ShowParams].ToolTipText = Language.T("Show indicator parameters.");
-            AOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = false;
+            aOptimizerButtons[(int) OptimizerButtons.ShowParams].Text = Language.T("Parameters");
+            aOptimizerButtons[(int) OptimizerButtons.ShowParams].ToolTipText = Language.T("Show indicator parameters.");
+            aOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = false;
 
             // Show Limitations
-            AOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Text = Language.T("Limitations");
-            AOptimizerButtons[(int) OptimizerButtons.ShowLimitations].ToolTipText =
+            aOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Text = Language.T("Limitations");
+            aOptimizerButtons[(int) OptimizerButtons.ShowLimitations].ToolTipText =
                 Language.T("Show strategy limitations.");
 
             // Show Settings
-            AOptimizerButtons[(int) OptimizerButtons.ShowSettings].Text = Language.T("Settings");
-            AOptimizerButtons[(int) OptimizerButtons.ShowSettings].ToolTipText = Language.T("Show optimizer settings.");
+            aOptimizerButtons[(int) OptimizerButtons.ShowSettings].Text = Language.T("Settings");
+            aOptimizerButtons[(int) OptimizerButtons.ShowSettings].ToolTipText = Language.T("Show optimizer settings.");
         }
 
         /// <summary>
-        /// Loads and parses the optimizer's options.
+        ///     Loads and parses the optimizer's options.
         /// </summary>
         private void LoadOptions()
         {
@@ -427,30 +438,30 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             try
             {
                 if (int.Parse(options[i++]) < OptionsVersion) return;
-                ChbOutOfSample.Checked = bool.Parse(options[i++]);
-                NUDOutOfSample.Value = int.Parse(options[i++]);
-                ChbAmbiguousBars.Checked = bool.Parse(options[i++]);
-                NUDAmbiguousBars.Value = int.Parse(options[i++]);
-                ChbMaxDrawdown.Checked = bool.Parse(options[i++]);
-                NUDMaxDrawdown.Value = int.Parse(options[i++]);
-                ChbMinTrades.Checked = bool.Parse(options[i++]);
-                NUDMinTrades.Value = int.Parse(options[i++]);
-                ChbMaxTrades.Checked = bool.Parse(options[i++]);
-                NUDMaxTrades.Value = int.Parse(options[i++]);
-                ChbWinLossRatio.Checked = bool.Parse(options[i++]);
-                NUDWinLossRatio.Value = int.Parse(options[i++])/100M;
-                ChbEquityPercent.Checked = bool.Parse(options[i++]);
-                NUDEquityPercent.Value = int.Parse(options[i++]);
-                ChbOOSPatternFilter.Checked = bool.Parse(options[i++]);
-                NUDOOSPatternPercent.Value = int.Parse(options[i++]);
-                ChbSmoothBalanceLines.Checked = bool.Parse(options[i++]);
-                NUDSmoothBalancePercent.Value = int.Parse(options[i++]);
-                NUDSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
-                ChbOptimizerWritesReport.Checked = bool.Parse(options[i++]);
-                ChbHideFSB.Checked = bool.Parse(options[i++]);
-                _formHeight = int.Parse(options[i++]);
-                _lastSelectButton = (OptimizerButtons) Enum.Parse(typeof (OptimizerButtons), options[i++]);
-                _lastSetStepButtonValue = int.Parse(options[i]);
+                chbOutOfSample.Checked = bool.Parse(options[i++]);
+                nudOutOfSample.Value = int.Parse(options[i++]);
+                chbAmbiguousBars.Checked = bool.Parse(options[i++]);
+                nudAmbiguousBars.Value = int.Parse(options[i++]);
+                chbMaxDrawdown.Checked = bool.Parse(options[i++]);
+                nudMaxDrawdown.Value = int.Parse(options[i++]);
+                chbMinTrades.Checked = bool.Parse(options[i++]);
+                nudMinTrades.Value = int.Parse(options[i++]);
+                chbMaxTrades.Checked = bool.Parse(options[i++]);
+                nudMaxTrades.Value = int.Parse(options[i++]);
+                chbWinLossRatio.Checked = bool.Parse(options[i++]);
+                nudWinLossRatio.Value = int.Parse(options[i++])/100M;
+                chbEquityPercent.Checked = bool.Parse(options[i++]);
+                nudEquityPercent.Value = int.Parse(options[i++]);
+                chbOOSPatternFilter.Checked = bool.Parse(options[i++]);
+                nudoosPatternPercent.Value = int.Parse(options[i++]);
+                chbSmoothBalanceLines.Checked = bool.Parse(options[i++]);
+                nudSmoothBalancePercent.Value = int.Parse(options[i++]);
+                nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
+                chbOptimizerWritesReport.Checked = bool.Parse(options[i++]);
+                chbHideFSB.Checked = bool.Parse(options[i++]);
+                formHeight = int.Parse(options[i++]);
+                lastSelectButton = (OptimizerButtons) Enum.Parse(typeof (OptimizerButtons), options[i++]);
+                lastSetStepButtonValue = int.Parse(options[i]);
             }
             catch (Exception exception)
             {
@@ -459,42 +470,42 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Saves the generator's options.
+        ///     Saves the generator's options.
         /// </summary>
         private void SaveOptions()
         {
             string options =
                 OptionsVersion + ";" +
-                ChbOutOfSample.Checked + ";" +
-                NUDOutOfSample.Value + ";" +
-                ChbAmbiguousBars.Checked + ";" +
-                NUDAmbiguousBars.Value + ";" +
-                ChbMaxDrawdown.Checked + ";" +
-                NUDMaxDrawdown.Value + ";" +
-                ChbMinTrades.Checked + ";" +
-                NUDMinTrades.Value + ";" +
-                ChbMaxTrades.Checked + ";" +
-                NUDMaxTrades.Value + ";" +
-                ChbWinLossRatio.Checked + ";" +
-                ((int) (NUDWinLossRatio.Value*100M)) + ";" +
-                ChbEquityPercent.Checked + ";" +
-                NUDEquityPercent.Value + ";" +
-                ChbOOSPatternFilter.Checked + ";" +
-                NUDOOSPatternPercent.Value + ";" +
-                ChbSmoothBalanceLines.Checked + ";" +
-                NUDSmoothBalancePercent.Value + ";" +
-                NUDSmoothBalanceCheckPoints.Value + ";" +
-                ChbOptimizerWritesReport.Checked + ";" +
-                ChbHideFSB.Checked + ";" +
+                chbOutOfSample.Checked + ";" +
+                nudOutOfSample.Value + ";" +
+                chbAmbiguousBars.Checked + ";" +
+                nudAmbiguousBars.Value + ";" +
+                chbMaxDrawdown.Checked + ";" +
+                nudMaxDrawdown.Value + ";" +
+                chbMinTrades.Checked + ";" +
+                nudMinTrades.Value + ";" +
+                chbMaxTrades.Checked + ";" +
+                nudMaxTrades.Value + ";" +
+                chbWinLossRatio.Checked + ";" +
+                ((int) (nudWinLossRatio.Value*100M)) + ";" +
+                chbEquityPercent.Checked + ";" +
+                nudEquityPercent.Value + ";" +
+                chbOOSPatternFilter.Checked + ";" +
+                nudoosPatternPercent.Value + ";" +
+                chbSmoothBalanceLines.Checked + ";" +
+                nudSmoothBalancePercent.Value + ";" +
+                nudSmoothBalanceCheckPoints.Value + ";" +
+                chbOptimizerWritesReport.Checked + ";" +
+                chbHideFSB.Checked + ";" +
                 Height + ";" +
-                _lastSelectButton + ";" +
-                _lastSetStepButtonValue;
+                lastSelectButton + ";" +
+                lastSetStepButtonValue;
 
             Configs.OptimizerOptions = options;
         }
 
         /// <summary>
-        /// Paints pnlCaptions
+        ///     Paints pnlCaptions
         /// </summary>
         private void PnlCaptionsPaint(object sender, PaintEventArgs e)
         {
@@ -516,53 +527,56 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Paints PnlParamsBase
+        ///     Paints PnlParamsBase
         /// </summary>
         private void PnlParamsBasePaint(object sender, PaintEventArgs e)
         {
             var pnl = (Panel) sender;
             Graphics g = e.Graphics;
-            var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), Border);
+            var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
+                                    Border);
 
             g.DrawLine(penBorder, 1, 0, 1, pnl.ClientSize.Height);
-            g.DrawLine(penBorder, pnl.ClientSize.Width - Border + 1, 0, pnl.ClientSize.Width - Border + 1, pnl.ClientSize.Height);
-            g.DrawLine(penBorder, 0, pnl.ClientSize.Height - Border + 1, pnl.ClientSize.Width, pnl.ClientSize.Height - Border + 1);
+            g.DrawLine(penBorder, pnl.ClientSize.Width - Border + 1, 0, pnl.ClientSize.Width - Border + 1,
+                       pnl.ClientSize.Height);
+            g.DrawLine(penBorder, 0, pnl.ClientSize.Height - Border + 1, pnl.ClientSize.Width,
+                       pnl.ClientSize.Height - Border + 1);
         }
 
         /// <summary>
-        /// Out of Sample
+        ///     Out of Sample
         /// </summary>
         private void NudOutOfSampleValueChanged(object sender, EventArgs e)
         {
-            _isOOS = ChbOutOfSample.Checked;
-            _barOOS = Data.Bars - Data.Bars*(int) NUDOutOfSample.Value/100 - 1;
+            isOOS = chbOutOfSample.Checked;
+            barOOS = Data.Bars - Data.Bars*(int) nudOutOfSample.Value/100 - 1;
 
-            BalanceChart.OOSBar = _barOOS;
+            balanceChart.OOSBar = barOOS;
 
-            if (!_isOOS) return;
-            BalanceChart.SetChartData();
-            BalanceChart.InitChart();
-            BalanceChart.Invalidate();
+            if (!isOOS) return;
+            balanceChart.SetChartData();
+            balanceChart.InitChart();
+            balanceChart.Invalidate();
         }
 
         /// <summary>
-        /// Out of Sample
+        ///     Out of Sample
         /// </summary>
         private void ChbOutOfSampleCheckedChanged(object sender, EventArgs e)
         {
-            _isOOS = ChbOutOfSample.Checked;
-            _barOOS = Data.Bars - Data.Bars*(int) NUDOutOfSample.Value/100 - 1;
+            isOOS = chbOutOfSample.Checked;
+            barOOS = Data.Bars - Data.Bars*(int) nudOutOfSample.Value/100 - 1;
 
-            BalanceChart.IsOOS = _isOOS;
-            BalanceChart.OOSBar = _barOOS;
+            balanceChart.IsOOS = isOOS;
+            balanceChart.OOSBar = barOOS;
 
-            BalanceChart.SetChartData();
-            BalanceChart.InitChart();
-            BalanceChart.Invalidate();
+            balanceChart.SetChartData();
+            balanceChart.InitChart();
+            balanceChart.Invalidate();
         }
 
         /// <summary>
-        /// Changes chart's settings after a button click.
+        ///     Changes chart's settings after a button click.
         /// </summary>
         private void ButtonsClick(object sender, EventArgs e)
         {
@@ -572,70 +586,70 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
             switch (button)
             {
                 case OptimizerButtons.ShowParams:
-                    PnlParamsBase.Visible = true;
-                    PnlLimitations.Visible = false;
-                    PnlSettings.Visible = false;
-                    if (_isOptimizing == false)
+                    pnlParamsBase.Visible = true;
+                    pnlLimitations.Visible = false;
+                    pnlSettings.Visible = false;
+                    if (isOptimizing == false)
                         for (int i = 0; i <= (int) OptimizerButtons.SetStep15; i++)
-                            AOptimizerButtons[i].Enabled = true;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = false;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Enabled = true;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowSettings].Enabled = true;
+                            aOptimizerButtons[i].Enabled = true;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = false;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Enabled = true;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowSettings].Enabled = true;
                     break;
                 case OptimizerButtons.ShowLimitations:
-                    PnlParamsBase.Visible = false;
-                    PnlLimitations.Visible = true;
-                    PnlSettings.Visible = false;
+                    pnlParamsBase.Visible = false;
+                    pnlLimitations.Visible = true;
+                    pnlSettings.Visible = false;
                     for (int i = 0; i <= (int) OptimizerButtons.SetStep15; i++)
-                        AOptimizerButtons[i].Enabled = false;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = true;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Enabled = false;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowSettings].Enabled = true;
+                        aOptimizerButtons[i].Enabled = false;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = true;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Enabled = false;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowSettings].Enabled = true;
                     break;
                 case OptimizerButtons.ShowSettings:
-                    PnlParamsBase.Visible = false;
-                    PnlLimitations.Visible = false;
-                    PnlSettings.Visible = true;
+                    pnlParamsBase.Visible = false;
+                    pnlLimitations.Visible = false;
+                    pnlSettings.Visible = true;
                     for (int i = 0; i <= (int) OptimizerButtons.SetStep15; i++)
-                        AOptimizerButtons[i].Enabled = false;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = true;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Enabled = true;
-                    AOptimizerButtons[(int) OptimizerButtons.ShowSettings].Enabled = false;
+                        aOptimizerButtons[i].Enabled = false;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = true;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Enabled = true;
+                    aOptimizerButtons[(int) OptimizerButtons.ShowSettings].Enabled = false;
                     break;
             }
 
-            if (_isOptimizing)
+            if (isOptimizing)
                 return;
 
             switch (button)
             {
                 case OptimizerButtons.SelectAll:
                     SelectParameters(OptimizerButtons.SelectAll);
-                    _lastSelectButton = OptimizerButtons.SelectAll;
+                    lastSelectButton = OptimizerButtons.SelectAll;
                     break;
                 case OptimizerButtons.SelectNone:
                     SelectParameters(OptimizerButtons.SelectNone);
-                    _lastSelectButton = OptimizerButtons.SelectNone;
+                    lastSelectButton = OptimizerButtons.SelectNone;
                     break;
                 case OptimizerButtons.SelectRandom:
                     SelectParameters(OptimizerButtons.SelectRandom);
-                    _lastSelectButton = OptimizerButtons.SelectRandom;
+                    lastSelectButton = OptimizerButtons.SelectRandom;
                     break;
                 case OptimizerButtons.SetStep5:
                     SetParamsMinMax(5);
-                    _lastSetStepButtonValue = 5;
+                    lastSetStepButtonValue = 5;
                     break;
                 case OptimizerButtons.SetStep10:
                     SetParamsMinMax(10);
-                    _lastSetStepButtonValue = 10;
+                    lastSetStepButtonValue = 10;
                     break;
                 case OptimizerButtons.SetStep15:
                     SetParamsMinMax(15);
-                    _lastSetStepButtonValue = 15;
+                    lastSetStepButtonValue = 15;
                     break;
                 case OptimizerButtons.SetStep20:
                     SetParamsMinMax(20);
-                    _lastSetStepButtonValue = 20;
+                    lastSetStepButtonValue = 20;
                     break;
                 case OptimizerButtons.ResetStrategy:
                     ResetStrategyParameters();
@@ -644,76 +658,76 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Check Box checked changed
+        ///     Check Box checked changed
         /// </summary>
         private void OptimizerCheckedChanged(object sender, EventArgs e)
         {
-            BtnOptimize.Focus();
+            btnOptimize.Focus();
         }
 
         /// <summary>
-        /// Arranges the controls into the pnlParams
+        ///     Arranges the controls into the pnlParams
         /// </summary>
         private void PnlParamsBase2Resize(object sender, EventArgs e)
         {
-            if (PnlParams.Height > PnlParamsBase2.Height)
+            if (pnlParams.Height > pnlParamsBase2.Height)
             {
-                ScrollBar.Maximum = PnlParams.Height - PnlParamsBase2.Height + 40;
-                ScrollBar.Value = 0;
-                ScrollBar.SmallChange = 20;
-                ScrollBar.LargeChange = 40;
-                ScrollBar.Visible = true;
+                scrollBar.Maximum = pnlParams.Height - pnlParamsBase2.Height + 40;
+                scrollBar.Value = 0;
+                scrollBar.SmallChange = 20;
+                scrollBar.LargeChange = 40;
+                scrollBar.Visible = true;
             }
             else
             {
-                ScrollBar.Visible = false;
-                ScrollBar.Minimum = 0;
-                ScrollBar.Maximum = 0;
-                ScrollBar.Value = 0;
+                scrollBar.Visible = false;
+                scrollBar.Minimum = 0;
+                scrollBar.Maximum = 0;
+                scrollBar.Value = 0;
             }
 
-            PnlParams.Location = new Point(0, -ScrollBar.Value);
+            pnlParams.Location = new Point(0, -scrollBar.Value);
         }
 
         /// <summary>
-        /// Invalidate the Panel Parameters
+        ///     Invalidate the Panel Parameters
         /// </summary>
         private void ScrollBarValueChanged(object sender, EventArgs e)
         {
-            PnlParams.Location = new Point(0, -ScrollBar.Value);
+            pnlParams.Location = new Point(0, -scrollBar.Value);
         }
 
         /// <summary>
-        /// Shift the pnlParams viewpoint
+        ///     Shift the pnlParams viewpoint
         /// </summary>
         private void ScrollBarMouseWheel(object sender, MouseEventArgs e)
         {
-            if (!ScrollBar.Visible) return;
-            int newValue = ScrollBar.Value - e.Delta/120;
+            if (!scrollBar.Visible) return;
+            int newValue = scrollBar.Value - e.Delta/120;
 
-            if (newValue < ScrollBar.Minimum)
-                ScrollBar.Value = ScrollBar.Minimum;
-            else if (newValue > ScrollBar.Maximum)
-                ScrollBar.Value = ScrollBar.Maximum;
+            if (newValue < scrollBar.Minimum)
+                scrollBar.Value = scrollBar.Minimum;
+            else if (newValue > scrollBar.Maximum)
+                scrollBar.Value = scrollBar.Maximum;
             else
-                ScrollBar.Value = newValue;
+                scrollBar.Value = newValue;
         }
 
         /// <summary>
-        /// Toggles FSB visibility.
+        ///     Toggles FSB visibility.
         /// </summary>
         private void HideFSBClick(object sender, EventArgs e)
         {
-            FormFSB.Visible = !ChbHideFSB.Checked;
+            formFSB.Visible = !chbHideFSB.Checked;
         }
 
         /// <summary>
-        /// Resets Generator
+        ///     Resets Generator
         /// </summary>
         private void BtnResetClick(object sender, EventArgs e)
         {
             Configs.OptimizerOptions = "";
-            _isReset = true;
+            isReset = true;
             Close();
         }
     }

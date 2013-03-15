@@ -1,23 +1,27 @@
-// Data Horizon
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Data Horizon Class
+    ///     Data Horizon Class
     /// </summary>
     public sealed class DataHorizon : Form
     {
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public DataHorizon(int maxBars, DateTime startTime, DateTime endTime, bool useStartTime, bool useEndTime)
         {
@@ -35,7 +39,7 @@ namespace Forex_Strategy_Builder
             DtpEndTime = new DateTimePicker();
             CbxUseEndTime = new CheckBox();
             CbxUseStartTime = new CheckBox();
-            NUDMaxBars = new NumericUpDown();
+            NudMaxBars = new NumericUpDown();
             LblMaxBars = new Label();
             LblMinBars = new Label();
 
@@ -115,15 +119,15 @@ namespace Forex_Strategy_Builder
             LblMaxBars.TextAlign = ContentAlignment.MiddleLeft;
 
             // MaxBars
-            NUDMaxBars.BeginInit();
-            NUDMaxBars.Parent = PnlBase;
-            NUDMaxBars.Name = "MaxBars";
-            NUDMaxBars.Minimum = Configs.MinBars;
-            NUDMaxBars.Maximum = Configs.MaxBarsLimit;
-            NUDMaxBars.ThousandsSeparator = true;
-            NUDMaxBars.ValueChanged += MaxBarsValueChanged;
-            NUDMaxBars.TextAlign = HorizontalAlignment.Center;
-            NUDMaxBars.EndInit();
+            NudMaxBars.BeginInit();
+            NudMaxBars.Parent = PnlBase;
+            NudMaxBars.Name = "MaxBars";
+            NudMaxBars.Minimum = Configs.MinBars;
+            NudMaxBars.Maximum = Configs.MaxBarsLimit;
+            NudMaxBars.ThousandsSeparator = true;
+            NudMaxBars.ValueChanged += MaxBarsValueChanged;
+            NudMaxBars.TextAlign = HorizontalAlignment.Center;
+            NudMaxBars.EndInit();
 
             // Label MinBars
             LblMinBars.Parent = PnlBase;
@@ -142,7 +146,7 @@ namespace Forex_Strategy_Builder
         private DateTimePicker DtpEndTime { get; set; }
         private CheckBox CbxUseEndTime { get; set; }
         private CheckBox CbxUseStartTime { get; set; }
-        private NumericUpDown NUDMaxBars { get; set; }
+        private NumericUpDown NudMaxBars { get; set; }
         private Label LblMaxBars { get; set; }
         private Label LblMinBars { get; set; }
 
@@ -153,7 +157,7 @@ namespace Forex_Strategy_Builder
         public DateTime EndTime { get; private set; }
 
         /// <summary>
-        /// Go to the online help
+        ///     Go to the online help
         /// </summary>
         private void BtnHelpClick(object sender, EventArgs e)
         {
@@ -208,12 +212,12 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            NUDMaxBars.Value = MaxBars;
+            NudMaxBars.Value = MaxBars;
             DtpStartTime.Value = StartTime;
             DtpEndTime.Value = EndTime;
             CbxUseEndTime.Checked = UseEndTime;
@@ -221,22 +225,22 @@ namespace Forex_Strategy_Builder
             CbxUseStartTime.Checked = UseStartTime;
             DtpStartTime.Enabled = UseStartTime;
 
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 230);
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
             const int border = 2;
 
@@ -277,15 +281,15 @@ namespace Forex_Strategy_Builder
             DtpEndTime.Location = new Point(space + 4, CbxUseEndTime.Bottom + space);
 
             // NUDMaxBars
-            NUDMaxBars.Width = 80;
-            NUDMaxBars.Location = new Point(DtpStartTime.Right - NUDMaxBars.Width, 2*space + 2*border - 2);
+            NudMaxBars.Width = 80;
+            NudMaxBars.Location = new Point(DtpStartTime.Right - NudMaxBars.Width, 2*space + 2*border - 2);
 
             // LblMinBars
             LblMinBars.Location = new Point(LblMaxBars.Left, DtpEndTime.Bottom + 3*space);
         }
 
         /// <summary>
-        /// Form OnPaint.
+        ///     Form OnPaint.
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {

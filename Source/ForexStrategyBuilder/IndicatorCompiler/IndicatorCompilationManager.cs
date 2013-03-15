@@ -1,8 +1,12 @@
-﻿// IndicatorCompilationManager class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -10,17 +14,17 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Manages the operation of indicators.
+    ///     Manages the operation of indicators.
     /// </summary>
     public class IndicatorCompilationManager
     {
         private readonly CSharpCompiler compiler;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public IndicatorCompilationManager()
         {
@@ -34,12 +38,12 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets a list of the loaded custom indicators
+        ///     Gets a list of the loaded custom indicators
         /// </summary>
         public List<Indicator> CustomIndicatorsList { get; private set; }
 
         /// <summary>
-        /// Gather all assemblies referenced from current assembly.
+        ///     Gather all assemblies referenced from current assembly.
         /// </summary>
         private static IEnumerable<Assembly> GetReferencedAndInitialAssembly(Assembly initialAssembly)
         {
@@ -57,7 +61,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Load file, compile it and create/load the indicators into the CustomIndicatorsList.
+        ///     Load file, compile it and create/load the indicators into the CustomIndicatorsList.
         /// </summary>
         /// <param name="filePath">Path to the source file</param>
         /// <param name="errorMessages">Resulting error messages, if any.</param>
@@ -72,6 +76,9 @@ namespace Forex_Strategy_Builder
                 errorMessages = errorLoadSourceFile;
                 return;
             }
+
+            // Rename namespaces
+            source = source.Replace("Forex_Strategy_Builder", "ForexStrategyBuilder");
 
             Dictionary<string, int> dictCompilationErrors;
             Assembly assembly = compiler.CompileSource(source, out dictCompilationErrors);
@@ -137,7 +144,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Reads the source code from file contents.
+        ///     Reads the source code from file contents.
         /// </summary>
         private string LoadSourceFile(string pathToIndicator, out string errorLoadSourceFile)
         {
@@ -168,7 +175,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Creates an indicator instance from the assembly given.
+        ///     Creates an indicator instance from the assembly given.
         /// </summary>
         private static Indicator GetIndicatorInstanceFromAssembly(Assembly assembly, string indicatorFileName,
                                                                   out string errorMessage)

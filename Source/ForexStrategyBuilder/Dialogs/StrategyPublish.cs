@@ -1,20 +1,24 @@
-// Forex Strategy Builder - StrategyPublish
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public sealed class StrategyPublish : Form
     {
         /// <summary>
-        /// Make a form
+        ///     Make a form
         /// </summary>
         public StrategyPublish()
         {
@@ -82,29 +86,29 @@ namespace Forex_Strategy_Builder
         private Button BtnConnect { get; set; }
 
         /// <summary>
-        /// Perform initializing
+        ///     Perform initializing
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             ClientSize = new Size(4*buttonWidth + 3*btnHrzSpace, 480);
             MinimumSize = new Size(Width, 300);
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
 
             // Button Close
@@ -128,7 +132,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -136,7 +140,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Accept Ctrl-A
+        ///     Accept Ctrl-A
         /// </summary>
         private void TxboxBBCode_KeyDown(object sender, KeyEventArgs e)
         {
@@ -147,7 +151,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Connects to the forum
+        ///     Connects to the forum
         /// </summary>
         private void BtnConnectClick(object sender, EventArgs e)
         {
@@ -162,7 +166,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Closes the form
+        ///     Closes the form
         /// </summary>
         private void BtnCloseClick(object sender, EventArgs e)
         {

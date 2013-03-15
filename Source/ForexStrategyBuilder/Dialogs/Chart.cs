@@ -1,17 +1,21 @@
-// Chart class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     ///     Class Indicator Chart : Form
@@ -636,7 +640,7 @@ namespace Forex_Strategy_Builder
             for (double label = minPrice; label <= maxPrice + Data.InstrProperties.Point; label += deltaLabel)
             {
                 var iLabelY = (int) Math.Round(yBottom - (label - minPrice)*yScale);
-                g.DrawString(label.ToString(Data.FF), Font, brushFore, xRight, iLabelY - Font.Height/2 - 1);
+                g.DrawString(label.ToString(Data.Ff), Font, brushFore, xRight, iLabelY - Font.Height/2 - 1);
                 if (ShowGrid || Math.Abs(label - minPrice) < 0.000001)
                     g.DrawLine(penGrid, spcLeft, iLabelY, xRight, iLabelY);
                 else
@@ -650,7 +654,7 @@ namespace Forex_Strategy_Builder
                 int xLine = (lineBar - firstBar)*BarPixels + spcLeft + BarPixels/2 - 1;
                 if (ShowGrid)
                     g.DrawLine(penGrid, xLine, yTop, xLine, yBottom + 2);
-                string date = String.Format("{0} {1}", Data.Time[lineBar].ToString(Data.DFS),
+                string date = String.Format("{0} {1}", Data.Time[lineBar].ToString(Data.Dfs),
                                             Data.Time[lineBar].ToString("HH:mm"));
                 g.DrawString(date, font, brushFore, xLine - szDate.Width/2, yBottomText);
             }
@@ -684,7 +688,7 @@ namespace Forex_Strategy_Builder
                 {
                     g.FillRectangle(brushLabelBackground, rec);
                     g.DrawRectangle(penCross, rec);
-                    string sDate = Data.Time[crossBar].ToString(Data.DF) + " " + Data.Time[crossBar].ToString("HH:mm");
+                    string sDate = Data.Time[crossBar].ToString(Data.Df) + " " + Data.Time[crossBar].ToString("HH:mm");
                     g.DrawString(sDate, font, brushLabelFore, point);
                 }
 
@@ -699,7 +703,7 @@ namespace Forex_Strategy_Builder
                     // Price Window
                     g.FillRectangle(brushLabelBackground, rec);
                     g.DrawRectangle(penCross, rec);
-                    string sPrice = ((yBottom - mouseY)/yScale + minPrice).ToString(Data.FF);
+                    string sPrice = ((yBottom - mouseY)/yScale + minPrice).ToString(Data.Ff);
                     g.DrawString(sPrice, font, brushLabelFore, point);
                 }
             }
@@ -2077,7 +2081,7 @@ namespace Forex_Strategy_Builder
             int row = 0;
             asInfoValue = new String[200];
             asInfoValue[row++] = (bar + 1).ToString(CultureInfo.InvariantCulture);
-            asInfoValue[row++] = Data.Time[bar].ToString(Data.DF);
+            asInfoValue[row++] = Data.Time[bar].ToString(Data.Df);
             asInfoValue[row++] = Data.Time[bar].ToString("HH:mm");
             if (isDebug)
             {
@@ -2088,10 +2092,10 @@ namespace Forex_Strategy_Builder
             }
             else
             {
-                asInfoValue[row++] = Data.Open[bar].ToString(Data.FF);
-                asInfoValue[row++] = Data.High[bar].ToString(Data.FF);
-                asInfoValue[row++] = Data.Low[bar].ToString(Data.FF);
-                asInfoValue[row++] = Data.Close[bar].ToString(Data.FF);
+                asInfoValue[row++] = Data.Open[bar].ToString(Data.Ff);
+                asInfoValue[row++] = Data.High[bar].ToString(Data.Ff);
+                asInfoValue[row++] = Data.Low[bar].ToString(Data.Ff);
+                asInfoValue[row++] = Data.Close[bar].ToString(Data.Ff);
             }
             asInfoValue[row++] = Data.Volume[bar].ToString(CultureInfo.InvariantCulture);
 
@@ -2199,8 +2203,8 @@ namespace Forex_Strategy_Builder
                 asInfoValue[row++] = Backtester.PosLots(bar, pos).ToString(CultureInfo.InvariantCulture);
                 asInfoValue[row++] = Language.T(Backtester.PosTransaction(bar, pos).ToString());
                 asInfoValue[row++] = Backtester.PosOrdNumb(bar, pos).ToString(CultureInfo.InvariantCulture);
-                asInfoValue[row++] = Backtester.PosOrdPrice(bar, pos).ToString(Data.FF);
-                asInfoValue[row++] = Backtester.PosPrice(bar, pos).ToString(Data.FF);
+                asInfoValue[row++] = Backtester.PosOrdPrice(bar, pos).ToString(Data.Ff);
+                asInfoValue[row++] = Backtester.PosPrice(bar, pos).ToString(Data.Ff);
 
                 // Profit Loss
                 if (Backtester.PosTransaction(bar, pos) == Transaction.Close ||
@@ -2802,17 +2806,17 @@ namespace Forex_Strategy_Builder
             {
                 ZoomIn();
             }
-                // Zoom out
+            // Zoom out
             else if (!e.Control && (e.KeyCode == Keys.Subtract || e.KeyCode == Keys.OemMinus))
             {
                 ZoomOut();
             }
-                // Vertical scale increase
+            // Vertical scale increase
             else if (e.Control && (e.KeyCode == Keys.Subtract || e.KeyCode == Keys.OemMinus))
             {
                 VerticalScaleIncrease();
             }
-                // Vertical scale decrease
+            // Vertical scale decrease
             else if (e.Control && (e.KeyCode == Keys.Add || e.KeyCode == Keys.Oemplus))
             {
                 VerticalScaleDecrease();
@@ -2822,7 +2826,7 @@ namespace Forex_Strategy_Builder
                 isCandleChart = !isCandleChart;
                 PnlPrice.Invalidate();
             }
-                // Dynamic info scroll up
+            // Dynamic info scroll up
             else if (e.KeyCode == Keys.A)
             {
                 if (!ShowInfoPanel)
@@ -2831,7 +2835,7 @@ namespace Forex_Strategy_Builder
                 dynInfoScrollValue = dynInfoScrollValue < 0 ? 0 : dynInfoScrollValue;
                 PnlInfo.Invalidate();
             }
-                // Dynamic info scroll up fast
+            // Dynamic info scroll up fast
             else if (e.KeyCode == Keys.S)
             {
                 if (!ShowInfoPanel)
@@ -2840,7 +2844,7 @@ namespace Forex_Strategy_Builder
                 dynInfoScrollValue = dynInfoScrollValue < 0 ? 0 : dynInfoScrollValue;
                 PnlInfo.Invalidate();
             }
-                // Dynamic info scroll down
+            // Dynamic info scroll down
             else if (e.KeyCode == Keys.Z)
             {
                 if (!ShowInfoPanel)
@@ -2849,7 +2853,7 @@ namespace Forex_Strategy_Builder
                 dynInfoScrollValue = dynInfoScrollValue > infoRows - 5 ? infoRows - 5 : dynInfoScrollValue;
                 PnlInfo.Invalidate();
             }
-                // Dynamic info scroll down fast
+            // Dynamic info scroll down fast
             else if (e.KeyCode == Keys.X)
             {
                 if (!ShowInfoPanel)
@@ -2858,14 +2862,14 @@ namespace Forex_Strategy_Builder
                 dynInfoScrollValue = dynInfoScrollValue > infoRows - 5 ? infoRows - 5 : dynInfoScrollValue;
                 PnlInfo.Invalidate();
             }
-                // Grid
+            // Grid
             else if (e.KeyCode == Keys.G)
             {
                 ShowGrid = !ShowGrid;
                 AChartButtons[(int) ChartButtons.Grid].Checked = ShowGrid;
                 InvalidateAllPanels();
             }
-                // Cross
+            // Cross
             else if (e.KeyCode == Keys.C)
             {
                 ShowCross = !ShowCross;
@@ -2873,56 +2877,56 @@ namespace Forex_Strategy_Builder
                 PnlPrice.Cursor = ShowCross ? Cursors.Cross : Cursors.Default;
                 InvalidateAllPanels();
             }
-                // Volume
+            // Volume
             else if (e.KeyCode == Keys.V)
             {
                 ShowVolume = !ShowVolume;
                 AChartButtons[(int) ChartButtons.Volume].Checked = ShowVolume;
                 PnlPrice.Invalidate();
             }
-                // Lots
+            // Lots
             else if (e.KeyCode == Keys.L)
             {
                 ShowPositionLots = !ShowPositionLots;
                 AChartButtons[(int) ChartButtons.PositionLots].Checked = ShowPositionLots;
                 PnlPrice.Invalidate();
             }
-                // Orders
+            // Orders
             else if (e.KeyCode == Keys.O)
             {
                 ShowOrders = !ShowOrders;
                 AChartButtons[(int) ChartButtons.Orders].Checked = ShowOrders;
                 PnlPrice.Invalidate();
             }
-                // Position price
+            // Position price
             else if (e.KeyCode == Keys.P)
             {
                 ShowPositionPrice = !ShowPositionPrice;
                 AChartButtons[(int) ChartButtons.PositionPrice].Checked = ShowPositionPrice;
                 PnlPrice.Invalidate();
             }
-                // Protections
+            // Protections
             else if (e.KeyCode == Keys.E)
             {
                 ShowProtections = !ShowProtections;
                 AChartButtons[(int) ChartButtons.Protections].Checked = ShowProtections;
                 PnlPrice.Invalidate();
             }
-                // Ambiguous bars mark
+            // Ambiguous bars mark
             else if (e.KeyCode == Keys.M)
             {
                 ShowAmbiguousBars = !ShowAmbiguousBars;
                 AChartButtons[(int) ChartButtons.AmbiguousBars].Checked = ShowAmbiguousBars;
                 PnlPrice.Invalidate();
             }
-                // True Charts
+            // True Charts
             else if (e.KeyCode == Keys.T)
             {
                 TrueCharts = !TrueCharts;
                 AChartButtons[(int) ChartButtons.TrueCharts].Checked = TrueCharts;
                 InvalidateAllPanels();
             }
-                // Indicator Charts
+            // Indicator Charts
             else if (e.KeyCode == Keys.D)
             {
                 ShowIndicators = !ShowIndicators;
@@ -2949,7 +2953,7 @@ namespace Forex_Strategy_Builder
                 InvalidateAllPanels();
                 scroll.Focus();
             }
-                // FloatingPL Charts
+            // FloatingPL Charts
             else if (e.KeyCode == Keys.F)
             {
                 ShowFloatingPL = !ShowFloatingPL;
@@ -2970,7 +2974,7 @@ namespace Forex_Strategy_Builder
                 InvalidateAllPanels();
                 scroll.Focus();
             }
-                // Balance/Equity Charts
+            // Balance/Equity Charts
             else if (e.KeyCode == Keys.B)
             {
                 ShowBalanceEquity = !ShowBalanceEquity;
@@ -2991,7 +2995,7 @@ namespace Forex_Strategy_Builder
                 InvalidateAllPanels();
                 scroll.Focus();
             }
-                // Show info panel
+            // Show info panel
             else if (e.KeyCode == Keys.I)
             {
                 ShowInfoPanel = !ShowInfoPanel;
@@ -3011,7 +3015,7 @@ namespace Forex_Strategy_Builder
                     PnlInfo.Invalidate();
                 }
             }
-                // Debug
+            // Debug
             else if (e.KeyCode == Keys.F12)
             {
                 isDebug = !isDebug;

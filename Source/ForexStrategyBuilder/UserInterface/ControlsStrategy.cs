@@ -1,19 +1,23 @@
-// Forex Strategy Builder - Strategy controls.
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Strategy field
+    ///     Strategy field
     /// </summary>
     public partial class Controls
     {
@@ -25,7 +29,7 @@ namespace Forex_Strategy_Builder
         private ToolStripButton ButtonStrategySize2 { get; set; }
 
         /// <summary>
-        /// Initializes the strategy field
+        ///     Initializes the strategy field
         /// </summary>
         private void InitializeStrategy()
         {
@@ -43,37 +47,37 @@ namespace Forex_Strategy_Builder
 
             // Button Strategy Size 1
             ButtonStrategySize1 = new ToolStripButton
-                                    {
-                                        DisplayStyle = ToolStripItemDisplayStyle.Image,
-                                        Image = Resources.slot_size_max,
-                                        Tag = 1,
-                                        ToolTipText = Language.T("Show detailed info in the slots."),
-                                        Alignment = ToolStripItemAlignment.Right
-                                    };
+                {
+                    DisplayStyle = ToolStripItemDisplayStyle.Image,
+                    Image = Resources.slot_size_max,
+                    Tag = 1,
+                    ToolTipText = Language.T("Show detailed info in the slots."),
+                    Alignment = ToolStripItemAlignment.Right
+                };
             ButtonStrategySize1.Click += BtnSlotSizeClick;
             ToolStripStrategy.Items.Add(ButtonStrategySize1);
 
             // Button Strategy Size 2
             ButtonStrategySize2 = new ToolStripButton
-                                    {
-                                        DisplayStyle = ToolStripItemDisplayStyle.Image,
-                                        Image = Resources.slot_size_min,
-                                        Tag = 2,
-                                        ToolTipText = Language.T("Show minimum info in the slots."),
-                                        Alignment = ToolStripItemAlignment.Right
-                                    };
+                {
+                    DisplayStyle = ToolStripItemDisplayStyle.Image,
+                    Image = Resources.slot_size_min,
+                    Tag = 2,
+                    ToolTipText = Language.T("Show minimum info in the slots."),
+                    Alignment = ToolStripItemAlignment.Right
+                };
             ButtonStrategySize2.Click += BtnSlotSizeClick;
             ToolStripStrategy.Items.Add(ButtonStrategySize2);
 
             // Button Strategy Info
             ButtonStrategyInfo = new ToolStripButton
-                                   {
-                                       DisplayStyle = ToolStripItemDisplayStyle.Image,
-                                       Image = Resources.str_info_infook,
-                                       Tag = SlotSizeMinMidMax.min,
-                                       ToolTipText = Language.T("Show the strategy description."),
-                                       Alignment = ToolStripItemAlignment.Right
-                                   };
+                {
+                    DisplayStyle = ToolStripItemDisplayStyle.Image,
+                    Image = Resources.str_info_infook,
+                    Tag = SlotSizeMinMidMax.min,
+                    ToolTipText = Language.T("Show the strategy description."),
+                    Alignment = ToolStripItemAlignment.Right
+                };
             ButtonStrategyInfo.Click += BtnStrategyDescriptionClick;
             ToolStripStrategy.Items.Add(ButtonStrategyInfo);
 
@@ -89,26 +93,26 @@ namespace Forex_Strategy_Builder
             StrategyField.ButtonAddCloseFilter.Click += BtnAddCloseFilterClick;
 
             ButtonShowJournalByPos = new Button
-                                      {
-                                          Parent = PanelStrategy,
-                                          Text = Language.T("Journal by Positions"),
-                                          UseVisualStyleBackColor = true
-                                      };
+                {
+                    Parent = PanelStrategy,
+                    Text = Language.T("Journal by Positions"),
+                    UseVisualStyleBackColor = true
+                };
             ButtonShowJournalByPos.Click += BtnShowJournalByPosClick;
 
             ButtonShowJournalByBars = new Button
-                                       {
-                                           Parent = PanelStrategy,
-                                           Text = Language.T("Journal by Bars"),
-                                           UseVisualStyleBackColor = true
-                                       };
+                {
+                    Parent = PanelStrategy,
+                    Text = Language.T("Journal by Bars"),
+                    UseVisualStyleBackColor = true
+                };
             ButtonShowJournalByBars.Click += BtnShowJournalByBarsClick;
 
             PanelStrategy.Resize += PnlStrategyResize;
         }
 
         /// <summary>
-        /// Arranges the controls after resizing.
+        ///     Arranges the controls after resizing.
         /// </summary>
         private void PnlStrategyResize(object sender, EventArgs e)
         {
@@ -125,14 +129,15 @@ namespace Forex_Strategy_Builder
                 ButtonShowJournalByBars.Visible = true;
                 ButtonShowJournalByPos.Width = ButtonShowJournalByBars.Width = (PanelStrategy.ClientSize.Width - Gap)/2;
                 ButtonShowJournalByPos.Location = new Point(0, PanelStrategy.Height - ButtonShowJournalByPos.Height + 1);
-                ButtonShowJournalByBars.Location = new Point(ButtonShowJournalByPos.Right + Gap, ButtonShowJournalByPos.Top);
+                ButtonShowJournalByBars.Location = new Point(ButtonShowJournalByPos.Right + Gap,
+                                                             ButtonShowJournalByPos.Top);
                 StrategyField.Size = new Size(PanelStrategy.ClientSize.Width, ButtonShowJournalByPos.Top - Gap - 2);
                 StrategyField.Location = new Point(0, Gap);
             }
         }
 
         /// <summary>
-        /// Shows Journal by bars.
+        ///     Shows Journal by bars.
         /// </summary>
         private void BtnShowJournalByBarsClick(object sender, EventArgs e)
         {
@@ -146,7 +151,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shows Journal by positions.
+        ///     Shows Journal by positions.
         /// </summary>
         private void BtnShowJournalByPosClick(object sender, EventArgs e)
         {
@@ -160,7 +165,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Creates a new strategy layout using Data.Strategy
+        ///     Creates a new strategy layout using Data.Strategy
         /// </summary>
         protected void RebuildStrategyLayout()
         {
@@ -182,38 +187,38 @@ namespace Forex_Strategy_Builder
         private ToolStripItem[] GetStrategySlotContextMenuItems(int slot)
         {
             var miEdit = new ToolStripMenuItem
-                             {Text = Language.T("Edit") + "...", Image = Resources.edit, Name = "Edit", Tag = slot};
+                {Text = Language.T("Edit") + "...", Image = Resources.edit, Name = "Edit", Tag = slot};
             miEdit.Click += SlotContextMenuClick;
 
             var miUpwards = new ToolStripMenuItem
-                                {
-                                    Text = Language.T("Move Up"),
-                                    Image = Resources.up_arrow,
-                                    Name = "Upwards",
-                                    Tag = slot
-                                };
+                {
+                    Text = Language.T("Move Up"),
+                    Image = Resources.up_arrow,
+                    Name = "Upwards",
+                    Tag = slot
+                };
             miUpwards.Click += SlotContextMenuClick;
             miUpwards.Enabled = (slot > 1 &&
                                  Data.Strategy.Slot[slot].SlotType == Data.Strategy.Slot[slot - 1].SlotType);
 
             var miDownwards = new ToolStripMenuItem
-                                  {
-                                      Text = Language.T("Move Down"),
-                                      Image = Resources.down_arrow,
-                                      Name = "Downwards",
-                                      Tag = slot
-                                  };
+                {
+                    Text = Language.T("Move Down"),
+                    Image = Resources.down_arrow,
+                    Name = "Downwards",
+                    Tag = slot
+                };
             miDownwards.Click += SlotContextMenuClick;
             miDownwards.Enabled = (slot < Data.Strategy.Slots - 1 &&
                                    Data.Strategy.Slot[slot].SlotType == Data.Strategy.Slot[slot + 1].SlotType);
 
             var miDuplicate = new ToolStripMenuItem
-                                  {
-                                      Text = Language.T("Duplicate"),
-                                      Image = Resources.duplicate,
-                                      Name = "Duplicate",
-                                      Tag = slot
-                                  };
+                {
+                    Text = Language.T("Duplicate"),
+                    Image = Resources.duplicate,
+                    Name = "Duplicate",
+                    Tag = slot
+                };
             miDuplicate.Click += SlotContextMenuClick;
             miDuplicate.Enabled = (Data.Strategy.Slot[slot].SlotType == SlotTypes.OpenFilter &&
                                    Data.Strategy.OpenFilters < Strategy.MaxOpenFilters ||
@@ -221,27 +226,27 @@ namespace Forex_Strategy_Builder
                                    Data.Strategy.CloseFilters < Strategy.MaxCloseFilters);
 
             var miDelete = new ToolStripMenuItem
-                               {
-                                   Text = Language.T("Delete"),
-                                   Image = Resources.close_button,
-                                   Name = "Delete",
-                                   Tag = slot
-                               };
+                {
+                    Text = Language.T("Delete"),
+                    Image = Resources.close_button,
+                    Name = "Delete",
+                    Tag = slot
+                };
             miDelete.Click += SlotContextMenuClick;
             miDelete.Enabled = (Data.Strategy.Slot[slot].SlotType == SlotTypes.OpenFilter ||
                                 Data.Strategy.Slot[slot].SlotType == SlotTypes.CloseFilter);
 
             var itemCollection = new ToolStripItem[]
-                                     {
-                                         miEdit, miUpwards, miDownwards, miDuplicate,
-                                         miDelete
-                                     };
+                {
+                    miEdit, miUpwards, miDownwards, miDuplicate,
+                    miDelete
+                };
 
             return itemCollection;
         }
 
         /// <summary>
-        /// Repaint the strategy slots without changing its kind and count
+        ///     Repaint the strategy slots without changing its kind and count
         /// </summary>
         protected void RepaintStrategyLayout()
         {
@@ -249,7 +254,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Rearranges the strategy slots without changing its kind and count
+        ///     Rearranges the strategy slots without changing its kind and count
         /// </summary>
         private void RearangeStrategyLayout()
         {
@@ -257,49 +262,49 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Opens the averaging parameters dialog.
+        ///     Opens the averaging parameters dialog.
         /// </summary>
         protected virtual void PnlAveragingClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Click on a strategy slot
+        ///     Click on a strategy slot
         /// </summary>
         protected virtual void PnlSlotMouseUp(object sender, MouseEventArgs e)
         {
         }
 
         /// <summary>
-        /// Click on a strategy slot
+        ///     Click on a strategy slot
         /// </summary>
         protected virtual void SlotContextMenuClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Performs actions after the button add open filter was clicked.
+        ///     Performs actions after the button add open filter was clicked.
         /// </summary>
         protected virtual void BtnAddOpenFilterClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Performs actions after the button add close filter was clicked.
+        ///     Performs actions after the button add close filter was clicked.
         /// </summary>
         protected virtual void BtnAddCloseFilterClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Removes the corresponding slot.
+        ///     Removes the corresponding slot.
         /// </summary>
         protected virtual void BtnRemoveSlotClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Changes the slot size
+        ///     Changes the slot size
         /// </summary>
         private void BtnSlotSizeClick(object sender, EventArgs e)
         {
@@ -350,7 +355,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// View / edit the strategy description
+        ///     View / edit the strategy description
         /// </summary>
         private void BtnStrategyDescriptionClick(object sender, EventArgs e)
         {
@@ -365,7 +370,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the strategy description button icon
+        ///     Sets the strategy description button icon
         /// </summary>
         private void SetStrategyDescriptionButton()
         {
@@ -375,7 +380,9 @@ namespace Forex_Strategy_Builder
             }
             else
             {
-                ButtonStrategyInfo.Image = Data.IsStrDescriptionRelevant() ? Resources.str_info_infook : Resources.str_info_warning;
+                ButtonStrategyInfo.Image = Data.IsStrDescriptionRelevant()
+                                               ? Resources.str_info_infook
+                                               : Resources.str_info_warning;
             }
         }
     }

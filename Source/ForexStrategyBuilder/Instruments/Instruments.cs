@@ -1,8 +1,12 @@
-// Instruments class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -10,19 +14,19 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public static class Instruments
     {
         private static readonly string PathToInstrumentsFile;
         private static readonly XmlDocument XMLInstruments;
-        private static Dictionary<String, InstrumentProperties> _dictInstrument;
-        private static bool _isReset;
+        private static Dictionary<String, InstrumentProperties> dictInstrument;
+        private static bool isReset;
 
         /// <summary>
-        /// Public constructor.
+        ///     Public constructor.
         /// </summary>
         static Instruments()
         {
@@ -32,28 +36,28 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the symbols list.
+        ///     Gets the symbols list.
         /// </summary>
         public static IEnumerable<string> SymbolList
         {
             get
             {
-                var symbols = new string[_dictInstrument.Count];
-                _dictInstrument.Keys.CopyTo(symbols, 0);
+                var symbols = new string[dictInstrument.Count];
+                dictInstrument.Keys.CopyTo(symbols, 0);
                 return symbols;
             }
         }
 
         /// <summary>
-        /// Gets or sets the instruments list.
+        ///     Gets or sets the instruments list.
         /// </summary>
         public static Dictionary<String, InstrumentProperties> InstrumentList
         {
-            get { return _dictInstrument; }
+            get { return dictInstrument; }
         }
 
         /// <summary>
-        /// Loads the instruments file.
+        ///     Loads the instruments file.
         /// </summary>
         public static void LoadInstruments()
         {
@@ -82,22 +86,22 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Resets the instruments file.
+        ///     Resets the instruments file.
         /// </summary>
         public static void ResetInstruments()
         {
             XMLInstruments.LoadXml(Resources.instruments);
             ParseInstruments();
             SaveInstruments();
-            _isReset = true;
+            isReset = true;
         }
 
         /// <summary>
-        /// Saves the config file.
+        ///     Saves the config file.
         /// </summary>
         public static void SaveInstruments()
         {
-            if (_isReset) return;
+            if (isReset) return;
 
             try
             {
@@ -110,39 +114,52 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Parses the instruments file.
+        ///     Parses the instruments file.
         /// </summary>
         private static void ParseInstruments()
         {
             int instrumentsCount = XMLInstruments.GetElementsByTagName("instrument").Count;
-            _dictInstrument = new Dictionary<string, InstrumentProperties>(instrumentsCount);
+            dictInstrument = new Dictionary<string, InstrumentProperties>(instrumentsCount);
 
             try
             {
                 foreach (XmlNode nodeInstr in XMLInstruments.GetElementsByTagName("instrument"))
                 {
                     string symbol = nodeInstr.SelectSingleNode("symbol").InnerText;
-                    var instrType = (InstrumetType) Enum.Parse(typeof (InstrumetType), nodeInstr.SelectSingleNode("instrumentType").InnerText);
+                    var instrType =
+                        (InstrumetType)
+                        Enum.Parse(typeof (InstrumetType), nodeInstr.SelectSingleNode("instrumentType").InnerText);
                     var instrProp = new InstrumentProperties(symbol, instrType)
-                    {
-                        Comment = nodeInstr.SelectSingleNode("comment").InnerText,
-                        Digits = int.Parse(nodeInstr.SelectSingleNode("digits").InnerText),
-                        LotSize = int.Parse(nodeInstr.SelectSingleNode("contractSize").InnerText),
-                        Spread = StringToFloat(nodeInstr.SelectSingleNode("spread").InnerText),
-                        SwapType = (CommissionType) Enum.Parse(typeof (CommissionType), nodeInstr.SelectSingleNode("swapType").InnerText),
-                        SwapLong = StringToFloat(nodeInstr.SelectSingleNode("swapLong").InnerText),
-                        SwapShort = StringToFloat(nodeInstr.SelectSingleNode("swapShort").InnerText),
-                        CommissionType = (CommissionType) Enum.Parse(typeof (CommissionType), nodeInstr.SelectSingleNode("commissionType").InnerText),
-                        CommissionScope = (CommissionScope) Enum.Parse(typeof (CommissionScope), nodeInstr.SelectSingleNode("commissionScope").InnerText),
-                        CommissionTime = (CommissionTime) Enum.Parse(typeof (CommissionTime), nodeInstr.SelectSingleNode("commissionTime").InnerText),
-                        Commission = StringToFloat(nodeInstr.SelectSingleNode("commission").InnerText),
-                        Slippage = int.Parse(nodeInstr.SelectSingleNode("slippage").InnerText),
-                        PriceIn = nodeInstr.SelectSingleNode("priceIn").InnerText,
-                        RateToUSD = StringToFloat(nodeInstr.SelectSingleNode("rateToUSD").InnerText),
-                        RateToEUR = StringToFloat(nodeInstr.SelectSingleNode("rateToEUR").InnerText),
-                        BaseFileName = nodeInstr.SelectSingleNode("baseFileName").InnerText
-                    };
-                    _dictInstrument.Add(symbol, instrProp);
+                        {
+                            Comment = nodeInstr.SelectSingleNode("comment").InnerText,
+                            Digits = int.Parse(nodeInstr.SelectSingleNode("digits").InnerText),
+                            LotSize = int.Parse(nodeInstr.SelectSingleNode("contractSize").InnerText),
+                            Spread = StringToFloat(nodeInstr.SelectSingleNode("spread").InnerText),
+                            SwapType =
+                                (CommissionType)
+                                Enum.Parse(typeof (CommissionType), nodeInstr.SelectSingleNode("swapType").InnerText),
+                            SwapLong = StringToFloat(nodeInstr.SelectSingleNode("swapLong").InnerText),
+                            SwapShort = StringToFloat(nodeInstr.SelectSingleNode("swapShort").InnerText),
+                            CommissionType =
+                                (CommissionType)
+                                Enum.Parse(typeof (CommissionType),
+                                           nodeInstr.SelectSingleNode("commissionType").InnerText),
+                            CommissionScope =
+                                (CommissionScope)
+                                Enum.Parse(typeof (CommissionScope),
+                                           nodeInstr.SelectSingleNode("commissionScope").InnerText),
+                            CommissionTime =
+                                (CommissionTime)
+                                Enum.Parse(typeof (CommissionTime),
+                                           nodeInstr.SelectSingleNode("commissionTime").InnerText),
+                            Commission = StringToFloat(nodeInstr.SelectSingleNode("commission").InnerText),
+                            Slippage = int.Parse(nodeInstr.SelectSingleNode("slippage").InnerText),
+                            PriceIn = nodeInstr.SelectSingleNode("priceIn").InnerText,
+                            RateToUSD = StringToFloat(nodeInstr.SelectSingleNode("rateToUSD").InnerText),
+                            RateToEUR = StringToFloat(nodeInstr.SelectSingleNode("rateToEUR").InnerText),
+                            BaseFileName = nodeInstr.SelectSingleNode("baseFileName").InnerText
+                        };
+                    dictInstrument.Add(symbol, instrProp);
                 }
             }
             catch (Exception e)
@@ -152,7 +169,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Generates instrument.xml file.
+        ///     Generates instrument.xml file.
         /// </summary>
         private static XmlDocument GenerateXMLFile()
         {
@@ -167,7 +184,7 @@ namespace Forex_Strategy_Builder
             XmlElement root = xmlDoc.DocumentElement;
             xmlDoc.InsertBefore(xmldecl, root);
 
-            foreach (var kvp in _dictInstrument)
+            foreach (var kvp in dictInstrument)
             {
                 InstrumentProperties instrProp = kvp.Value;
 
@@ -253,7 +270,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Parses string values to float.
+        ///     Parses string values to float.
         /// </summary>
         private static float StringToFloat(string input)
         {

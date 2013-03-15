@@ -1,19 +1,30 @@
-﻿using System;
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
+
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public static class FileIconExtractor
     {
-        private static SHFileInfo _shinfo;
+        private static SHFileInfo shinfo;
 
         [DllImport("shell32.dll")]
-        private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFileInfo psfi, uint cbSizeFileInfo, uint uFlags);
+        private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFileInfo psfi,
+                                                   uint cbSizeFileInfo, uint uFlags);
 
         /// <summary>
-        /// Extract the Icon from given file name 
+        ///     Extract the Icon from given file name
         /// </summary>
         public static Icon GetIcon(string filename)
         {
@@ -22,11 +33,12 @@ namespace Forex_Strategy_Builder
                 const uint SHGFI_ICON = 0x100;
                 //const uint SHGFI_LARGEICON = 0x0; // 'Large icon
                 const uint SHGFI_SMALLICON = 0x1; // 'Small icon
-                SHGetFileInfo(filename, 0, ref _shinfo, (uint) Marshal.SizeOf(_shinfo), SHGFI_ICON | SHGFI_SMALLICON);
-                return Icon.FromHandle(_shinfo.hIcon);
+                SHGetFileInfo(filename, 0, ref shinfo, (uint) Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_SMALLICON);
+                return Icon.FromHandle(shinfo.hIcon);
             }
             catch
-            {   // Return the default icon 
+            {
+                // Return the default icon 
                 return Resources.Icon;
             }
         }

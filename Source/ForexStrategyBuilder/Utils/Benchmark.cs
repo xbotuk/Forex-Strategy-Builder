@@ -1,13 +1,19 @@
-﻿// Forex Strategy Builder
-// Copyright (c) Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Diagnostics;
 using System.Text;
-using Forex_Strategy_Builder.Common;
+using ForexStrategyBuilder.Common;
 
-namespace Forex_Strategy_Builder.Utils
+namespace ForexStrategyBuilder.Utils
 {
     public class Benchmark
     {
@@ -17,7 +23,6 @@ namespace Forex_Strategy_Builder.Utils
         private InstrumentProperties instrProperties;
         private InstrumentProperties instrPropertiesDefault;
         private bool isAccountInCurrencyDefault;
-        private bool isAdditionalStatsDefault;
         private bool isAutoscanDefault;
         private bool isCheckDataDefault;
         private bool isCutBadDataDefault;
@@ -97,8 +102,7 @@ namespace Forex_Strategy_Builder.Utils
             StatsBuffer.UpdateStatsBuffer();
         }
 
-
-        public void GenerateStrategy()
+        private void GenerateStrategy()
         {
             var strategy = new Strategy(4, 2)
                 {
@@ -291,7 +295,6 @@ namespace Forex_Strategy_Builder.Utils
             initialAccountDefault = Configs.InitialAccount;
             leverageDefault = Configs.Leverage;
             isTradeUntilMarginCallDefault = Configs.TradeUntilMarginCall;
-            isAdditionalStatsDefault = Configs.AdditionalStatistics;
             isUseLogicalGroupsDefault = Configs.UseLogicalGroups;
 
             symbolDefault = Data.Symbol;
@@ -318,7 +321,6 @@ namespace Forex_Strategy_Builder.Utils
             Configs.InitialAccount = 100000;
             Configs.Leverage = 100;
             Configs.TradeUntilMarginCall = false;
-            Configs.AdditionalStatistics = true;
             Configs.UseLogicalGroups = true;
         }
 
@@ -339,7 +341,6 @@ namespace Forex_Strategy_Builder.Utils
             Configs.InitialAccount = initialAccountDefault;
             Configs.Leverage = leverageDefault;
             Configs.TradeUntilMarginCall = isTradeUntilMarginCallDefault;
-            Configs.AdditionalStatistics = isAdditionalStatsDefault;
             Configs.UseLogicalGroups = isUseLogicalGroupsDefault;
 
             Data.Period = periodDefault;

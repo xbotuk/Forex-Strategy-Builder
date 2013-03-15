@@ -1,23 +1,27 @@
-﻿// Command Console
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.IO;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public sealed class CommandConsole : Form
     {
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public CommandConsole()
         {
@@ -34,24 +38,24 @@ namespace Forex_Strategy_Builder
 
             // Text Box Output
             TbxOutput = new TextBox
-                            {
-                                BorderStyle = BorderStyle.FixedSingle,
-                                BackColor = Color.Black,
-                                ForeColor = Color.GhostWhite,
-                                Parent = this,
-                                Location = Point.Empty,
-                                Multiline = true,
-                                WordWrap = false,
-                                Font = new Font("Courier New", 10),
-                                ScrollBars = ScrollBars.Vertical
-                            };
+                {
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = Color.Black,
+                    ForeColor = Color.GhostWhite,
+                    Parent = this,
+                    Location = Point.Empty,
+                    Multiline = true,
+                    WordWrap = false,
+                    Font = new Font("Courier New", 10),
+                    ScrollBars = ScrollBars.Vertical
+                };
         }
 
         private TextBox TbxInput { get; set; }
         private TextBox TbxOutput { get; set; }
 
         /// <summary>
-        /// OnLoad
+        ///     OnLoad
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -61,7 +65,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// OnResize
+        ///     OnResize
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
@@ -76,7 +80,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Catches the hot keys
+        ///     Catches the hot keys
         /// </summary>
         private void TbxInputKeyUp(object sender, KeyEventArgs e)
         {
@@ -86,33 +90,34 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Does the job
+        ///     Does the job
         /// </summary>
         private void ParseInput(string input)
         {
             var asCommands = new[]
-            {
-                "help           - Shows the commands list.",
-                "clr            - Clears the screen.",
-                "pos #          - Shows the parameters of position #.",
-                "ord #          - Shows the parameters of order #.",
-                "bar #          - Shows the prices of bar #.",
-                "ind #          - Shows the indicators for bar #.",
-                "str            - shows the strategy.",
-                "debug          - Turns on debug mode.",
-                "undebug        - Turns off debug mode.",
-                "loadlang       - Reloads the language file.",
-                "missingphrases - Shows all phrases, which are used in the program but are not included in the language file.",
-                "genlangfiles   - Regenerates English.xml.",
-                "repairlang     - Repairs all the language files.",
-                "importlang     - Imports a translation (Read more first).",
-                "langtowiki     - Shows translation in wiki format.",
-                "resetinstrum   - Resets the instruments list.",
-                "speedtest      - Performs a speed test.",
-                "reloadtips     - Reloads the starting tips.",
-                "showalltips    - Shows all the starting tips.",
-                "loadsavedata   - Loads, filters and saves all data files."
-            };
+                {
+                    "help           - Shows the commands list.",
+                    "clr            - Clears the screen.",
+                    "pos #          - Shows the parameters of position #.",
+                    "ord #          - Shows the parameters of order #.",
+                    "bar #          - Shows the prices of bar #.",
+                    "ind #          - Shows the indicators for bar #.",
+                    "str            - shows the strategy.",
+                    "debug          - Turns on debug mode.",
+                    "undebug        - Turns off debug mode.",
+                    "loadlang       - Reloads the language file.",
+                    "missingphrases - Shows all phrases, which are used in the program but are not included in the language file."
+                    ,
+                    "genlangfiles   - Regenerates English.xml.",
+                    "repairlang     - Repairs all the language files.",
+                    "importlang     - Imports a translation (Read more first).",
+                    "langtowiki     - Shows translation in wiki format.",
+                    "resetinstrum   - Resets the instruments list.",
+                    "speedtest      - Performs a speed test.",
+                    "reloadtips     - Reloads the starting tips.",
+                    "showalltips    - Shows all the starting tips.",
+                    "loadsavedata   - Loads, filters and saves all data files."
+                };
 
             if (input.StartsWith("help") || input.StartsWith("?"))
             {
@@ -215,7 +220,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Speed Test
+        ///     Speed Test
         /// </summary>
         private void SpeedTest()
         {
@@ -232,7 +237,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Show position
+        ///     Show position
         /// </summary>
         private void ShowPosition(string input)
         {
@@ -252,7 +257,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Show position
+        ///     Show position
         /// </summary>
         private void ShowOrder(string input)
         {
@@ -272,7 +277,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Show bar
+        ///     Show bar
         /// </summary>
         private void ShowBar(string input)
         {
@@ -305,7 +310,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shows all missing phrases.
+        ///     Shows all missing phrases.
         /// </summary>
         private void ShowMissingPhrases()
         {
@@ -317,7 +322,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shows the strategy
+        ///     Shows the strategy
         /// </summary>
         private void ShowStrategy()
         {
@@ -326,7 +331,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Show indicators in the selected bars.
+        ///     Show indicators in the selected bars.
         /// </summary>
         private void ShowIndicators(string input)
         {
@@ -363,28 +368,28 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads, filters and saves all data files.
+        ///     Loads, filters and saves all data files.
         /// </summary>
         private void LoadSaveData()
         {
-            var files = Directory.GetFiles(Data.OfflineDataDir, "*.csv");
-            foreach (var file in files)
+            string[] files = Directory.GetFiles(Data.OfflineDataDir, "*.csv");
+            foreach (string file in files)
             {
-                var symbol = GetSymbolFromFileName(file);
-                var period = GetPeriodFromFileName(file);
+                string symbol = GetSymbolFromFileName(file);
+                int period = GetPeriodFromFileName(file);
                 if (string.IsNullOrEmpty(symbol) || period == 0)
                     continue;
 
                 InstrumentProperties instrProperties = Instruments.InstrumentList[symbol].Clone();
                 var instrument = new Instrument(instrProperties, period)
-                                     {
-                                         DataDir = Data.OfflineDataDir,
-                                         MaxBars = Configs.MaxBars,
-                                         StartTime = Configs.DataStartTime,
-                                         EndTime = Configs.DataEndTime,
-                                         UseStartTime = Configs.UseStartTime,
-                                         UseEndTime = Configs.UseEndTime
-                                     };
+                    {
+                        DataDir = Data.OfflineDataDir,
+                        MaxBars = Configs.MaxBars,
+                        StartTime = Configs.DataStartTime,
+                        EndTime = Configs.DataEndTime,
+                        UseStartTime = Configs.UseStartTime,
+                        UseEndTime = Configs.UseEndTime
+                    };
 
                 int loadDataResult = instrument.LoadData();
 
@@ -415,16 +420,14 @@ namespace Forex_Strategy_Builder
                     {
                         MessageBox.Show(exc.Message);
                     }
-
                 }
-
             }
         }
 
         private string GetSymbolFromFileName(string file)
         {
             string symbol = string.Empty;
-            var fileName = Path.GetFileNameWithoutExtension(file);
+            string fileName = Path.GetFileNameWithoutExtension(file);
             const string pattern = @"^(?<symbol>[A-Za-z]+)\d+$";
             var expression = new Regex(pattern, RegexOptions.Compiled);
             if (fileName != null)
@@ -439,7 +442,7 @@ namespace Forex_Strategy_Builder
         private int GetPeriodFromFileName(string file)
         {
             int period = 0;
-            var fileName = Path.GetFileNameWithoutExtension(file);
+            string fileName = Path.GetFileNameWithoutExtension(file);
             const string pattern = @"(?<period>\d+)$";
             var expression = new Regex(pattern, RegexOptions.Compiled);
             if (fileName != null)

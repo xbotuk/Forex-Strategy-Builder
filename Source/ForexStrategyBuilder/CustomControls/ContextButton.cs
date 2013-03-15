@@ -1,19 +1,23 @@
-﻿// ContextButton class.
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Utils;
+using ForexStrategyBuilder.Utils;
 
-namespace Forex_Strategy_Builder.CustomControls
+namespace ForexStrategyBuilder.CustomControls
 {
     public sealed class ContextButton : Panel
     {
-        private bool _isHover;
+        private bool isHover;
 
         public ContextButton()
         {
@@ -31,14 +35,14 @@ namespace Forex_Strategy_Builder.CustomControls
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
-            _isHover = true;
+            isHover = true;
             Invalidate();
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
-            _isHover = false;
+            isHover = false;
             Invalidate();
         }
 
@@ -46,8 +50,8 @@ namespace Forex_Strategy_Builder.CustomControls
         {
             Graphics g = e.Graphics;
 
-            float factor1 = _isHover ? 0.40f : 0.20f;
-            float factor2 = _isHover ? 0.85f : 0.65f;
+            float factor1 = isHover ? 0.40f : 0.20f;
+            float factor2 = isHover ? 0.85f : 0.65f;
 
             Brush brush1 = new SolidBrush(ColorMagic.GetIntermediateColor(ColorBack, ColorFore, factor1));
             Brush brush2 = new SolidBrush(ColorMagic.GetIntermediateColor(ColorBack, ColorFore, factor2));

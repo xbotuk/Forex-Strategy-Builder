@@ -1,8 +1,12 @@
-﻿// Strategy Analyzer - OverOptimization Charts
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
@@ -10,82 +14,82 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs.Analyzer
+namespace ForexStrategyBuilder.Dialogs.Analyzer
 {
     internal class OverOptimizationCharts : Panel
     {
         private const int Space = 5;
         private const int Border = 2;
-        private PointF[][] _apntParameters;
-        private Brush _brushFore;
-        private float _captionHeight;
-        private string _chartTitle;
-        private int _countLabels;
-        private float _delta;
-        private int _devSteps;
-        private Font _font;
-        private int _labelWidth;
-        private int _maximum;
-        private int _minimum;
-        private int _parameters;
-        private Pen _penBorder;
-        private Pen _penGrid;
-        private int _percentDev;
-        private RectangleF _rectfCaption;
-        private int _step;
-        private StringFormat _stringFormatCaption;
-        private int _xLeft;
-        private int _xMiddle;
-        private int _xRight;
-        private float _xScale;
-        private int _yBottom;
-        private float _yScale;
-        private int _yTop;
+        private PointF[][] apntParameters;
+        private Brush brushFore;
+        private float captionHeight;
+        private string chartTitle;
+        private int countLabels;
+        private float delta;
+        private int devSteps;
+        private Font font;
+        private int labelWidth;
+        private int maximum;
+        private int minimum;
+        private int parameters;
+        private Pen penBorder;
+        private Pen penGrid;
+        private int percentDev;
+        private RectangleF rectfCaption;
+        private int step;
+        private StringFormat stringFormatCaption;
+        private int xLeft;
+        private int xMiddle;
+        private int xRight;
+        private float xScale;
+        private int yBottom;
+        private float yScale;
+        private int yTop;
         private OverOptimizationDataTable Table { get; set; }
 
         /// <summary>
-        /// Sets the chart parameters
+        ///     Sets the chart parameters
         /// </summary>
         public void InitChart(OverOptimizationDataTable table)
         {
             Table = table;
 
             // Chart Title
-            _chartTitle = table.Name;
-            _font = new Font(Font.FontFamily, 9);
-            _captionHeight = Math.Max(_font.Height, 18);
-            _rectfCaption = new RectangleF(0, 0, ClientSize.Width, _captionHeight);
-            _stringFormatCaption = new StringFormat
-                                       {
-                                           Alignment = StringAlignment.Center,
-                                           LineAlignment = StringAlignment.Center,
-                                           Trimming = StringTrimming.EllipsisCharacter,
-                                           FormatFlags = StringFormatFlags.NoWrap
-                                       };
+            chartTitle = table.Name;
+            font = new Font(Font.FontFamily, 9);
+            captionHeight = Math.Max(font.Height, 18);
+            rectfCaption = new RectangleF(0, 0, ClientSize.Width, captionHeight);
+            stringFormatCaption = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center,
+                    Trimming = StringTrimming.EllipsisCharacter,
+                    FormatFlags = StringFormatFlags.NoWrap
+                };
 
-            _brushFore = new SolidBrush(LayoutColors.ColorChartFore);
-            _penGrid = new Pen(LayoutColors.ColorChartGrid)
-                           {DashStyle = DashStyle.Dash, DashPattern = new float[] {4, 2}};
-            _penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
-                                 Border);
+            brushFore = new SolidBrush(LayoutColors.ColorChartFore);
+            penGrid = new Pen(LayoutColors.ColorChartGrid)
+                {DashStyle = DashStyle.Dash, DashPattern = new float[] {4, 2}};
+            penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
+                                Border);
 
-            _devSteps = table.CountDeviationSteps;
-            _percentDev = (_devSteps - 1)/2;
-            _parameters = table.CountStrategyParams;
+            devSteps = table.CountDeviationSteps;
+            percentDev = (devSteps - 1)/2;
+            parameters = table.CountStrategyParams;
 
-            if (_parameters == 0)
+            if (parameters == 0)
                 return;
 
             double minValue = double.MaxValue;
             double maxValue = double.MinValue;
 
-            for (int param = 0; param < _parameters; param++)
+            for (int param = 0; param < parameters; param++)
             {
                 double min = double.MaxValue;
                 double max = double.MinValue;
-                for (int dev = 0; dev < _devSteps; dev++)
+                for (int dev = 0; dev < devSteps; dev++)
                 {
-                    int index = dev - _percentDev;
+                    int index = dev - percentDev;
                     double value = table.GetData(index, param);
                     if (min > value) min = value;
                     if (max < value) max = value;
@@ -94,129 +98,129 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
                 if (maxValue < max) maxValue = max;
             }
 
-            _maximum = (int) Math.Round(maxValue + 0.1*Math.Abs(maxValue));
-            _minimum = (int) Math.Round(minValue - 0.1*Math.Abs(minValue));
-            int roundStep = Math.Abs(_minimum) > 1 ? 10 : 1;
-            _minimum = (int) (Math.Floor(_minimum/(float) roundStep)*roundStep);
-            if (Math.Abs(_maximum - _minimum) < 1) _maximum = _minimum + 1;
+            maximum = (int) Math.Round(maxValue + 0.1*Math.Abs(maxValue));
+            minimum = (int) Math.Round(minValue - 0.1*Math.Abs(minValue));
+            int roundStep = Math.Abs(minimum) > 1 ? 10 : 1;
+            minimum = (int) (Math.Floor(minimum/(float) roundStep)*roundStep);
+            if (Math.Abs(maximum - minimum) < 1) maximum = minimum + 1;
 
-            _yTop = (int) _captionHeight + 2*Space + 1;
-            _yBottom = ClientSize.Height - 2*Space - 1 - Border - Space - Font.Height;
+            yTop = (int) captionHeight + 2*Space + 1;
+            yBottom = ClientSize.Height - 2*Space - 1 - Border - Space - Font.Height;
 
             Graphics g = CreateGraphics();
-            _labelWidth =
+            labelWidth =
                 (int)
-                Math.Max(g.MeasureString(_minimum.ToString(CultureInfo.InvariantCulture), _font).Width,
-                         g.MeasureString(_maximum.ToString(CultureInfo.InvariantCulture), _font).Width);
+                Math.Max(g.MeasureString(minimum.ToString(CultureInfo.InvariantCulture), font).Width,
+                         g.MeasureString(maximum.ToString(CultureInfo.InvariantCulture), font).Width);
             g.Dispose();
 
-            _labelWidth = Math.Max(_labelWidth, 30);
-            _xLeft = Border + 3*Space;
-            _xRight = ClientSize.Width - Border - 2*Space - _labelWidth;
-            _xScale = (_xRight - _xLeft)/(float) (_devSteps - 1);
-            _xMiddle = (int) (_xLeft + _percentDev*_xScale);
+            labelWidth = Math.Max(labelWidth, 30);
+            xLeft = Border + 3*Space;
+            xRight = ClientSize.Width - Border - 2*Space - labelWidth;
+            xScale = (xRight - xLeft)/(float) (devSteps - 1);
+            xMiddle = (int) (xLeft + percentDev*xScale);
 
-            _countLabels = Math.Max((_yBottom - _yTop)/20, 2);
-            _delta = (float) Math.Max(Math.Round((_maximum - _minimum)/(float) _countLabels), roundStep);
-            _step = (int) Math.Ceiling(_delta/roundStep)*roundStep;
-            _countLabels = (int) Math.Ceiling((_maximum - _minimum)/(float) _step);
-            _maximum = _minimum + _countLabels*_step;
-            _yScale = (_yBottom - _yTop)/(_countLabels*(float) _step);
+            countLabels = Math.Max((yBottom - yTop)/20, 2);
+            delta = (float) Math.Max(Math.Round((maximum - minimum)/(float) countLabels), roundStep);
+            step = (int) Math.Ceiling(delta/roundStep)*roundStep;
+            countLabels = (int) Math.Ceiling((maximum - minimum)/(float) step);
+            maximum = minimum + countLabels*step;
+            yScale = (yBottom - yTop)/(countLabels*(float) step);
 
-            _apntParameters = new PointF[_parameters][];
+            apntParameters = new PointF[parameters][];
 
-            for (int param = 0; param < _parameters; param++)
+            for (int param = 0; param < parameters; param++)
             {
-                _apntParameters[param] = new PointF[_devSteps];
-                for (int dev = 0; dev < _devSteps; dev++)
+                apntParameters[param] = new PointF[devSteps];
+                for (int dev = 0; dev < devSteps; dev++)
                 {
-                    int index = dev - _percentDev;
-                    _apntParameters[param][dev].X = _xLeft + dev*_xScale;
-                    _apntParameters[param][dev].Y =
-                        (float) (_yBottom - (table.GetData(index, param) - _minimum)*_yScale);
+                    int index = dev - percentDev;
+                    apntParameters[param][dev].X = xLeft + dev*xScale;
+                    apntParameters[param][dev].Y =
+                        (float) (yBottom - (table.GetData(index, param) - minimum)*yScale);
                 }
             }
         }
 
         /// <summary>
-        /// Paints the chart
+        ///     Paints the chart
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
 
             // Caption bar.
-            Data.GradientPaint(g, _rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
-            g.DrawString(_chartTitle, Font, new SolidBrush(LayoutColors.ColorCaptionText), _rectfCaption,
-                         _stringFormatCaption);
+            Data.GradientPaint(g, rectfCaption, LayoutColors.ColorCaptionBack, LayoutColors.DepthCaption);
+            g.DrawString(chartTitle, Font, new SolidBrush(LayoutColors.ColorCaptionText), rectfCaption,
+                         stringFormatCaption);
 
             // Border.
-            g.DrawLine(_penBorder, 1, _captionHeight, 1, ClientSize.Height);
-            g.DrawLine(_penBorder, ClientSize.Width - Border + 1, _captionHeight, ClientSize.Width - Border + 1,
+            g.DrawLine(penBorder, 1, captionHeight, 1, ClientSize.Height);
+            g.DrawLine(penBorder, ClientSize.Width - Border + 1, captionHeight, ClientSize.Width - Border + 1,
                        ClientSize.Height);
-            g.DrawLine(_penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
+            g.DrawLine(penBorder, 0, ClientSize.Height - Border + 1, ClientSize.Width, ClientSize.Height - Border + 1);
 
             // Paints the background by gradient.
-            var rectField = new RectangleF(Border, _captionHeight, ClientSize.Width - 2*Border,
-                                           ClientSize.Height - _captionHeight - Border);
+            var rectField = new RectangleF(Border, captionHeight, ClientSize.Width - 2*Border,
+                                           ClientSize.Height - captionHeight - Border);
             Data.GradientPaint(g, rectField, LayoutColors.ColorChartBack, LayoutColors.DepthControl);
 
-            if (Table == null || _parameters == 0)
+            if (Table == null || parameters == 0)
                 return;
 
             // Grid and value labels.
-            for (int label = _minimum; label <= _maximum; label += _step)
+            for (int label = minimum; label <= maximum; label += step)
             {
-                var iLabelY = (int) (_yBottom - (label - _minimum)*_yScale);
-                g.DrawString(label.ToString(CultureInfo.InvariantCulture), Font, _brushFore, _xRight + Space,
+                var iLabelY = (int) (yBottom - (label - minimum)*yScale);
+                g.DrawString(label.ToString(CultureInfo.InvariantCulture), Font, brushFore, xRight + Space,
                              iLabelY - Font.Height/2 - 1);
-                g.DrawLine(_penGrid, _xLeft, iLabelY, _xRight, iLabelY);
+                g.DrawLine(penGrid, xLeft, iLabelY, xRight, iLabelY);
             }
 
             // Deviation labels.
             var strFormatDevLabel = new StringFormat {Alignment = StringAlignment.Center};
             int xLabelRight = 0;
-            for (int dev = 0; dev < _devSteps; dev++)
+            for (int dev = 0; dev < devSteps; dev++)
             {
-                int index = dev - _percentDev;
-                var xVertLine = (int) (_xLeft + dev*_xScale);
-                g.DrawLine(_penGrid, xVertLine, _yTop, xVertLine, _yBottom + 2);
+                int index = dev - percentDev;
+                var xVertLine = (int) (xLeft + dev*xScale);
+                g.DrawLine(penGrid, xVertLine, yTop, xVertLine, yBottom + 2);
                 string devLabel = index + (index != 0 ? "%" : "");
-                var devLabelWidth = (int) g.MeasureString(devLabel, _font).Width;
+                var devLabelWidth = (int) g.MeasureString(devLabel, font).Width;
                 if (xVertLine - devLabelWidth/2 > xLabelRight)
                 {
-                    g.DrawString(devLabel, _font, _brushFore, xVertLine, _yBottom + Space, strFormatDevLabel);
+                    g.DrawString(devLabel, font, brushFore, xVertLine, yBottom + Space, strFormatDevLabel);
                     xLabelRight = xVertLine + devLabelWidth/2;
                 }
             }
 
             // Vertical coordinate axes.
-            g.DrawLine(new Pen(LayoutColors.ColorChartFore), _xMiddle - 1, _yTop - Space, _xMiddle - 1, _yBottom + 1);
+            g.DrawLine(new Pen(LayoutColors.ColorChartFore), xMiddle - 1, yTop - Space, xMiddle - 1, yBottom + 1);
 
             // Chart lines
-            for (int param = 0; param < _parameters; param++)
-                g.DrawLines(new Pen(GetNextColor(param)), _apntParameters[param]);
+            for (int param = 0; param < parameters; param++)
+                g.DrawLines(new Pen(GetNextColor(param)), apntParameters[param]);
 
             // Horizontal coordinate axes.
-            g.DrawLine(new Pen(LayoutColors.ColorChartFore), _xLeft - 1, _yBottom + 1, _xRight, _yBottom + 1);
+            g.DrawLine(new Pen(LayoutColors.ColorChartFore), xLeft - 1, yBottom + 1, xRight, yBottom + 1);
         }
 
         /// <summary>
-        /// Gets color for the chart lines.
+        ///     Gets color for the chart lines.
         /// </summary>
         private Color GetNextColor(int param)
         {
             var colors = new[]
-                             {
-                                 Color.DarkViolet,
-                                 Color.Red,
-                                 Color.Peru,
-                                 Color.DarkSalmon,
-                                 Color.Orange,
-                                 Color.Green,
-                                 Color.Lime,
-                                 Color.Gold
-                             };
+                {
+                    Color.DarkViolet,
+                    Color.Red,
+                    Color.Peru,
+                    Color.DarkSalmon,
+                    Color.Orange,
+                    Color.Green,
+                    Color.Lime,
+                    Color.Gold
+                };
 
             if (param >= colors.Length)
                 param = param%colors.Length;
@@ -225,7 +229,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Invalidates the chart after resizing
+        ///     Invalidates the chart after resizing
         /// </summary>
         protected override void OnResize(EventArgs eventargs)
         {

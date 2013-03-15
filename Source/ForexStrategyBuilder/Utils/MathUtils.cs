@@ -1,28 +1,31 @@
-﻿// FormState
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Globalization;
 
-namespace Forex_Strategy_Builder.Utils
+namespace ForexStrategyBuilder.Utils
 {
     public static class MathUtils
     {
-
         public static int[] ArrayResize(double[] input, int size)
         {
             var output = new int[size];
 
-            var scale = input.Length / (double)size;
+            double scale = input.Length/(double) size;
             for (int i = 0; i < size; i++)
             {
                 double sum = 0;
                 int count = 0;
-                var startIndex = (int)Math.Floor(i * scale);
-                var endIndex = (int)Math.Ceiling((i + 1) * scale);
+                var startIndex = (int) Math.Floor(i*scale);
+                var endIndex = (int) Math.Ceiling((i + 1)*scale);
                 if (endIndex > input.Length)
                     endIndex = input.Length;
 
@@ -32,7 +35,7 @@ namespace Forex_Strategy_Builder.Utils
                     count++;
                 }
 
-                output[i] = (int)((count == 0) ? input[startIndex] : Math.Round(sum / count));
+                output[i] = (int) ((count == 0) ? input[startIndex] : Math.Round(sum/count));
             }
 
             return output;

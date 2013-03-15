@@ -1,20 +1,24 @@
-// Backtester - Interpolation
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Class Backtester
+    ///     Class Backtester
     /// </summary>
     public partial class Backtester
     {
         /// <summary>
-        /// Arranges the orders inside the bar.
+        ///     Arranges the orders inside the bar.
         /// </summary>
         private static void BarInterpolation(int bar)
         {
@@ -46,10 +50,10 @@ namespace Forex_Strategy_Builder
                 bool isScanningResult = false;
 
                 // Break Even
-                int currentPosNumber = _session[bar].Summary.PosNumb;
+                int currentPosNumber = session[bar].Summary.PosNumb;
                 if (Strategy.UseBreakEven && lastPosBreakEven != currentPosNumber && IsOpenPos(bar))
                 {
-                    if (lastPosActivatedBE != currentPosNumber && !_session[bar].Summary.IsBreakEvenActivated)
+                    if (lastPosActivatedBE != currentPosNumber && !session[bar].Summary.IsBreakEvenActivated)
                     {
                         SetBreakEvenActivation(bar);
                         lastPosActivatedBE = currentPosNumber;
@@ -60,24 +64,24 @@ namespace Forex_Strategy_Builder
                 }
 
                 // Setting the parameters
-                for (int ord = 0; ord < _session[bar].Orders; ord++)
+                for (int ord = 0; ord < session[bar].Orders; ord++)
                 {
                     if (!CheckOrd(bar, ord)) continue;
 
-                    Order order = _session[bar].Order[ord];
+                    Order order = session[bar].Order[ord];
                     var prices = new[] {order.OrdPrice, order.OrdPrice2};
                     foreach (double price in prices)
                     {
-                        if (high + _micron <= price || price <= low - _micron)
+                        if (high + micron <= price || price <= low - micron)
                             continue;
 
                         if (isTopReachable)
-                            isTopReachable = current > price + _micron;
+                            isTopReachable = current > price + micron;
 
                         if (isBottomReachable)
-                            isBottomReachable = current < price - _micron;
+                            isBottomReachable = current < price - micron;
 
-                        if (price > current - _micron && price < priceHigher + _micron)
+                        if (price > current - micron && price < priceHigher + micron)
                         {
                             // New nearer Upper price
                             isHigherPrice = true;
@@ -85,7 +89,7 @@ namespace Forex_Strategy_Builder
                             orderHigher = order;
                             isTopReachable = false;
                         }
-                        else if (price < current && price > priceLower - _micron)
+                        else if (price < current && price > priceLower - micron)
                         {
                             // New nearer Lower price
                             isLowerPrice = true;
@@ -107,12 +111,12 @@ namespace Forex_Strategy_Builder
                     // There are a higher and a lower order
                     eval = BacktestEval.Ambiguous;
                 }
-                else if (isHigherPrice && priceHigher - current < _micron)
+                else if (isHigherPrice && priceHigher - current < micron)
                 {
                     // There is an order at the current price
                     eval = BacktestEval.Correct;
                 }
-                else if (isLowerPrice && current - priceLower < _micron)
+                else if (isLowerPrice && current - priceLower < micron)
                 {
                     // There is an order at the current price
                     eval = BacktestEval.Correct;
@@ -120,20 +124,20 @@ namespace Forex_Strategy_Builder
                 else
                 {
                     // Check for a Closing Ambiguity
-                    if (_session[bar].IsBottomReached && _session[bar].IsTopReached &&
-                        current > close - _micron && close > priceLower)
+                    if (session[bar].IsBottomReached && session[bar].IsTopReached &&
+                        current > close - micron && close > priceLower)
                         isClosingAmbiguity = true;
 
-                    else if (_session[bar].IsBottomReached && _session[bar].IsTopReached &&
-                             current < close + _micron && close < priceHigher)
+                    else if (session[bar].IsBottomReached && session[bar].IsTopReached &&
+                             current < close + micron && close < priceHigher)
                         isClosingAmbiguity = true;
 
-                    else if (_session[bar].IsTopReached && isHigherPrice &&
-                             current > close - _micron)
+                    else if (session[bar].IsTopReached && isHigherPrice &&
+                             current > close - micron)
                         isClosingAmbiguity = true;
 
-                    else if (_session[bar].IsBottomReached && isLowerPrice &&
-                             current < close + _micron)
+                    else if (session[bar].IsBottomReached && isLowerPrice &&
+                             current < close + micron)
                         isClosingAmbiguity = true;
 
                     eval = isClosingAmbiguity
@@ -142,7 +146,7 @@ namespace Forex_Strategy_Builder
                 }
 
 
-                if (_isScanning && Configs.UseTickData && IsTickData && TickData[bar] != null)
+                if (isScanning && Configs.UseTickData && IsTickData && TickData[bar] != null)
                 {
                     isScanningResult = TickScanning(bar, eval,
                                                     ref current, ref reachedTick,
@@ -153,7 +157,7 @@ namespace Forex_Strategy_Builder
                                                     isClosingAmbiguity);
                 }
 
-                if (_isScanning && !isScanningResult && IntraBarsPeriods[bar] != Period)
+                if (isScanning && !isScanningResult && IntraBarsPeriods[bar] != Period)
                 {
                     isScanningResult = IntrabarScanning(bar, eval, ref current,
                                                         ref reachedIntrabar, ref tradedIntrabar,
@@ -203,11 +207,11 @@ namespace Forex_Strategy_Builder
                                      isClosingAmbiguity);
                         break;
                 }
-            } while (!(eval == BacktestEval.None && _session[bar].IsTopReached && _session[bar].IsBottomReached));
+            } while (!(eval == BacktestEval.None && session[bar].IsTopReached && session[bar].IsBottomReached));
         }
 
         /// <summary>
-        /// Tick Scanning
+        ///     Tick Scanning
         /// </summary>
         private static bool TickScanning(int bar, BacktestEval eval,
                                          ref double current, ref int reachedTick,
@@ -225,64 +229,64 @@ namespace Forex_Strategy_Builder
             if (eval == BacktestEval.None)
             {
                 // There isn't any orders
-                if (!_session[bar].IsTopReached && !_session[bar].IsBottomReached)
+                if (!session[bar].IsTopReached && !session[bar].IsBottomReached)
                 {
                     // Neither the top nor the bottom was reached
                     int tickCount = TickData[bar].Length;
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + _micron > high)
+                        if (TickData[bar][tick] + micron > high)
                         {
                             // Top found
                             current = high;
-                            _session[bar].SetWayPoint(high, WayPointType.High);
-                            _session[bar].IsTopReached = true;
+                            session[bar].SetWayPoint(high, WayPointType.High);
+                            session[bar].IsTopReached = true;
                             isScanningResult = true;
                             break;
                         }
-                        if (TickData[bar][tick] - _micron < low)
+                        if (TickData[bar][tick] - micron < low)
                         {
                             // Bottom found
                             current = low;
-                            _session[bar].SetWayPoint(low, WayPointType.Low);
-                            _session[bar].IsBottomReached = true;
+                            session[bar].SetWayPoint(low, WayPointType.Low);
+                            session[bar].IsBottomReached = true;
                             isScanningResult = true;
                             break;
                         }
                     }
                 }
-                else if (!_session[bar].IsTopReached)
+                else if (!session[bar].IsTopReached)
                 {
                     // Whether hit the Top
                     int tickCount = TickData[bar].Length;
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + _micron > high)
+                        if (TickData[bar][tick] + micron > high)
                         {
                             // Top found
                             current = high;
-                            _session[bar].SetWayPoint(high, WayPointType.High);
-                            _session[bar].IsTopReached = true;
+                            session[bar].SetWayPoint(high, WayPointType.High);
+                            session[bar].IsTopReached = true;
                             isScanningResult = true;
                             break;
                         }
                     }
                 }
-                else if (!_session[bar].IsBottomReached)
+                else if (!session[bar].IsBottomReached)
                 {
                     // Whether hit the Bottom
                     int tickCount = TickData[bar].Length;
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] - _micron < low)
+                        if (TickData[bar][tick] - micron < low)
                         {
                             // Bottom found
                             current = low;
-                            _session[bar].SetWayPoint(low, WayPointType.Low);
-                            _session[bar].IsBottomReached = true;
+                            session[bar].SetWayPoint(low, WayPointType.Low);
+                            session[bar].IsBottomReached = true;
                             isScanningResult = true;
                             break;
                         }
@@ -306,14 +310,14 @@ namespace Forex_Strategy_Builder
                     thePrice = priceLower;
                 }
 
-                if (!_session[bar].IsBottomReached && isBottomReachable)
+                if (!session[bar].IsBottomReached && isBottomReachable)
                 {
                     // The order or the Bottom
                     int tickCount = TickData[bar].Length;
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + _micron > thePrice)
+                        if (TickData[bar][tick] + micron > thePrice)
                         {
                             // The order is reached
                             current = thePrice;
@@ -321,34 +325,34 @@ namespace Forex_Strategy_Builder
                             isScanningResult = true;
                             break;
                         }
-                        if (TickData[bar][tick] - _micron < low)
+                        if (TickData[bar][tick] - micron < low)
                         {
                             // Bottom is reached
                             current = low;
-                            _session[bar].SetWayPoint(low, WayPointType.Low);
-                            _session[bar].IsBottomReached = true;
+                            session[bar].SetWayPoint(low, WayPointType.Low);
+                            session[bar].IsBottomReached = true;
                             isScanningResult = true;
                             break;
                         }
                     }
                 }
-                else if (!_session[bar].IsTopReached && isTopReachable)
+                else if (!session[bar].IsTopReached && isTopReachable)
                 {
                     // The order or the Top
                     int tickCount = TickData[bar].Length;
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + _micron > high)
+                        if (TickData[bar][tick] + micron > high)
                         {
                             // The Top is reached
                             current = high;
-                            _session[bar].SetWayPoint(high, WayPointType.High);
-                            _session[bar].IsTopReached = true;
+                            session[bar].SetWayPoint(high, WayPointType.High);
+                            session[bar].IsTopReached = true;
                             isScanningResult = true;
                             break;
                         }
-                        if (TickData[bar][tick] - _micron < thePrice)
+                        if (TickData[bar][tick] - micron < thePrice)
                         {
                             // The order is reached
                             current = thePrice;
@@ -366,8 +370,8 @@ namespace Forex_Strategy_Builder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (priceOld - _micron < thePrice && TickData[bar][tick] + _micron > thePrice ||
-                            priceOld + _micron > thePrice && TickData[bar][tick] - _micron < thePrice)
+                        if (priceOld - micron < thePrice && TickData[bar][tick] + micron > thePrice ||
+                            priceOld + micron > thePrice && TickData[bar][tick] - micron < thePrice)
                         {
                             // Order reached
                             current = thePrice;
@@ -388,7 +392,7 @@ namespace Forex_Strategy_Builder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + _micron > priceHigher)
+                        if (TickData[bar][tick] + micron > priceHigher)
                         {
                             // Upper order is reached
                             current = priceHigher;
@@ -396,7 +400,7 @@ namespace Forex_Strategy_Builder
                             isScanningResult = true;
                             break;
                         }
-                        if (TickData[bar][tick] - _micron < priceLower)
+                        if (TickData[bar][tick] - micron < priceLower)
                         {
                             // Lower order is reached
                             current = priceLower;
@@ -409,7 +413,7 @@ namespace Forex_Strategy_Builder
                 else
                 {
                     // Execute or exit the bar
-                    Order theOrder = null;
+                    var theOrder = new Order();
                     double thePrice = 0.0;
                     if (isHigherPrice)
                     {
@@ -429,7 +433,7 @@ namespace Forex_Strategy_Builder
                         for (int tick = reachedTick; tick < tickCount; tick++)
                         {
                             reachedTick = tick;
-                            if (TickData[bar][tick] + _micron > thePrice)
+                            if (TickData[bar][tick] + micron > thePrice)
                             {
                                 // The order is reached
                                 executeOrder = true;
@@ -444,7 +448,7 @@ namespace Forex_Strategy_Builder
                         for (int tick = reachedTick; tick < tickCount; tick++)
                         {
                             reachedTick = tick;
-                            if (TickData[bar][tick] - _micron < thePrice)
+                            if (TickData[bar][tick] - micron < thePrice)
                             {
                                 // The order is reached
                                 executeOrder = true;
@@ -464,7 +468,7 @@ namespace Forex_Strategy_Builder
                         // Exit the bar
                         current = close;
                         theOrder.OrdStatus = OrderStatus.Cancelled;
-                        _session[bar].BacktestEval = BacktestEval.Correct;
+                        session[bar].BacktestEval = BacktestEval.Correct;
                     }
 
                     isScanningResult = true;
@@ -475,7 +479,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Intrabar Scanning
+        ///     Intrabar Scanning
         /// </summary>
         private static bool IntrabarScanning(int bar, BacktestEval eval, ref double current,
                                              ref int reachedIntrabar, ref int tradedIntrabar,
@@ -493,7 +497,7 @@ namespace Forex_Strategy_Builder
             if (eval == BacktestEval.None)
             {
                 // There is no more orders
-                if (!_session[bar].IsTopReached && !_session[bar].IsBottomReached)
+                if (!session[bar].IsTopReached && !session[bar].IsBottomReached)
                 {
                     // Neither the top nor the bottom was reached
                     bool goUpward = false;
@@ -501,14 +505,14 @@ namespace Forex_Strategy_Builder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + _micron > high)
+                        if (IntraBarData[bar][intraBar].High + micron > high)
                         {
                             // Top found
                             goUpward = true;
                             isScanningResult = true;
                         }
 
-                        if (IntraBarData[bar][intraBar].Low - _micron < low)
+                        if (IntraBarData[bar][intraBar].Low - micron < low)
                         {
                             // Bottom found
                             if (isScanningResult)
@@ -530,49 +534,49 @@ namespace Forex_Strategy_Builder
                         {
                             // Hit the Top
                             current = high;
-                            _session[bar].SetWayPoint(high, WayPointType.High);
-                            _session[bar].IsTopReached = true;
+                            session[bar].SetWayPoint(high, WayPointType.High);
+                            session[bar].IsTopReached = true;
                         }
                         else
                         {
                             // Hit the Bottom
                             current = low;
-                            _session[bar].SetWayPoint(low, WayPointType.Low);
-                            _session[bar].IsBottomReached = true;
+                            session[bar].SetWayPoint(low, WayPointType.Low);
+                            session[bar].IsBottomReached = true;
                         }
                     }
                 }
-                else if (!_session[bar].IsTopReached)
+                else if (!session[bar].IsTopReached)
                 {
                     // Whether hit the Top
                     for (int intraBar = reachedIntrabar; intraBar < IntraBarBars[bar]; intraBar++)
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + _micron > high)
+                        if (IntraBarData[bar][intraBar].High + micron > high)
                         {
                             // Top found
                             current = high;
-                            _session[bar].SetWayPoint(high, WayPointType.High);
-                            _session[bar].IsTopReached = true;
+                            session[bar].SetWayPoint(high, WayPointType.High);
+                            session[bar].IsTopReached = true;
                             isScanningResult = true;
                             break;
                         }
                     }
                 }
-                else if (!_session[bar].IsBottomReached)
+                else if (!session[bar].IsBottomReached)
                 {
                     // Whether hit the Bottom
                     for (int intraBar = reachedIntrabar; intraBar < IntraBarBars[bar]; intraBar++)
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].Low - _micron < low)
+                        if (IntraBarData[bar][intraBar].Low - micron < low)
                         {
                             // Bottom found
                             current = low;
-                            _session[bar].SetWayPoint(low, WayPointType.Low);
-                            _session[bar].IsBottomReached = true;
+                            session[bar].SetWayPoint(low, WayPointType.Low);
+                            session[bar].IsBottomReached = true;
                             isScanningResult = true;
                             break;
                         }
@@ -596,7 +600,7 @@ namespace Forex_Strategy_Builder
                     thePrice = priceLower;
                 }
 
-                if (!_session[bar].IsBottomReached && isBottomReachable)
+                if (!session[bar].IsBottomReached && isBottomReachable)
                 {
                     // The order or the bottom
                     bool goUpward = false;
@@ -604,14 +608,14 @@ namespace Forex_Strategy_Builder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + _micron > thePrice)
+                        if (IntraBarData[bar][intraBar].High + micron > thePrice)
                         {
                             // The order is reached
                             goUpward = true;
                             isScanningResult = true;
                         }
 
-                        if (IntraBarData[bar][intraBar].Low - _micron < low)
+                        if (IntraBarData[bar][intraBar].Low - micron < low)
                         {
                             // Bottom is reached
                             if (isScanningResult)
@@ -644,12 +648,12 @@ namespace Forex_Strategy_Builder
                         {
                             // Hit the Bottom
                             current = low;
-                            _session[bar].SetWayPoint(low, WayPointType.Low);
-                            _session[bar].IsBottomReached = true;
+                            session[bar].SetWayPoint(low, WayPointType.Low);
+                            session[bar].IsBottomReached = true;
                         }
                     }
                 }
-                else if (!_session[bar].IsTopReached && isTopReachable)
+                else if (!session[bar].IsTopReached && isTopReachable)
                 {
                     // The order or the Top
                     bool goUpward = false;
@@ -657,14 +661,14 @@ namespace Forex_Strategy_Builder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + _micron > high)
+                        if (IntraBarData[bar][intraBar].High + micron > high)
                         {
                             // The Top is reached
                             goUpward = true;
                             isScanningResult = true;
                         }
 
-                        if (IntraBarData[bar][intraBar].Low - _micron < thePrice)
+                        if (IntraBarData[bar][intraBar].Low - micron < thePrice)
                         {
                             // The order is reached
                             if (isScanningResult)
@@ -688,8 +692,8 @@ namespace Forex_Strategy_Builder
                         {
                             // Hit the Top
                             current = high;
-                            _session[bar].SetWayPoint(high, WayPointType.High);
-                            _session[bar].IsTopReached = true;
+                            session[bar].SetWayPoint(high, WayPointType.High);
+                            session[bar].IsTopReached = true;
                         }
                         else
                         {
@@ -711,8 +715,8 @@ namespace Forex_Strategy_Builder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + _micron > thePrice &&
-                            IntraBarData[bar][intraBar].Low - _micron < thePrice)
+                        if (IntraBarData[bar][intraBar].High + micron > thePrice &&
+                            IntraBarData[bar][intraBar].Low - micron < thePrice)
                         {
                             // Order reached
                             if (tradedIntrabar == reachedIntrabar)
@@ -739,14 +743,14 @@ namespace Forex_Strategy_Builder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + _micron > priceHigher)
+                        if (IntraBarData[bar][intraBar].High + micron > priceHigher)
                         {
                             // Upper order is reached
                             executeUpper = true;
                             isScanningResult = true;
                         }
 
-                        if (IntraBarData[bar][intraBar].Low - _micron < priceLower)
+                        if (IntraBarData[bar][intraBar].Low - micron < priceLower)
                         {
                             // Lower order is reached
                             if (isScanningResult)
@@ -790,7 +794,7 @@ namespace Forex_Strategy_Builder
                 else
                 {
                     // Execute or exit the bar
-                    Order theOrder = null;
+                    var theOrder = new Order();
                     double thePrice = 0;
                     if (isHigherPrice)
                     {
@@ -810,7 +814,7 @@ namespace Forex_Strategy_Builder
                         {
                             reachedIntrabar = intraBar;
 
-                            if (IntraBarData[bar][intraBar].High + _micron > thePrice)
+                            if (IntraBarData[bar][intraBar].High + micron > thePrice)
                             {
                                 // The order is reached
                                 executeOrder = true;
@@ -825,7 +829,7 @@ namespace Forex_Strategy_Builder
                         {
                             reachedIntrabar = b;
 
-                            if (IntraBarData[bar][b].Low - _micron < thePrice)
+                            if (IntraBarData[bar][b].Low - micron < thePrice)
                             {
                                 // The order is reached
                                 executeOrder = true;
@@ -851,7 +855,7 @@ namespace Forex_Strategy_Builder
                         // Exit the bar
                         current = close;
                         theOrder.OrdStatus = OrderStatus.Cancelled;
-                        _session[bar].BacktestEval = BacktestEval.Correct;
+                        session[bar].BacktestEval = BacktestEval.Correct;
                     }
                     isScanningResult = true;
                 }
@@ -861,7 +865,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Random Execution Method
+        ///     Random Execution Method
         /// </summary>
         private static void RandomMethod(int bar, BacktestEval eval, ref double current,
                                          bool isTopReachable, bool isBottomReachable,
@@ -878,7 +882,7 @@ namespace Forex_Strategy_Builder
             if (eval == BacktestEval.None)
             {
                 // There is no more orders
-                if (!_session[bar].IsTopReached && !_session[bar].IsBottomReached)
+                if (!session[bar].IsTopReached && !session[bar].IsBottomReached)
                 {
                     // Neither the top nor the bottom was reached
                     var upRange = (int) Math.Round((high - current)/InstrProperties.Point);
@@ -902,30 +906,30 @@ namespace Forex_Strategy_Builder
                     {
                         // Hit the Top
                         current = high;
-                        _session[bar].SetWayPoint(high, WayPointType.High);
-                        _session[bar].IsTopReached = true;
+                        session[bar].SetWayPoint(high, WayPointType.High);
+                        session[bar].IsTopReached = true;
                     }
                     else
                     {
                         // Hit the Bottom
                         current = low;
-                        _session[bar].SetWayPoint(low, WayPointType.Low);
-                        _session[bar].IsBottomReached = true;
+                        session[bar].SetWayPoint(low, WayPointType.Low);
+                        session[bar].IsBottomReached = true;
                     }
                 }
-                else if (!_session[bar].IsTopReached)
+                else if (!session[bar].IsTopReached)
                 {
                     // Hit the Top
                     current = high;
-                    _session[bar].SetWayPoint(high, WayPointType.High);
-                    _session[bar].IsTopReached = true;
+                    session[bar].SetWayPoint(high, WayPointType.High);
+                    session[bar].IsTopReached = true;
                 }
-                else if (!_session[bar].IsBottomReached)
+                else if (!session[bar].IsBottomReached)
                 {
                     // Hit the Bottom
                     current = low;
-                    _session[bar].SetWayPoint(low, WayPointType.Low);
-                    _session[bar].IsBottomReached = true;
+                    session[bar].SetWayPoint(low, WayPointType.Low);
+                    session[bar].IsBottomReached = true;
                 }
             }
             if (eval == BacktestEval.Correct)
@@ -944,7 +948,7 @@ namespace Forex_Strategy_Builder
                     thePrice = priceLower;
                 }
 
-                if (!_session[bar].IsBottomReached && isBottomReachable)
+                if (!session[bar].IsBottomReached && isBottomReachable)
                 {
                     // The order or the bottom
                     var iUpRange = (int) Math.Round((thePrice - current)/InstrProperties.Point);
@@ -974,11 +978,11 @@ namespace Forex_Strategy_Builder
                     {
                         // Hit the Bottom
                         current = low;
-                        _session[bar].SetWayPoint(low, WayPointType.Low);
-                        _session[bar].IsBottomReached = true;
+                        session[bar].SetWayPoint(low, WayPointType.Low);
+                        session[bar].IsBottomReached = true;
                     }
                 }
-                else if (!_session[bar].IsTopReached && isTopReachable)
+                else if (!session[bar].IsTopReached && isTopReachable)
                 {
                     // The order or the Top
                     var upRange = (int) Math.Round((high - current)/InstrProperties.Point);
@@ -1002,8 +1006,8 @@ namespace Forex_Strategy_Builder
                     {
                         // Hit the Top
                         current = high;
-                        _session[bar].SetWayPoint(high, WayPointType.High);
-                        _session[bar].IsTopReached = true;
+                        session[bar].SetWayPoint(high, WayPointType.High);
+                        session[bar].IsTopReached = true;
                     }
                     else
                     {
@@ -1084,7 +1088,7 @@ namespace Forex_Strategy_Builder
                             // Exit the bar
                             current = close;
                             orderHigher.OrdStatus = OrderStatus.Cancelled;
-                            _session[bar].BacktestEval = BacktestEval.Ambiguous;
+                            session[bar].BacktestEval = BacktestEval.Ambiguous;
                         }
                     }
                     else if (isLowerPrice)
@@ -1112,7 +1116,7 @@ namespace Forex_Strategy_Builder
                             // Exit the bar
                             current = close;
                             orderLower.OrdStatus = OrderStatus.Cancelled;
-                            _session[bar].BacktestEval = BacktestEval.Ambiguous;
+                            session[bar].BacktestEval = BacktestEval.Ambiguous;
                         }
                     }
                 }
@@ -1120,7 +1124,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Nearest order first Method
+        ///     Nearest order first Method
         /// </summary>
         private static void NearestMethod(int bar, BacktestEval eval, ref double current,
                                           bool isTopReachable, bool isBottomReachable,
@@ -1137,37 +1141,37 @@ namespace Forex_Strategy_Builder
             if (eval == BacktestEval.None)
             {
                 // There is no more orders
-                if (!_session[bar].IsTopReached && !_session[bar].IsBottomReached)
+                if (!session[bar].IsTopReached && !session[bar].IsBottomReached)
                 {
                     // Neither the top nor the bottom was reached
                     if (close < open)
                     {
                         // Hit the Top
                         current = high;
-                        _session[bar].SetWayPoint(high, WayPointType.High);
-                        _session[bar].IsTopReached = true;
+                        session[bar].SetWayPoint(high, WayPointType.High);
+                        session[bar].IsTopReached = true;
                     }
                     else
                     {
                         // Hit the Bottom
                         current = low;
-                        _session[bar].SetWayPoint(low, WayPointType.Low);
-                        _session[bar].IsBottomReached = true;
+                        session[bar].SetWayPoint(low, WayPointType.Low);
+                        session[bar].IsBottomReached = true;
                     }
                 }
-                else if (!_session[bar].IsTopReached)
+                else if (!session[bar].IsTopReached)
                 {
                     // Hit the Top
                     current = high;
-                    _session[bar].SetWayPoint(high, WayPointType.High);
-                    _session[bar].IsTopReached = true;
+                    session[bar].SetWayPoint(high, WayPointType.High);
+                    session[bar].IsTopReached = true;
                 }
-                else if (!_session[bar].IsBottomReached)
+                else if (!session[bar].IsBottomReached)
                 {
                     // Hit the Bottom
                     current = low;
-                    _session[bar].SetWayPoint(low, WayPointType.Low);
-                    _session[bar].IsBottomReached = true;
+                    session[bar].SetWayPoint(low, WayPointType.Low);
+                    session[bar].IsBottomReached = true;
                 }
             }
             if (eval == BacktestEval.Correct)
@@ -1186,7 +1190,7 @@ namespace Forex_Strategy_Builder
                     thePrice = priceLower;
                 }
 
-                if (!_session[bar].IsBottomReached && isBottomReachable)
+                if (!session[bar].IsBottomReached && isBottomReachable)
                 {
                     // The order or the bottom
                     double upRange = thePrice - current;
@@ -1202,11 +1206,11 @@ namespace Forex_Strategy_Builder
                     {
                         // Hit the Bottom
                         current = low;
-                        _session[bar].SetWayPoint(low, WayPointType.Low);
-                        _session[bar].IsBottomReached = true;
+                        session[bar].SetWayPoint(low, WayPointType.Low);
+                        session[bar].IsBottomReached = true;
                     }
                 }
-                else if (!_session[bar].IsTopReached && isTopReachable)
+                else if (!session[bar].IsTopReached && isTopReachable)
                 {
                     // The order or the bottom
                     double upRange = high - current;
@@ -1216,8 +1220,8 @@ namespace Forex_Strategy_Builder
                     {
                         // Hit the Top
                         current = high;
-                        _session[bar].SetWayPoint(high, WayPointType.High);
-                        _session[bar].IsTopReached = true;
+                        session[bar].SetWayPoint(high, WayPointType.High);
+                        session[bar].IsTopReached = true;
                     }
                     else
                     {
@@ -1285,7 +1289,7 @@ namespace Forex_Strategy_Builder
                     {
                         // Cancel the order, go to Close
                         current = close;
-                        _session[bar].BacktestEval = BacktestEval.Ambiguous;
+                        session[bar].BacktestEval = BacktestEval.Ambiguous;
                         if (isHigherPrice)
                             orderHigher.OrdStatus = OrderStatus.Cancelled;
                         else if (isLowerPrice)
@@ -1296,7 +1300,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shortest route inside the bar Method
+        ///     Shortest route inside the bar Method
         /// </summary>
         private static void ShortestMethod(int bar, BacktestEval eval, ref double current,
                                            bool isTopReachable, bool isBottomReachable,
@@ -1311,54 +1315,54 @@ namespace Forex_Strategy_Builder
             double close = Close[bar];
 
             bool isGoUpward;
-            if (!_session[bar].IsTopReached && !_session[bar].IsBottomReached)
+            if (!session[bar].IsTopReached && !session[bar].IsBottomReached)
                 isGoUpward = open > close;
-            else if (_session[bar].IsTopReached && !_session[bar].IsBottomReached)
+            else if (session[bar].IsTopReached && !session[bar].IsBottomReached)
                 isGoUpward = false;
-            else if (!_session[bar].IsTopReached && _session[bar].IsBottomReached)
+            else if (!session[bar].IsTopReached && session[bar].IsBottomReached)
                 isGoUpward = true;
             else
                 isGoUpward = open > close;
 
-            if (isLowerPrice && current - priceLower < _micron)
+            if (isLowerPrice && current - priceLower < micron)
                 isGoUpward = false;
-            if (isHigherPrice && priceHigher - current < _micron)
+            if (isHigherPrice && priceHigher - current < micron)
                 isGoUpward = true;
 
             if (eval == BacktestEval.None)
             {
                 // There is no more orders
-                if (!_session[bar].IsTopReached && !_session[bar].IsBottomReached)
+                if (!session[bar].IsTopReached && !session[bar].IsBottomReached)
                 {
                     // Neither the top nor the bottom was reached
                     if (isGoUpward)
                     {
                         // Hit the Top
                         current = high;
-                        _session[bar].SetWayPoint(high, WayPointType.High);
-                        _session[bar].IsTopReached = true;
+                        session[bar].SetWayPoint(high, WayPointType.High);
+                        session[bar].IsTopReached = true;
                     }
                     else
                     {
                         // Hit the Bottom
                         current = low;
-                        _session[bar].SetWayPoint(low, WayPointType.Low);
-                        _session[bar].IsBottomReached = true;
+                        session[bar].SetWayPoint(low, WayPointType.Low);
+                        session[bar].IsBottomReached = true;
                     }
                 }
-                else if (!_session[bar].IsTopReached)
+                else if (!session[bar].IsTopReached)
                 {
                     // Hit the Top
                     current = high;
-                    _session[bar].SetWayPoint(high, WayPointType.High);
-                    _session[bar].IsTopReached = true;
+                    session[bar].SetWayPoint(high, WayPointType.High);
+                    session[bar].IsTopReached = true;
                 }
-                else if (!_session[bar].IsBottomReached)
+                else if (!session[bar].IsBottomReached)
                 {
                     // Hit the Bottom
                     current = low;
-                    _session[bar].SetWayPoint(low, WayPointType.Low);
-                    _session[bar].IsBottomReached = true;
+                    session[bar].SetWayPoint(low, WayPointType.Low);
+                    session[bar].IsBottomReached = true;
                 }
             }
             if (eval == BacktestEval.Correct)
@@ -1377,19 +1381,19 @@ namespace Forex_Strategy_Builder
                     thePrice = priceLower;
                 }
 
-                if (!_session[bar].IsBottomReached && isBottomReachable && !isGoUpward)
+                if (!session[bar].IsBottomReached && isBottomReachable && !isGoUpward)
                 {
                     // Hit the Bottom
                     current = low;
-                    _session[bar].SetWayPoint(low, WayPointType.Low);
-                    _session[bar].IsBottomReached = true;
+                    session[bar].SetWayPoint(low, WayPointType.Low);
+                    session[bar].IsBottomReached = true;
                 }
-                else if (!_session[bar].IsTopReached && isTopReachable && isGoUpward)
+                else if (!session[bar].IsTopReached && isTopReachable && isGoUpward)
                 {
                     // Hit the Top
                     current = high;
-                    _session[bar].SetWayPoint(high, WayPointType.High);
-                    _session[bar].IsTopReached = true;
+                    session[bar].SetWayPoint(high, WayPointType.High);
+                    session[bar].IsTopReached = true;
                 }
                 else
                 {
@@ -1424,7 +1428,7 @@ namespace Forex_Strategy_Builder
                 {
                     // Exit the bar
                     current = close;
-                    _session[bar].BacktestEval = BacktestEval.Ambiguous;
+                    session[bar].BacktestEval = BacktestEval.Ambiguous;
                     if (isHigherPrice)
                         orderHigher.OrdStatus = OrderStatus.Cancelled;
                     else if (isLowerPrice)
@@ -1434,7 +1438,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Optimistic / Pessimistic Method
+        ///     Optimistic / Pessimistic Method
         /// </summary>
         private static void OptimisticPessimisticMethod(int bar, BacktestEval eval, ref double current,
                                                         bool isTopReachable, bool isBottomReachable,
@@ -1453,43 +1457,43 @@ namespace Forex_Strategy_Builder
             if (eval == BacktestEval.None)
             {
                 // There is no more orders
-                if (!_session[bar].IsTopReached && !_session[bar].IsBottomReached)
+                if (!session[bar].IsTopReached && !session[bar].IsBottomReached)
                 {
                     // Neither the top nor the bottom was reached
                     if (close < open)
                     {
                         // Hit the Top
                         current = high;
-                        _session[bar].SetWayPoint(high, WayPointType.High);
-                        _session[bar].IsTopReached = true;
+                        session[bar].SetWayPoint(high, WayPointType.High);
+                        session[bar].IsTopReached = true;
                     }
                     else
                     {
                         // Hit the Bottom
                         current = low;
-                        _session[bar].SetWayPoint(low, WayPointType.Low);
-                        _session[bar].IsBottomReached = true;
+                        session[bar].SetWayPoint(low, WayPointType.Low);
+                        session[bar].IsBottomReached = true;
                     }
                 }
-                else if (!_session[bar].IsTopReached)
+                else if (!session[bar].IsTopReached)
                 {
                     // Hit the Top
                     current = high;
-                    _session[bar].SetWayPoint(high, WayPointType.High);
-                    _session[bar].IsTopReached = true;
+                    session[bar].SetWayPoint(high, WayPointType.High);
+                    session[bar].IsTopReached = true;
                 }
-                else if (!_session[bar].IsBottomReached)
+                else if (!session[bar].IsBottomReached)
                 {
                     // Hit the Bottom
                     current = low;
-                    _session[bar].SetWayPoint(low, WayPointType.Low);
-                    _session[bar].IsBottomReached = true;
+                    session[bar].SetWayPoint(low, WayPointType.Low);
+                    session[bar].IsBottomReached = true;
                 }
             }
             if (eval == BacktestEval.Correct)
             {
                 // Hit the order or the top/bottom
-                Order theOrder = null;
+                var theOrder = new Order();
                 double thePrice = 0;
                 if (isHigherPrice)
                 {
@@ -1502,14 +1506,14 @@ namespace Forex_Strategy_Builder
                     thePrice = priceLower;
                 }
 
-                if (!_session[bar].IsBottomReached && isBottomReachable)
+                if (!session[bar].IsBottomReached && isBottomReachable)
                 {
                     // The order or the bottom
                     bool goUpward;
 
-                    if (current < low + _micron)
+                    if (current < low + micron)
                         goUpward = false;
-                    else if (thePrice - current < _micron)
+                    else if (thePrice - current < micron)
                         goUpward = true;
                     else if (theOrder.OrdDir == OrderDirection.Buy)
                         goUpward = !isOptimistic;
@@ -1528,18 +1532,18 @@ namespace Forex_Strategy_Builder
                     {
                         // Hit the Bottom
                         current = low;
-                        _session[bar].SetWayPoint(low, WayPointType.Low);
-                        _session[bar].IsBottomReached = true;
+                        session[bar].SetWayPoint(low, WayPointType.Low);
+                        session[bar].IsBottomReached = true;
                     }
                 }
-                else if (!_session[bar].IsTopReached && isTopReachable)
+                else if (!session[bar].IsTopReached && isTopReachable)
                 {
                     // The order or the top
                     bool goUpward;
 
-                    if (current > high - _micron)
+                    if (current > high - micron)
                         goUpward = true;
-                    else if (current - thePrice < _micron)
+                    else if (current - thePrice < micron)
                         goUpward = false;
                     else if (theOrder.OrdDir == OrderDirection.Buy)
                         goUpward = !isOptimistic;
@@ -1552,8 +1556,8 @@ namespace Forex_Strategy_Builder
                     {
                         // Hit the Top
                         current = high;
-                        _session[bar].SetWayPoint(high, WayPointType.High);
-                        _session[bar].IsTopReached = true;
+                        session[bar].SetWayPoint(high, WayPointType.High);
+                        session[bar].IsTopReached = true;
                     }
                     else
                     {
@@ -1577,13 +1581,13 @@ namespace Forex_Strategy_Builder
                     // Execute one of both orders
                     bool executeUpper;
 
-                    if (priceHigher - current < _micron)
+                    if (priceHigher - current < micron)
                         executeUpper = true;
-                    else if (current - priceLower < _micron)
+                    else if (current - priceLower < micron)
                         executeUpper = false;
-                    else if (_session[bar].Summary.PosDir == PosDirection.Long)
+                    else if (session[bar].Summary.PosDir == PosDirection.Long)
                         executeUpper = isOptimistic;
-                    else if (_session[bar].Summary.PosDir == PosDirection.Short)
+                    else if (session[bar].Summary.PosDir == PosDirection.Short)
                         executeUpper = !isOptimistic;
                     else
                     {
@@ -1635,9 +1639,9 @@ namespace Forex_Strategy_Builder
                     if (isHigherPrice)
                     {
                         bool toExecute = false;
-                        if (_session[bar].Summary.PosDir == PosDirection.Long)
+                        if (session[bar].Summary.PosDir == PosDirection.Long)
                             toExecute = isOptimistic;
-                        else if (_session[bar].Summary.PosDir == PosDirection.Short)
+                        else if (session[bar].Summary.PosDir == PosDirection.Short)
                             toExecute = !isOptimistic;
                         else if (orderHigher.OrdDir == OrderDirection.Buy)
                             toExecute = !isOptimistic;
@@ -1655,7 +1659,7 @@ namespace Forex_Strategy_Builder
                             // Exit the bar
                             current = close;
                             orderHigher.OrdStatus = OrderStatus.Cancelled;
-                            _session[bar].BacktestEval = BacktestEval.Ambiguous;
+                            session[bar].BacktestEval = BacktestEval.Ambiguous;
                         }
                     }
                     else if (isLowerPrice)
@@ -1663,9 +1667,9 @@ namespace Forex_Strategy_Builder
                         // The priceLower or Exit the bar
                         bool toExecute = false;
 
-                        if (_session[bar].Summary.PosDir == PosDirection.Long)
+                        if (session[bar].Summary.PosDir == PosDirection.Long)
                             toExecute = !isOptimistic;
-                        else if (_session[bar].Summary.PosDir == PosDirection.Short)
+                        else if (session[bar].Summary.PosDir == PosDirection.Short)
                             toExecute = isOptimistic;
                         else if (orderLower.OrdDir == OrderDirection.Buy)
                             toExecute = isOptimistic;
@@ -1683,7 +1687,7 @@ namespace Forex_Strategy_Builder
                             // Exit the bar
                             current = close;
                             orderLower.OrdStatus = OrderStatus.Cancelled;
-                            _session[bar].BacktestEval = BacktestEval.Ambiguous;
+                            session[bar].BacktestEval = BacktestEval.Ambiguous;
                         }
                     }
                 }

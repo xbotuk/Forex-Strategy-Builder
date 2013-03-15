@@ -6,7 +6,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace Forex_Strategy_Builder.Utils
+namespace ForexStrategyBuilder.Utils
 {       
         #region Работа с Bitmap
         public class DIBSection

@@ -1,16 +1,20 @@
-// About Screen Form
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public sealed class AboutScreen : Form
     {
@@ -48,7 +52,7 @@ namespace Forex_Strategy_Builder
             string stage = String.Empty;
             if (Data.IsProgramBeta)
                 stage = " " + Language.T("Beta");
-            else if (Data.IsProgramRC)
+            else if (Data.IsProgramReleaseCandidate)
                 stage = " " + "RC";
 
             // label2
@@ -161,16 +165,16 @@ namespace Forex_Strategy_Builder
         private LinkLabel LlCredits { get; set; }
 
         /// <summary>
-        /// Form On Resize
+        ///     Form On Resize
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
 
             BtnOk.Size = new Size(buttonWidth, buttonHeight);
@@ -190,13 +194,13 @@ namespace Forex_Strategy_Builder
             LlWebsite.Location = new Point(Label5.Right + 5, Label4.Top);
             LlForum.Location = new Point(Label5.Right + 5, Label5.Top);
             LlEmail.Location = new Point(Label5.Right + 5, Label6.Top);
-            LlCredits.Location = new Point((PnlBase.Width - LlCredits.Width) / 2, 230);
+            LlCredits.Location = new Point((PnlBase.Width - LlCredits.Width)/2, 230);
 
             PnlBase.Invalidate();
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -204,7 +208,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Connects to the web site
+        ///     Connects to the web site
         /// </summary>
         private void WebsiteLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -221,7 +225,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Closes the form
+        ///     Closes the form
         /// </summary>
         private void BtnOkClick(object sender, EventArgs e)
         {

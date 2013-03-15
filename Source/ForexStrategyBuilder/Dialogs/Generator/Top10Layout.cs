@@ -1,14 +1,18 @@
-// Top10Layout Classes
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs.Generator
+namespace ForexStrategyBuilder.Dialogs.Generator
 {
     public sealed class Top10Layout : Panel
     {
@@ -17,11 +21,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
 
         private readonly int maxStrategies;
         private readonly ToolTip toolTip;
-        private readonly SortableDictionary<Single, Top10StrategyInfo> top10Holder;
+        private readonly SortableDictionary<float, Top10StrategyInfo> top10Holder;
         private readonly VScrollBar vScrollBarStrategy;
 
-        private Single maxValue = Single.MinValue;
-        private Single minValue = Single.MaxValue;
+        private float maxValue = float.MinValue;
+        private float minValue = float.MaxValue;
 
         /// <summary>
         ///     Constructor
@@ -33,7 +37,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             this.maxStrategies = maxStrategies;
             BackColor = LayoutColors.ColorControlBack;
 
-            top10Holder = new SortableDictionary<Single, Top10StrategyInfo>();
+            top10Holder = new SortableDictionary<float, Top10StrategyInfo>();
 
             flowLayoutStrategy = new FlowLayoutPanel();
             vScrollBarStrategy = new VScrollBar();
@@ -73,28 +77,28 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// <summary>
         ///     Adds a strategy to the top 10 Layout
         /// </summary>
-        public void AddStrategyInfo(Top10StrategyInfo top10StrategyInfo)
+        public void AddStrategyInfo(Top10StrategyInfo strategyInfo)
         {
-            if (top10Holder.ContainsKey(top10StrategyInfo.Balance))
+            if (top10Holder.ContainsKey(strategyInfo.Value))
                 return;
 
-            if (top10Holder.Count == maxStrategies && top10StrategyInfo.Balance <= minValue)
+            if (top10Holder.Count == maxStrategies && strategyInfo.Value <= minValue)
                 return;
 
-            if (top10Holder.Count == maxStrategies && top10StrategyInfo.Balance > minValue)
+            if (top10Holder.Count == maxStrategies && strategyInfo.Value > minValue)
             {
                 top10Holder.Remove(minValue);
-                top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
+                top10Holder.Add(strategyInfo.Value, strategyInfo);
             }
             else if (top10Holder.Count < maxStrategies)
             {
-                top10Holder.Add(top10StrategyInfo.Balance, top10StrategyInfo);
+                top10Holder.Add(strategyInfo.Value, strategyInfo);
             }
 
             top10Holder.ReverseSort();
 
-            minValue = Single.MaxValue;
-            maxValue = Single.MinValue;
+            minValue = float.MaxValue;
+            maxValue = float.MinValue;
             foreach (var keyValue in top10Holder)
             {
                 if (minValue > keyValue.Key)
@@ -117,8 +121,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         public void ClearTop10Slots()
         {
-            minValue = Single.MaxValue;
-            maxValue = Single.MinValue;
+            minValue = float.MaxValue;
+            maxValue = float.MinValue;
             top10Holder.Clear();
 
             ArrangeTop10Slots();
@@ -143,7 +147,11 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         public Strategy GetStrategy(int balance)
         {
-            return top10Holder[balance].TheStrategy.Clone();
+            foreach (var keyValuePair in top10Holder)
+                if (keyValuePair.Value.Balance == balance)
+                    return keyValuePair.Value.TheStrategy;
+
+            throw new ArgumentOutOfRangeException("balance");
         }
 
         /// <summary>

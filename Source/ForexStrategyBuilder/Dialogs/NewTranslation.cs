@@ -1,23 +1,27 @@
-﻿// Forex Strategy Builder - New Translation
-// Part of Forex Strategy Builder & Forex Strategy Trader
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// New Translation
+    ///     New Translation
     /// </summary>
     internal sealed class NewTranslation : Form
     {
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public NewTranslation()
         {
@@ -41,35 +45,35 @@ namespace Forex_Strategy_Builder
 
             // Input Names
             var asInputNames = new[]
-                                   {
-                                       Language.T("Language"),
-                                       Language.T("File name"),
-                                       Language.T("Author"),
-                                       Language.T("Website"),
-                                       Language.T("Contacts")
-                                   };
+                {
+                    Language.T("Language"),
+                    Language.T("File name"),
+                    Language.T("Author"),
+                    Language.T("Website"),
+                    Language.T("Contacts")
+                };
 
             // Input Values
             var asInputValues = new[]
-                                    {
-                                        "Language",
-                                        "Language",
-                                        "Your Name",
-                                        "http://forexsb.com",
-                                        "info@forexsb.com"
-                                    };
+                {
+                    "Language",
+                    "Language",
+                    "Your Name",
+                    "http://forexsb.com",
+                    "info@forexsb.com"
+                };
 
             // Input parameters
             for (int i = 0; i < asInputNames.Length; i++)
             {
                 AlblInputNames[i] = new Label
-                                        {
-                                            Parent = PnlInput,
-                                            ForeColor = LayoutColors.ColorControlText,
-                                            BackColor = Color.Transparent,
-                                            AutoSize = true,
-                                            Text = asInputNames[i]
-                                        };
+                    {
+                        Parent = PnlInput,
+                        ForeColor = LayoutColors.ColorControlText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Text = asInputNames[i]
+                    };
 
                 AtbxInputValues[i] = new TextBox {Parent = PnlInput, Text = asInputValues[i]};
             }
@@ -97,7 +101,7 @@ namespace Forex_Strategy_Builder
         private Button BtnCancel { get; set; }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -107,16 +111,16 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             const int width = 195; // Right side controls
 
@@ -152,7 +156,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Button click
+        ///     Button click
         /// </summary>
         private void BtnClick(object sender, EventArgs e)
         {
@@ -233,7 +237,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {

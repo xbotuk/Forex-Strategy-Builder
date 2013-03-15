@@ -7,7 +7,7 @@
 
 using System.Drawing;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     /// Money Flow Indicator

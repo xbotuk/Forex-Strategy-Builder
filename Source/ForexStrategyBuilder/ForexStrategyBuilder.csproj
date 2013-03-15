@@ -8,9 +8,9 @@
     <ProjectGuid>{490A7A3C-E194-499E-9A47-2E29290618EF}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Forex_Strategy_Builder</RootNamespace>
+    <RootNamespace>ForexStrategyBuilder</RootNamespace>
     <AssemblyName>Forex Strategy Builder</AssemblyName>
-    <StartupObject>Forex_Strategy_Builder.Actions</StartupObject>
+    <StartupObject>ForexStrategyBuilder.Actions</StartupObject>
     <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>8FA56569CB22C17E6B8C06FE58F78558F440F61E</ManifestCertificateThumbprint>
     <ManifestKeyFile>Forex Strategy Builder_TemporaryKey.pfx</ManifestKeyFile>
@@ -426,7 +426,7 @@
     </Compile>
     <Compile Include="Backtester\Order.cs" />
     <Compile Include="Backtester\Position.cs" />
-    <Compile Include="CustomControls\NUD.cs">
+    <Compile Include="CustomControls\FancyNud.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UserInterface\SmallHistogramChart.cs">
@@ -465,7 +465,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Indicators\Accelerator Oscillator.cs" />
-    <Compile Include="Indicators\Accumulation Distribution.cs" />
+    <Compile Include="Indicators\AccumulationDistribution.cs" />
     <Compile Include="Indicators\ADX.cs" />
     <Compile Include="Indicators\Alligator.cs" />
     <Compile Include="Indicators\Average True Range.cs" />

@@ -1,16 +1,19 @@
-// Top10StrategyInfo Classes
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
-using System;
-
-namespace Forex_Strategy_Builder.Dialogs.Generator
+namespace ForexStrategyBuilder.Dialogs.Generator
 {
     public class Top10StrategyInfo
     {
-        public Single Balance { get; set; }
+        public float Value { get; set; }
+        public int Balance { get; set; }
         public Top10Slot Top10Slot { get; set; }
         public Strategy TheStrategy { get; set; }
     }

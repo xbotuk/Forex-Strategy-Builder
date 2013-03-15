@@ -1,25 +1,29 @@
-// Forex Strategy Builder - JForexDataFiles
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System.IO;
 
-namespace Forex_Strategy_Builder.Dialogs.JForex
+namespace ForexStrategyBuilder.Dialogs.JForex
 {
     public class JForexDataFiles
     {
-        private readonly string _fileName;
+        private readonly string fileName;
 
         public JForexDataFiles(string filePath, string targetPath)
         {
             IsCorrect = false;
             FilePath = filePath;
-            _fileName = Path.GetFileNameWithoutExtension(filePath);
-            if (_fileName != null)
+            fileName = Path.GetFileNameWithoutExtension(filePath);
+            if (fileName != null)
             {
-                string[] fields = _fileName.Split(new[] {'_'});
+                string[] fields = fileName.Split(new[] {'_'});
 
                 if (fields.Length < 4)
                     return;

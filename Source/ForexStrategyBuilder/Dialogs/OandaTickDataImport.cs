@@ -1,8 +1,12 @@
-﻿// Forex Strategy Builder - OandaTickDataImport
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -15,19 +19,19 @@ using System.Media;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs
+namespace ForexStrategyBuilder.Dialogs
 {
     public sealed class OandaTickDataImport : Form
     {
-        private readonly BackgroundWorker _bgWorker;
-        private bool _isImporting;
-        private List<Bar> _minuteBarList;
-        private string _lastFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        private readonly string _outFolder = Configs.OandaImportDestFolder;
-        private string _oandaFile;
+        private readonly BackgroundWorker bgWorker;
+        private readonly string outFolder = Configs.OandaImportDestFolder;
+        private bool isImporting;
+        private string lastFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        private List<Bar> minuteBarList;
+        private string oandaFile;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public OandaTickDataImport()
         {
@@ -117,7 +121,9 @@ namespace Forex_Strategy_Builder.Dialogs
             TxbDestFolder.Parent = PnlSettings;
             TxbDestFolder.BackColor = LayoutColors.ColorControlBack;
             TxbDestFolder.ForeColor = LayoutColors.ColorControlText;
-            TxbDestFolder.Text = String.IsNullOrEmpty(Configs.OandaImportDestFolder) ? Data.OfflineDataDir : Configs.OandaImportDestFolder;
+            TxbDestFolder.Text = String.IsNullOrEmpty(Configs.OandaImportDestFolder)
+                                     ? Data.OfflineDataDir
+                                     : Configs.OandaImportDestFolder;
 
             // BtnDestFolder
             BtnDestFolder.Parent = PnlSettings;
@@ -168,10 +174,9 @@ namespace Forex_Strategy_Builder.Dialogs
             BtnImport.UseVisualStyleBackColor = true;
 
             // BackGroundWorker
-            _bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
-            _bgWorker.DoWork += BgWorkerDoWork;
-            _bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
-            
+            bgWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            bgWorker.DoWork += BgWorkerDoWork;
+            bgWorker.RunWorkerCompleted += BgWorkerRunWorkerCompleted;
         }
 
         private Label LblIntro { get; set; }
@@ -194,29 +199,29 @@ namespace Forex_Strategy_Builder.Dialogs
         private Button BtnClose { get; set; }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 400);
             BtnBrowse.Focus();
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
 
             // Button Cancel
@@ -234,13 +239,14 @@ namespace Forex_Strategy_Builder.Dialogs
             BtnImport.Location = new Point(btnHrzSpace, ClientSize.Height - buttonHeight - btnVertSpace);
 
             // ProgressBar
-            ProgressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDLU*9));
+            ProgressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDlu*9));
             ProgressBar.Location = new Point(border, BtnClose.Top - ProgressBar.Height - btnVertSpace);
 
             PnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 180);
             PnlSettings.Location = new Point(btnHrzSpace, border);
 
-            PnlImportInfo.Size = new Size(ClientSize.Width - 2 * btnHrzSpace, ProgressBar.Top - PnlSettings.Bottom - 2 * border);
+            PnlImportInfo.Size = new Size(ClientSize.Width - 2*btnHrzSpace,
+                                          ProgressBar.Top - PnlSettings.Bottom - 2*border);
             PnlImportInfo.Location = new Point(btnHrzSpace, PnlSettings.Bottom + border);
 
             // Label Intro
@@ -257,23 +263,27 @@ namespace Forex_Strategy_Builder.Dialogs
             // Symbol
             LblSymbol.Location = new Point(btnHrzSpace + border, BtnBrowse.Bottom + border + 2);
             TxbSymbol.Width = 150;
-            TxbSymbol.Location = new Point(PnlSettings.ClientSize.Width - btnHrzSpace - border - TxbSymbol.Width, BtnBrowse.Bottom + border);
+            TxbSymbol.Location = new Point(PnlSettings.ClientSize.Width - btnHrzSpace - border - TxbSymbol.Width,
+                                           BtnBrowse.Bottom + border);
 
             // Minimum bars
             LblMinBars.Location = new Point(btnHrzSpace + border, TxbSymbol.Bottom + border + 20);
             NudMinBars.Width = 75;
-            NudMinBars.Location = new Point(PnlSettings.ClientSize.Width - btnHrzSpace - border - NudMinBars.Width, LblMinBars.Top - 2);
+            NudMinBars.Location = new Point(PnlSettings.ClientSize.Width - btnHrzSpace - border - NudMinBars.Width,
+                                            LblMinBars.Top - 2);
 
             // Destination folder
             LblDestFolder.Location = new Point(btnHrzSpace + border, NudMinBars.Bottom + 2*border);
             BtnDestFolder.Size = new Size(buttonWidth, buttonHeight);
-            BtnDestFolder.Location = new Point(PnlSettings.Width - buttonWidth - btnHrzSpace, LblDestFolder.Bottom + border);
-            TxbDestFolder.Width = BtnDestFolder.Left - 2 * btnHrzSpace - border;
-            TxbDestFolder.Location = new Point(btnHrzSpace + border, BtnDestFolder.Top + (buttonHeight - TxbDestFolder.Height) / 2);
+            BtnDestFolder.Location = new Point(PnlSettings.Width - buttonWidth - btnHrzSpace,
+                                               LblDestFolder.Bottom + border);
+            TxbDestFolder.Width = BtnDestFolder.Left - 2*btnHrzSpace - border;
+            TxbDestFolder.Location = new Point(btnHrzSpace + border,
+                                               BtnDestFolder.Top + (buttonHeight - TxbDestFolder.Height)/2);
         }
 
         /// <summary>
-        /// Form On Paint.
+        ///     Form On Paint.
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -281,13 +291,13 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Form closes.
+        ///     Form closes.
         /// </summary>
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
 
-            Configs.MinBarsInBarFile = (int)NudMinBars.Value;
+            Configs.MinBarsInBarFile = (int) NudMinBars.Value;
         }
 
         private void SetInfoText(string text)
@@ -303,36 +313,36 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Button Browse Click
+        ///     Button Browse Click
         /// </summary>
         private void BtnBrowseClick(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog {InitialDirectory = _lastFolder};
+            var fd = new OpenFileDialog {InitialDirectory = lastFolder};
             if (fd.ShowDialog() != DialogResult.OK) return;
-            _oandaFile = fd.FileName;
-            _lastFolder = Path.GetDirectoryName(_oandaFile);
-            TxbFileName.Text = Path.GetFileNameWithoutExtension(_oandaFile);
+            oandaFile = fd.FileName;
+            lastFolder = Path.GetDirectoryName(oandaFile);
+            TxbFileName.Text = Path.GetFileNameWithoutExtension(oandaFile);
             TxbSymbol.Text = string.Empty;
             TxbSymbol.Focus();
         }
 
         /// <summary>
-        /// BtnDestFolderClick
+        ///     BtnDestFolderClick
         /// </summary>
         private void BtnDestFolderClick(object sender, EventArgs e)
         {
             var fd = new FolderBrowserDialog
-                         {
-                             SelectedPath = TxbDestFolder.Text,
-                             Description = Language.T("Select a destination folder") + "."
-                         };
+                {
+                    SelectedPath = TxbDestFolder.Text,
+                    Description = Language.T("Select a destination folder") + "."
+                };
             if (fd.ShowDialog() != DialogResult.OK) return;
             TxbDestFolder.Text = fd.SelectedPath;
             Configs.OandaImportDestFolder = fd.SelectedPath;
         }
 
         /// <summary>
-        /// Button Help Click
+        ///     Button Help Click
         /// </summary>
         private void BtnHelpClick(object sender, EventArgs e)
         {
@@ -347,28 +357,28 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Button Import Click
+        ///     Button Import Click
         /// </summary>
         private void BtnImportClick(object sender, EventArgs e)
         {
-            if (_isImporting)
+            if (isImporting)
             {
                 // Cancel the asynchronous operation.
-                _bgWorker.CancelAsync();
+                bgWorker.CancelAsync();
                 return;
             }
 
             Configs.MetaTrader4DataPath = TxbFileName.Text;
             Cursor = Cursors.WaitCursor;
-            _isImporting = true;
+            isImporting = true;
             BtnImport.Text = Language.T("Stop");
             ProgressBar.Style = ProgressBarStyle.Marquee;
 
-            _bgWorker.RunWorkerAsync();
+            bgWorker.RunWorkerAsync();
         }
 
         /// <summary>
-        /// Does the job
+        ///     Does the job
         /// </summary>
         private void BgWorkerDoWork(object sender, DoWorkEventArgs e)
         {
@@ -376,27 +386,26 @@ namespace Forex_Strategy_Builder.Dialogs
             var worker = sender as BackgroundWorker;
             if (worker == null) return;
 
-            int count1MinBars = ImportTicks(_oandaFile);
+            int count1MinBars = ImportTicks(oandaFile);
 
-            foreach (DataPeriods period in Enum.GetValues(typeof(DataPeriods)))
+            foreach (DataPeriods period in Enum.GetValues(typeof (DataPeriods)))
             {
-                if (count1MinBars < NudMinBars.Value * (int)period) continue;
+                if (count1MinBars < NudMinBars.Value*(int) period) continue;
 
                 if (period == DataPeriods.min1)
                 {
                     CompileMinuteBars();
-                    SaveBars(_minuteBarList, DataPeriods.min1);
+                    SaveBars(minuteBarList, DataPeriods.min1);
                     continue;
                 }
-                
-                List<Bar> barList = CompileBars(_minuteBarList, period);
+
+                List<Bar> barList = CompileBars(minuteBarList, period);
                 SaveBars(barList, period);
             }
-
         }
 
         /// <summary>
-        /// This event handler deals with the results of the background operation.
+        ///     This event handler deals with the results of the background operation.
         /// </summary>
         private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -404,7 +413,7 @@ namespace Forex_Strategy_Builder.Dialogs
                 SystemSounds.Exclamation.Play();
 
             ProgressBar.Style = ProgressBarStyle.Blocks;
-            _isImporting = false;
+            isImporting = false;
             BtnImport.Text = Language.T("Import");
             Cursor = Cursors.Default;
 
@@ -413,12 +422,12 @@ namespace Forex_Strategy_Builder.Dialogs
 
         private int ImportTicks(string file)
         {
-            var symbol = TxbSymbol.Text;
-            if(string.IsNullOrEmpty(symbol))
+            string symbol = TxbSymbol.Text;
+            if (string.IsNullOrEmpty(symbol))
                 return 0;
 
             var streamReader = new StreamReader(file);
-            var outStream = new FileStream(Path.Combine(_outFolder, symbol + "0.bin"), FileMode.Create);
+            var outStream = new FileStream(Path.Combine(outFolder, symbol + "0.bin"), FileMode.Create);
             var binaryWriter = new BinaryWriter(outStream);
 
             DateTime time = DateTime.MinValue;
@@ -440,7 +449,7 @@ namespace Forex_Strategy_Builder.Dialogs
                         if (delimiter == '#')
                             delimiter = FindDelimiter(line);
 
-                        string[] data = line.Split(new[] { delimiter });
+                        string[] data = line.Split(new[] {delimiter});
 
                         if (dateFormat == "#")
                             dateFormat = FindDateFormat(data[0]);
@@ -505,7 +514,7 @@ namespace Forex_Strategy_Builder.Dialogs
             if (count < 3)
                 return;
 
-            var bids = new List<double>(count - 1) { reccord[0], reccord[1] };
+            var bids = new List<double>(count - 1) {reccord[0], reccord[1]};
 
             int b = 1;
             bool isChanged = false;
@@ -534,7 +543,8 @@ namespace Forex_Strategy_Builder.Dialogs
             }
         }
 
-        private static void SaveReccord(BinaryWriter binaryWriter, DateTime time, int volume, ICollection<double> reccord)
+        private static void SaveReccord(BinaryWriter binaryWriter, DateTime time, int volume,
+                                        ICollection<double> reccord)
         {
             int count = reccord.Count;
             if (count < 1)
@@ -547,11 +557,11 @@ namespace Forex_Strategy_Builder.Dialogs
                 binaryWriter.Write(bid);
         }
 
-        private List<Bar> CompileBars(IEnumerable<Bar> minuteBarList, DataPeriods period)
+        private List<Bar> CompileBars(IEnumerable<Bar> minuteBars, DataPeriods period)
         {
             var barList = new List<Bar>();
             var lastBarEndTime = new DateTime();
-            foreach (var bar in minuteBarList)
+            foreach (Bar bar in minuteBars)
             {
                 if (bar.Time >= lastBarEndTime)
                 {
@@ -583,18 +593,18 @@ namespace Forex_Strategy_Builder.Dialogs
             if (period == 1)
                 return new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute, 0);
             if (period < 60)
-                return new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute - time.Minute % period, 0);
+                return new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute - time.Minute%period, 0);
             if (period == 60)
                 return new DateTime(time.Year, time.Month, time.Day, time.Hour, 0, 0);
             if (period == 240)
-                return new DateTime(time.Year, time.Month, time.Day, time.Hour - time.Hour % 4, 0, 0);
+                return new DateTime(time.Year, time.Month, time.Day, time.Hour - time.Hour%4, 0, 0);
             return new DateTime(time.Year, time.Month, time.Day);
         }
 
         /// <summary>
-        /// Saves bar data to a CSV file.
+        ///     Saves bar data to a CSV file.
         /// </summary>
-        private void SaveBars(List<Bar> barList, DataPeriods period )
+        private void SaveBars(List<Bar> barList, DataPeriods period)
         {
             var sb = new StringBuilder();
             foreach (Bar bar in barList)
@@ -603,8 +613,8 @@ namespace Forex_Strategy_Builder.Dialogs
                                   bar.Time.Year, bar.Time.Month, bar.Time.Day, bar.Time.Hour, bar.Time.Minute, bar.Open,
                                   bar.High, bar.Low, bar.Close, bar.Volume));
 
-            string fileName = TxbSymbol.Text + (int)period + ".csv";
-            string path = Path.Combine(_outFolder, fileName);
+            string fileName = TxbSymbol.Text + (int) period + ".csv";
+            string path = Path.Combine(outFolder, fileName);
 
             try
             {
@@ -612,7 +622,8 @@ namespace Forex_Strategy_Builder.Dialogs
                 sw.Write(sb.ToString());
                 sw.Close();
 
-                SetInfoText(Language.T("Saved") + " " + Data.DataPeriodToString(period) + " " + Language.T("bars") + " - " + barList.Count + Environment.NewLine);
+                SetInfoText(Language.T("Saved") + " " + Data.DataPeriodToString(period) + " " + Language.T("bars") +
+                            " - " + barList.Count + Environment.NewLine);
             }
             catch (Exception exc)
             {
@@ -621,12 +632,12 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Loads tick data and compiles 1M bars.
+        ///     Loads tick data and compiles 1M bars.
         /// </summary>
         private void CompileMinuteBars()
         {
-            _minuteBarList = new List<Bar>();
-            var fileStream = new FileStream(Path.Combine(_outFolder, TxbSymbol.Text + "0.bin"), FileMode.Open);
+            minuteBarList = new List<Bar>();
+            var fileStream = new FileStream(Path.Combine(outFolder, TxbSymbol.Text + "0.bin"), FileMode.Open);
             var binaryReader = new BinaryReader(fileStream);
 
             long pos = 0;
@@ -634,18 +645,18 @@ namespace Forex_Strategy_Builder.Dialogs
             while (pos < length)
             {
                 DateTime time = DateTime.FromBinary(binaryReader.ReadInt64());
-                pos += sizeof(Int64);
+                pos += sizeof (Int64);
 
                 int volume = binaryReader.ReadInt32();
-                pos += sizeof(Int32);
+                pos += sizeof (Int32);
 
                 int count = binaryReader.ReadInt32();
-                pos += sizeof(Int32);
+                pos += sizeof (Int32);
 
                 var bidTicks = new double[count];
                 for (int i = 0; i < count; i++)
                     bidTicks[i] = binaryReader.ReadDouble();
-                pos += count * sizeof(Double);
+                pos += count*sizeof (Double);
 
                 SetMinuteBar(time, volume, bidTicks);
             }
@@ -655,19 +666,19 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Saves bar data to minute list
+        ///     Saves bar data to minute list
         /// </summary>
         private void SetMinuteBar(DateTime time, int volume, double[] ticks)
         {
             var bar = new Bar
-                          {
-                              Time = time,
-                              Volume = volume,
-                              Open = ticks[0],
-                              High = double.MinValue,
-                              Low = double.MaxValue,
-                              Close = ticks[ticks.Length - 1]
-                          };
+                {
+                    Time = time,
+                    Volume = volume,
+                    Open = ticks[0],
+                    High = double.MinValue,
+                    Low = double.MaxValue,
+                    Close = ticks[ticks.Length - 1]
+                };
 
             foreach (double tick in ticks)
             {
@@ -677,12 +688,12 @@ namespace Forex_Strategy_Builder.Dialogs
                     bar.Low = tick;
             }
 
-            _minuteBarList.Add(bar);
+            minuteBarList.Add(bar);
         }
 
         private char FindDelimiter(string line)
         {
-            var delimiters = new[] { ',', ' ', '\t', ';' };
+            var delimiters = new[] {',', ' ', '\t', ';'};
 
             foreach (char delimiter in delimiters)
             {
@@ -697,14 +708,14 @@ namespace Forex_Strategy_Builder.Dialogs
         private string FindDateFormat(string timeString)
         {
             var dateFormats = new[]
-                                  {
-                                      "dd/MM/yy HH:mm:ss",
-                                      "dd.MM.yy HH:mm:ss",
-                                      "dd-MM-yy HH:mm:ss",
-                                      "yy.MM.dd HH:mm:ss",
-                                      "yy-MM-dd HH:mm:ss",
-                                      "yy/MM/dd HH:mm:ss"
-                                  };
+                {
+                    "dd/MM/yy HH:mm:ss",
+                    "dd.MM.yy HH:mm:ss",
+                    "dd-MM-yy HH:mm:ss",
+                    "yy.MM.dd HH:mm:ss",
+                    "yy-MM-dd HH:mm:ss",
+                    "yy/MM/dd HH:mm:ss"
+                };
 
             foreach (string format in dateFormats)
             {
@@ -719,8 +730,8 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Fixes wrong year interpretation. 
-        /// For example 08 must be 2008 instead of 8.
+        ///     Fixes wrong year interpretation.
+        ///     For example 08 must be 2008 instead of 8.
         /// </summary>
         private int CorrectProblemYear2000(int year)
         {
@@ -732,7 +743,7 @@ namespace Forex_Strategy_Builder.Dialogs
         }
 
         /// <summary>
-        /// Converts a string to a double number.
+        ///     Converts a string to a double number.
         /// </summary>
         private static double StringToDouble(string input)
         {
@@ -754,6 +765,5 @@ namespace Forex_Strategy_Builder.Dialogs
         private delegate void SetInfoTextDelegate(string text);
 
         #endregion
-
     }
 }

@@ -1,18 +1,22 @@
-﻿// Journal_Positions Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Common;
-using Forex_Strategy_Builder.CustomControls;
-using Forex_Strategy_Builder.Utils;
+using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.CustomControls;
+using ForexStrategyBuilder.Utils;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public sealed class JournalByPositions : ContextPanel
     {
@@ -331,12 +335,12 @@ namespace Forex_Strategy_Builder
                 int p = 0;
                 journalData[row, p++] = (posNumber + 1).ToString(CultureInfo.InvariantCulture);
                 journalData[row, p++] = (bar + 1).ToString(CultureInfo.InvariantCulture);
-                journalData[row, p++] = Data.Time[bar].ToString(Data.DF) + Data.Time[bar].ToString(" HH:mm");
+                journalData[row, p++] = Data.Time[bar].ToString(Data.Df) + Data.Time[bar].ToString(" HH:mm");
                 journalData[row, p++] = Language.T(position.Transaction.ToString());
                 journalData[row, p++] = Language.T(position.PosDir.ToString());
                 journalData[row, p++] = posAmount;
-                journalData[row, p++] = position.FormOrdPrice.ToString(Data.FF);
-                journalData[row, p++] = position.PosPrice.ToString(Data.FF);
+                journalData[row, p++] = position.FormOrdPrice.ToString(Data.Ff);
+                journalData[row, p++] = position.PosPrice.ToString(Data.Ff);
                 journalData[row, p++] = position.RequiredMargin.ToString("F2");
 
                 // Charges

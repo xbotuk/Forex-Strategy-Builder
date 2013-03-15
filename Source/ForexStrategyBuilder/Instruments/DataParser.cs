@@ -1,8 +1,12 @@
-// DataParser Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +15,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     /// Provide methods of parsing data string.
@@ -24,7 +28,7 @@ namespace Forex_Strategy_Builder
         private const string PricePattern  = @"\d+([\.,]\d+)?";
         private const string VolumePattern = @"\d{1,10}";
 
-        private static bool _isOptionalDataFile;
+        private static bool isOptionalDataFile;
 
         /// <summary>
         /// Gets the the data array
@@ -40,21 +44,21 @@ namespace Forex_Strategy_Builder
             {
                 // Patten for Data Files that include a Time Field
                 const string pattern1 = "^" + // Start of the string
-                                        SpacePattern + "*" + // Zero or more white spaces
-                                        DatePattern  +       // Valid date pattern
-                                        SpacePattern + "+" + // One or more spaces
-                                        TimePattern  +       // Valid time pattern
-                                        SpacePattern + "+" + // One or more spaces
-                                        PricePattern +       // Price
-                                        SpacePattern + "+" + // One or more spaces
-                                        PricePattern +       // Price
-                                        SpacePattern + "+" + // One or more spaces
-                                        PricePattern +       // Price
-                                        SpacePattern + "+" + // One or more spaces
-                                        PricePattern +       // Price
-                                        SpacePattern + "+" + // One or more spaces
-                                        VolumePattern +      // Optional volume
-                                        SpacePattern + "*";  // Zero or more white spaces
+                        SpacePattern + "*" + // Zero or more white spaces
+                        DatePattern  +       // Valid date pattern
+                        SpacePattern + "+" + // One or more spaces
+                        TimePattern  +       // Valid time pattern
+                        SpacePattern + "+" + // One or more spaces
+                        PricePattern +       // Price
+                        SpacePattern + "+" + // One or more spaces
+                        PricePattern +       // Price
+                        SpacePattern + "+" + // One or more spaces
+                        PricePattern +       // Price
+                        SpacePattern + "+" + // One or more spaces
+                        PricePattern +       // Price
+                        SpacePattern + "+" + // One or more spaces
+                        VolumePattern +      // Optional volume
+                        SpacePattern + "*";  // Zero or more white spaces
 
                 // A data line has to start with date and has an optional time string
                 var regex = new Regex(pattern1, RegexOptions.Compiled);
@@ -72,19 +76,19 @@ namespace Forex_Strategy_Builder
             {
                 // Patten for Data Files that do NOT include a Time Field
                 const string pattern2 = "^" + // Start of the string
-                                        SpacePattern + "*" + // Zero or more white spaces
-                                        DatePattern  +       // Valid date pattern
-                                        SpacePattern + "+" + // One or more spaces
-                                        PricePattern +       // Price
-                                        SpacePattern + "+" + // One or more spaces
-                                        PricePattern +       // Price
-                                        SpacePattern + "+" + // One or more spaces
-                                        PricePattern +       // Price
-                                        SpacePattern + "+" + // One or more spaces
-                                        PricePattern +       // Price
-                                        SpacePattern + "+" + // One or more spaces
-                                        VolumePattern +      // Optional volume
-                                        SpacePattern + "*";  // Zero or more white spaces
+                        SpacePattern + "*" + // Zero or more white spaces
+                        DatePattern  +       // Valid date pattern
+                        SpacePattern + "+" + // One or more spaces
+                        PricePattern +       // Price
+                        SpacePattern + "+" + // One or more spaces
+                        PricePattern +       // Price
+                        SpacePattern + "+" + // One or more spaces
+                        PricePattern +       // Price
+                        SpacePattern + "+" + // One or more spaces
+                        PricePattern +       // Price
+                        SpacePattern + "+" + // One or more spaces
+                        VolumePattern +      // Optional volume
+                        SpacePattern + "*";  // Zero or more white spaces
 
                 // A data line has to start with date and has an optional time string
                 var regex = new Regex(pattern2, RegexOptions.Compiled);
@@ -414,14 +418,14 @@ namespace Forex_Strategy_Builder
                 if (regexGeneral.IsMatch(line))
                 {
                     timeMatchPattern = @"(?<hour>\d{1,2}):(?<min>\d{1,2})(:(?<sec>\d{1,2}))?";
-                    _isOptionalDataFile = false;
+                    isOptionalDataFile = false;
                     break;
                 }
 
                 if (regexOptional.IsMatch(line))
                 {
                     timeMatchPattern = "";
-                    _isOptionalDataFile = true;
+                    isOptionalDataFile = true;
                     break;
                 }
             }
@@ -441,7 +445,7 @@ namespace Forex_Strategy_Builder
         /// <returns>Price match pattern.</returns>
         private string PriceMatchPattern(string dataString)
         {
-            Regex regexGeneral = _isOptionalDataFile ? OptionalDataFileRegex : GeneralDataFileRegex;
+            Regex regexGeneral = isOptionalDataFile ? OptionalDataFileRegex : GeneralDataFileRegex;
             const string columnSeparator = @"[\t ;,]+";
             string priceMatchPattern = "";
             string line;
@@ -515,7 +519,7 @@ namespace Forex_Strategy_Builder
                 int hour  = 0;
                 int min   = 0;
                 int sec   = 0;
-                if (!_isOptionalDataFile)
+                if (!isOptionalDataFile)
                 {
                     hour = int.Parse(match.Groups["hour"].Value);
                     min  = int.Parse(match.Groups["min"].Value);

@@ -1,8 +1,12 @@
-// Math Calculator
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
@@ -10,14 +14,14 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public sealed class Calculator : Form
     {
-        private Regex _expression;
+        private Regex expression;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Calculator()
         {
@@ -42,7 +46,7 @@ namespace Forex_Strategy_Builder
         private TextBox TbxInput { get; set; }
 
         /// <summary>
-        /// Sets the patterns
+        ///     Sets the patterns
         /// </summary>
         private void SetPatterns()
         {
@@ -57,11 +61,11 @@ namespace Forex_Strategy_Builder
                 patternNumber.Replace("numb", "arg2"),
                 patternLast);
 
-            _expression = new Regex(operation, RegexOptions.Compiled);
+            expression = new Regex(operation, RegexOptions.Compiled);
         }
 
         /// <summary>
-        /// Catches the hot keys
+        ///     Catches the hot keys
         /// </summary>
         private void TbxInputKeyUp(object sender, KeyEventArgs e)
         {
@@ -96,14 +100,14 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Does the job
+        ///     Does the job
         /// </summary>
         private void ParseInput(string input)
         {
             string dcmlSeparator = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
             input = input.Replace(".", dcmlSeparator);
             input = input.Replace(",", dcmlSeparator);
-            Match match = _expression.Match(input);
+            Match match = expression.Match(input);
             double result = double.NaN;
 
             if (match.Success)

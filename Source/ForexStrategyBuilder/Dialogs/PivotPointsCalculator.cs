@@ -1,22 +1,26 @@
-﻿// Pivot Points Calculator
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     internal sealed class PivotPointsCalculator : Form
     {
-        private readonly Color _colorText;
+        private readonly Color colorText;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public PivotPointsCalculator()
         {
@@ -28,7 +32,7 @@ namespace Forex_Strategy_Builder
             AlblOutputNames = new Label[7];
             AlblOutputValues = new Label[7];
 
-            _colorText = LayoutColors.ColorControlText;
+            colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -42,23 +46,23 @@ namespace Forex_Strategy_Builder
 
             // Input Names
             var inputNames = new[]
-                                 {
-                                     Language.T("Highest price"),
-                                     Language.T("Closing price"),
-                                     Language.T("Lowest price")
-                                 };
+                {
+                    Language.T("Highest price"),
+                    Language.T("Closing price"),
+                    Language.T("Lowest price")
+                };
 
             int number = 0;
             foreach (string name in inputNames)
             {
                 AlblInputNames[number] = new Label
-                                             {
-                                                 Parent = PnlInput,
-                                                 ForeColor = _colorText,
-                                                 BackColor = Color.Transparent,
-                                                 AutoSize = true,
-                                                 Text = name
-                                             };
+                    {
+                        Parent = PnlInput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Text = name
+                    };
 
                 AtbxInputValues[number] = new TextBox {Parent = PnlInput};
                 AtbxInputValues[number].TextChanged += TbxInputTextChanged;
@@ -66,35 +70,35 @@ namespace Forex_Strategy_Builder
             }
 
             var outputNames = new[]
-                                  {
-                                      Language.T("Resistance") + " 3",
-                                      Language.T("Resistance") + " 2",
-                                      Language.T("Resistance") + " 1",
-                                      Language.T("Pivot Point"),
-                                      Language.T("Support") + " 1",
-                                      Language.T("Support") + " 2",
-                                      Language.T("Support") + " 3"
-                                  };
+                {
+                    Language.T("Resistance") + " 3",
+                    Language.T("Resistance") + " 2",
+                    Language.T("Resistance") + " 1",
+                    Language.T("Pivot Point"),
+                    Language.T("Support") + " 1",
+                    Language.T("Support") + " 2",
+                    Language.T("Support") + " 3"
+                };
 
             number = 0;
             foreach (string name in outputNames)
             {
                 AlblOutputNames[number] = new Label
-                                              {
-                                                  Parent = PnlOutput,
-                                                  ForeColor = _colorText,
-                                                  BackColor = Color.Transparent,
-                                                  AutoSize = true,
-                                                  Text = name
-                                              };
+                    {
+                        Parent = PnlOutput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Text = name
+                    };
 
                 AlblOutputValues[number] = new Label
-                                               {
-                                                   Parent = PnlOutput,
-                                                   ForeColor = _colorText,
-                                                   BackColor = Color.Transparent,
-                                                   AutoSize = true
-                                               };
+                    {
+                        Parent = PnlOutput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true
+                    };
 
                 number++;
             }
@@ -113,7 +117,7 @@ namespace Forex_Strategy_Builder
         private Label[] AlblOutputValues { get; set; }
 
         /// <summary>
-        /// Initializes the parameters
+        ///     Initializes the parameters
         /// </summary>
         private void InitParams()
         {
@@ -123,7 +127,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -135,14 +139,14 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             const int width = 100; // Right side controls
 
@@ -193,7 +197,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Parses a float value
+        ///     Parses a float value
         /// </summary>
         private float ParseInput(string input)
         {
@@ -205,7 +209,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// A parameter has been changed
+        ///     A parameter has been changed
         /// </summary>
         private void TbxInputTextChanged(object sender, EventArgs e)
         {
@@ -213,7 +217,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Perform calculation
+        ///     Perform calculation
         /// </summary>
         private void Calculate()
         {
@@ -256,7 +260,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {

@@ -1,17 +1,21 @@
-﻿// JournalPositions Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Common;
-using Forex_Strategy_Builder.Utils;
+using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.Utils;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public class JournalPositions : Panel
     {
@@ -178,8 +182,8 @@ namespace Forex_Strategy_Builder
                                           : StatsBuffer.PosLots(SelectedBar, pos).ToString(CultureInfo.InvariantCulture);
                 journalData[row, 4] =
                     (StatsBuffer.PosOrdNumb(SelectedBar, pos) + 1).ToString(CultureInfo.InvariantCulture);
-                journalData[row, 5] = StatsBuffer.PosOrdPrice(SelectedBar, pos).ToString(Data.FF);
-                journalData[row, 6] = StatsBuffer.PosPrice(SelectedBar, pos).ToString(Data.FF);
+                journalData[row, 5] = StatsBuffer.PosOrdPrice(SelectedBar, pos).ToString(Data.Ff);
+                journalData[row, 6] = StatsBuffer.PosPrice(SelectedBar, pos).ToString(Data.Ff);
 
                 // Profit Loss
                 if (StatsBuffer.PosTransaction(SelectedBar, pos) == Transaction.Close ||

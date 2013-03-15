@@ -1,10 +1,12 @@
-// Small Histogram Chart
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
-//
-// Contributed by Krog.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
@@ -12,12 +14,12 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Common;
-using Forex_Strategy_Builder.CustomControls;
-using Forex_Strategy_Builder.Properties;
-using Forex_Strategy_Builder.Utils;
+using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.CustomControls;
+using ForexStrategyBuilder.Properties;
+using ForexStrategyBuilder.Utils;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     ///     Draws a small histogram chart

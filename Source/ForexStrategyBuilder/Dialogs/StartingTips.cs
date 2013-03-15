@@ -1,8 +1,12 @@
-// Forex Strategy Builder - StartingTips
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
@@ -12,30 +16,22 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     internal sealed class StartingTips : Form
     {
-        private WebBrowser Browser { get; set; }
-        private Button BtnClose { get; set; }
-        private Button BtnNextTip { get; set; }
-        private Button BtnPrevTip { get; set; }
-        private CheckBox ChboxShow { get; set; }
-        private FancyPanel PnlBase { get; set; }
-        private Panel PnlControl { get; set; }
+        private readonly XmlDocument xmlTips;
+        private string currentTip;
+        private string footer;
+        private string header;
+        private int indexTip;
 
-        private readonly XmlDocument _xmlTips;
-        private string _currentTip;
-        private string _footer;
-        private string _header;
-        private int _indexTip;
-
-        private bool _showAllTips;
-        private bool _showTips;
-        private int _tipsCount;
+        private bool showAllTips;
+        private bool showTips;
+        private int tipsCount;
 
         /// <summary>
-        /// Public Constructor
+        ///     Public Constructor
         /// </summary>
         public StartingTips()
         {
@@ -47,7 +43,7 @@ namespace Forex_Strategy_Builder
             BtnPrevTip = new Button();
             BtnClose = new Button();
 
-            _xmlTips = new XmlDocument();
+            xmlTips = new XmlDocument();
 
             Text = Language.T("Tip of the Day");
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -101,11 +97,19 @@ namespace Forex_Strategy_Builder
             LoadStartingTips();
         }
 
+        private WebBrowser Browser { get; set; }
+        private Button BtnClose { get; set; }
+        private Button BtnNextTip { get; set; }
+        private Button BtnPrevTip { get; set; }
+        private CheckBox ChboxShow { get; set; }
+        private FancyPanel PnlBase { get; set; }
+        private Panel PnlControl { get; set; }
+
         public bool ShowAllTips
         {
             set
             {
-                _showAllTips = value;
+                showAllTips = value;
                 Browser.IsWebBrowserContextMenuEnabled = true;
                 Browser.WebBrowserShortcutsEnabled = true;
             }
@@ -113,30 +117,30 @@ namespace Forex_Strategy_Builder
 
         public int TipsCount
         {
-            get { return _tipsCount; }
+            get { return tipsCount; }
         }
 
         /// <summary>
-        /// On Load
+        ///     On Load
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            Width = (int) (Data.HorizontalDLU*240);
-            Height = (int) (Data.VerticalDLU*140);
+            Width = (int) (Data.HorizontalDlu*240);
+            Height = (int) (Data.VerticalDlu*140);
         }
 
         /// <summary>
-        /// On Resize
+        ///     On Resize
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
 
             PnlControl.Height = buttonHeight + 2*btnVertSpace;
@@ -161,7 +165,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -169,27 +173,27 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// The Document is ready
+        ///     The Document is ready
         /// </summary>
         private void BrowserDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             Browser.DocumentCompleted -= BrowserDocumentCompleted;
-            _indexTip--;
+            indexTip--;
             ShowTip(true);
         }
 
         /// <summary>
-        /// Change starting options
+        ///     Change starting options
         /// </summary>
         private void ChboxShowCheckStateChanged(object sender, EventArgs e)
         {
-            _showTips = ChboxShow.Checked;
-            Configs.ShowStartingTip = _showTips;
+            showTips = ChboxShow.Checked;
+            Configs.ShowStartingTip = showTips;
             Configs.SaveConfigs();
         }
 
         /// <summary>
-        /// Navigate
+        ///     Navigate
         /// </summary>
         private void Navigate(object sender, EventArgs e)
         {
@@ -210,7 +214,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Show random tip
+        ///     Show random tip
         /// </summary>
         private void ShowTip(bool bNextTip)
         {
@@ -219,71 +223,73 @@ namespace Forex_Strategy_Builder
 
             if (bNextTip)
             {
-                if (_indexTip < TipsCount - 1)
-                    _indexTip++;
+                if (indexTip < TipsCount - 1)
+                    indexTip++;
                 else
-                    _indexTip = 0;
+                    indexTip = 0;
             }
             else
             {
-                if (_indexTip > 0)
-                    _indexTip--;
+                if (indexTip > 0)
+                    indexTip--;
                 else
-                    _indexTip = TipsCount - 1;
+                    indexTip = TipsCount - 1;
             }
 
-            if (_showAllTips)
+            if (showAllTips)
             {
                 var sbTips = new StringBuilder(TipsCount);
 
-                var xmlNodeList = _xmlTips.SelectNodes("tips/tip");
+                XmlNodeList xmlNodeList = xmlTips.SelectNodes("tips/tip");
                 if (xmlNodeList != null)
                     foreach (XmlNode node in xmlNodeList)
                         sbTips.AppendLine(node.InnerXml);
 
-                Browser.DocumentText = _header + sbTips + _footer;
+                Browser.DocumentText = header + sbTips + footer;
             }
             else
             {
-                var xmlNodeList = _xmlTips.SelectNodes("tips/tip");
+                XmlNodeList xmlNodeList = xmlTips.SelectNodes("tips/tip");
                 if (xmlNodeList != null)
                 {
-                    var xmlNode = xmlNodeList.Item(_indexTip);
-                    if (xmlNode != null) _currentTip = xmlNode.InnerXml;
+                    XmlNode xmlNode = xmlNodeList.Item(indexTip);
+                    if (xmlNode != null) currentTip = xmlNode.InnerXml;
                 }
 
-                Browser.DocumentText = _header.Replace("###", (_indexTip + 1).ToString(CultureInfo.InvariantCulture)) + _currentTip + _footer;
+                Browser.DocumentText = header.Replace("###", (indexTip + 1).ToString(CultureInfo.InvariantCulture)) +
+                                       currentTip + footer;
 
-                Configs.CurrentTipNumber = _indexTip;
+                Configs.CurrentTipNumber = indexTip;
             }
         }
 
         /// <summary>
-        /// Load tips config file
+        ///     Load tips config file
         /// </summary>
         private void LoadStartingTips()
         {
             // Header
-            _header = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">";
-            _header += "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">";
-            _header += "<head><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />";
-            _header += "<title>Tip of the Day</title><style>";
-            _header += "body {margin: 0px; font-size: 14px; background-color: #fffffd}";
-            _header += ".number {font-size: 9px}";
-            _header += ".content {padding: 0 5px 5px 5px;}";
-            _header += ".content h1 {margin: 0; font-weight: bold; font-size: 14px; color: #000033; text-align: center;}";
-            _header += ".content p {margin-top: 0.5em; margin-bottom: 2px; color: #000033; text-indent: 1em;}";
-            _header += "</style></head>";
-            _header += "<body>";
-            _header += "<div class=\"content\">";
-            _header += "<div class=\"number\">(###)</div>";
+            header =
+                "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">";
+            header += "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">";
+            header += "<head><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />";
+            header += "<title>Tip of the Day</title><style>";
+            header += "body {margin: 0px; font-size: 14px; background-color: #fffffd}";
+            header += ".number {font-size: 9px}";
+            header += ".content {padding: 0 5px 5px 5px;}";
+            header += ".content h1 {margin: 0; font-weight: bold; font-size: 14px; color: #000033; text-align: center;}";
+            header += ".content p {margin-top: 0.5em; margin-bottom: 2px; color: #000033; text-indent: 1em;}";
+            header += "</style></head>";
+            header += "<body>";
+            header += "<div class=\"content\">";
+            header += "<div class=\"number\">(###)</div>";
 
             // Footer
-            _footer = "</div></body></html>";
+            footer = "</div></body></html>";
 
-            _indexTip = Configs.CurrentTipNumber + 1;
+            indexTip = Configs.CurrentTipNumber + 1;
 
-            if (_showAllTips) _indexTip = 0;
+            if (showAllTips) indexTip = 0;
 
             string sStartingTipsDir = Data.SystemDir + @"StartingTips";
 
@@ -304,25 +310,25 @@ namespace Forex_Strategy_Builder
                         {
                             // There is no language specified int the language file
                             string messageText = "Starting tip file: " + langFile + Environment.NewLine +
-                                                  Environment.NewLine + "The language is not specified!";
+                                                 Environment.NewLine + "The language is not specified!";
                             MessageBox.Show(messageText, "Tips of the Day File Loading", MessageBoxButtons.OK,
                                             MessageBoxIcon.Exclamation);
                         }
                         else if (node.InnerText == Configs.Language)
                         {
                             // It looks OK
-                            _xmlTips.Load(langFile);
-                            var xmlNodeList = _xmlTips.SelectNodes("tips/tip");
+                            xmlTips.Load(langFile);
+                            XmlNodeList xmlNodeList = xmlTips.SelectNodes("tips/tip");
                             if (xmlNodeList != null)
-                                _tipsCount = xmlNodeList.Count;
+                                tipsCount = xmlNodeList.Count;
                         }
                     }
                     catch (Exception e)
                     {
                         string messageText = "Starting tip file: " + langFile + Environment.NewLine +
-                                              Environment.NewLine +
-                                              "Error in the starting tip file!" + Environment.NewLine +
-                                              Environment.NewLine + e.Message;
+                                             Environment.NewLine +
+                                             "Error in the starting tip file!" + Environment.NewLine +
+                                             Environment.NewLine + e.Message;
                         MessageBox.Show(messageText, "Tips of the Day File Loading", MessageBoxButtons.OK,
                                         MessageBoxIcon.Exclamation);
                     }
@@ -334,16 +340,16 @@ namespace Forex_Strategy_Builder
                 try
                 {
                     // The tips file
-                    _xmlTips.Load(Data.SystemDir + "StartingTips" + Path.DirectorySeparatorChar + "English.xml");
-                    var xmlNodeList = _xmlTips.SelectNodes("tips/tip");
-                    if (xmlNodeList != null) _tipsCount = xmlNodeList.Count;
+                    xmlTips.Load(Data.SystemDir + "StartingTips" + Path.DirectorySeparatorChar + "English.xml");
+                    XmlNodeList xmlNodeList = xmlTips.SelectNodes("tips/tip");
+                    if (xmlNodeList != null) tipsCount = xmlNodeList.Count;
                 }
                 catch (Exception e)
                 {
                     string messageText = "Starting tip file \"English.xml\"" + Environment.NewLine +
-                                          Environment.NewLine +
-                                          "Error in the starting tip file!" + Environment.NewLine + Environment.NewLine +
-                                          e.Message;
+                                         Environment.NewLine +
+                                         "Error in the starting tip file!" + Environment.NewLine + Environment.NewLine +
+                                         e.Message;
                     MessageBox.Show(messageText, "Tips of the Day File Loading", MessageBoxButtons.OK,
                                     MessageBoxIcon.Exclamation);
                 }

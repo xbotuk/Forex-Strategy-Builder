@@ -5,7 +5,7 @@
 // This code or any part of it cannot be used in other applications without a permission.
 // Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     /// Market Facilitation Index Indicator

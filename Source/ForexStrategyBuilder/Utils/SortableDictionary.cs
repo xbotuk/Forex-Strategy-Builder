@@ -1,16 +1,20 @@
-﻿// Sortable Dictionary
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Sortable dictionary by Keys
+    ///     Sortable dictionary by Keys
     /// </summary>
     public class SortableDictionary<TKey, TValue> : Dictionary<TKey, TValue> where TKey : IComparable
     {
@@ -24,7 +28,7 @@ namespace Forex_Strategy_Builder
 
             // Clear the dictionary and repopulate it from the List
             Clear();
-            foreach (KeyValuePair<TKey, TValue> kvp in sortedList)
+            foreach (var kvp in sortedList)
                 Add(kvp.Key, kvp.Value);
         }
 
@@ -38,7 +42,7 @@ namespace Forex_Strategy_Builder
 
             // Clear the dictionary and repopulate it from the List
             Clear();
-            foreach (KeyValuePair<TKey, TValue> kvp in sortedList)
+            foreach (var kvp in sortedList)
                 Add(kvp.Key, kvp.Value);
         }
     }

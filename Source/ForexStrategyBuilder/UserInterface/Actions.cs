@@ -1,8 +1,12 @@
-// Actions class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.ComponentModel;
@@ -10,12 +14,12 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Common;
-using Forex_Strategy_Builder.Dialogs.Generator;
-using Forex_Strategy_Builder.Dialogs.Optimizer;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.Dialogs.Generator;
+using ForexStrategyBuilder.Dialogs.Optimizer;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     ///     Class Actions : Controls
@@ -1067,7 +1071,7 @@ namespace Forex_Strategy_Builder
                     InitialAccount = Configs.InitialAccount,
                     Leverage = Configs.Leverage,
                     RateToUSD = Data.InstrProperties.RateToUSD,
-                    RateToEUR = Data.InstrProperties.RateToEUR
+                    RateToEur = Data.InstrProperties.RateToEUR
                 };
 
             accountSettings.SetParams();
@@ -1077,7 +1081,7 @@ namespace Forex_Strategy_Builder
             Configs.InitialAccount = accountSettings.InitialAccount;
             Configs.Leverage = accountSettings.Leverage;
             Data.InstrProperties.RateToUSD = accountSettings.RateToUSD;
-            Data.InstrProperties.RateToEUR = accountSettings.RateToEUR;
+            Data.InstrProperties.RateToEUR = accountSettings.RateToEur;
 
             Instruments.InstrumentList[Data.InstrProperties.Symbol] = Data.InstrProperties.Clone();
             Calculate(false);
@@ -1183,7 +1187,7 @@ namespace Forex_Strategy_Builder
         /// </summary>
         private void ShowOverview()
         {
-            var browser = new Browser(Language.T("Strategy Overview"), Data.Strategy.GenerateHTMLOverview());
+            var browser = new Browser(Language.T("Strategy Overview"), Data.Strategy.GenerateHtmlOverview());
             browser.Show();
         }
 

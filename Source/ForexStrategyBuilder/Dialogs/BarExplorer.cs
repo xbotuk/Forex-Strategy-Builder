@@ -1,8 +1,12 @@
-// Bar Explorer
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
@@ -10,7 +14,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     internal sealed class BarExplorer : Form
     {
@@ -77,7 +81,7 @@ namespace Forex_Strategy_Builder
             infoRowHeight = Math.Max(fontInfo.Height, 18);
 
             barInfo = Language.T("Bar") + ": " + (barCurrent + 1) + " " +
-                      Data.Time[barCurrent].ToString(Data.DF) + " " +
+                      Data.Time[barCurrent].ToString(Data.Df) + " " +
                       Data.Time[barCurrent].ToString("HH:mm") + "; " +
                       Language.T("Interpolation method") + ": " +
                       Backtester.InterpolationMethodToString();
@@ -191,9 +195,9 @@ namespace Forex_Strategy_Builder
 
             string longestDescription = "";
             foreach (WayPointType wpType in Enum.GetValues(typeof (WayPointType)))
-                if (g.MeasureString(Language.T(WayPoint.WPTypeToString(wpType)), fontInfo).Width >
+                if (g.MeasureString(Language.T(WayPoint.WpTypeToString(wpType)), fontInfo).Width >
                     g.MeasureString(longestDescription, fontInfo).Width)
-                    longestDescription = Language.T(WayPoint.WPTypeToString(wpType));
+                    longestDescription = Language.T(WayPoint.WpTypeToString(wpType));
 
             string longestDirection = "";
             foreach (PosDirection posDir in Enum.GetValues(typeof (PosDirection)))
@@ -235,7 +239,7 @@ namespace Forex_Strategy_Builder
                 if (Backtester.WayPoints(bar) > maxWayPoints)
                     maxWayPoints = Backtester.WayPoints(bar);
 
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int clientSizeWidth = (Math.Max(aiColumnX[columns] + 2*btnHrzSpace, 550));
             ClientSize = new Size(clientSizeWidth, 310 + infoRowHeight*(maxWayPoints + 2));
         }
@@ -247,10 +251,10 @@ namespace Forex_Strategy_Builder
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var verticalSpace = (int) (Data.VerticalDLU*5.5);
-            var hrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var verticalSpace = (int) (Data.VerticalDlu*5.5);
+            var hrzSpace = (int) (Data.HorizontalDlu*3);
             int space = hrzSpace;
 
             int width = ClientSize.Width - 2*space;
@@ -408,7 +412,7 @@ namespace Forex_Strategy_Builder
             SetBtnNavigate();
 
             barInfo = Language.T("Bar") + ": " + (barCurrent + 1) +
-                      " " + Data.Time[barCurrent].ToString(Data.DF) +
+                      " " + Data.Time[barCurrent].ToString(Data.Df) +
                       " " + Data.Time[barCurrent].ToString("HH:mm") + "; " +
                       Language.T("Interpolation method") + ": " +
                       Backtester.InterpolationMethodToString();
@@ -604,7 +608,7 @@ namespace Forex_Strategy_Builder
             for (double label = minPrice; label <= maxPrice + Data.InstrProperties.Point; label += delta)
             {
                 var labelY = (int) (yBottom - (label - minPrice)*scaleY);
-                g.DrawString(label.ToString(Data.FF), Font, brushGridText, xRight, labelY - Font.Height/2 - 1);
+                g.DrawString(label.ToString(Data.Ff), Font, brushGridText, xRight, labelY - Font.Height/2 - 1);
                 g.DrawLine(penGrid, Border + space, labelY, xRight, labelY);
             }
 
@@ -734,7 +738,7 @@ namespace Forex_Strategy_Builder
                 Position position = Backtester.PosFromNumb(posNumber);
                 double posLots = position.PosLots;
                 PosDirection posDirection = position.PosDir;
-                WayPointType wpType = Backtester.WayPoint(barCurrent, point).WPType;
+                WayPointType wpType = Backtester.WayPoint(barCurrent, point).WpType;
 
                 var height = (int) (Math.Max(posLots*2, 2));
                 int length = barPixels;
@@ -832,7 +836,7 @@ namespace Forex_Strategy_Builder
             // Draw O, H, L, C labels
             for (int point = 0; point < points; point++)
             {
-                WayPointType wpType = Backtester.WayPoint(barCurrent, point).WPType;
+                WayPointType wpType = Backtester.WayPoint(barCurrent, point).WpType;
                 if (wpType != WayPointType.Open && wpType != WayPointType.High &&
                     wpType != WayPointType.Low && wpType != WayPointType.Close)
                     continue;
@@ -872,7 +876,7 @@ namespace Forex_Strategy_Builder
 
                 PosDirection posDirection = Backtester.PosFromNumb(posNumber).PosDir;
                 OrderDirection ordDirection = Backtester.OrdFromNumb(ordNumber).OrdDir;
-                WayPointType wpType = Backtester.WayPoint(barCurrent, point).WPType;
+                WayPointType wpType = Backtester.WayPoint(barCurrent, point).WpType;
 
                 if (wpType == WayPointType.None || wpType == WayPointType.Open || wpType == WayPointType.High ||
                     wpType == WayPointType.Low || wpType == WayPointType.Close)
@@ -957,7 +961,7 @@ namespace Forex_Strategy_Builder
             if (!Data.IsData || !Data.IsResult) return;
 
             var pnl = (Panel) sender;
-            string ff = Data.FF; // Format modifier to print the floats
+            string ff = Data.Ff; // Format modifier to print the floats
             var size = new Size(aiX[columns] - aiX[0], infoRowHeight);
             var sf = new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Near};
 
@@ -1002,14 +1006,14 @@ namespace Forex_Strategy_Builder
                     g.FillRectangle(brushEvenRow, new Rectangle(point, size));
 
                 int positionNumber = Backtester.WayPoint(barCurrent, pnt).PosNumb;
-                WayPointType wpType = Backtester.WayPoint(barCurrent, pnt).WPType;
+                WayPointType wpType = Backtester.WayPoint(barCurrent, pnt).WpType;
                 PosDirection posDirection = Backtester.PosFromNumb(positionNumber).PosDir;
                 double posLots = Backtester.PosFromNumb(positionNumber).PosLots;
                 int ordNumber = Backtester.WayPoint(barCurrent, pnt).OrdNumb;
 
                 g.DrawString((pnt + 1).ToString(CultureInfo.InvariantCulture), fontInfo, brush, (aiX[0] + aiX[1])/2f,
                              y, sf);
-                g.DrawString(Language.T(WayPoint.WPTypeToString(wpType)), fontInfo, brush, aiX[1] + 2, y);
+                g.DrawString(Language.T(WayPoint.WpTypeToString(wpType)), fontInfo, brush, aiX[1] + 2, y);
                 g.DrawString(Backtester.WayPoint(barCurrent, pnt).Price.ToString(ff), fontInfo, brush,
                              (aiX[3] + aiX[2])/2f, y, sf);
 

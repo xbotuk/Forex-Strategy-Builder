@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Forex_Strategy_Builder.CustomAnalytics
+namespace ForexStrategyBuilder.CustomAnalytics
 {
     /// <summary>
     /// Generator Custom Math

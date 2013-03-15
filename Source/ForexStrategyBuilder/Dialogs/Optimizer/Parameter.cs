@@ -1,47 +1,53 @@
-// Parameter class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 
-namespace Forex_Strategy_Builder.Dialogs.Optimizer
+namespace ForexStrategyBuilder.Dialogs.Optimizer
 {
     /// <summary>
-    /// Provide links to the Parameter's fields
+    ///     Provide links to the Parameter's fields
     /// </summary>
     public class Parameter
     {
+        private double bestValue;
+
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Parameter(OptimizerParameterType type, int slotNumber, int paramNumber)
         {
             Type = type;
             SlotNumber = slotNumber;
             NumParam = paramNumber;
-            _bestValue = Value;
+            bestValue = Value;
             OldBestValue = Value;
         }
 
         /// <summary>
-        /// Type of the parameter
+        ///     Type of the parameter
         /// </summary>
         public OptimizerParameterType Type { get; private set; }
 
         /// <summary>
-        /// The number of the indicator slot
+        ///     The number of the indicator slot
         /// </summary>
         public int SlotNumber { get; private set; }
 
         /// <summary>
-        /// The number of NumericParam
+        ///     The number of NumericParam
         /// </summary>
         public int NumParam { get; private set; }
 
         /// <summary>
-        /// The IndicatorParameters
+        ///     The IndicatorParameters
         /// </summary>
         public IndicatorParam IndParam
         {
@@ -54,7 +60,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// Parameter group name
+        ///     Parameter group name
         /// </summary>
         public string GroupName
         {
@@ -67,7 +73,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// The name of the parameter
+        ///     The name of the parameter
         /// </summary>
         public string ParameterName
         {
@@ -94,7 +100,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// The current value of the parameter
+        ///     The current value of the parameter
         /// </summary>
         public double Value
         {
@@ -139,7 +145,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// The minimum value of the parameter
+        ///     The minimum value of the parameter
         /// </summary>
         public double Minimum
         {
@@ -152,7 +158,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// The maximum value of the parameter
+        ///     The maximum value of the parameter
         /// </summary>
         public double Maximum
         {
@@ -165,7 +171,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// The number of significant digits
+        ///     The number of significant digits
         /// </summary>
         public int Point
         {
@@ -178,7 +184,7 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// The maximum value of the parameter
+        ///     The maximum value of the parameter
         /// </summary>
         public double Step
         {
@@ -191,23 +197,21 @@ namespace Forex_Strategy_Builder.Dialogs.Optimizer
         }
 
         /// <summary>
-        /// The best value of the parameter
+        ///     The best value of the parameter
         /// </summary>
         public double BestValue
         {
-            get { return _bestValue; }
+            get { return bestValue; }
             set
             {
-                OldBestValue = _bestValue;
-                _bestValue = value;
+                OldBestValue = bestValue;
+                bestValue = value;
             }
         }
 
         /// <summary>
-        /// The previous best value of the parameter
+        ///     The previous best value of the parameter
         /// </summary>
         public double OldBestValue { get; private set; }
-
-        private double _bestValue;
     }
 }

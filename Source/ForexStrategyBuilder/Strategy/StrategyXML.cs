@@ -1,22 +1,26 @@
-﻿// StrategyXML Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
-using Forex_Strategy_Builder.Common;
-using Forex_Strategy_Builder.Utils;
+using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.Utils;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public class StrategyXML
     {
         /// <summary>
-        /// Represents the Strategy as a XmlDocument.
+        ///     Represents the Strategy as a XmlDocument.
         /// </summary>
         public static XmlDocument CreateStrategyXmlDoc(Strategy strategy)
         {
@@ -35,7 +39,7 @@ namespace Forex_Strategy_Builder
             AppendStringElement(xmlDocStrategy, "programVersion", Data.ProgramVersion);
             AppendStringElement(xmlDocStrategy, "strategyName", strategy.StrategyName);
             AppendStringElement(xmlDocStrategy, "instrumentSymbol", strategy.Symbol);
-            AppendStringElement(xmlDocStrategy, "instrumentPeriod", (int)strategy.DataPeriod);
+            AppendStringElement(xmlDocStrategy, "instrumentPeriod", (int) strategy.DataPeriod);
             AppendStringElement(xmlDocStrategy, "sameDirSignalAction", strategy.SameSignalAction.ToString());
             AppendStringElement(xmlDocStrategy, "oppDirSignalAction", strategy.OppSignalAction.ToString());
 
@@ -155,7 +159,8 @@ namespace Forex_Strategy_Builder
 
                     // Add an element.
                     newElem = xmlDocStrategy.CreateElement("value");
-                    newElem.InnerText = stratSlot.IndParam.CheckParam[param].Checked.ToString(CultureInfo.InvariantCulture);
+                    newElem.InnerText =
+                        stratSlot.IndParam.CheckParam[param].Checked.ToString(CultureInfo.InvariantCulture);
                     newCheckElem.AppendChild(newElem);
 
                     newSlot.AppendChild(newCheckElem);
@@ -185,8 +190,8 @@ namespace Forex_Strategy_Builder
                 equityLine[bar] = Backtester.MoneyEquity(bar);
             }
             int size = Math.Min(600, length);
-            var balanceList = MathUtils.ArrayToStringArray(MathUtils.ArrayResize(balanceLine, size));
-            var equityList = MathUtils.ArrayToStringArray(MathUtils.ArrayResize(equityLine, size));
+            string[] balanceList = MathUtils.ArrayToStringArray(MathUtils.ArrayResize(balanceLine, size));
+            string[] equityList = MathUtils.ArrayToStringArray(MathUtils.ArrayResize(equityLine, size));
             AppendStringElement(xmlDocStrategy, "BalanceLine", String.Join(";", balanceList));
             AppendStringElement(xmlDocStrategy, "EquityLine", String.Join(";", equityList));
 
@@ -195,7 +200,7 @@ namespace Forex_Strategy_Builder
 
 
         /// <summary>
-        /// Pareses a strategy from a xml document.
+        ///     Pareses a strategy from a xml document.
         /// </summary>
         public Strategy ParseXmlStrategy(XmlDocument xmlDocStrategy)
         {
@@ -225,7 +230,7 @@ namespace Forex_Strategy_Builder
             // Permanent Stop Loss
             tempStrategy.PermanentSL =
                 Math.Abs(int.Parse(xmlDocStrategy.GetElementsByTagName("permanentStopLoss")[0].InnerText));
-                // Math.Abs() removes the negative sign from previous versions.
+            // Math.Abs() removes the negative sign from previous versions.
             XmlAttributeCollection xmlAttributeCollection =
                 xmlDocStrategy.GetElementsByTagName("permanentStopLoss")[0].Attributes;
             if (xmlAttributeCollection != null)
@@ -325,7 +330,9 @@ namespace Forex_Strategy_Builder
                     StrategySlotStatus slotStatus;
                     try
                     {
-                        slotStatus = (StrategySlotStatus) Enum.Parse(typeof (StrategySlotStatus), collection["slotStatus"].InnerText);
+                        slotStatus =
+                            (StrategySlotStatus)
+                            Enum.Parse(typeof (StrategySlotStatus), collection["slotStatus"].InnerText);
                     }
                     catch
                     {
@@ -431,10 +438,10 @@ namespace Forex_Strategy_Builder
                             }
                         }
                     }
-                    
+
                     // Set the Slot Status (Open, Locked, or Linked)
                     tempStrategy.Slot[slot].SlotStatus = slotStatus;
-                    
+
                     // Calculate the indicator.
                     indicator.Calculate(slotType);
                     tempStrategy.Slot[slot].IndicatorName = indicator.IndicatorName;
@@ -452,7 +459,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Converts a string to a double number.
+        ///     Converts a string to a double number.
         /// </summary>
         private double StringToDouble(string input)
         {
@@ -468,7 +475,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the default logical group of the slot.
+        ///     Gets the default logical group of the slot.
         /// </summary>
         private string GetDefaultGroup(SlotTypes slotType, int slotIndex, int closeSlotIndex)
         {
@@ -515,6 +522,5 @@ namespace Forex_Strategy_Builder
             if (xmlDocument.DocumentElement != null)
                 xmlDocument.DocumentElement.AppendChild(newElem);
         }
-
     }
 }

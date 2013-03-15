@@ -1,18 +1,23 @@
-// Controls Account
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Dialogs;
+using ForexStrategyBuilder.Dialogs;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Class Controls Account: MenuAndStatusBar
+    ///     Class Controls Account: MenuAndStatusBar
     /// </summary>
     public partial class Controls
     {
@@ -21,7 +26,7 @@ namespace Forex_Strategy_Builder
         protected InfoPanel InfoPanelAccountStatistics { get; private set; }
 
         /// <summary>
-        /// Initializes the controls in panel pnlOverview
+        ///     Initializes the controls in panel pnlOverview
         /// </summary>
         private void InitializeAccount()
         {
@@ -40,13 +45,13 @@ namespace Forex_Strategy_Builder
 
             // ComboBox Interpolation Methods
             ComboBoxInterpolationMethod = new ToolStripComboBox
-            {
-                Name = "ComboBoxInterpolationMethod",
-                AutoSize = false,
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = maxWidth + (int) (18*Data.HorizontalDLU),
-                ToolTipText = Language.T("Bar interpolation method.")
-            };
+                {
+                    Name = "ComboBoxInterpolationMethod",
+                    AutoSize = false,
+                    DropDownStyle = ComboBoxStyle.DropDownList,
+                    Width = maxWidth + (int) (18*Data.HorizontalDlu),
+                    ToolTipText = Language.T("Bar interpolation method.")
+                };
             foreach (string method in methods)
                 ComboBoxInterpolationMethod.Items.Add(method);
             ComboBoxInterpolationMethod.SelectedIndex = 0;
@@ -78,14 +83,14 @@ namespace Forex_Strategy_Builder
 
             // Small Balance Chart
             BalanceChart = new SmallBalanceChart
-            {
-                Parent = PanelAccount,
-                Cursor = Cursors.Hand,
-                Dock = DockStyle.Bottom,
-                MinimumSize = new Size(100, 50),
-                ShowDynamicInfo = true,
-                IsContextButtonVisible = true
-            };
+                {
+                    Parent = PanelAccount,
+                    Cursor = Cursors.Hand,
+                    Dock = DockStyle.Bottom,
+                    MinimumSize = new Size(100, 50),
+                    ShowDynamicInfo = true,
+                    IsContextButtonVisible = true
+                };
             BalanceChart.PopUpContextMenu.Items.AddRange(GetBalanceChartContextMenuItems());
             BalanceChart.MouseMove += SmallBalanceChartMouseMove;
             BalanceChart.MouseLeave += SmallBalanceChartMouseLeave;
@@ -100,24 +105,24 @@ namespace Forex_Strategy_Builder
         private ToolStripItem[] GetBalanceChartContextMenuItems()
         {
             var menuStripShowFullBalanceChart = new ToolStripMenuItem
-            {
-                Image = Properties.Resources.balance_chart,
-                Text = Language.T("Full Balance Chart") + "..."
-            };
+                {
+                    Image = Resources.balance_chart,
+                    Text = Language.T("Full Balance Chart") + "..."
+                };
             menuStripShowFullBalanceChart.Click += ContextMenuShowFullBalanceChartClick;
 
             var menuStripDetachChart = new ToolStripMenuItem
-            {
-                Image = Properties.Resources.pushpin_detach,
-                Text = Language.T("Detach Balance Chart") + "..."
-            };
+                {
+                    Image = Resources.pushpin_detach,
+                    Text = Language.T("Detach Balance Chart") + "..."
+                };
             menuStripDetachChart.Click += ContextMenuDetachChartClick;
 
             var itemCollection = new ToolStripItem[]
-            {
-                menuStripShowFullBalanceChart,
-                menuStripDetachChart
-            };
+                {
+                    menuStripShowFullBalanceChart,
+                    menuStripDetachChart
+                };
 
             return itemCollection;
         }
@@ -133,7 +138,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Arranges the controls after resizing
+        ///     Arranges the controls after resizing
         /// </summary>
         private void PnlAccountResize(object sender, EventArgs e)
         {
@@ -141,7 +146,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Show the dynamic info on the status bar
+        ///     Show the dynamic info on the status bar
         /// </summary>
         private void SmallBalanceChartMouseMove(object sender, MouseEventArgs e)
         {
@@ -150,7 +155,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Deletes the dynamic info on the status bar
+        ///     Deletes the dynamic info on the status bar
         /// </summary>
         private void SmallBalanceChartMouseLeave(object sender, EventArgs e)
         {
@@ -158,11 +163,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shows the full account chart after clicking on it
+        ///     Shows the full account chart after clicking on it
         /// </summary>
         private void SmallBalanceChart_MouseUp(object sender, MouseEventArgs e)
         {
-            if(!Data.IsData || !Data.IsResult) return;
+            if (!Data.IsData || !Data.IsResult) return;
 
             if (e.Button == MouseButtons.Left)
             {
@@ -176,7 +181,7 @@ namespace Forex_Strategy_Builder
 
         private static void DetachBalanceChart()
         {
-            if(!Data.IsData || !Data.IsResult) return;
+            if (!Data.IsData || !Data.IsResult) return;
 
             var balanceChart = new SeparateBalanceChart();
             balanceChart.ShowDialog();
@@ -184,26 +189,26 @@ namespace Forex_Strategy_Builder
 
         private static void ShowFullBalanceChart()
         {
-            if(!Data.IsData || !Data.IsResult) return;
+            if (!Data.IsData || !Data.IsResult) return;
 
             var chart = new Chart
-            {
-                BarPixels = Configs.BalanceChartZoom,
-                ShowInfoPanel = Configs.BalanceChartInfoPanel,
-                ShowDynInfo = Configs.BalanceChartDynamicInfo,
-                ShowGrid = Configs.BalanceChartGrid,
-                ShowCross = Configs.BalanceChartCross,
-                ShowVolume = Configs.BalanceChartVolume,
-                ShowPositionLots = Configs.BalanceChartLots,
-                ShowOrders = Configs.BalanceChartEntryExitPoints,
-                ShowPositionPrice = Configs.BalanceChartCorrectedPositionPrice,
-                ShowBalanceEquity = Configs.BalanceChartBalanceEquityChart,
-                ShowFloatingPL = Configs.BalanceChartFloatingPLChart,
-                ShowIndicators = Configs.BalanceChartIndicators,
-                ShowAmbiguousBars = Configs.BalanceChartAmbiguousMark,
-                TrueCharts = Configs.BalanceChartTrueCharts,
-                ShowProtections = Configs.BalanceChartProtections
-            };
+                {
+                    BarPixels = Configs.BalanceChartZoom,
+                    ShowInfoPanel = Configs.BalanceChartInfoPanel,
+                    ShowDynInfo = Configs.BalanceChartDynamicInfo,
+                    ShowGrid = Configs.BalanceChartGrid,
+                    ShowCross = Configs.BalanceChartCross,
+                    ShowVolume = Configs.BalanceChartVolume,
+                    ShowPositionLots = Configs.BalanceChartLots,
+                    ShowOrders = Configs.BalanceChartEntryExitPoints,
+                    ShowPositionPrice = Configs.BalanceChartCorrectedPositionPrice,
+                    ShowBalanceEquity = Configs.BalanceChartBalanceEquityChart,
+                    ShowFloatingPL = Configs.BalanceChartFloatingPLChart,
+                    ShowIndicators = Configs.BalanceChartIndicators,
+                    ShowAmbiguousBars = Configs.BalanceChartAmbiguousMark,
+                    TrueCharts = Configs.BalanceChartTrueCharts,
+                    ShowProtections = Configs.BalanceChartProtections
+                };
 
             chart.ShowDialog();
 
@@ -225,14 +230,14 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Opens the corresponding tool
+        ///     Opens the corresponding tool
         /// </summary>
         protected virtual void BtnToolsOnClick(object sender, EventArgs e)
         {
         }
 
         /// <summary>
-        /// Tools menu
+        ///     Tools menu
         /// </summary>
         protected override void MenuToolsOnClick(object sender, EventArgs e)
         {

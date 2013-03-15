@@ -1,8 +1,12 @@
-// Browser class.
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Diagnostics;
@@ -10,25 +14,17 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Class Actions : Controls
+    ///     Class Actions : Controls
     /// </summary>
     public sealed class Browser : Form
     {
-        private MenuStrip MainMenu { get; set; }
-        private WebBrowser WbBrowser { get; set; }
-        private ToolStripMenuItem ItemForum { get; set; }
-        private ToolStripMenuItem ItemOnlineHelp { get; set; }
-        private ToolStripMenuItem ItemPreview { get; set; }
-        private ToolStripMenuItem ItemPrint { get; set; }
-        private ToolStripMenuItem ItemProps { get; set; }
-        private ToolStripMenuItem ItemSaveAs { get; set; }
-        private readonly string _webPage;
+        private readonly string webPage;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Browser(string caption, string webPage)
         {
@@ -38,7 +34,7 @@ namespace Forex_Strategy_Builder
 
             WbBrowser = new WebBrowser {Parent = this, Dock = DockStyle.Fill};
 
-            _webPage = webPage;
+            this.webPage = webPage;
 
             // Create MenuStrip
             MainMenu = new MenuStrip {Parent = this, Dock = DockStyle.Top};
@@ -48,8 +44,17 @@ namespace Forex_Strategy_Builder
             MainMenu.Items.Add(HelpMenu());
         }
 
+        private MenuStrip MainMenu { get; set; }
+        private WebBrowser WbBrowser { get; set; }
+        private ToolStripMenuItem ItemForum { get; set; }
+        private ToolStripMenuItem ItemOnlineHelp { get; set; }
+        private ToolStripMenuItem ItemPreview { get; set; }
+        private ToolStripMenuItem ItemPrint { get; set; }
+        private ToolStripMenuItem ItemProps { get; set; }
+        private ToolStripMenuItem ItemSaveAs { get; set; }
+
         /// <summary>
-        /// Overrides the base method OnLoad.
+        ///     Overrides the base method OnLoad.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -60,11 +65,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the help page.
+        ///     Loads the help page.
         /// </summary>
         private void ShowDocument()
         {
-            WbBrowser.DocumentText = _webPage;
+            WbBrowser.DocumentText = webPage;
         }
 
         private ToolStripMenuItem FileMenu()
@@ -122,14 +127,16 @@ namespace Forex_Strategy_Builder
             try
             {
                 string tempFile = Path.GetTempFileName();
-                tempFile = Path.Combine(Path.GetDirectoryName(tempFile), Path.GetFileNameWithoutExtension(tempFile) + ".html");
+                string dirName = Path.GetDirectoryName(tempFile);
+                if (dirName == null) return;
+                tempFile = Path.Combine(dirName, Path.GetFileNameWithoutExtension(tempFile) + ".html");
                 StreamWriter writer = File.CreateText(tempFile);
                 writer.Write(WbBrowser.DocumentText);
                 writer.Flush();
                 writer.Close();
                 WbBrowser.Navigate(tempFile);
                 WbBrowser.ShowSaveAsDialog();
-                WbBrowser.DocumentText = _webPage;
+                WbBrowser.DocumentText = webPage;
                 File.Delete(tempFile);
             }
             catch (Exception exception)
@@ -169,8 +176,9 @@ namespace Forex_Strategy_Builder
             {
                 Process.Start("http://forexsb.com/wiki/fsb/manual/start");
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -180,8 +188,9 @@ namespace Forex_Strategy_Builder
             {
                 Process.Start("http://forexsb.com/forum/");
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
             }
         }
     }

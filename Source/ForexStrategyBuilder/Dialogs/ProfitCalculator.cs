@@ -1,27 +1,31 @@
-﻿// Profit Calculator
-// Part of Forex Strategy Builder & Forex Strategy Trader
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    ///Profit Calculator
+    ///     Profit Calculator
     /// </summary>
     public sealed class ProfitCalculator : Form
     {
-        private readonly Color _colorText;
+        private readonly Color colorText;
 
-        private string _symbol;
+        private string symbol;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public ProfitCalculator()
         {
@@ -34,12 +38,12 @@ namespace Forex_Strategy_Builder
 
             LblLotSize = new Label();
             CbxDirection = new ComboBox();
-            NUDLots = new NumericUpDown();
-            NUDEntryPrice = new NumericUpDown();
-            NUDExitPrice = new NumericUpDown();
-            NUDDays = new NumericUpDown();
+            NudLots = new NumericUpDown();
+            NudEntryPrice = new NumericUpDown();
+            NudExitPrice = new NumericUpDown();
+            NudDays = new NumericUpDown();
 
-            _colorText = LayoutColors.ColorControlText;
+            colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -56,32 +60,32 @@ namespace Forex_Strategy_Builder
 
             // Input Names
             var asInputNames = new[]
-                                   {
-                                       Data.InstrProperties.Symbol,
-                                       Language.T("Direction"),
-                                       Language.T("Number of lots"),
-                                       Language.T("Entry price"),
-                                       Language.T("Exit price"),
-                                       Language.T("Days rollover")
-                                   };
+                {
+                    Data.InstrProperties.Symbol,
+                    Language.T("Direction"),
+                    Language.T("Number of lots"),
+                    Language.T("Entry price"),
+                    Language.T("Exit price"),
+                    Language.T("Days rollover")
+                };
 
             int number = 0;
             foreach (string name in asInputNames)
             {
                 AlblInputNames[number] = new Label
-                                             {
-                                                 Parent = PnlInput,
-                                                 ForeColor = _colorText,
-                                                 BackColor = Color.Transparent,
-                                                 AutoSize = true,
-                                                 Text = name
-                                             };
+                    {
+                        Parent = PnlInput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Text = name
+                    };
                 number++;
             }
 
             // Label Lot size
             LblLotSize.Parent = PnlInput;
-            LblLotSize.ForeColor = _colorText;
+            LblLotSize.ForeColor = colorText;
             LblLotSize.BackColor = Color.Transparent;
 
             // ComboBox SameDirAction
@@ -91,62 +95,62 @@ namespace Forex_Strategy_Builder
             CbxDirection.SelectedIndex = 0;
 
             // Lots
-            NUDLots.Parent = PnlInput;
-            NUDLots.BeginInit();
-            NUDLots.Minimum = 0.01M;
-            NUDLots.Maximum = 100;
-            NUDLots.Increment = 0.01M;
-            NUDLots.DecimalPlaces = 2;
-            NUDLots.Value = (decimal) Data.Strategy.EntryLots;
-            NUDLots.EndInit();
+            NudLots.Parent = PnlInput;
+            NudLots.BeginInit();
+            NudLots.Minimum = 0.01M;
+            NudLots.Maximum = 100;
+            NudLots.Increment = 0.01M;
+            NudLots.DecimalPlaces = 2;
+            NudLots.Value = (decimal) Data.Strategy.EntryLots;
+            NudLots.EndInit();
 
             // NumericUpDown Entry Price
-            NUDEntryPrice.Parent = PnlInput;
+            NudEntryPrice.Parent = PnlInput;
 
             // NumericUpDown Exit Price
-            NUDExitPrice.Parent = PnlInput;
+            NudExitPrice.Parent = PnlInput;
 
             // NumericUpDown Reducing Lots
-            NUDDays.Parent = PnlInput;
-            NUDDays.BeginInit();
-            NUDDays.Minimum = 0;
-            NUDDays.Maximum = 1000;
-            NUDDays.Increment = 1;
-            NUDDays.Value = 1;
-            NUDDays.EndInit();
+            NudDays.Parent = PnlInput;
+            NudDays.BeginInit();
+            NudDays.Minimum = 0;
+            NudDays.Maximum = 1000;
+            NudDays.Increment = 1;
+            NudDays.Value = 1;
+            NudDays.EndInit();
 
             // Output Names
             var asOutputNames = new[]
-                                    {
-                                        Language.T("Required margin"),
-                                        Language.T("Gross profit"),
-                                        Language.T("Spread"),
-                                        Language.T("Entry commission"),
-                                        Language.T("Exit commission"),
-                                        Language.T("Rollover"),
-                                        Language.T("Slippage"),
-                                        Language.T("Net profit")
-                                    };
+                {
+                    Language.T("Required margin"),
+                    Language.T("Gross profit"),
+                    Language.T("Spread"),
+                    Language.T("Entry commission"),
+                    Language.T("Exit commission"),
+                    Language.T("Rollover"),
+                    Language.T("Slippage"),
+                    Language.T("Net profit")
+                };
 
             number = 0;
             foreach (string name in asOutputNames)
             {
                 AlblOutputNames[number] = new Label
-                                              {
-                                                  Parent = PnlOutput,
-                                                  ForeColor = _colorText,
-                                                  BackColor = Color.Transparent,
-                                                  AutoSize = true,
-                                                  Text = name
-                                              };
+                    {
+                        Parent = PnlOutput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true,
+                        Text = name
+                    };
 
                 AlblOutputValues[number] = new Label
-                                               {
-                                                   Parent = PnlOutput,
-                                                   ForeColor = _colorText,
-                                                   BackColor = Color.Transparent,
-                                                   AutoSize = true
-                                               };
+                    {
+                        Parent = PnlOutput,
+                        ForeColor = colorText,
+                        BackColor = Color.Transparent,
+                        AutoSize = true
+                    };
 
                 number++;
             }
@@ -168,25 +172,25 @@ namespace Forex_Strategy_Builder
 
         private Label LblLotSize { get; set; }
         private ComboBox CbxDirection { get; set; }
-        private NumericUpDown NUDLots { get; set; }
-        private NumericUpDown NUDEntryPrice { get; set; }
-        private NumericUpDown NUDExitPrice { get; set; }
-        private NumericUpDown NUDDays { get; set; }
+        private NumericUpDown NudLots { get; set; }
+        private NumericUpDown NudEntryPrice { get; set; }
+        private NumericUpDown NudExitPrice { get; set; }
+        private NumericUpDown NudDays { get; set; }
 
         private Timer Timer { get; set; }
 
         /// <summary>
-        /// Performs initialization.
+        ///     Performs initialization.
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
             CbxDirection.SelectedIndexChanged += ParamChanged;
-            NUDLots.ValueChanged += ParamChanged;
-            NUDEntryPrice.ValueChanged += ParamChanged;
-            NUDExitPrice.ValueChanged += ParamChanged;
-            NUDDays.ValueChanged += ParamChanged;
+            NudLots.ValueChanged += ParamChanged;
+            NudEntryPrice.ValueChanged += ParamChanged;
+            NudExitPrice.ValueChanged += ParamChanged;
+            NudDays.ValueChanged += ParamChanged;
 
             ClientSize = new Size(270, 405);
 
@@ -194,14 +198,14 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             const int width = 100; // Right side controls
 
@@ -213,19 +217,19 @@ namespace Forex_Strategy_Builder
 
             LblLotSize.Width = width;
             CbxDirection.Width = width;
-            NUDLots.Width = width;
-            NUDEntryPrice.Width = width;
-            NUDExitPrice.Width = width;
-            NUDDays.Width = width;
+            NudLots.Width = width;
+            NudEntryPrice.Width = width;
+            NudExitPrice.Width = width;
+            NudDays.Width = width;
 
             int shift = 22;
             int vertSpace = 2;
             LblLotSize.Location = new Point(left, 0*buttonHeight + 1*vertSpace + shift - 0);
             CbxDirection.Location = new Point(left, 1*buttonHeight + 2*vertSpace + shift - 4);
-            NUDLots.Location = new Point(left, 2*buttonHeight + 3*vertSpace + shift - 4);
-            NUDEntryPrice.Location = new Point(left, 3*buttonHeight + 4*vertSpace + shift - 4);
-            NUDExitPrice.Location = new Point(left, 4*buttonHeight + 5*vertSpace + shift - 4);
-            NUDDays.Location = new Point(left, 5*buttonHeight + 6*vertSpace + shift - 4);
+            NudLots.Location = new Point(left, 2*buttonHeight + 3*vertSpace + shift - 4);
+            NudEntryPrice.Location = new Point(left, 3*buttonHeight + 4*vertSpace + shift - 4);
+            NudExitPrice.Location = new Point(left, 4*buttonHeight + 5*vertSpace + shift - 4);
+            NudDays.Location = new Point(left, 5*buttonHeight + 6*vertSpace + shift - 4);
 
             int numb = 0;
             foreach (Label lbl in AlblInputNames)
@@ -256,48 +260,48 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Perform periodical action.
+        ///     Perform periodical action.
         /// </summary>
         private void TimerTick(object sender, EventArgs e)
         {
-            if (_symbol == Data.InstrProperties.Symbol) return;
+            if (symbol == Data.InstrProperties.Symbol) return;
             InitParams();
             InitParams();
         }
 
         /// <summary>
-        /// Sets the initial params.
+        ///     Sets the initial params.
         /// </summary>
         private void InitParams()
         {
-            _symbol = Data.InstrProperties.Symbol;
+            symbol = Data.InstrProperties.Symbol;
 
-            AlblInputNames[0].Text = _symbol;
+            AlblInputNames[0].Text = symbol;
             LblLotSize.Text = Data.InstrProperties.LotSize.ToString(CultureInfo.InvariantCulture);
 
             // NumericUpDown Entry Price
-            NUDEntryPrice.BeginInit();
-            NUDEntryPrice.DecimalPlaces = Data.InstrProperties.Digits;
-            NUDEntryPrice.Minimum = (decimal) (Data.MinPrice*0.7);
-            NUDEntryPrice.Maximum = (decimal) (Data.MaxPrice*1.3);
-            NUDEntryPrice.Increment = (decimal) Data.InstrProperties.Point;
-            NUDEntryPrice.Value = (decimal) Data.Close[Data.Bars - 1];
-            NUDEntryPrice.EndInit();
+            NudEntryPrice.BeginInit();
+            NudEntryPrice.DecimalPlaces = Data.InstrProperties.Digits;
+            NudEntryPrice.Minimum = (decimal) (Data.MinPrice*0.7);
+            NudEntryPrice.Maximum = (decimal) (Data.MaxPrice*1.3);
+            NudEntryPrice.Increment = (decimal) Data.InstrProperties.Point;
+            NudEntryPrice.Value = (decimal) Data.Close[Data.Bars - 1];
+            NudEntryPrice.EndInit();
 
             // NumericUpDown Exit Price
-            NUDExitPrice.BeginInit();
-            NUDExitPrice.DecimalPlaces = Data.InstrProperties.Digits;
-            NUDExitPrice.Minimum = (decimal) (Data.MinPrice*0.7);
-            NUDExitPrice.Maximum = (decimal) (Data.MaxPrice*1.3);
-            NUDExitPrice.Increment = (decimal) Data.InstrProperties.Point;
-            NUDExitPrice.Value = (decimal) (Data.Close[Data.Bars - 1] + 100*Data.InstrProperties.Point);
-            NUDExitPrice.EndInit();
+            NudExitPrice.BeginInit();
+            NudExitPrice.DecimalPlaces = Data.InstrProperties.Digits;
+            NudExitPrice.Minimum = (decimal) (Data.MinPrice*0.7);
+            NudExitPrice.Maximum = (decimal) (Data.MaxPrice*1.3);
+            NudExitPrice.Increment = (decimal) Data.InstrProperties.Point;
+            NudExitPrice.Value = (decimal) (Data.Close[Data.Bars - 1] + 100*Data.InstrProperties.Point);
+            NudExitPrice.EndInit();
 
             Calculate();
         }
 
         /// <summary>
-        /// Sets the params values
+        ///     Sets the params values
         /// </summary>
         private void ParamChanged(object sender, EventArgs e)
         {
@@ -305,17 +309,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Calculates the result
+        ///     Calculates the result
         /// </summary>
         private void Calculate()
         {
             bool isLong = (CbxDirection.SelectedIndex == 0);
             PosDirection posDir = isLong ? PosDirection.Long : PosDirection.Short;
             int lotSize = Data.InstrProperties.LotSize;
-            var lots = (double) NUDLots.Value;
-            var entryPrice = (double) NUDEntryPrice.Value;
-            var exitPrice = (double) NUDExitPrice.Value;
-            var daysRollover = (int) NUDDays.Value;
+            var lots = (double) NudLots.Value;
+            var entryPrice = (double) NudEntryPrice.Value;
+            var exitPrice = (double) NudExitPrice.Value;
+            var daysRollover = (int) NudDays.Value;
             double point = Data.InstrProperties.Point;
             string unit = " " + Configs.AccountCurrency;
             double entryValue = lots*lotSize*entryPrice;
@@ -357,7 +361,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {

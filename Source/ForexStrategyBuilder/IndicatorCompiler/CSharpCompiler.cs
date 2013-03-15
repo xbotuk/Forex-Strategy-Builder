@@ -1,54 +1,55 @@
-﻿// CSharpCompiler Class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.CSharp;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// CSharp_Compiler manages the compilation of source code to an assembly.
-    /// This class is thread safe, so multiple threads are capable
-    /// to utilize it simultaneously.
+    ///     CSharp_Compiler manages the compilation of source code to an assembly.
+    ///     This class is thread safe, so multiple threads are capable
+    ///     to utilize it simultaneously.
     /// </summary>
     public class CSharpCompiler
     {
-        // Provides the actual compilation of source code.
-
-        // Represents the parameters used to invoke a compiler.
-        private readonly CompilerParameters _compilationParameters;
-        private volatile CSharpCodeProvider _codeProvider;
+        private readonly CompilerParameters compilationParameters;
+        private volatile CSharpCodeProvider codeProvider;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public CSharpCompiler()
         {
-            _codeProvider = new CSharpCodeProvider();
+            codeProvider = new CSharpCodeProvider();
             // Make sure we conduct all the operations "in memory".
-            _compilationParameters = new CompilerParameters {GenerateInMemory = true};
+            compilationParameters = new CompilerParameters {GenerateInMemory = true};
         }
 
         /// <summary>
-        /// For the source code to compile, it needs to have a reference to assemblies
-        /// to use the IL code inside them.
+        ///     For the source code to compile, it needs to have a reference to assemblies
+        ///     to use the IL code inside them.
         /// </summary>
         /// <param name="assembly">An assembly to add.</param>
         public void AddReferencedAssembly(Assembly assembly)
         {
             lock (this)
             {
-                _compilationParameters.ReferencedAssemblies.Add(assembly.Location);
+                compilationParameters.ReferencedAssemblies.Add(assembly.Location);
             }
         }
 
         /// <summary>
-        /// Compile a single source file to assembly.
+        ///     Compile a single source file to assembly.
         /// </summary>
         /// <param name="source">Indicator source to compile.</param>
         /// <param name="compilerErrors">Compiler errors, if any.</param>
@@ -57,14 +58,15 @@ namespace Forex_Strategy_Builder
         {
             compilerErrors = new Dictionary<string, int>();
 
-            CompilerResults compilerResults = _codeProvider.CompileAssemblyFromSource(_compilationParameters, source);
+            CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilationParameters, source);
 
             if (compilerResults.Errors.Count > 0)
             {
                 // Compilation failed.
                 foreach (CompilerError error in compilerResults.Errors)
                 {
-                    string errorMessage = "Line " + error.Line + " Column " + error.Column + ": " + error.ErrorText + ".";
+                    string errorMessage = "Line " + error.Line + " Column " + error.Column + ": " + error.ErrorText +
+                                          ".";
                     int errorLine = error.Line;
 
                     if (!compilerErrors.ContainsKey(errorMessage))

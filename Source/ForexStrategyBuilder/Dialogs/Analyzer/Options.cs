@@ -1,14 +1,18 @@
-﻿// Strategy Analyzer - Options
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Forex_Strategy_Builder.Dialogs.Analyzer
+namespace ForexStrategyBuilder.Dialogs.Analyzer
 {
     public class Options : FancyPanel
     {
@@ -45,10 +49,10 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             // ComboBox Column Separator
             CbxColumnSeparator.Parent = this;
             CbxColumnSeparator.Items.AddRange(new object[]
-                                                  {
-                                                      Language.T("Comma") + " ','", Language.T("Semicolon") + " ';'",
-                                                      Language.T("Tab") + @" '\t'"
-                                                  });
+                {
+                    Language.T("Comma") + " ','", Language.T("Semicolon") + " ';'",
+                    Language.T("Tab") + @" '\t'"
+                });
             CbxColumnSeparator.SelectedIndex = Configs.ColumnSeparator == ","
                                                    ? 0
                                                    : Configs.ColumnSeparator == ";" ? 1 : 2;
@@ -82,8 +86,8 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 
         private void PnlOptionsResize(object sender, EventArgs e)
         {
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
             const int border = 2;
 
@@ -134,7 +138,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Toggles FSB visibility.
+        ///     Toggles FSB visibility.
         /// </summary>
         private void HideFSBClick(object sender, EventArgs e)
         {
@@ -145,7 +149,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Shows FSB
+        ///     Shows FSB
         /// </summary>
         public void ShowFSB()
         {
@@ -154,7 +158,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Shows or Hides FSB
+        ///     Shows or Hides FSB
         /// </summary>
         public void SetFSBVisiability()
         {

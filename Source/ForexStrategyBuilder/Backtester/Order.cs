@@ -1,100 +1,105 @@
-// Order class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Order
+    ///     Order
     /// </summary>
     public class Order
     {
         /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
         public Order()
         {
-            OrdDir    = OrderDirection.None;
-            OrdType   = OrderType.None;
-            OrdCond   = OrderCondition.None;
+            OrdDir = OrderDirection.None;
+            OrdType = OrderType.None;
+            OrdCond = OrderCondition.None;
             OrdStatus = OrderStatus.None;
             OrdSender = OrderSender.None;
             OrdOrigin = OrderOrigin.None;
-            OrdNote   = "Not Defined";
+            OrdNote = "Not Defined";
         }
 
         /// <summary>
-        /// The ID of the order.
+        ///     The ID of the order.
         /// </summary>
         public int OrdNumb { get; set; }
 
         /// <summary>
-        /// The amount of the order.
+        ///     The amount of the order.
         /// </summary>
         public double OrdLots { get; set; }
 
         /// <summary>
-        /// Zero or the ID number of the other order.
+        ///     Zero or the ID number of the other order.
         /// </summary>
-        public int OrdIF { get; set; }
+        public int OrdIf { get; set; }
 
         /// <summary>
-        /// Zero or the ID number of the target position.
+        ///     Zero or the ID number of the target position.
         /// </summary>
         public int OrdPos { get; set; }
 
         /// <summary>
-        /// The order's price.
+        ///     The order's price.
         /// </summary>
         public double OrdPrice { get; set; }
 
         /// <summary>
-        /// The order's second price.
+        ///     The order's second price.
         /// </summary>
         public double OrdPrice2 { get; set; }
 
         /// <summary>
-        /// The order's direction.
+        ///     The order's direction.
         /// </summary>
         public OrderDirection OrdDir { get; set; }
 
         /// <summary>
-        /// The order's type.
+        ///     The order's type.
         /// </summary>
         public OrderType OrdType { get; set; }
 
         /// <summary>
-        /// The order's condition.
+        ///     The order's condition.
         /// </summary>
         public OrderCondition OrdCond { get; set; }
 
         /// <summary>
-        /// The order's status.
+        ///     The order's status.
         /// </summary>
         public OrderStatus OrdStatus { get; set; }
 
         /// <summary>
-        /// The order's sender.
+        ///     The order's sender.
         /// </summary>
         public OrderSender OrdSender { get; set; }
 
         /// <summary>
-        /// The order's origin.
+        ///     The order's origin.
         /// </summary>
         public OrderOrigin OrdOrigin { get; set; }
 
         /// <summary>
-        /// The order's note.
+        ///     The order's note.
         /// </summary>
         public string OrdNote { get; set; }
 
         /// <summary>
-        /// Gets the order's icon.
+        ///     Gets the order's icon.
         /// </summary>
         public OrderIcons OrderIcon
         {
@@ -117,25 +122,25 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the order's icon
+        ///     Gets the order's icon
         /// </summary>
         public static Image OrderIconImage(OrderIcons icon)
         {
-            Image img = Properties.Resources.pos_square;
+            Image img = Resources.pos_square;
 
             switch (icon)
             {
                 case OrderIcons.Buy:
-                    img = Properties.Resources.ord_buy;
+                    img = Resources.ord_buy;
                     break;
                 case OrderIcons.Sell:
-                    img = Properties.Resources.ord_sell;
+                    img = Resources.ord_sell;
                     break;
                 case OrderIcons.BuyCancel:
-                    img = Properties.Resources.ord_buy_cancel;
+                    img = Resources.ord_buy_cancel;
                     break;
                 case OrderIcons.SellCancel:
-                    img = Properties.Resources.ord_sell_cancel;
+                    img = Resources.ord_sell_cancel;
                     break;
             }
 
@@ -143,32 +148,32 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Makes a deep copy.
+        ///     Makes a deep copy.
         /// </summary>
         public Order Copy()
         {
             var order = new Order
-            {
-                OrdDir = OrdDir,
-                OrdType = OrdType,
-                OrdCond = OrdCond,
-                OrdStatus = OrdStatus,
-                OrdSender = OrdSender,
-                OrdOrigin = OrdOrigin,
-                OrdNumb = OrdNumb,
-                OrdIF = OrdIF,
-                OrdPos = OrdPos,
-                OrdLots = OrdLots,
-                OrdPrice = OrdPrice,
-                OrdPrice2 = OrdPrice2,
-                OrdNote = OrdNote
-            };
+                {
+                    OrdDir = OrdDir,
+                    OrdType = OrdType,
+                    OrdCond = OrdCond,
+                    OrdStatus = OrdStatus,
+                    OrdSender = OrdSender,
+                    OrdOrigin = OrdOrigin,
+                    OrdNumb = OrdNumb,
+                    OrdIf = OrdIf,
+                    OrdPos = OrdPos,
+                    OrdLots = OrdLots,
+                    OrdPrice = OrdPrice,
+                    OrdPrice2 = OrdPrice2,
+                    OrdNote = OrdNote
+                };
 
             return order;
         }
 
         /// <summary>
-        /// Represents the position.
+        ///     Represents the position.
         /// </summary>
         public override string ToString()
         {
@@ -176,18 +181,18 @@ namespace Forex_Strategy_Builder
             string nl = Environment.NewLine;
 
             orderd += "Number    " + (OrdNumb + 1) + nl;
-            orderd += "Direction " + OrdDir        + nl;
-            orderd += "Type      " + OrdType       + nl;
-            orderd += "Condition " + OrdCond       + nl;
-            orderd += "Status    " + OrdStatus     + nl;
-            orderd += "Sender    " + OrdSender     + nl;
-            orderd += "Origin    " + OrdOrigin     + nl;
-            orderd += "If order  " + (OrdIF + 1)   + nl;
-            orderd += "To pos    " + (OrdPos + 1)  + nl;
-            orderd += "Lots      " + OrdLots       + nl;
-            orderd += "Price     " + OrdPrice      + nl;
-            orderd += "Price2    " + OrdPrice2     + nl;
-            orderd += "Note      " + OrdNote       + nl;
+            orderd += "Direction " + OrdDir + nl;
+            orderd += "Type      " + OrdType + nl;
+            orderd += "Condition " + OrdCond + nl;
+            orderd += "Status    " + OrdStatus + nl;
+            orderd += "Sender    " + OrdSender + nl;
+            orderd += "Origin    " + OrdOrigin + nl;
+            orderd += "If order  " + (OrdIf + 1) + nl;
+            orderd += "To pos    " + (OrdPos + 1) + nl;
+            orderd += "Lots      " + OrdLots + nl;
+            orderd += "Price     " + OrdPrice + nl;
+            orderd += "Price2    " + OrdPrice2 + nl;
+            orderd += "Note      " + OrdNote + nl;
 
             return orderd;
         }

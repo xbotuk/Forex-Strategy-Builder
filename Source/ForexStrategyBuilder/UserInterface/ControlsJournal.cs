@@ -1,17 +1,21 @@
-// Forex Strategy Builder - Journal controls.
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Class Controls Journal: Menu_and_StatusBar
+    ///     Class Controls Journal: Menu_and_StatusBar
     /// </summary>
     public partial class Controls
     {
@@ -25,7 +29,7 @@ namespace Forex_Strategy_Builder
         private int WidthOldJournal { get; set; }
 
         /// <summary>
-        /// Initializes the controls in panel pnlJournal.
+        ///     Initializes the controls in panel pnlJournal.
         /// </summary>
         private void InitializeJournal()
         {
@@ -45,7 +49,12 @@ namespace Forex_Strategy_Builder
             new Splitter {Parent = PanelJournalRight, Dock = DockStyle.Bottom, Height = Gap};
 
             // Journal Position
-            JournalPositions = new JournalPositions {Parent = PanelJournalRight, Dock = DockStyle.Bottom, Cursor = Cursors.Hand};
+            JournalPositions = new JournalPositions
+                {
+                    Parent = PanelJournalRight,
+                    Dock = DockStyle.Bottom,
+                    Cursor = Cursors.Hand
+                };
             JournalPositions.Click += PnlJournalMouseClick;
             toolTip.SetToolTip(JournalPositions, Language.T("Click to view Bar Explorer."));
 
@@ -57,17 +66,26 @@ namespace Forex_Strategy_Builder
             JournalByBars.IsContextButtonVisible = true;
             JournalByBars.SelectedBarChange += PnlJournalSelectedBarChange;
             JournalByBars.MouseDoubleClick += PnlJournalMouseDoubleClick;
-            toolTip.SetToolTip(JournalByBars, Language.T("Click to select a bar.") + Environment.NewLine + Language.T("Double click to view Bar Explorer."));
+            toolTip.SetToolTip(JournalByBars,
+                               Language.T("Click to select a bar.") + Environment.NewLine +
+                               Language.T("Double click to view Bar Explorer."));
 
             // Journal by Positions
-            JournalByPositions = new JournalByPositions {Name = "JournalByPositions", Parent = PanelJournal, Dock = DockStyle.Fill};
+            JournalByPositions = new JournalByPositions
+                {
+                    Name = "JournalByPositions",
+                    Parent = PanelJournal,
+                    Dock = DockStyle.Fill
+                };
             JournalByPositions.PopUpContextMenu.Items.AddRange(GetJournalContextMenuItems());
             JournalByPositions.IsContextButtonVisible = true;
             JournalByPositions.CloseButton.Visible = true;
             JournalByPositions.CloseButton.Click += ContextMenuCloseJournalClick;
             JournalByPositions.SelectedBarChange += PnlJournalSelectedBarChange;
             JournalByPositions.MouseDoubleClick += PnlJournalMouseDoubleClick;
-            toolTip.SetToolTip(JournalByPositions, Language.T("Click to select a bar.") + Environment.NewLine + Language.T("Double click to view Bar Explorer."));
+            toolTip.SetToolTip(JournalByPositions,
+                               Language.T("Click to select a bar.") + Environment.NewLine +
+                               Language.T("Double click to view Bar Explorer."));
             toolTip.SetToolTip(JournalByPositions.CloseButton, Language.T("Close Journal"));
 
             PanelJournal.Resize += PnlJournalResize;
@@ -82,50 +100,50 @@ namespace Forex_Strategy_Builder
         private ToolStripItem[] GetJournalContextMenuItems()
         {
             var mi1 = new ToolStripMenuItem
-            {
-                Image = Resources.pos_buy,
-                Text = Language.T("Journal by Positions") + " " + Language.T("without Transfers")
-            };
+                {
+                    Image = Resources.pos_buy,
+                    Text = Language.T("Journal by Positions") + " " + Language.T("without Transfers")
+                };
             mi1.Click += ContextMenuJournalByPosWithoutTransfersClick;
 
             var mi2 = new ToolStripMenuItem
-            {
-                Image = Resources.pos_transfer_long,
-                Text = Language.T("Journal by Positions")
-            };
+                {
+                    Image = Resources.pos_transfer_long,
+                    Text = Language.T("Journal by Positions")
+                };
             mi2.Click += ContextMenuJournalByPositionsClick;
 
             var mi3 = new ToolStripMenuItem
-            {
-                Image = Resources.pos_square,
-                Text = Language.T("Journal by Bars")
-            };
+                {
+                    Image = Resources.pos_square,
+                    Text = Language.T("Journal by Bars")
+                };
             mi3.Click += ContextMenuJournalByBarsClick;
 
             var mi4 = new ToolStripMenuItem
-            {
-                Image = Resources.bar_explorer,
-                Text = Language.T("Bar Explorer") + "..."
-            };
+                {
+                    Image = Resources.bar_explorer,
+                    Text = Language.T("Bar Explorer") + "..."
+                };
             mi4.Click += ContextMenuBarExplorerClick;
 
             var mi5 = new ToolStripMenuItem
-            {
-                Image = Resources.close_button,
-                Text = Language.T("Close Journal")
-            };
+                {
+                    Image = Resources.close_button,
+                    Text = Language.T("Close Journal")
+                };
             mi5.Click += ContextMenuCloseJournalClick;
 
             var itemCollection = new ToolStripItem[]
-            {
-                mi1, mi2, mi3, new ToolStripSeparator(), mi4, new ToolStripSeparator(), mi5
-            };
+                {
+                    mi1, mi2, mi3, new ToolStripSeparator(), mi4, new ToolStripSeparator(), mi5
+                };
 
             return itemCollection;
         }
 
         /// <summary>
-        /// Sets the journal data
+        ///     Sets the journal data
         /// </summary>
         protected void SetupJournal()
         {
@@ -153,7 +171,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Arranges the controls after resizing
+        ///     Arranges the controls after resizing
         /// </summary>
         private void PnlJournalResize(object sender, EventArgs e)
         {
@@ -167,7 +185,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Sets the selected bar number
+        ///     Sets the selected bar number
         /// </summary>
         private void PnlJournalSelectedBarChange(object sender, EventArgs e)
         {
@@ -207,7 +225,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shows the Bar Explorer
+        ///     Shows the Bar Explorer
         /// </summary>
         private void ShowBarExplorer()
         {
@@ -254,7 +272,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Resets the journal layout.
+        ///     Resets the journal layout.
         /// </summary>
         protected void ResetJournal()
         {

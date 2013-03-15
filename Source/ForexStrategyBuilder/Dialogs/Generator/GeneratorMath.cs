@@ -1,8 +1,12 @@
-﻿// Strategy Generator - Math
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -10,8 +14,9 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Media;
 using System.Windows.Forms;
+using ForexStrategyBuilder.CustomAnalytics;
 
-namespace Forex_Strategy_Builder.Dialogs.Generator
+namespace ForexStrategyBuilder.Dialogs.Generator
 {
     /// <summary>
     ///     Strategy Generator
@@ -27,8 +32,8 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         private IndicatorSlot[] aLockedEntryFilter; // Holds all locked entry filters.
         private IndicatorSlot[] aLockedExitFilter; // Holds all locked exit filters.
         private int barOOS = Data.Bars - 1;
-        private Single bestValue;
-        private CustomAnalytics.CustomGeneratorAnalytics customAnalytics;
+        private float bestValue;
+        private CustomGeneratorAnalytics customAnalytics;
         private bool customSortingAdvancedEnabled;
         private string customSortingOptionDisplay = String.Empty;
         private bool customSortingSimpleEnabled;
@@ -260,7 +265,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             else if (rbnCustomSortingNone.Checked)
                 bestValue = (isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance);
             else
-                bestValue = Single.MinValue;
+                bestValue = float.MinValue;
 
             maxOpeningLogicSlots = chbMaxOpeningLogicSlots.Checked
                                        ? (int) nudMaxOpeningLogicSlots.Value
@@ -516,8 +521,9 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                 const double epsilon = 0.000001;
 
                 bool isLimitationsOk = IsLimitationsFulfilled();
+                bool isBalanceOk = Backtester.NetBalance > 0;
 
-                if (isLimitationsOk)
+                if (isLimitationsOk && isBalanceOk)
                 {
                     if (rbnCustomSortingNone.Checked)
                         value = (isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance);
@@ -715,33 +721,31 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                         customAnalytics.LimitationSmoothBalanceLine++;
                         return false;
                     }
-                    if (Configs.AdditionalStatistics)
-                    {
-                        // Long balance line
-                        netBalance = Backtester.NetLongMoneyBalance;
-                        checkPointBalance = Backtester.LongMoneyBalance(bar);
-                        startBalance = Backtester.LongMoneyBalance(firstBar);
-                        targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                        minBalance = targetBalance*(1 - maxPercentDeviation);
-                        maxBalance = targetBalance*(1 + maxPercentDeviation);
-                        if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                        {
-                            customAnalytics.LimitationSmoothBalanceLineLong++;
-                            return false;
-                        }
 
-                        // Short balance line
-                        netBalance = Backtester.NetShortMoneyBalance;
-                        checkPointBalance = Backtester.ShortMoneyBalance(bar);
-                        startBalance = Backtester.ShortMoneyBalance(firstBar);
-                        targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                        minBalance = targetBalance*(1 - maxPercentDeviation);
-                        maxBalance = targetBalance*(1 + maxPercentDeviation);
-                        if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                        {
-                            customAnalytics.LimitationSmoothBalanceLineShort++;
-                            return false;
-                        }
+                    // Long balance line
+                    netBalance = Backtester.NetLongMoneyBalance;
+                    checkPointBalance = Backtester.LongMoneyBalance(bar);
+                    startBalance = Backtester.LongMoneyBalance(firstBar);
+                    targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
+                    minBalance = targetBalance*(1 - maxPercentDeviation);
+                    maxBalance = targetBalance*(1 + maxPercentDeviation);
+                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
+                    {
+                        customAnalytics.LimitationSmoothBalanceLineLong++;
+                        return false;
+                    }
+
+                    // Short balance line
+                    netBalance = Backtester.NetShortMoneyBalance;
+                    checkPointBalance = Backtester.ShortMoneyBalance(bar);
+                    startBalance = Backtester.ShortMoneyBalance(firstBar);
+                    targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
+                    minBalance = targetBalance*(1 - maxPercentDeviation);
+                    maxBalance = targetBalance*(1 + maxPercentDeviation);
+                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
+                    {
+                        customAnalytics.LimitationSmoothBalanceLineShort++;
+                        return false;
                     }
                 }
             }
@@ -1131,25 +1135,25 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             switch (customAnalytics.SimpleSortOption)
             {
                 case "Annualized Profit":
-                    value = GetSingle(Backtester.AdditionalStatsValueTotal[7]);
+                    value = (float) Backtester.AnnualizedProfit;
                     break;
                 case "Annualized Profit %":
-                    value = GetSingle(Backtester.AdditionalStatsValueTotal[8]);
+                    value = (float) Backtester.AnnualizedProfitPercent;
                     break;
                 case "Average Holding Period Ret.":
-                    value = GetSingle(Backtester.AdditionalStatsValueTotal[30]);
+                    value = (float) Backtester.AvrgHoldingPeriodRet;
                     break;
                 case "Geometric Holding Period Ret.":
-                    value = GetSingle(Backtester.AdditionalStatsValueTotal[31]);
+                    value = (float) Backtester.GeomHoldingPeriodRet;
                     break;
                 case "Profit Factor":
-                    value = GetSingle(Backtester.AdditionalStatsValueTotal[6]);
+                    value = (float) Backtester.ProfitFactor;
                     break;
                 case "Sharpe Ratio":
-                    value = GetSingle(Backtester.AdditionalStatsValueTotal[32]);
+                    value = (float) Backtester.SharpeRatio;
                     break;
                 case "Win/Loss Ratio":
-                    value = GetSingle(Backtester.AdditionalStatsValueTotal[24]);
+                    value = (float) Backtester.WinLossRatio;
                     break;
                 default:
                     // External Simple Sorting Options
@@ -1157,7 +1161,7 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
                     customAnalytics.Positions = GetPositionsList();
                     // Retrieve the Custom Filter Value
                     CustomAnalytics.Generator.GetSimpleCustomSortingValue(ref customAnalytics, out value,
-                                                                           out displayName);
+                                                                          out displayName);
                     break;
             }
         }
@@ -1184,8 +1188,6 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
         /// </summary>
         private void GetAdvancedCustomSortingValue(out float value, out string displayName)
         {
-            displayName = customAnalytics.AdvancedSortOption;
-
             // External Simple Sorting Options
             customAnalytics.Strategy = StrategyXML.CreateStrategyXmlDoc(Data.Strategy);
             customAnalytics.Positions = GetPositionsList();
@@ -1285,26 +1287,6 @@ namespace Forex_Strategy_Builder.Dialogs.Generator
             }
 
             return positions;
-        }
-
-        /// <summary>
-        ///     Safe convert FSB String to Single
-        /// </summary>
-        private static float GetSingle(string input)
-        {
-            string val;
-
-            if (input.IndexOf(" ", StringComparison.Ordinal) == -1 && input.IndexOf("%", StringComparison.Ordinal) > 0)
-                val = input.Substring(0, input.IndexOf("%", StringComparison.Ordinal));
-            else if (input.IndexOf(" ", StringComparison.Ordinal) >= 0)
-                val = input.Substring(0, input.IndexOf(" ", StringComparison.Ordinal));
-            else
-                val = input;
-
-            float result;
-            Single.TryParse(val, out result);
-
-            return result;
         }
     }
 }

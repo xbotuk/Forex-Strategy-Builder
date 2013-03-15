@@ -1,18 +1,22 @@
-﻿// MicroBalanceChartImage class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     public class MicroBalanceChartImage
     {
         /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
         /// <param name="width">Chart Width</param>
         /// <param name="height">Chart Height</param>
@@ -24,7 +28,7 @@ namespace Forex_Strategy_Builder
         public Bitmap Chart { get; private set; }
 
         /// <summary>
-        /// Sets the chart parameters
+        ///     Sets the chart parameters
         /// </summary>
         private void InitChart(int width, int height)
         {
@@ -48,10 +52,18 @@ namespace Forex_Strategy_Builder
 
             if (Configs.AdditionalStatistics)
             {
-                int maxLongBalance = Configs.AccountInMoney ? (int) Backtester.MaxLongMoneyBalance : Backtester.MaxLongBalance;
-                int minLongBalance = Configs.AccountInMoney ? (int) Backtester.MinLongMoneyBalance : Backtester.MinLongBalance;
-                int maxShortBalance = Configs.AccountInMoney ? (int) Backtester.MaxShortMoneyBalance : Backtester.MaxShortBalance;
-                int minShortBalance = Configs.AccountInMoney ? (int) Backtester.MinShortMoneyBalance : Backtester.MinShortBalance;
+                int maxLongBalance = Configs.AccountInMoney
+                                         ? (int) Backtester.MaxLongMoneyBalance
+                                         : Backtester.MaxLongBalance;
+                int minLongBalance = Configs.AccountInMoney
+                                         ? (int) Backtester.MinLongMoneyBalance
+                                         : Backtester.MinLongBalance;
+                int maxShortBalance = Configs.AccountInMoney
+                                          ? (int) Backtester.MaxShortMoneyBalance
+                                          : Backtester.MaxShortBalance;
+                int minShortBalance = Configs.AccountInMoney
+                                          ? (int) Backtester.MinShortMoneyBalance
+                                          : Backtester.MinShortBalance;
                 int maxLsBalance = Math.Max(maxLongBalance, maxShortBalance);
                 int minLsBalance = Math.Min(minLongBalance, minShortBalance);
 
@@ -71,7 +83,8 @@ namespace Forex_Strategy_Builder
             float xScale = (xRight - xLeft)/(float) chartBars;
             float yScale = (yBottom - yTop)/(float) (maximum - minimum);
 
-            var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption), border);
+            var penBorder = new Pen(Data.GetGradientColor(LayoutColors.ColorCaptionBack, -LayoutColors.DepthCaption),
+                                    border);
 
             var balancePoints = new PointF[chartBars];
             var equityPoints = new PointF[chartBars];
@@ -100,8 +113,10 @@ namespace Forex_Strategy_Builder
                     shortBalancePoints[index].X = xLeft + index*xScale;
                     if (Configs.AccountInMoney)
                     {
-                        longBalancePoints[index].Y = (float) (yBottom - (Backtester.LongMoneyBalance(bar) - minimum)*yScale);
-                        shortBalancePoints[index].Y = (float) (yBottom - (Backtester.ShortMoneyBalance(bar) - minimum)*yScale);
+                        longBalancePoints[index].Y =
+                            (float) (yBottom - (Backtester.LongMoneyBalance(bar) - minimum)*yScale);
+                        shortBalancePoints[index].Y =
+                            (float) (yBottom - (Backtester.ShortMoneyBalance(bar) - minimum)*yScale);
                     }
                     else
                     {

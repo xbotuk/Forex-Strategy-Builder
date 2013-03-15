@@ -1,8 +1,12 @@
-﻿// Language class
-// Part of Forex Strategy Builder & Forex Strategy Trader
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -11,16 +15,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Manages the language translations of the program
+    ///     Manages the language translations of the program
     /// </summary>
     public static class Language
     {
-        private static Dictionary<String, String> _languageFiles; // Language files <Language><FileName>
+        private static Dictionary<String, String> languageFiles; // Language files <Language><FileName>
 
         static Language()
         {
@@ -28,45 +32,45 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Gets the language dictionary.
+        ///     Gets the language dictionary.
         /// </summary>
         public static Dictionary<string, string> Translation { get; private set; }
 
         /// <summary>
-        /// Gets the language files list.
+        ///     Gets the language files list.
         /// </summary>
         public static string[] LanguageList { get; private set; }
 
         /// <summary>
-        /// Gets language file name.
+        ///     Gets language file name.
         /// </summary>
         public static string LanguageFileName
         {
-            get { return Path.GetFileName(_languageFiles[Configs.Language]); }
+            get { return Path.GetFileName(languageFiles[Configs.Language]); }
         }
 
         /// <summary>
-        /// Gets the author name.
+        ///     Gets the author name.
         /// </summary>
         public static string Author { get; private set; }
 
         /// <summary>
-        /// Gets the author's website.
+        ///     Gets the author's website.
         /// </summary>
         public static string AuthorsWebsite { get; private set; }
 
         /// <summary>
-        /// Gets the author's email.
+        ///     Gets the author's email.
         /// </summary>
         public static string AuthorsEmail { get; private set; }
 
         /// <summary>
-        /// Gets the list of missing phrases.
+        ///     Gets the list of missing phrases.
         /// </summary>
         public static List<string> MissingPhrases { get; private set; }
 
         /// <summary>
-        /// Language Translation.
+        ///     Language Translation.
         /// </summary>
         public static string T(string phrase)
         {
@@ -84,11 +88,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Initializes the languages.
+        ///     Initializes the languages.
         /// </summary>
         public static void InitLanguages()
         {
-            _languageFiles = new Dictionary<string, string>();
+            languageFiles = new Dictionary<string, string>();
             bool bIsLanguageSet = false;
 
             if (Directory.Exists(Data.LanguageDir) && Directory.GetFiles(Data.LanguageDir).Length > 0)
@@ -113,7 +117,7 @@ namespace Forex_Strategy_Builder
                             MessageBox.Show(sMessageText, "Language Files Loading", MessageBoxButtons.OK,
                                             MessageBoxIcon.Exclamation);
                         }
-                        else if (_languageFiles.ContainsKey(node.InnerText))
+                        else if (languageFiles.ContainsKey(node.InnerText))
                         {
                             // This language has been already loaded
                             string sMessageText = "Language file: " + langFile + Environment.NewLine +
@@ -126,7 +130,7 @@ namespace Forex_Strategy_Builder
                         {
                             // It looks OK
                             string sLanguage = node.InnerText;
-                            _languageFiles.Add(sLanguage, langFile);
+                            languageFiles.Add(sLanguage, langFile);
 
                             if (sLanguage == Configs.Language)
                             {
@@ -146,11 +150,11 @@ namespace Forex_Strategy_Builder
                 }
             }
 
-            if (!_languageFiles.ContainsKey("English"))
-                _languageFiles.Add("English", "System");
+            if (!languageFiles.ContainsKey("English"))
+                languageFiles.Add("English", "System");
 
-            if (!_languageFiles.ContainsKey("Български"))
-                _languageFiles.Add("Български", "System");
+            if (!languageFiles.ContainsKey("Български"))
+                languageFiles.Add("Български", "System");
 
             if (!bIsLanguageSet)
             {
@@ -165,13 +169,13 @@ namespace Forex_Strategy_Builder
 
             CheckLangFile();
 
-            LanguageList = new string[_languageFiles.Count];
-            _languageFiles.Keys.CopyTo(LanguageList, 0);
+            LanguageList = new string[languageFiles.Count];
+            languageFiles.Keys.CopyTo(LanguageList, 0);
             Array.Sort(LanguageList);
         }
 
         /// <summary>
-        /// Loads a language dictionary.
+        ///     Loads a language dictionary.
         /// </summary>
         private static void LoadLanguageFile(string sLangFile)
         {
@@ -217,7 +221,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Generates English.xml and Bulgarian.xml.
+        ///     Generates English.xml and Bulgarian.xml.
         /// </summary>
         public static void GenerateLangFiles()
         {
@@ -250,7 +254,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Generates a new language file.
+        ///     Generates a new language file.
         /// </summary>
         public static bool GenerateNewLangFile(string sFileName, string sLang, string sAuthor, string sWebsite,
                                                string sEmail)
@@ -283,11 +287,11 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Generates a new language file.
+        ///     Generates a new language file.
         /// </summary>
         public static void SaveLangFile(Dictionary<string, string> dict, string sAuthor, string sWebsite, string sEmail)
         {
-            string path = _languageFiles[Configs.Language];
+            string path = languageFiles[Configs.Language];
             var xmlLanguage = new XmlDocument();
             xmlLanguage.Load(path);
 
@@ -313,7 +317,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Repairs all the language files.
+        ///     Repairs all the language files.
         /// </summary>
         public static string RapairAllLangFiles()
         {
@@ -369,7 +373,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Saves a text file
+        ///     Saves a text file
         /// </summary>
         private static bool SaveTextFile(string sFilePath, string sContent)
         {
@@ -397,7 +401,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Checks the language file.
+        ///     Checks the language file.
         /// </summary>
         private static void CheckLangFile()
         {
@@ -452,7 +456,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Shows the phrases in a web browser.
+        ///     Shows the phrases in a web browser.
         /// </summary>
         /// <param name="whatToShow">1 - English, 2 - Alt, 3 - Both, 4 - Wiki</param>
         public static void ShowPhrases(int whatToShow)
@@ -460,12 +464,14 @@ namespace Forex_Strategy_Builder
             var sb = new StringBuilder();
 
             // Header
-            sb.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
+            sb.AppendLine(
+                "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
             sb.AppendLine("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">");
             sb.AppendLine("<head><meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\" />");
             sb.AppendLine("<title>" + Configs.Language + "</title>");
             sb.AppendLine("<style type=\"text/css\">");
-            sb.AppendLine("body {padding: 0 10px 10px 10px; margin: 0px; font-family: Verdana, Helvetica, Arial, Sans-Serif; font-size: 62.5%; background-color: #fffffe; color: #000033}");
+            sb.AppendLine(
+                "body {padding: 0 10px 10px 10px; margin: 0px; font-family: Verdana, Helvetica, Arial, Sans-Serif; font-size: 62.5%; background-color: #fffffe; color: #000033}");
             sb.AppendLine(".content h1 {font-size: 1.9em; text-align: center;}");
             sb.AppendLine(".content h2 {font-size: 1.6em;}");
             sb.AppendLine(".content p {color: #000033; font-size: 1.3em; text-align: left}");
@@ -543,7 +549,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Imports a language file.
+        ///     Imports a language file.
         /// </summary>
         public static void ImportLanguageFile(string sLangFile)
         {

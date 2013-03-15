@@ -1,6 +1,12 @@
+//==============================================================
 // Forex Strategy Builder
-// Copyright (c) Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -12,12 +18,12 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using Forex_Strategy_Builder.Dialogs;
-using Forex_Strategy_Builder.Dialogs.Analyzer;
-using Forex_Strategy_Builder.Dialogs.JForex;
-using Forex_Strategy_Builder.Utils;
+using ForexStrategyBuilder.Dialogs;
+using ForexStrategyBuilder.Dialogs.Analyzer;
+using ForexStrategyBuilder.Dialogs.JForex;
+using ForexStrategyBuilder.Utils;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
     ///     Class Actions : Controls

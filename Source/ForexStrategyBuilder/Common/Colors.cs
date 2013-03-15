@@ -1,8 +1,12 @@
-// Forex Strategy Builder - Colors
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;
@@ -11,32 +15,32 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder
 {
     /// <summary>
-    /// Colors
+    ///     Colors
     /// </summary>
     public static class LayoutColors
     {
-        public static string[] ColorSchemeList { get; private set; }
-        private static Dictionary<string, string> DictColorFiles { get; set; }
-        private static XmlDocument XMLColors { get; set; }
-
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         static LayoutColors()
         {
             SetColorsDefault();
         }
 
+        public static string[] ColorSchemeList { get; private set; }
+        private static Dictionary<string, string> DictColorFiles { get; set; }
+        private static XmlDocument XMLColors { get; set; }
+
         /// <summary>
-        /// Gradient color depth of the caption bars
+        ///     Gradient color depth of the caption bars
         /// </summary>
         public static int DepthCaption { get; private set; }
 
         /// <summary>
-        /// Gradient color depth of the controls
+        ///     Gradient color depth of the controls
         /// </summary>
         public static int DepthControl { get; private set; }
 
@@ -51,7 +55,12 @@ namespace Forex_Strategy_Builder
         public static Color ColorCaptionBack { get; private set; }
         public static Color ColorCaptionText { get; private set; }
         public static Color ColorEvenRowBack { get; private set; }
-        public static Color ColorOddRowBack {get { return ColorControlBack; }}
+
+        public static Color ColorOddRowBack
+        {
+            get { return ColorControlBack; }
+        }
+
         public static Color ColorJournalLines { get; private set; }
         public static Color ColorSignalRed { get; private set; }
 
@@ -97,7 +106,7 @@ namespace Forex_Strategy_Builder
         public static Color ComparatorChartRandomBands { get; private set; }
 
         /// <summary>
-        /// Sets the default color scheme
+        ///     Sets the default color scheme
         /// </summary>
         private static void SetColorsDefault()
         {
@@ -161,7 +170,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Loads the color scheme from a file
+        ///     Loads the color scheme from a file
         /// </summary>
         public static void LoadColorScheme(string sColorScheme)
         {
@@ -232,17 +241,17 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Parses the color from the given xml node
+        ///     Parses the color from the given xml node
         /// </summary>
         private static Color ParseColor(string node)
         {
-            var nodeList = XMLColors.SelectNodes("color/" + node);
+            XmlNodeList nodeList = XMLColors.SelectNodes("color/" + node);
             if (nodeList != null)
             {
-                var item = nodeList.Item(0);
+                XmlNode item = nodeList.Item(0);
                 if (item != null)
                 {
-                    var attributes = item.Attributes;
+                    XmlAttributeCollection attributes = item.Attributes;
                     if (attributes != null)
                     {
                         int r = int.Parse(attributes.Item(0).InnerText);
@@ -257,7 +266,7 @@ namespace Forex_Strategy_Builder
         }
 
         /// <summary>
-        /// Initializes the color scheme.
+        ///     Initializes the color scheme.
         /// </summary>
         public static void InitColorSchemes()
         {

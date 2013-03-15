@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Forex_Strategy_Builder.CustomAnalytics
+namespace ForexStrategyBuilder.CustomAnalytics
 {
     /// <summary>
     ///     Custom Analytics
@@ -35,7 +35,7 @@ namespace Forex_Strategy_Builder.CustomAnalytics
         /// <summary>
         ///     Returns a list of supported simple custom generator sorting options
         /// </summary>
-        public static List<string> GetSimpleCustomSortingOptions()
+        public static IEnumerable<string> GetSimpleCustomSortingOptions()
         {
             var options = new List<string> {"System Quality Number"};
 
@@ -72,7 +72,7 @@ namespace Forex_Strategy_Builder.CustomAnalytics
         /// <summary>
         ///     Returns a list of supported simple custom generator sorting options
         /// </summary>
-        public static List<string> GetAdvancedCustomSortingOptions()
+        public static IEnumerable<string> GetAdvancedCustomSortingOptions()
         {
             var options = new List<string> {"Correlation"};
 

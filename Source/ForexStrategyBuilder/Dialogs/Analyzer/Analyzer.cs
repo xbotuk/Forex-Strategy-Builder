@@ -1,21 +1,25 @@
-﻿// Strategy Analyzer class
-// Part of Forex Strategy Builder
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2012 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
-using Forex_Strategy_Builder.Properties;
+using ForexStrategyBuilder.Properties;
 
-namespace Forex_Strategy_Builder.Dialogs.Analyzer
+namespace ForexStrategyBuilder.Dialogs.Analyzer
 {
     public sealed class Analyzer : Form
     {
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public Analyzer(string menuItem)
         {
@@ -28,12 +32,12 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
 
             // Button Close
             BtnClose = new Button
-                           {
-                               Parent = this,
-                               Text = Language.T("Close"),
-                               DialogResult = DialogResult.Cancel,
-                               UseVisualStyleBackColor = true
-                           };
+                {
+                    Parent = this,
+                    Text = Language.T("Close"),
+                    DialogResult = DialogResult.Cancel,
+                    UseVisualStyleBackColor = true
+                };
 
             SetupMenuBar();
             SetPanelOptions();
@@ -56,7 +60,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Sets items in the Main Menu.
+        ///     Sets items in the Main Menu.
         /// </summary>
         private void SetupMenuBar()
         {
@@ -66,20 +70,20 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             TsMainMenu.Items.Add(tsmiAnalysis);
 
             var tsmiOverOptimization = new ToolStripMenuItem
-                                           {
-                                               Text = Language.T("Over-optimization Report"),
-                                               Name = "tsmiOverOptimization",
-                                               Image = Resources.overoptimization_chart
-                                           };
+                {
+                    Text = Language.T("Over-optimization Report"),
+                    Name = "tsmiOverOptimization",
+                    Image = Resources.overoptimization_chart
+                };
             tsmiOverOptimization.Click += MainMenuClick;
             tsmiAnalysis.DropDownItems.Add(tsmiOverOptimization);
 
             var tsmiCumulativeStrategy = new ToolStripMenuItem
-                                             {
-                                                 Text = Language.T("Cumulative Strategy"),
-                                                 Name = "tsmiCumulativeStrategy",
-                                                 Image = Resources.cumulative_str
-                                             };
+                {
+                    Text = Language.T("Cumulative Strategy"),
+                    Name = "tsmiCumulativeStrategy",
+                    Image = Resources.cumulative_str
+                };
             tsmiCumulativeStrategy.Click += MainMenuClick;
             //tsmiAnalysis.DropDownItems.Add(tsmiCumulativeStrategy);
 
@@ -87,11 +91,11 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
             TsMainMenu.Items.Add(tsmiTools);
 
             var tsmiOptions = new ToolStripMenuItem
-                                  {
-                                      Text = Language.T("Options"),
-                                      Name = "tsmiOptions",
-                                      Image = Resources.tools
-                                  };
+                {
+                    Text = Language.T("Options"),
+                    Name = "tsmiOptions",
+                    Image = Resources.tools
+                };
             tsmiOptions.Click += MainMenuClick;
             tsmiTools.DropDownItems.Add(tsmiOptions);
         }
@@ -128,7 +132,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Perform initializing
+        ///     Perform initializing
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
@@ -140,7 +144,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Form On Paint
+        ///     Form On Paint
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -148,14 +152,14 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Recalculates the sizes and positions of the controls after resizing.
+        ///     Recalculates the sizes and positions of the controls after resizing.
         /// </summary>
         protected override void OnResize(EventArgs e)
         {
-            var buttonHeight = (int) (Data.VerticalDLU*15.5);
-            var buttonWidth = (int) (Data.HorizontalDLU*60);
-            var btnVertSpace = (int) (Data.VerticalDLU*5.5);
-            var btnHrzSpace = (int) (Data.HorizontalDLU*3);
+            var buttonHeight = (int) (Data.VerticalDlu*15.5);
+            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var btnVertSpace = (int) (Data.VerticalDlu*5.5);
+            var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
 
             // Button Close
@@ -178,7 +182,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// It shows if some process is running.
+        ///     It shows if some process is running.
         /// </summary>
         /// <returns></returns>
         private bool IsSomethingRunning()
@@ -189,7 +193,7 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         }
 
         /// <summary>
-        /// Analyzer closes
+        ///     Analyzer closes
         /// </summary>
         private void ActionsFormClosing(object sender, FormClosingEventArgs e)
         {
@@ -212,13 +216,13 @@ namespace Forex_Strategy_Builder.Dialogs.Analyzer
         private void SetPanelOverOptimization()
         {
             PnlOverOptimization = new OverOptimization(Language.T("Over-optimization Report"))
-                                      {Parent = this, Visible = true};
+                {Parent = this, Visible = true};
         }
 
         private void SetPanelCumulativeStrategy()
         {
             PnlCumulativeStrategy = new CumulativeStrategy(Language.T("Cumulative Strategy"))
-                                        {Parent = this, Visible = false};
+                {Parent = this, Visible = false};
         }
     }
 }
