@@ -1,12 +1,13 @@
 Thumbs.db
 *ReSharper*
-*DotSettings.user
+*DotSettings*
 *.suo
 *.sln.docstates
 obj
-/Output/*.exe
+*.exe
+*.pfx
+*.iss
 /Output/fsb-padfile.xml
-/Output/Debug/*.exe
 /Output/Debug/*.config
 /Output/Debug/*.pdb
 /Output/Debug/*.manifest
@@ -15,7 +16,6 @@ obj
 /Output/Debug/System/fsb-update.xml
 /Output/Debug/System/instruments.xml
 /Output/Debug/Strategies/*.csv
-/Output/Release/*.exe
 !/Output/Release/FSB\ Starter.exe
 /Output/Release/*.config
 /Output/Release/*.pdb
