@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LauncherForm));
             this.lblApplicationName = new System.Windows.Forms.Label();
-            this.tbxOutput = new System.Windows.Forms.ListBox();
+            this.listBoxOutput = new System.Windows.Forms.ListBox();
             this.lblCompany = new System.Windows.Forms.Label();
             this.linkWebsite = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
@@ -46,19 +46,19 @@
             this.lblApplicationName.TabIndex = 0;
             this.lblApplicationName.Text = "Forex Strategy Builder";
             // 
-            // tbxOutput
+            // listBoxOutput
             // 
-            this.tbxOutput.BackColor = System.Drawing.SystemColors.Control;
-            this.tbxOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.tbxOutput.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.tbxOutput.FormattingEnabled = true;
-            this.tbxOutput.ItemHeight = 15;
-            this.tbxOutput.Location = new System.Drawing.Point(96, 120);
-            this.tbxOutput.Name = "tbxOutput";
-            this.tbxOutput.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.tbxOutput.Size = new System.Drawing.Size(230, 135);
-            this.tbxOutput.TabIndex = 3;
-            this.tbxOutput.TabStop = false;
+            this.listBoxOutput.BackColor = System.Drawing.SystemColors.Control;
+            this.listBoxOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listBoxOutput.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.listBoxOutput.FormattingEnabled = true;
+            this.listBoxOutput.ItemHeight = 15;
+            this.listBoxOutput.Location = new System.Drawing.Point(96, 120);
+            this.listBoxOutput.Name = "listBoxOutput";
+            this.listBoxOutput.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listBoxOutput.Size = new System.Drawing.Size(230, 135);
+            this.listBoxOutput.TabIndex = 3;
+            this.listBoxOutput.TabStop = false;
             // 
             // lblCompany
             // 
@@ -91,7 +91,7 @@
             this.ClientSize = new System.Drawing.Size(420, 300);
             this.Controls.Add(this.linkWebsite);
             this.Controls.Add(this.lblCompany);
-            this.Controls.Add(this.tbxOutput);
+            this.Controls.Add(this.listBoxOutput);
             this.Controls.Add(this.lblApplicationName);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -111,7 +111,7 @@
         #endregion
 
         private System.Windows.Forms.Label lblApplicationName;
-        private System.Windows.Forms.ListBox tbxOutput;
+        private System.Windows.Forms.ListBox listBoxOutput;
         private System.Windows.Forms.Label lblCompany;
         private System.Windows.Forms.LinkLabel linkWebsite;
     }

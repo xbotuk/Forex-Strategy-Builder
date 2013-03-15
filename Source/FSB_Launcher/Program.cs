@@ -34,7 +34,8 @@ namespace FSB_Launcher
 
             IIoManager ioManager = new IoManager();
             ITimeHelper timeHelper = new TimeHelper();
-            presenter = new LauncherPresenter(ioManager, timeHelper);
+            ISettings settings = new Settings();
+            presenter = new LauncherPresenter(ioManager, timeHelper, settings);
             var form = new LauncherForm(presenter);
             presenter.SetView(form);
 

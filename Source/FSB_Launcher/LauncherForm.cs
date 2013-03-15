@@ -25,17 +25,6 @@ namespace FSB_Launcher
         public LauncherForm()
         {
             InitializeComponent();
-
-            Color backColor = ColorTranslator.FromHtml("#007049");
-            Color foreColor = ColorTranslator.FromHtml("#E3DEEB");
-
-            BackColor = backColor;
-            tbxOutput.BackColor = backColor;
-
-            lblApplicationName.ForeColor = foreColor;
-            lblCompany.ForeColor = foreColor;
-            linkWebsite.LinkColor = foreColor;
-            tbxOutput.ForeColor = foreColor;
         }
 
         public LauncherForm(ILauncherPresenter presenter)
@@ -44,9 +33,21 @@ namespace FSB_Launcher
             this.presenter = presenter;
         }
 
+        public void SetColors(Color backColor, Color foreColor)
+        {
+            BackColor = backColor;
+            ForeColor = foreColor;
+
+            listBoxOutput.BackColor = backColor;
+            lblApplicationName.ForeColor = foreColor;
+            lblCompany.ForeColor = foreColor;
+            linkWebsite.LinkColor = foreColor;
+            listBoxOutput.ForeColor = foreColor;
+        }
+
         public void UpdateStatus(string record)
         {
-            tbxOutput.Invoke((MethodInvoker) (() => tbxOutput.Items.Add(record)));
+            listBoxOutput.Invoke((MethodInvoker) (() => listBoxOutput.Items.Add(record)));
         }
 
         protected override void WndProc(ref Message message)

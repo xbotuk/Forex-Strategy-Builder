@@ -8,10 +8,13 @@
 // A PARTICULAR PURPOSE.
 //==============================================================
 
+using System.Drawing;
+
 namespace FSB_Launcher.Interfaces
 {
     public interface ILauncherForm
     {
+        void SetColors(Color backColor, Color foreColor);
         void UpdateStatus(string record);
         void Close();
     }

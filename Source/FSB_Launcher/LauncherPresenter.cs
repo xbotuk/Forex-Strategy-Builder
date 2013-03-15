@@ -18,15 +18,18 @@ namespace FSB_Launcher
     {
         private readonly IIoManager ioManager;
         private readonly ITimeHelper timeHelper;
+        private readonly ISettings settings;
         private ILauncherForm view;
 
-        public LauncherPresenter(IIoManager ioManager,
-                                 ITimeHelper timeHelper)
+        public LauncherPresenter(IIoManager ioManager, ITimeHelper timeHelper, ISettings settings)
         {
             if (ioManager == null) throw new ArgumentNullException("ioManager");
             if (timeHelper == null) throw new ArgumentNullException("timeHelper");
+            if (settings == null) throw new ArgumentNullException("settings");
+
             this.ioManager = ioManager;
             this.timeHelper = timeHelper;
+            this.settings = settings;
 
             timeHelper.CountDownElapsed += TimeHelper_CountDownElapsed;
         }
@@ -35,11 +38,17 @@ namespace FSB_Launcher
         {
             if (launcherForm == null) throw new ArgumentNullException("launcherForm");
             view = launcherForm;
+
+            settings.PathSettings = @"FSB_Launcher.xml";
+            settings.SetDefaults();
+            settings.LoadSettings();
+
+            view.SetColors(settings.BackColor, settings.ForeColor);
         }
 
         public void Proceede()
         {
-            timeHelper.StartCountDown(4);
+            timeHelper.StartCountDown(settings.ShutDownTime);
             StartApplication();
         }
 
@@ -60,11 +69,11 @@ namespace FSB_Launcher
 
         private void StartApplication()
         {
-            view.UpdateStatus("Starting Forex Strategy Builder...");
+            view.UpdateStatus("- loading now...");
 
-            string path = Path.Combine(ioManager.CurrentDirectory, @"Forex Strategy Builder.exe");
+            string path = Path.Combine(ioManager.CurrentDirectory, settings.FSBPath);
             if (ioManager.FileExists(path))
-                ioManager.RunFile(path, "");
+                ioManager.RunFile(path, settings.Arguments);
             else
                 view.UpdateStatus("Error: cannot find FSB!");
         }
