@@ -69,7 +69,7 @@ namespace FSB_Launcher
 
         private void StartApplication()
         {
-            view.UpdateStatus("- loading now...");
+            view.UpdateStatus("- loading application...");
 
             string path = Path.Combine(ioManager.CurrentDirectory, settings.FSBPath);
             if (ioManager.FileExists(path))

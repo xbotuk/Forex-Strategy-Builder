@@ -100,7 +100,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FSB Pro Launcher";
+            this.Text = "FSB Launcher";
             this.TopMost = true;
             this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.FormLauncher_MouseDoubleClick);
             this.ResumeLayout(false);

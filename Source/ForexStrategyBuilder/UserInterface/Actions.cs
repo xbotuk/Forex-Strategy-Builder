@@ -26,6 +26,8 @@ namespace ForexStrategyBuilder
     /// </summary>
     public sealed partial class Actions : Controls
     {
+        private static int splashScreenId;
+
         /// <summary>
         ///     The default constructor.
         /// </summary>
@@ -37,6 +39,8 @@ namespace ForexStrategyBuilder
             MinimumSize = new Size(500, 375);
             Icon = Data.Icon;
             Text = Data.ProgramName;
+            splashScreenId = WinApi.GetWindowId(null, "FSB Launcher");
+
             FormClosing += ActionsFormClosing;
             Application.Idle += ApplicationIdle;
 
@@ -46,7 +50,7 @@ namespace ForexStrategyBuilder
             Calculate(false);
             CheckUpdate.CheckForUpdate(Data.SystemDir, MiLiveContent, MiForex);
             ShowStartingTips();
-            UpdateStatusLabel("Loading user interface...");
+            UpdateStatusLabel("- loading user interface...");
             SetStrategyDirWatcher();
 
             foreach (string arg in Environment.GetCommandLineArgs())
@@ -64,7 +68,6 @@ namespace ForexStrategyBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            UpdateStatusLabel("Loading...");
             Data.Start();
             Instruments.LoadInstruments();
             Configs.LoadConfigs();
@@ -79,7 +82,7 @@ namespace ForexStrategyBuilder
 
         private void PrepareInstruments()
         {
-            UpdateStatusLabel("Loading historical data...");
+            UpdateStatusLabel("- loading historical data...");
             if (LoadInstrument(false) != 0)
             {
                 LoadInstrument(true);
@@ -95,7 +98,7 @@ namespace ForexStrategyBuilder
         {
             if (Configs.LoadCustomIndicators)
             {
-                UpdateStatusLabel("Loading custom indicators...");
+                UpdateStatusLabel("- loading custom indicators...");
                 CustomIndicators.LoadCustomIndicators();
             }
             else
@@ -104,7 +107,7 @@ namespace ForexStrategyBuilder
 
         private void ProvideStrategy()
         {
-            UpdateStatusLabel("Loading strategy...");
+            UpdateStatusLabel("- loading strategy...");
             string strategyPath = Data.StrategyPath;
 
             if (Configs.RememberLastStr && Configs.LastStrategy != "")
@@ -152,9 +155,7 @@ namespace ForexStrategyBuilder
         private void ApplicationIdle(object sender, EventArgs e)
         {
             Application.Idle -= ApplicationIdle;
-            string lockFile = GetLockFile();
-            if (!string.IsNullOrEmpty(lockFile))
-                File.Delete(lockFile);
+            WinApi.CloseWindow(splashScreenId);
         }
 
         /// <summary>
@@ -162,30 +163,7 @@ namespace ForexStrategyBuilder
         /// </summary>
         private static void UpdateStatusLabel(string comment)
         {
-            try
-            {
-                TextWriter tw = new StreamWriter(GetLockFile(), false);
-                tw.WriteLine(comment);
-                tw.Close();
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-            }
-        }
-
-        /// <summary>
-        ///     The lockfile name will be passed automatically by Splash.exe as a
-        ///     command line arg -lockfile="c:\temp\C1679A85-A4FA-48a2-BF77-E74F73E08768.lock"
-        /// </summary>
-        /// <returns>Lock file path</returns>
-        private static string GetLockFile()
-        {
-            foreach (string arg in Environment.GetCommandLineArgs())
-                if (arg.StartsWith("-lockfile="))
-                    return arg.Replace("-lockfile=", String.Empty);
-
-            return string.Empty;
+            WinApi.SendWindowsStringMessage(splashScreenId, 0, comment);
         }
 
         /// <summary>
