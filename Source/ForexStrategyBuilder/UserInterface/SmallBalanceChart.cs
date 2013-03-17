@@ -412,14 +412,14 @@ namespace ForexStrategyBuilder
                 // Draw balance line up to Margin Call
                 var balPoints = new PointF[data.MarginCallBar - data.FirstBar];
                 for (int i = 0; i < balPoints.Length; i++)
-                    balPoints[i] = balPoints[i];
+                    balPoints[i] = balancePoints[i];
                 if (balPoints.Length > 1)
                     g.DrawLines(new Pen(LayoutColors.ColorChartBalanceLine), balPoints);
 
                 // Draw balance line after Margin Call
                 var redBalancePoints = new PointF[data.Bars - data.MarginCallBar];
                 for (int i = 0; i < redBalancePoints.Length; i++)
-                    redBalancePoints[i] = balPoints[i + data.MarginCallBar - data.FirstBar];
+                    redBalancePoints[i] = balancePoints[i + data.MarginCallBar - data.FirstBar];
                 g.DrawLines(new Pen(LayoutColors.ColorSignalRed), redBalancePoints);
 
                 // Margin Call line
