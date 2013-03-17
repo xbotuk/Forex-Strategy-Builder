@@ -580,9 +580,19 @@ namespace ForexStrategyBuilder
 
             miStrategy.DropDownItems.Add(new ToolStripSeparator());
 
+            var miStrategyRepo = new ToolStripMenuItem
+                {
+                    Text = Language.T("Strategy Repository") + "...",
+                    Image = Resources.repo,
+                    ToolTipText = Language.T("Download or upload strategies."),
+                    Tag = @"http://repo.forexsb.com/strategy/list_all"
+                };
+            miStrategyRepo.Click += MenuForexContentsOnClick;
+            miStrategy.DropDownItems.Add(miStrategyRepo);
+
             var miStrategyPublish = new ToolStripMenuItem
                 {
-                    Text = Language.T("Publish") + "...",
+                    Text = Language.T("Publish to Forum") + "...",
                     Image = Resources.publish_strategy,
                     ToolTipText = Language.T("Publish the strategy in the program's forum.")
                 };
@@ -927,6 +937,15 @@ namespace ForexStrategyBuilder
             miCustIndForum.Click += MenuHelpContentsOnClick;
             miCustomInd.DropDownItems.Add(miCustIndForum);
 
+            var miCustIndRepo = new ToolStripMenuItem
+                {
+                    Text = Language.T("Custom Indicators Repo") + "...",
+                    Image = Resources.repo,
+                    Tag = "http://repo.forexsb.com/forex_indicators/"
+                };
+            miCustIndRepo.Click += MenuHelpContentsOnClick;
+            miCustomInd.DropDownItems.Add(miCustIndRepo);
+
             miCustomInd.DropDownItems.Add(new ToolStripSeparator());
 
             var miLoadCstomInd = new ToolStripMenuItem
@@ -1217,6 +1236,16 @@ namespace ForexStrategyBuilder
                     Visible = false
                 };
 
+            // Go Pro
+            var miGoPro = new ToolStripMenuItem(Language.T("Go Pro"))
+                {
+                    Alignment = ToolStripItemAlignment.Right,
+                    Tag = "http://forexsb.com/wiki/fsbpro/start",
+                    ForeColor = Color.Navy,
+                    ToolTipText = Language.T("See Forex Strategy Builder Professional web page...")
+                };
+            miGoPro.Click += MenuForexContentsOnClick;
+
             // Forex Forum
             var miForum = new ToolStripMenuItem(Resources.forum_icon)
                 {
@@ -1230,7 +1259,8 @@ namespace ForexStrategyBuilder
             var mainMenu = new[]
                 {
                     miFile, miEdit, miView, miAccount, miMarket, miStrategy, miExport,
-                    miTesting, miAnalysis, miTools, miHelp, MiForex, MiLiveContent, miForum
+                    miTesting, miAnalysis, miTools, miHelp, MiForex, MiLiveContent,
+                    miForum, miGoPro
                 };
             foreach (ToolStripMenuItem item in mainMenu)
                 MainMenuStrip.Items.Add(item);
@@ -1704,7 +1734,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Opens the forex news
+        ///     Opens web link
         /// </summary>
         private void MenuForexContentsOnClick(object sender, EventArgs e)
         {

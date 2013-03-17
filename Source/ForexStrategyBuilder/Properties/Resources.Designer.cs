@@ -1348,6 +1348,16 @@ namespace ForexStrategyBuilder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap repo {
+            get {
+                object obj = ResourceManager.GetObject("repo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap safety_first {
             get {
                 object obj = ResourceManager.GetObject("safety_first", resourceCulture);

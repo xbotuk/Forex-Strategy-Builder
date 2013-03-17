@@ -544,6 +544,7 @@
     <Content Include="Images\open_data_directory.png" />
     <Content Include="Images\pushpin-detach.png" />
     <Content Include="Images\refresh.png" />
+    <Content Include="Images\repo.png" />
     <Content Include="Images\toggle.png" />
     <Content Include="Images\truefx_ico.png" />
     <Content Include="Resources\config.xml" />
