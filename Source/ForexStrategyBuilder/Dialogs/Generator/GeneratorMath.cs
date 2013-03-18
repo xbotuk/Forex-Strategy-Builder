@@ -32,7 +32,9 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private IndicatorSlot[] aLockedEntryFilter; // Holds all locked entry filters.
         private IndicatorSlot[] aLockedExitFilter; // Holds all locked exit filters.
         private int barOOS = Data.Bars - 1;
+        private double benchmark;
         private float bestValue;
+        private TimeSpan currentBenchmarkTime;
         private CustomGeneratorAnalytics customAnalytics;
         private bool customSortingAdvancedEnabled;
         private string customSortingOptionDisplay = String.Empty;
@@ -52,9 +54,12 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private int minutes;
         private int progressPercent;
         private Strategy strategyBest;
+        private float targetBalanceRatio = 1;
+
+        private long totalCalculations;
+        private TimeSpan totalWorkTime;
 
         // Out of Sample
-        private float targetBalanceRatio = 1;
 
         /// <summary>
         ///     BtnGenerate_Click
@@ -446,6 +451,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             var workTime = new TimeSpan(0, minutes, 0);
             DateTime stopTime = startTime + workTime;
 
+            currentBenchmarkTime = totalWorkTime;
+
             bool isStopGenerating = false;
             do
             {
@@ -477,7 +484,12 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     // Initial Optimization
                     if (chbInitialOptimization.Checked)
                         PerformInitialOptimization(worker, isBetter);
+
+                    totalWorkTime = currentBenchmarkTime.Add(DateTime.Now - startTime);
+                    benchmark = 0.0001 * Data.Bars * totalCalculations / totalWorkTime.TotalSeconds;
+                    SetBenchmarkText(benchmark);
                 }
+
 
                 if (minutes > 0)
                 {
@@ -501,6 +513,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         {
             bool isBetter = false;
             cycles++;
+            totalCalculations++;
 
             Data.FirstBar = Data.Strategy.SetFirstBar();
             Data.Strategy.AdjustUsePreviousBarValue();
@@ -591,6 +604,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             {
 #endif
                 indicator.Calculate(slotType);
+                totalCalculations++;
                 return true;
 #if !DEBUG
             }

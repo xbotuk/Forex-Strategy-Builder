@@ -40,6 +40,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private readonly InfoPanel infpnlAccountStatistics;
         private readonly Label lblCalcStrInfo;
         private readonly Label lblCalcStrNumb;
+        private readonly Label lblBenchmarkInfo;
+        private readonly Label lblBenchmarkNumb;
         private readonly NumericUpDown nudWorkingMinutes;
         private readonly FancyPanel pnlCommon;
         private readonly FancyPanel pnlIndicators;
@@ -118,6 +120,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             progressBar = new ProgressBar();
             lblCalcStrInfo = new Label();
             lblCalcStrNumb = new Label();
+            lblBenchmarkInfo = new Label();
+            lblBenchmarkNumb = new Label();
             btnAccept = new Button();
             btnGenerate = new Button();
             btnCancel = new Button();
@@ -555,6 +559,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             nudMaxClosingLogicSlots.Increment = 1;
             nudMaxClosingLogicSlots.Value = 1;
             nudMaxClosingLogicSlots.EndInit();
+
             // Label Calculated Strategies Caption
             lblCalcStrInfo.Parent = pnlCommon;
             lblCalcStrInfo.AutoSize = true;
@@ -569,6 +574,20 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             lblCalcStrNumb.BackColor = LayoutColors.ColorControlBack;
             lblCalcStrNumb.TextAlign = ContentAlignment.MiddleCenter;
             lblCalcStrNumb.Text = "0";
+
+            // Benchmark
+            lblBenchmarkInfo.Parent = pnlCommon;
+            lblBenchmarkInfo.AutoSize = true;
+            lblBenchmarkInfo.ForeColor = LayoutColors.ColorControlText;
+            lblBenchmarkInfo.BackColor = Color.Transparent;
+            lblBenchmarkInfo.Text = Language.T("Benchmark");
+
+            lblBenchmarkNumb.Parent = pnlCommon;
+            lblBenchmarkNumb.BorderStyle = BorderStyle.FixedSingle;
+            lblBenchmarkNumb.ForeColor = LayoutColors.ColorControlText;
+            lblBenchmarkNumb.BackColor = LayoutColors.ColorControlBack;
+            lblBenchmarkNumb.TextAlign = ContentAlignment.MiddleCenter;
+            lblBenchmarkNumb.Text = "0";
         }
 
         /// <summary>
@@ -951,6 +970,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             lblCalcStrNumb.Size = new Size(nudWidth, nudMaxOpeningLogicSlots.Height - 1);
             lblCalcStrNumb.Location = new Point(lblCalcStrInfo.Right + border, lblCalcStrInfo.Top - 3);
 
+            // Labels Benchmark
+            lblBenchmarkNumb.Size = new Size(nudWidth, nudMaxOpeningLogicSlots.Height - 1);
+            lblBenchmarkNumb.Location = new Point(pnlCommon.ClientSize.Width - border - lblBenchmarkNumb.Width, lblCalcStrNumb.Top);
+            lblBenchmarkInfo.Location = new Point(lblBenchmarkNumb.Left - lblBenchmarkInfo.Width - border, pnlCommon.Height - nudMaxOpeningLogicSlots.Height - border);
 
 
             // Working Minutes
@@ -1140,6 +1163,22 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             else
             {
                 lblCalcStrNumb.Text = text;
+            }
+        }
+
+        /// <summary>
+        ///     Sets Benchmark
+        /// </summary>
+        private void SetBenchmarkText(double value)
+        {
+            if (lblBenchmarkNumb.InvokeRequired)
+            {
+
+                BeginInvoke(new SetBenchmarkCallback(SetBenchmarkText), new object[] { value });
+            }
+            else
+            {
+                lblBenchmarkNumb.Text = ((int) Math.Round(value)).ToString(CultureInfo.InvariantCulture);
             }
         }
 
@@ -1806,6 +1845,12 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         #region Nested type: SetCyclesCallback
 
         private delegate void SetCyclesCallback(string text);
+
+        #endregion
+
+        #region Nested type: SetBenchmarkCallback
+
+        private delegate void SetBenchmarkCallback(double value);
 
         #endregion
     }
