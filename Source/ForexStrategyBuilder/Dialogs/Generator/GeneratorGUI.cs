@@ -30,6 +30,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private readonly Button btnCancel;
         private readonly Button btnGenerate;
 
+        private readonly CheckBox chbWorkingMinutes;
         private readonly CheckBox chbGenerateNewStrategy;
         private readonly CheckBox chbInitialOptimization;
         private readonly CheckBox chbPreserveBreakEven;
@@ -39,7 +40,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private readonly InfoPanel infpnlAccountStatistics;
         private readonly Label lblCalcStrInfo;
         private readonly Label lblCalcStrNumb;
-        private readonly Label lblWorkingMinutes;
         private readonly NumericUpDown nudWorkingMinutes;
         private readonly FancyPanel pnlCommon;
         private readonly FancyPanel pnlIndicators;
@@ -127,7 +127,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             chbPreserveBreakEven = new CheckBox();
             chbInitialOptimization = new CheckBox();
             nudWorkingMinutes = new NumericUpDown();
-            lblWorkingMinutes = new Label();
+            chbWorkingMinutes = new CheckBox();
 
             MaximizeBox = false;
             Icon = Data.Icon;
@@ -395,6 +395,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 nudMaxClosingLogicSlots.Value = Math.Min(int.Parse(options[i++]), Strategy.MaxCloseFilters);
                 chbOutOfSample.Checked = bool.Parse(options[i++]);
                 nudOutOfSample.Value = int.Parse(options[i++]);
+                chbWorkingMinutes.Checked = bool.Parse(options[i++]);
                 nudWorkingMinutes.Value = int.Parse(options[i++]);
                 chbAmbiguousBars.Checked = bool.Parse(options[i++]);
                 nudAmbiguousBars.Value = int.Parse(options[i++]);
@@ -452,6 +453,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 nudMaxClosingLogicSlots.Value + ";" +
                 chbOutOfSample.Checked + ";" +
                 nudOutOfSample.Value + ";" +
+                chbWorkingMinutes.Checked + ";" +
                 nudWorkingMinutes.Value + ";" +
                 chbAmbiguousBars.Checked + ";" +
                 nudAmbiguousBars.Value + ";" +
@@ -494,14 +496,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         /// </summary>
         private void SetPanelCommon()
         {
-            // chbGenerateNewStrategy
-            chbGenerateNewStrategy.Parent = pnlCommon;
-            chbGenerateNewStrategy.Text = Language.T("Generate a new strategy at every start");
-            chbGenerateNewStrategy.AutoSize = true;
-            chbGenerateNewStrategy.Checked = true;
-            chbGenerateNewStrategy.ForeColor = LayoutColors.ColorControlText;
-            chbGenerateNewStrategy.BackColor = Color.Transparent;
-
             // chbPreservPermSL
             chbPreservePermSL.Parent = pnlCommon;
             chbPreservePermSL.Text = Language.T("Do not change the Permanent Stop Loss");
@@ -525,14 +519,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             chbPreserveBreakEven.Checked = true;
             chbPreserveBreakEven.ForeColor = LayoutColors.ColorControlText;
             chbPreserveBreakEven.BackColor = Color.Transparent;
-
-            // chbPseudoOpt
-            chbInitialOptimization.Parent = pnlCommon;
-            chbInitialOptimization.Text = Language.T("Perform an initial optimization");
-            chbInitialOptimization.AutoSize = true;
-            chbInitialOptimization.Checked = true;
-            chbInitialOptimization.ForeColor = LayoutColors.ColorControlText;
-            chbInitialOptimization.BackColor = Color.Transparent;
 
             chbMaxOpeningLogicSlots = new CheckBox
                 {
@@ -569,24 +555,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             nudMaxClosingLogicSlots.Increment = 1;
             nudMaxClosingLogicSlots.Value = 1;
             nudMaxClosingLogicSlots.EndInit();
-
-            //lblNumUpDown
-            lblWorkingMinutes.Parent = pnlCommon;
-            lblWorkingMinutes.ForeColor = LayoutColors.ColorControlText;
-            lblWorkingMinutes.BackColor = Color.Transparent;
-            lblWorkingMinutes.Text = Language.T("Working time");
-            lblWorkingMinutes.AutoSize = true;
-            lblWorkingMinutes.TextAlign = ContentAlignment.MiddleRight;
-
-            // numUpDownWorkingTime
-            nudWorkingMinutes.Parent = pnlCommon;
-            nudWorkingMinutes.Value = 5;
-            nudWorkingMinutes.Minimum = 0;
-            nudWorkingMinutes.Maximum = 10000;
-            nudWorkingMinutes.TextAlign = HorizontalAlignment.Center;
-            toolTip.SetToolTip(nudWorkingMinutes, Language.T("Set the number of minutes for the Generator to work.") +
-                                                  Environment.NewLine + "0 - " + Language.T("No limits").ToLower() + ".");
-
             // Label Calculated Strategies Caption
             lblCalcStrInfo.Parent = pnlCommon;
             lblCalcStrInfo.AutoSize = true;
@@ -608,6 +576,38 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         /// </summary>
         private void SetPanelSettings()
         {
+
+            //chbWorkingMinutes
+            chbWorkingMinutes.Parent = pnlSettings;
+            chbWorkingMinutes.Text = Language.T("Working time limit in minutes");
+            chbWorkingMinutes.AutoSize = true;
+            chbWorkingMinutes.Checked = true;
+            chbWorkingMinutes.ForeColor = LayoutColors.ColorControlText;
+            chbWorkingMinutes.BackColor = Color.Transparent;
+
+            // numUpDownWorkingTime
+            nudWorkingMinutes.Parent = pnlSettings;
+            nudWorkingMinutes.Value = 5;
+            nudWorkingMinutes.Minimum = 1;
+            nudWorkingMinutes.Maximum = 10000;
+            nudWorkingMinutes.TextAlign = HorizontalAlignment.Center;
+
+            // chbGenerateNewStrategy
+            chbGenerateNewStrategy.Parent = pnlSettings;
+            chbGenerateNewStrategy.Text = Language.T("Generate a new strategy at every start");
+            chbGenerateNewStrategy.AutoSize = true;
+            chbGenerateNewStrategy.Checked = true;
+            chbGenerateNewStrategy.ForeColor = LayoutColors.ColorControlText;
+            chbGenerateNewStrategy.BackColor = Color.Transparent;
+
+            // chbPseudoOpt
+            chbInitialOptimization.Parent = pnlSettings;
+            chbInitialOptimization.Text = Language.T("Perform an initial optimization");
+            chbInitialOptimization.AutoSize = true;
+            chbInitialOptimization.Checked = true;
+            chbInitialOptimization.ForeColor = LayoutColors.ColorControlText;
+            chbInitialOptimization.BackColor = Color.Transparent;
+
             chbOutOfSample = new CheckBox
                 {
                     Parent = pnlSettings,
@@ -817,7 +817,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             // Find correct size
             int maxCheckBoxWidth = 250;
-            foreach (Control control in pnlCriteriaBase.Controls)
+            foreach (Control control in pnlCriteriaControls.Controls)
             {
                 if (maxCheckBoxWidth < control.Width)
                     maxCheckBoxWidth = control.Width;
@@ -927,11 +927,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                                                     progressBar.Top - 3*border - pnlCommon.Bottom);
             infpnlAccountStatistics.Location = new Point(strategyField.Right + border, pnlCommon.Bottom + border);
 
-            //chbGenerateNewStrategy
-            chbGenerateNewStrategy.Location = new Point(border + 2, 26);
-
             //chbPreservePermSL
-            chbPreservePermSL.Location = new Point(border + 2, chbGenerateNewStrategy.Bottom + border + 4);
+            chbPreservePermSL.Location = new Point(border + 2, 26);
 
             //chbPreservePermTP
             chbPreservePermTP.Location = new Point(border + 2, chbPreservePermSL.Bottom + border + 4);
@@ -939,20 +936,13 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             //chbPreservebreakEven
             chbPreserveBreakEven.Location = new Point(border + 2, chbPreservePermTP.Bottom + border + 4);
 
-            // chbPseudoOpt
-            chbInitialOptimization.Location = new Point(border + 2, chbPreserveBreakEven.Bottom + border + 4);
-
             // chbMaxOpeningLogicSlots
-            chbMaxOpeningLogicSlots.Location = new Point(border + 2, chbInitialOptimization.Bottom + border + 4);
-
-            // nudMaxOpeningLogicSlots
+            chbMaxOpeningLogicSlots.Location = new Point(border + 2, chbPreserveBreakEven.Bottom + border + 14);
             nudMaxOpeningLogicSlots.Width = nudWidth;
             nudMaxOpeningLogicSlots.Location = new Point(nudAmbiguousBars.Left, chbMaxOpeningLogicSlots.Top - 1);
 
             // chbMaxClosingLogicSlots
             chbMaxClosingLogicSlots.Location = new Point(border + 2, chbMaxOpeningLogicSlots.Bottom + border + 4);
-
-            // nudMaxClosingLogicSlots
             nudMaxClosingLogicSlots.Width = nudWidth;
             nudMaxClosingLogicSlots.Location = new Point(nudAmbiguousBars.Left, chbMaxClosingLogicSlots.Top - 1);
 
@@ -961,14 +951,21 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             lblCalcStrNumb.Size = new Size(nudWidth, nudMaxOpeningLogicSlots.Height - 1);
             lblCalcStrNumb.Location = new Point(lblCalcStrInfo.Right + border, lblCalcStrInfo.Top - 3);
 
-            //Working Minutes
+
+
+            // Working Minutes
+            chbWorkingMinutes.Location = new Point(border + 2, 26);
             nudWorkingMinutes.Width = nudWidth;
-            nudWorkingMinutes.Location = new Point(nudMaxOpeningLogicSlots.Right - nudWidth, lblCalcStrInfo.Top - 2);
-            lblWorkingMinutes.Location = new Point(nudWorkingMinutes.Left - lblWorkingMinutes.Width - 3,
-                                                   lblCalcStrInfo.Top);
+            nudWorkingMinutes.Location = new Point(nudMaxOpeningLogicSlots.Right - nudWidth, chbWorkingMinutes.Top - 1);
+
+            //chbGenerateNewStrategy
+            chbGenerateNewStrategy.Location = new Point(border + 2, chbWorkingMinutes.Bottom + border + 4);
+
+            // chbInitialOptimization
+            chbInitialOptimization.Location = new Point(border + 2, chbGenerateNewStrategy.Bottom + border + 4);
 
             // chbOutOfSample
-            chbOutOfSample.Location = new Point(border + 2, 25);
+            chbOutOfSample.Location = new Point(border + 2, chbInitialOptimization.Bottom + border + 4);
             nudOutOfSample.Width = nudWidth;
             nudOutOfSample.Location = new Point(nudAmbiguousBars.Left, chbOutOfSample.Top - 1);
 
@@ -980,6 +977,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             // Hide FSB when generator starts
             chbHideFsb.Location = new Point(border + 2, chbSaveStrategySlotStatus.Bottom + border + 4);
+
 
             // Custom Sorting Radio Buttons
             rbnCustomSortingNone.Location = new Point(border + 2, 25);

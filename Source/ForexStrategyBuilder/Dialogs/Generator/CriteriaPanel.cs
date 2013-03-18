@@ -100,7 +100,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             nudMinProfitPerDay.Minimum = 1;
             nudMinProfitPerDay.Maximum = 500;
             nudMinProfitPerDay.Increment =1;
-            nudMinProfitPerDay.DecimalPlaces = 1;
             nudMinProfitPerDay.Value = 1;
             nudMinProfitPerDay.EndInit();
 

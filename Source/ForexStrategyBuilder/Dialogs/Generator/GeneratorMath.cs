@@ -112,8 +112,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
                 Cursor = Cursors.WaitCursor;
 
-                minutes = (int) nudWorkingMinutes.Value;
-                progressBar.Style = minutes > 0 ? ProgressBarStyle.Blocks : ProgressBarStyle.Marquee;
+                minutes = chbWorkingMinutes.Checked ? (int) nudWorkingMinutes.Value : int.MaxValue;
+                progressBar.Style = chbWorkingMinutes.Checked ? ProgressBarStyle.Blocks : ProgressBarStyle.Marquee;
 
                 GeneratedDescription = String.Empty;
 
