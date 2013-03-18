@@ -87,7 +87,6 @@
     <Compile Include="CustomControls\CloseButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CustomControls\NudDto.cs" />
     <Compile Include="CustomControls\ScrollFlowPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

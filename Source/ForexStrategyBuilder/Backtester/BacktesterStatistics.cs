@@ -543,12 +543,13 @@ namespace ForexStrategyBuilder
             if (TestedDays < 1)
                 TestedDays = 1;
 
+            CalculateAdditionalStats();
+
             if (Configs.AccountInMoney)
                 GenerateAccountStatsInMoney();
             else
                 GenerateAccountStats();
 
-            CalculateAdditionalStats();
         }
 
         /// <summary>
@@ -562,6 +563,7 @@ namespace ForexStrategyBuilder
                     Language.T("Interpolation method"),
                     Language.T("Ambiguous bars"),
                     Language.T("Profit per day"),
+                    Language.T("Sharpe ratio"),
                     Language.T("Tested bars"),
                     Language.T("Initial account"),
                     Language.T("Account balance"),
@@ -590,54 +592,56 @@ namespace ForexStrategyBuilder
 
             string unit = " " + Configs.AccountCurrency;
 
-            AccountStatsValue = new string[28];
-            AccountStatsValue[0] = IsScanPerformed ? Language.T("Accomplished") : Language.T("Not accomplished");
-            AccountStatsValue[1] = InterpolationMethodShortToString();
-            AccountStatsValue[2] = AmbiguousBars.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[3] = MoneyProfitPerDay.ToString("F2") + unit;
-            AccountStatsValue[4] = (Bars - FirstBar).ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[5] = Configs.InitialAccount.ToString("F2") + unit;
-            AccountStatsValue[6] = NetMoneyBalance.ToString("F2") + unit;
-            AccountStatsValue[7] = MinMoneyBalance.ToString("F2") + unit;
-            AccountStatsValue[8] = MaxMoneyBalance.ToString("F2") + unit;
-            AccountStatsValue[9] = MaxMoneyDrawdown.ToString("F2") + unit;
-            AccountStatsValue[10] = MaxMoneyEquityDrawdown.ToString("F2") + unit;
-            AccountStatsValue[11] = MoneyEquityPercentDrawdown.ToString("F2") + " %";
-            AccountStatsValue[12] = GrossMoneyProfit.ToString("F2") + unit;
-            AccountStatsValue[13] = GrossMoneyLoss.ToString("F2") + unit;
-            AccountStatsValue[14] = SentOrders.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[15] = ExecutedOrders.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[16] = TradedLots.ToString("F2");
-            AccountStatsValue[17] = WinningTrades.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[18] = LosingTrades.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[19] = WinLossRatio.ToString("F2");
-            AccountStatsValue[20] = TimeInPosition + " %";
-            AccountStatsValue[21] = TotalChargedMoneySpread.ToString("F2") + unit;
-            AccountStatsValue[22] = TotalChargedMoneyRollOver.ToString("F2") + unit;
-            AccountStatsValue[23] = TotalChargedMoneyCommission.ToString("F2") + unit;
-            AccountStatsValue[24] = TotalChargedMoneySlippage.ToString("F2") + unit;
-            AccountStatsValue[25] =
+            AccountStatsValue = new string[AccountStatsParam.Length];
+            int i = 0;
+            AccountStatsValue[i++] = IsScanPerformed ? Language.T("Accomplished") : Language.T("Not accomplished");
+            AccountStatsValue[i++] = InterpolationMethodShortToString();
+            AccountStatsValue[i++] = AmbiguousBars.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = MoneyProfitPerDay.ToString("F2") + unit;
+            AccountStatsValue[i++] = SharpeRatio.ToString("F2");
+            AccountStatsValue[i++] = (Bars - FirstBar).ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = Configs.InitialAccount.ToString("F2") + unit;
+            AccountStatsValue[i++] = NetMoneyBalance.ToString("F2") + unit;
+            AccountStatsValue[i++] = MinMoneyBalance.ToString("F2") + unit;
+            AccountStatsValue[i++] = MaxMoneyBalance.ToString("F2") + unit;
+            AccountStatsValue[i++] = MaxMoneyDrawdown.ToString("F2") + unit;
+            AccountStatsValue[i++] = MaxMoneyEquityDrawdown.ToString("F2") + unit;
+            AccountStatsValue[i++] = MoneyEquityPercentDrawdown.ToString("F2") + " %";
+            AccountStatsValue[i++] = GrossMoneyProfit.ToString("F2") + unit;
+            AccountStatsValue[i++] = GrossMoneyLoss.ToString("F2") + unit;
+            AccountStatsValue[i++] = SentOrders.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = ExecutedOrders.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = TradedLots.ToString("F2");
+            AccountStatsValue[i++] = WinningTrades.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = LosingTrades.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = WinLossRatio.ToString("F2");
+            AccountStatsValue[i++] = TimeInPosition + " %";
+            AccountStatsValue[i++] = TotalChargedMoneySpread.ToString("F2") + unit;
+            AccountStatsValue[i++] = TotalChargedMoneyRollOver.ToString("F2") + unit;
+            AccountStatsValue[i++] = TotalChargedMoneyCommission.ToString("F2") + unit;
+            AccountStatsValue[i++] = TotalChargedMoneySlippage.ToString("F2") + unit;
+            AccountStatsValue[i++] =
                 (TotalChargedMoneySpread + TotalChargedMoneyRollOver + TotalChargedMoneyCommission +
                  TotalChargedMoneySlippage).ToString("F2") + unit;
-            AccountStatsValue[26] =
+            AccountStatsValue[i++] =
                 (NetMoneyBalance + TotalChargedMoneySpread + TotalChargedMoneyRollOver + TotalChargedMoneyCommission +
                  TotalChargedMoneySlippage).ToString("F2") + unit;
 
             if (InstrProperties.PriceIn == Configs.AccountCurrency)
-                AccountStatsValue[27] = Language.T("Not used");
+                AccountStatsValue[i++] = Language.T("Not used");
             else if (InstrProperties.InstrType == InstrumetType.Forex && Symbol.StartsWith(Configs.AccountCurrency))
-                AccountStatsValue[27] = Language.T("Deal price");
+                AccountStatsValue[i++] = Language.T("Deal price");
             else if (Configs.AccountCurrency == "USD")
-                AccountStatsValue[27] = InstrProperties.RateToUSD.ToString("F4");
+                AccountStatsValue[i++] = InstrProperties.RateToUSD.ToString("F4");
             else if (Configs.AccountCurrency == "EUR")
-                AccountStatsValue[27] = InstrProperties.RateToEUR.ToString("F4");
+                AccountStatsValue[i++] = InstrProperties.RateToEUR.ToString("F4");
 
-            AccountStatsFlags = new bool[28];
+            AccountStatsFlags = new bool[AccountStatsParam.Length];
             AccountStatsFlags[0] = AmbiguousBars > 0 && !IsScanPerformed;
             AccountStatsFlags[1] = InterpolationMethod != InterpolationMethod.Pessimistic;
             AccountStatsFlags[2] = AmbiguousBars > 0;
-            AccountStatsFlags[6] = NetMoneyBalance < Configs.InitialAccount;
-            AccountStatsFlags[9] = MaxDrawdown > Configs.InitialAccount/2;
+            AccountStatsFlags[7] = NetMoneyBalance < Configs.InitialAccount;
+            AccountStatsFlags[10] = MaxDrawdown > Configs.InitialAccount/2;
         }
 
         /// <summary>
@@ -651,6 +655,7 @@ namespace ForexStrategyBuilder
                     Language.T("Interpolation method"),
                     Language.T("Ambiguous bars"),
                     Language.T("Profit per day"),
+                    Language.T("Sharpe ratio"),
                     Language.T("Tested bars"),
                     Language.T("Account balance"),
                     Language.T("Minimum account"),
@@ -676,41 +681,42 @@ namespace ForexStrategyBuilder
                 };
 
             string unit = " " + Language.T("pips");
-            AccountStatsValue = new string[26];
-            AccountStatsValue[0] = IsScanPerformed ? Language.T("Accomplished") : Language.T("Not accomplished");
-            AccountStatsValue[1] = InterpolationMethodShortToString();
-            AccountStatsValue[2] = AmbiguousBars.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[3] = ProfitPerDay + unit;
-            AccountStatsValue[4] = (Bars - FirstBar).ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[5] = NetBalance + unit;
-            AccountStatsValue[6] = MinBalance + unit;
-            AccountStatsValue[7] = MaxBalance + unit;
-            AccountStatsValue[8] = MaxDrawdown + unit;
-            AccountStatsValue[9] = MaxEquityDrawdown + unit;
-            AccountStatsValue[10] = EquityPercentDrawdown.ToString("F2") + " %";
-            AccountStatsValue[11] = GrossProfit + unit;
-            AccountStatsValue[12] = GrossLoss + unit;
-            AccountStatsValue[13] = SentOrders.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[14] = ExecutedOrders.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[15] = TradedLots.ToString("F2");
-            AccountStatsValue[16] = WinningTrades.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[17] = LosingTrades.ToString(CultureInfo.InvariantCulture);
-            AccountStatsValue[18] = ((float) WinningTrades/(WinningTrades + LosingTrades)).ToString("F2");
-            AccountStatsValue[19] = TimeInPosition + " %";
-            AccountStatsValue[20] = Math.Round(TotalChargedSpread) + unit;
-            AccountStatsValue[21] = Math.Round(TotalChargedRollOver) + unit;
-            AccountStatsValue[22] = Math.Round(TotalChargedCommission) + unit;
-            AccountStatsValue[23] = TotalChargedSlippage.ToString("F2") + unit;
-            AccountStatsValue[24] = Math.Round(TotalChargedSpread + TotalChargedRollOver + TotalChargedSlippage) + unit;
-            AccountStatsValue[25] =
-                Math.Round(NetBalance + TotalChargedSpread + TotalChargedRollOver + TotalChargedSlippage) + unit;
+            AccountStatsValue = new string[AccountStatsParam.Length];
+            int i = 0;
+            AccountStatsValue[i++] = IsScanPerformed ? Language.T("Accomplished") : Language.T("Not accomplished");
+            AccountStatsValue[i++] = InterpolationMethodShortToString();
+            AccountStatsValue[i++] = AmbiguousBars.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = ProfitPerDay + unit;
+            AccountStatsValue[i++] = SharpeRatio.ToString("F2");
+            AccountStatsValue[i++] = (Bars - FirstBar).ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = NetBalance + unit;
+            AccountStatsValue[i++] = MinBalance + unit;
+            AccountStatsValue[i++] = MaxBalance + unit;
+            AccountStatsValue[i++] = MaxDrawdown + unit;
+            AccountStatsValue[i++] = MaxEquityDrawdown + unit;
+            AccountStatsValue[i++] = EquityPercentDrawdown.ToString("F2") + " %";
+            AccountStatsValue[i++] = GrossProfit + unit;
+            AccountStatsValue[i++] = GrossLoss + unit;
+            AccountStatsValue[i++] = SentOrders.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = ExecutedOrders.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = TradedLots.ToString("F2");
+            AccountStatsValue[i++] = WinningTrades.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = LosingTrades.ToString(CultureInfo.InvariantCulture);
+            AccountStatsValue[i++] = ((float)WinningTrades / (WinningTrades + LosingTrades)).ToString("F2");
+            AccountStatsValue[i++] = TimeInPosition + " %";
+            AccountStatsValue[i++] = Math.Round(TotalChargedSpread) + unit;
+            AccountStatsValue[i++] = Math.Round(TotalChargedRollOver) + unit;
+            AccountStatsValue[i++] = Math.Round(TotalChargedCommission) + unit;
+            AccountStatsValue[i++] = TotalChargedSlippage.ToString("F2") + unit;
+            AccountStatsValue[i++] = Math.Round(TotalChargedSpread + TotalChargedRollOver + TotalChargedSlippage) + unit;
+            AccountStatsValue[i++] = Math.Round(NetBalance + TotalChargedSpread + TotalChargedRollOver + TotalChargedSlippage) + unit;
 
-            AccountStatsFlags = new bool[26];
+            AccountStatsFlags = new bool[AccountStatsParam.Length];
             AccountStatsFlags[0] = AmbiguousBars > 0 && !IsScanPerformed;
             AccountStatsFlags[1] = InterpolationMethod != InterpolationMethod.Pessimistic;
             AccountStatsFlags[2] = AmbiguousBars > 0;
-            AccountStatsFlags[5] = NetBalance < 0;
-            AccountStatsFlags[8] = MaxDrawdown > 500;
+            AccountStatsFlags[6] = NetBalance < 0;
+            AccountStatsFlags[9] = MaxDrawdown > 500;
         }
 
         /// <summary>

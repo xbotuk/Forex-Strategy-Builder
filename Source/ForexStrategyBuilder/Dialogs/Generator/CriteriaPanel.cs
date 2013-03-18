@@ -432,17 +432,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             }
 
             // Criterion Red/Green Deviation
-            if (chbMaxRedGreenDeviation.Checked)
+            if (chbMaxRedGreenDeviation.Checked && Backtester.RedGreenBalanceDev > (double)nudMaxRedGreenDeviation.Value)
             {
-                var maxDev = (double) nudMaxRedGreenDeviation.Value;
-                var delta = 100*Math.Abs(Backtester.NetLongMoneyBalance - Backtester.NetShortMoneyBalance)/
-                            Backtester.NetMoneyBalance;
-
-                if (delta > maxDev)
-                {
-                    customAnalytics.CriterionSharpeRatio++;
-                    return false;
-                }
+                customAnalytics.CriterionSharpeRatio++;
+                return false;
             }
 
             // OOS Pattern filter

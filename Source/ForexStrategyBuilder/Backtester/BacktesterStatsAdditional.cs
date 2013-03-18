@@ -180,6 +180,14 @@ namespace ForexStrategyBuilder
         public static double MaxLongMoneyBalance { get; private set; }
 
         /// <summary>
+        /// Gets deviation percent between red and green balances.
+        /// </summary>
+        public static double RedGreenBalanceDev
+        {
+            get { return  100 * Math.Abs(NetLongMoneyBalance - NetShortMoneyBalance) / NetMoneyBalance; }
+        }
+
+        /// <summary>
         ///     Gets the max short balance in money.
         /// </summary>
         public static double MaxShortMoneyBalance { get; private set; }
