@@ -1,8 +1,12 @@
-﻿// Strategy Generator Extension
-// Part of Forex Strategy Builder (Custom.Generator)
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2013 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+﻿//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Collections.Generic;

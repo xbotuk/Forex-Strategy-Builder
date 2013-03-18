@@ -119,7 +119,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
                 foreach (Control control in pnlCommon.Controls)
                     control.Enabled = false;
-                foreach (Control control in pnlLimitations.Controls)
+                foreach (Control control in pnlCriteriaControls.Controls)
                     control.Enabled = false;
                 foreach (Control control in pnlSettings.Controls)
                     control.Enabled = false;
@@ -202,7 +202,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             foreach (Control control in pnlCommon.Controls)
                 control.Enabled = true;
-            foreach (Control control in pnlLimitations.Controls)
+            foreach (Control control in pnlCriteriaControls.Controls)
                 control.Enabled = true;
             foreach (Control control in pnlSettings.Controls)
                 control.Enabled = true;
@@ -520,7 +520,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 customSortingOptionDisplay = String.Empty;
                 const double epsilon = 0.000001;
 
-                bool isLimitationsOk = IsLimitationsFulfilled();
+                bool isLimitationsOk = IsCriteriaFulfilled();
                 bool isBalanceOk = Backtester.NetBalance > 0;
 
                 if (isLimitationsOk && isBalanceOk)
@@ -562,7 +562,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                         Top10AddStrategy();
                     }
                     else
-                        customAnalytics.LimitationFailsNomination++;
+                        customAnalytics.CriterionFailsNomination++;
                 }
 
                 SetLabelCyclesText(cycles.ToString(CultureInfo.InvariantCulture));
@@ -630,127 +630,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 Data.Strategy.Slot[slot].SlotStatus = strategyBest.Slot[slot].SlotStatus;
 
             RecalculateSlots();
-        }
-
-        /// <summary>
-        ///     Check the strategy limitations
-        /// </summary>
-        private bool IsLimitationsFulfilled()
-        {
-            // The calculated strategy has higher profit
-            // or the same profit but lower number of slots
-            Backtester.CalculateAccountStats();
-
-            // Limitation Max Ambiguous Bars
-            if (chbAmbiguousBars.Checked && Backtester.AmbiguousBars > nudAmbiguousBars.Value)
-            {
-                customAnalytics.LimitationAmbiguousBars++;
-                return false;
-            }
-
-            // Limitation Max Equity Drawdown
-            double maxEquityDrawdown = Configs.AccountInMoney
-                                           ? Backtester.MaxMoneyEquityDrawdown
-                                           : Backtester.MaxEquityDrawdown;
-            if (chbMaxDrawdown.Checked && maxEquityDrawdown > (double) nudMaxDrawdown.Value)
-            {
-                customAnalytics.LimitationMaxEquityDD++;
-                return false;
-            }
-
-            // Limitation Max Equity percent drawdown
-            if (chbEquityPercent.Checked && Backtester.MoneyEquityPercentDrawdown > (double) nudEquityPercent.Value)
-            {
-                customAnalytics.LimitationMaxEquityPercentDD++;
-                return false;
-            }
-
-            // Limitation Min Trades
-            if (chbMinTrades.Checked && Backtester.ExecutedOrders < nudMinTrades.Value)
-            {
-                customAnalytics.LimitationMinTrades++;
-                return false;
-            }
-
-            // Limitation Max Trades
-            if (chbMaxTrades.Checked && Backtester.ExecutedOrders > nudMaxTrades.Value)
-            {
-                customAnalytics.LimitationMaxTrades++;
-                return false;
-            }
-
-            // Limitation Win / Loss ratio
-            if (chbWinLossRatio.Checked && Backtester.WinLossRatio < (double) nudWinLossRatio.Value)
-            {
-                customAnalytics.LimitationWinLossRatio++;
-                return false;
-            }
-
-            // OOS Pattern filter
-            if (chbOOSPatternFilter.Checked && chbOutOfSample.Checked)
-            {
-                int netBalance = Backtester.NetBalance;
-                int oosBalance = Backtester.Balance(barOOS);
-                var targetBalance = (int) (oosBalance*targetBalanceRatio);
-                var minBalance = (int) (targetBalance*(1 - nudoosPatternPercent.Value/100));
-                if (netBalance < oosBalance || netBalance < minBalance)
-                {
-                    customAnalytics.LimitationOOSPatternFilter++;
-                    return false;
-                }
-            }
-
-            // Smooth Balance Line
-            if (chbSmoothBalanceLines.Checked)
-            {
-                var checkPoints = (int) nudSmoothBalanceCheckPoints.Value;
-                var maxPercentDeviation = (double) (nudSmoothBalancePercent.Value/100);
-
-                for (int i = 1; i <= checkPoints; i++)
-                {
-                    int firstBar = Data.FirstBar;
-                    int bar = Data.FirstBar + i*(Data.Bars - firstBar)/(checkPoints + 1);
-                    double netBalance = Backtester.NetMoneyBalance;
-                    double startBalance = Backtester.MoneyBalance(firstBar);
-                    double checkPointBalance = Backtester.MoneyBalance(bar);
-                    double targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                    double minBalance = targetBalance*(1 - maxPercentDeviation);
-                    double maxBalance = targetBalance*(1 + maxPercentDeviation);
-                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                    {
-                        customAnalytics.LimitationSmoothBalanceLine++;
-                        return false;
-                    }
-
-                    // Long balance line
-                    netBalance = Backtester.NetLongMoneyBalance;
-                    checkPointBalance = Backtester.LongMoneyBalance(bar);
-                    startBalance = Backtester.LongMoneyBalance(firstBar);
-                    targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                    minBalance = targetBalance*(1 - maxPercentDeviation);
-                    maxBalance = targetBalance*(1 + maxPercentDeviation);
-                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                    {
-                        customAnalytics.LimitationSmoothBalanceLineLong++;
-                        return false;
-                    }
-
-                    // Short balance line
-                    netBalance = Backtester.NetShortMoneyBalance;
-                    checkPointBalance = Backtester.ShortMoneyBalance(bar);
-                    startBalance = Backtester.ShortMoneyBalance(firstBar);
-                    targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                    minBalance = targetBalance*(1 - maxPercentDeviation);
-                    maxBalance = targetBalance*(1 + maxPercentDeviation);
-                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                    {
-                        customAnalytics.LimitationSmoothBalanceLineShort++;
-                        return false;
-                    }
-                }
-            }
-
-            return true;
         }
 
         /// <summary>

@@ -43,10 +43,11 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private readonly NumericUpDown nudWorkingMinutes;
         private readonly FancyPanel pnlCommon;
         private readonly FancyPanel pnlIndicators;
-        private readonly FancyPanel pnlLimitations;
+        private readonly FancyPanel pnlCriteriaBase;
         private readonly FancyPanel pnlSettings;
         private readonly FancyPanel pnlSorting;
         private readonly FancyPanel pnlTop10;
+        private readonly ScrollFlowPanel criteriaPanel;
         private readonly ProgressBar progressBar;
         private readonly Random random = new Random();
         private readonly StrategyLayout strategyField;
@@ -58,37 +59,19 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private ComboBox cbxCustomSortingAdvancedCompareTo;
         private ComboBox cbxCustomSortingSimple;
 
-        private CheckBox chbAmbiguousBars;
-        private CheckBox chbEquityPercent;
         private CheckBox chbHideFsb;
         private CheckBox chbMaxClosingLogicSlots;
-        private CheckBox chbMaxDrawdown;
         private CheckBox chbMaxOpeningLogicSlots;
-        private CheckBox chbMaxTrades;
-        private CheckBox chbMinTrades;
-        private CheckBox chbOOSPatternFilter;
         private CheckBox chbOutOfSample;
         private CheckBox chbSaveStrategySlotStatus;
-        private CheckBox chbSmoothBalanceLines;
         private CheckBox chbUseDefaultIndicatorValues;
-        private CheckBox chbWinLossRatio;
 
         private IndicatorsLayout indicatorsField;
         private bool isReset;
         private Label lblCustomSortingAdvancedCompareTo;
 
-        private NumericUpDown nudAmbiguousBars;
-        private NumericUpDown nudEquityPercent;
-        private NumericUpDown nudMaxClosingLogicSlots;
-        private NumericUpDown nudMaxDrawdown;
         private NumericUpDown nudMaxOpeningLogicSlots;
-        private NumericUpDown nudMaxTrades;
-        private NumericUpDown nudMinTrades;
         private NumericUpDown nudOutOfSample;
-        private NumericUpDown nudSmoothBalanceCheckPoints;
-        private NumericUpDown nudSmoothBalancePercent;
-        private NumericUpDown nudWinLossRatio;
-        private NumericUpDown nudoosPatternPercent;
         private RadioButton rbnCustomSortingAdvanced;
         private RadioButton rbnCustomSortingNone;
         private RadioButton rbnCustomSortingSimple;
@@ -97,7 +80,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private ToolStripButton tsbtLockAll;
         private ToolStripButton tsbtOverview;
         private ToolStripButton tsbtShowIndicators;
-        private ToolStripButton tsbtShowLimitations;
+        private ToolStripButton tsbtShowCriteria;
         private ToolStripButton tsbtShowOptions;
         private ToolStripButton tsbtShowSettings;
         private ToolStripButton tsbtShowSorting;
@@ -124,10 +107,11 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             toolStrip = new ToolStrip();
             strategyField = new StrategyLayout(strategyBest);
             pnlCommon = new FancyPanel(Language.T("Common"));
-            pnlLimitations = new FancyPanel(Language.T("Limitations"));
+            pnlCriteriaBase = new FancyPanel(Language.T("Acceptance Criteria"));
             pnlSettings = new FancyPanel(Language.T("Settings"));
             pnlSorting = new FancyPanel(Language.T("Custom Sorting"));
             pnlTop10 = new FancyPanel(Language.T("Top 10"));
+            criteriaPanel = new ScrollFlowPanel();
             pnlIndicators = new FancyPanel(Language.T("Indicators"));
             balanceChart = new SmallBalanceChart();
             infpnlAccountStatistics = new InfoPanel();
@@ -168,7 +152,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             strategyField.SlotToolTipText = Language.T("Lock, link, or unlock the slot.");
 
             pnlCommon.Parent = this;
-            pnlLimitations.Parent = this;
+            pnlCriteriaBase.Parent = this;
             pnlSettings.Parent = this;
             pnlSorting.Parent = this;
             pnlTop10.Parent = this;
@@ -239,7 +223,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             SetButtonsStrategy();
             SetButtonsGenerator();
             SetPanelCommon();
-            SetPanelLimitations();
+            SetCriteriaPanel();
             SetPanelSettings();
             SetPanelSorting();
             SetPanelTop10();
@@ -437,7 +421,13 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 rbnCustomSortingNone.Checked = bool.Parse(options[i++]);
                 cbxCustomSortingSimple.Text = options[i++];
                 cbxCustomSortingAdvanced.Text = options[i++];
-                cbxCustomSortingAdvancedCompareTo.Text = options[i];
+                cbxCustomSortingAdvancedCompareTo.Text = options[i++];
+                chbMinSharpeRatio.Checked = bool.Parse(options[i++]);
+                nudMinSharpeRatio.Value = int.Parse(options[i++]) / 100M;
+                chbMinProfitPerDay.Checked = bool.Parse(options[i++]);
+                nudMinProfitPerDay.Value = int.Parse(options[i++]);
+                chbMaxRedGreenDeviation.Checked = bool.Parse(options[i++]);
+                nudMaxRedGreenDeviation.Value = int.Parse(options[i]);
             }
             catch (Exception exception)
             {
@@ -488,7 +478,13 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 rbnCustomSortingNone.Checked + ";" +
                 cbxCustomSortingSimple.Text + ";" +
                 cbxCustomSortingAdvanced.Text + ";" +
-                cbxCustomSortingAdvancedCompareTo.Text;
+                cbxCustomSortingAdvancedCompareTo.Text + ";" +
+                chbMinSharpeRatio.Checked + ";" +
+                ((int) (nudMinSharpeRatio.Value*100M)) + ";" +
+                chbMinProfitPerDay.Checked + ";" +
+                nudMinProfitPerDay.Value + ";" +
+                chbMaxRedGreenDeviation.Checked + ";" +
+                nudMaxRedGreenDeviation.Value;
 
             Configs.GeneratorOptions = options;
         }
@@ -605,170 +601,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             lblCalcStrNumb.BackColor = LayoutColors.ColorControlBack;
             lblCalcStrNumb.TextAlign = ContentAlignment.MiddleCenter;
             lblCalcStrNumb.Text = "0";
-        }
-
-        /// <summary>
-        ///     Sets controls in panel Limitations
-        /// </summary>
-        private void SetPanelLimitations()
-        {
-            chbAmbiguousBars = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Maximum number of ambiguous bars"),
-                    Checked = true,
-                    AutoSize = true
-                };
-
-            nudAmbiguousBars = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudAmbiguousBars.BeginInit();
-            nudAmbiguousBars.Minimum = 0;
-            nudAmbiguousBars.Maximum = 100;
-            nudAmbiguousBars.Increment = 1;
-            nudAmbiguousBars.Value = 10;
-            nudAmbiguousBars.EndInit();
-
-            chbMaxDrawdown = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Maximum equity drawdown") + " [" +
-                           (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudMaxDrawdown = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudMaxDrawdown.BeginInit();
-            nudMaxDrawdown.Minimum = 0;
-            nudMaxDrawdown.Maximum = Configs.InitialAccount;
-            nudMaxDrawdown.Increment = 10;
-            nudMaxDrawdown.Value = (decimal) Math.Round(Configs.InitialAccount/4.0);
-            nudMaxDrawdown.EndInit();
-
-            chbEquityPercent = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text =
-                        Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency +
-                        "]",
-                    Checked = true,
-                    AutoSize = true
-                };
-
-            nudEquityPercent = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudEquityPercent.BeginInit();
-            nudEquityPercent.Minimum = 1;
-            nudEquityPercent.Maximum = 100;
-            nudEquityPercent.Increment = 1;
-            nudEquityPercent.Value = 25;
-            nudEquityPercent.EndInit();
-
-            chbMinTrades = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Minimum number of trades"),
-                    Checked = true,
-                    AutoSize = true
-                };
-
-            nudMinTrades = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudMinTrades.BeginInit();
-            nudMinTrades.Minimum = 10;
-            nudMinTrades.Maximum = 1000;
-            nudMinTrades.Increment = 10;
-            nudMinTrades.Value = 100;
-            nudMinTrades.EndInit();
-
-            chbMaxTrades = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Maximum number of trades"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudMaxTrades = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudMaxTrades.BeginInit();
-            nudMaxTrades.Minimum = 10;
-            nudMaxTrades.Maximum = 10000;
-            nudMaxTrades.Increment = 10;
-            nudMaxTrades.Value = 1000;
-            nudMaxTrades.EndInit();
-
-            chbWinLossRatio = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Minimum win / loss trades ratio"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudWinLossRatio = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudWinLossRatio.BeginInit();
-            nudWinLossRatio.Minimum = 0.10M;
-            nudWinLossRatio.Maximum = 1;
-            nudWinLossRatio.Increment = 0.01M;
-            nudWinLossRatio.Value = 0.30M;
-            nudWinLossRatio.DecimalPlaces = 2;
-            nudWinLossRatio.EndInit();
-
-            chbOOSPatternFilter = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Filter bad OOS performance"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudoosPatternPercent = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudoosPatternPercent.BeginInit();
-            nudoosPatternPercent.Minimum = 1;
-            nudoosPatternPercent.Maximum = 50;
-            nudoosPatternPercent.Value = 20;
-            nudoosPatternPercent.EndInit();
-            toolTip.SetToolTip(nudoosPatternPercent, Language.T("Deviation percent."));
-
-            chbSmoothBalanceLines = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Filter non-linear balance pattern"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudSmoothBalancePercent = new NumericUpDown
-                {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudSmoothBalancePercent.BeginInit();
-            nudSmoothBalancePercent.Minimum = 1;
-            nudSmoothBalancePercent.Maximum = 50;
-            nudSmoothBalancePercent.Value = 20;
-            nudSmoothBalancePercent.EndInit();
-            toolTip.SetToolTip(nudSmoothBalancePercent, Language.T("Deviation percent."));
-
-            nudSmoothBalanceCheckPoints = new NumericUpDown
-                {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudSmoothBalanceCheckPoints.BeginInit();
-            nudSmoothBalanceCheckPoints.Minimum = 1;
-            nudSmoothBalanceCheckPoints.Maximum = 50;
-            nudSmoothBalanceCheckPoints.Value = 1;
-            nudSmoothBalanceCheckPoints.EndInit();
-            toolTip.SetToolTip(nudSmoothBalanceCheckPoints, Language.T("Check points count."));
         }
 
         /// <summary>
@@ -948,10 +780,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             tsbtShowOptions.Click += ChangeGeneratorPanel;
             toolStrip.Items.Add(tsbtShowOptions);
 
-            // Button Limitations
-            tsbtShowLimitations = new ToolStripButton {Name = "tsbtShowLimitations", Text = Language.T("Limitations")};
-            tsbtShowLimitations.Click += ChangeGeneratorPanel;
-            toolStrip.Items.Add(tsbtShowLimitations);
+            // Button Criteria
+            tsbtShowCriteria = new ToolStripButton {Name = "tsbtShowCriteria", Text = Language.T("Criteria")};
+            tsbtShowCriteria.Click += ChangeGeneratorPanel;
+            toolStrip.Items.Add(tsbtShowCriteria);
 
             // Button Settings
             tsbtShowSettings = new ToolStripButton {Name = "tsbtShowSettings", Text = Language.T("Settings")};
@@ -985,7 +817,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             // Find correct size
             int maxCheckBoxWidth = 250;
-            foreach (Control control in pnlLimitations.Controls)
+            foreach (Control control in pnlCriteriaBase.Controls)
             {
                 if (maxCheckBoxWidth < control.Width)
                     maxCheckBoxWidth = control.Width;
@@ -999,10 +831,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             var buttonWidth = (int) (Data.HorizontalDlu*60);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             const int nudWidth = 55;
-            pnlLimitations.Width = 3*buttonWidth + 2*btnHrzSpace;
-            int borderWidth = (pnlLimitations.Width - pnlLimitations.ClientSize.Width)/2;
+            pnlCriteriaBase.Width = 3*buttonWidth + 2*btnHrzSpace;
+            int borderWidth = (pnlCriteriaBase.Width - pnlCriteriaBase.ClientSize.Width)/2;
 
-            if (maxCheckBoxWidth + 3*btnHrzSpace + nudWidth + 4 > pnlLimitations.ClientSize.Width)
+            if (maxCheckBoxWidth + 3*btnHrzSpace + nudWidth + 4 > pnlCriteriaBase.ClientSize.Width)
                 buttonWidthMultiplier = ((maxCheckBoxWidth + nudWidth + 3*btnHrzSpace + 2*borderWidth + 4)/3.0)/
                                         buttonWidth;
 
@@ -1061,9 +893,9 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             pnlCommon.Size = new Size(rightSideWidth, optionsHeight);
             pnlCommon.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
 
-            // Panel pnlLimitations
-            pnlLimitations.Size = new Size(rightSideWidth, optionsHeight);
-            pnlLimitations.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
+            // Panel pnlCriteriaBase
+            pnlCriteriaBase.Size = new Size(rightSideWidth, optionsHeight);
+            pnlCriteriaBase.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
 
             // Panel Settings
             pnlSettings.Size = new Size(rightSideWidth, optionsHeight);
@@ -1135,52 +967,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             lblWorkingMinutes.Location = new Point(nudWorkingMinutes.Left - lblWorkingMinutes.Width - 3,
                                                    lblCalcStrInfo.Top);
 
-            // chbAmbiguousBars
-            chbAmbiguousBars.Location = new Point(border + 2, 25);
-
-            // nudAmbiguousBars
-            nudAmbiguousBars.Width = nudWidth;
-            nudAmbiguousBars.Location = new Point(pnlLimitations.ClientSize.Width - nudWidth - border - 2,
-                                                  chbAmbiguousBars.Top - 1);
-
-            // MaxDrawdown
-            chbMaxDrawdown.Location = new Point(border + 2, chbAmbiguousBars.Bottom + border + 4);
-            nudMaxDrawdown.Width = nudWidth;
-            nudMaxDrawdown.Location = new Point(nudAmbiguousBars.Left, chbMaxDrawdown.Top - 1);
-
-            // MaxDrawdown %
-            chbEquityPercent.Location = new Point(border + 2, nudMaxDrawdown.Bottom + border + 4);
-            nudEquityPercent.Width = nudWidth;
-            nudEquityPercent.Location = new Point(nudAmbiguousBars.Left, chbEquityPercent.Top - 1);
-
-            // MinTrades
-            chbMinTrades.Location = new Point(border + 2, chbEquityPercent.Bottom + border + 4);
-            nudMinTrades.Width = nudWidth;
-            nudMinTrades.Location = new Point(nudAmbiguousBars.Left, chbMinTrades.Top - 1);
-
-            // MaxTrades
-            chbMaxTrades.Location = new Point(border + 2, chbMinTrades.Bottom + border + 4);
-            nudMaxTrades.Width = nudWidth;
-            nudMaxTrades.Location = new Point(nudAmbiguousBars.Left, chbMaxTrades.Top - 1);
-
-            // WinLossRatios
-            chbWinLossRatio.Location = new Point(border + 2, chbMaxTrades.Bottom + border + 4);
-            nudWinLossRatio.Width = nudWidth;
-            nudWinLossRatio.Location = new Point(nudAmbiguousBars.Left, chbWinLossRatio.Top - 1);
-
-            // OOS Pattern Filter
-            chbOOSPatternFilter.Location = new Point(border + 2, chbWinLossRatio.Bottom + border + 4);
-            nudoosPatternPercent.Width = nudWidth;
-            nudoosPatternPercent.Location = new Point(nudAmbiguousBars.Left, chbOOSPatternFilter.Top - 1);
-
-            // Balance lines pattern
-            chbSmoothBalanceLines.Location = new Point(border + 2, chbOOSPatternFilter.Bottom + border + 4);
-            nudSmoothBalancePercent.Width = nudWidth;
-            nudSmoothBalancePercent.Location = new Point(nudAmbiguousBars.Left, chbSmoothBalanceLines.Top - 1);
-            nudSmoothBalanceCheckPoints.Width = nudWidth;
-            nudSmoothBalanceCheckPoints.Location = new Point(nudSmoothBalancePercent.Left - nudWidth - border,
-                                                             chbSmoothBalanceLines.Top - 1);
-
             // chbOutOfSample
             chbOutOfSample.Location = new Point(border + 2, 25);
             nudOutOfSample.Width = nudWidth;
@@ -1223,6 +1009,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             // Top 10 Layout
             top10Field.Size = new Size(pnlTop10.Width - 2*2, pnlTop10.Height - (int) pnlTop10.CaptionHeight - 2);
             top10Field.Location = new Point(2, (int) pnlTop10.CaptionHeight);
+
+            // Criteria Panel
+            criteriaPanel.Size = new Size(pnlCriteriaBase.Width - 2 * 2, pnlCriteriaBase.Height - (int)pnlCriteriaBase.CaptionHeight - 2);
+            criteriaPanel.Location = new Point(2, (int)pnlCriteriaBase.CaptionHeight);
 
             // Indicators Layout
             indicatorsField.Size = new Size(pnlIndicators.Width - 2*2,
@@ -1553,30 +1343,30 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             if (name == "tsbtShowOptions")
             {
                 pnlCommon.Visible = true;
-                pnlLimitations.Visible = false;
+                pnlCriteriaBase.Visible = false;
                 pnlSettings.Visible = false;
                 pnlSorting.Visible = false;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = false;
-                tsbtShowLimitations.Enabled = true;
+                tsbtShowCriteria.Enabled = true;
                 tsbtShowSettings.Enabled = true;
                 tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = true;
                 tsbtShowIndicators.Enabled = true;
             }
-            else if (name == "tsbtShowLimitations")
+            else if (name == "tsbtShowCriteria")
             {
                 pnlCommon.Visible = false;
-                pnlLimitations.Visible = true;
+                pnlCriteriaBase.Visible = true;
                 pnlSettings.Visible = false;
                 pnlSorting.Visible = false;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = true;
-                tsbtShowLimitations.Enabled = false;
+                tsbtShowCriteria.Enabled = false;
                 tsbtShowSettings.Enabled = true;
                 tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = true;
@@ -1585,14 +1375,14 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             else if (name == "tsbtShowSettings")
             {
                 pnlCommon.Visible = false;
-                pnlLimitations.Visible = false;
+                pnlCriteriaBase.Visible = false;
                 pnlSettings.Visible = true;
                 pnlSorting.Visible = false;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = true;
-                tsbtShowLimitations.Enabled = true;
+                tsbtShowCriteria.Enabled = true;
                 tsbtShowSettings.Enabled = false;
                 tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = true;
@@ -1601,14 +1391,14 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             else if (name == "tsbtShowSorting")
             {
                 pnlCommon.Visible = false;
-                pnlLimitations.Visible = false;
+                pnlCriteriaBase.Visible = false;
                 pnlSettings.Visible = false;
                 pnlSorting.Visible = true;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = true;
-                tsbtShowLimitations.Enabled = true;
+                tsbtShowCriteria.Enabled = true;
                 tsbtShowSettings.Enabled = true;
                 tsbtShowSorting.Enabled = false;
                 tsbtShowTop10.Enabled = true;
@@ -1617,14 +1407,14 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             else if (name == "tsbtShowTop10")
             {
                 pnlCommon.Visible = false;
-                pnlLimitations.Visible = false;
+                pnlCriteriaBase.Visible = false;
                 pnlSettings.Visible = false;
                 pnlSorting.Visible = false;
                 pnlTop10.Visible = true;
                 pnlIndicators.Visible = false;
 
                 tsbtShowOptions.Enabled = true;
-                tsbtShowLimitations.Enabled = true;
+                tsbtShowCriteria.Enabled = true;
                 tsbtShowSettings.Enabled = true;
                 tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = false;
@@ -1633,14 +1423,14 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             else if (name == "tsbtIndicators")
             {
                 pnlCommon.Visible = false;
-                pnlLimitations.Visible = false;
+                pnlCriteriaBase.Visible = false;
                 pnlSettings.Visible = false;
                 pnlSorting.Visible = false;
                 pnlTop10.Visible = false;
                 pnlIndicators.Visible = true;
 
                 tsbtShowOptions.Enabled = true;
-                tsbtShowLimitations.Enabled = true;
+                tsbtShowCriteria.Enabled = true;
                 tsbtShowSettings.Enabled = true;
                 tsbtShowSorting.Enabled = true;
                 tsbtShowTop10.Enabled = true;
