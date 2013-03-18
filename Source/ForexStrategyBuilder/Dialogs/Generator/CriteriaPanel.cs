@@ -299,64 +299,65 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             const int nudWidth = 55;
+            int nudLeft = panel.ClientSize.Width - border - nudWidth;
+
 
             // chbAmbiguousBars
             chbAmbiguousBars.Location = new Point(border + 2, 6);
 
             // nudAmbiguousBars
             nudAmbiguousBars.Width = nudWidth;
-            nudAmbiguousBars.Location = new Point(panel.ClientSize.Width - nudWidth - border - 2,
-                                                  chbAmbiguousBars.Top - 1);
+            nudAmbiguousBars.Location = new Point(nudLeft, chbAmbiguousBars.Top - 1);
 
             // Min Profit Per Day
             chbMinProfitPerDay.Location = new Point(border + 2, chbAmbiguousBars.Bottom + border + 4);
             nudMinProfitPerDay.Width = nudWidth;
-            nudMinProfitPerDay.Location = new Point(nudAmbiguousBars.Left, chbMinProfitPerDay.Top - 1);
+            nudMinProfitPerDay.Location = new Point(nudLeft, chbMinProfitPerDay.Top - 1);
 
             // MaxDrawdown
             chbMaxDrawdown.Location = new Point(border + 2, chbMinProfitPerDay.Bottom + border + 4);
             nudMaxDrawdown.Width = nudWidth;
-            nudMaxDrawdown.Location = new Point(nudAmbiguousBars.Left, chbMaxDrawdown.Top - 1);
+            nudMaxDrawdown.Location = new Point(nudLeft, chbMaxDrawdown.Top - 1);
 
             // MaxDrawdown %
             chbEquityPercent.Location = new Point(border + 2, nudMaxDrawdown.Bottom + border + 4);
             nudEquityPercent.Width = nudWidth;
-            nudEquityPercent.Location = new Point(nudAmbiguousBars.Left, chbEquityPercent.Top - 1);
+            nudEquityPercent.Location = new Point(nudLeft, chbEquityPercent.Top - 1);
 
             // MinTrades
             chbMinTrades.Location = new Point(border + 2, chbEquityPercent.Bottom + border + 4);
             nudMinTrades.Width = nudWidth;
-            nudMinTrades.Location = new Point(nudAmbiguousBars.Left, chbMinTrades.Top - 1);
+            nudMinTrades.Location = new Point(nudLeft, chbMinTrades.Top - 1);
 
             // MaxTrades
             chbMaxTrades.Location = new Point(border + 2, chbMinTrades.Bottom + border + 4);
             nudMaxTrades.Width = nudWidth;
-            nudMaxTrades.Location = new Point(nudAmbiguousBars.Left, chbMaxTrades.Top - 1);
+            nudMaxTrades.Location = new Point(nudLeft, chbMaxTrades.Top - 1);
 
             // Win/Loss Ratios
             chbWinLossRatio.Location = new Point(border + 2, chbMaxTrades.Bottom + border + 4);
             nudWinLossRatio.Width = nudWidth;
-            nudWinLossRatio.Location = new Point(nudAmbiguousBars.Left, chbWinLossRatio.Top - 1);
+            nudWinLossRatio.Location = new Point(nudLeft, chbWinLossRatio.Top - 1);
 
             // Sharpe Ratios
             chbMinSharpeRatio.Location = new Point(border + 2, chbWinLossRatio.Bottom + border + 4);
             nudMinSharpeRatio.Width = nudWidth;
-            nudMinSharpeRatio.Location = new Point(nudAmbiguousBars.Left, chbMinSharpeRatio.Top - 1);
+            nudMinSharpeRatio.Location = new Point(nudLeft, chbMinSharpeRatio.Top - 1);
 
             // Red/Green Deviation
             chbMaxRedGreenDeviation.Location = new Point(border + 2, chbMinSharpeRatio.Bottom + border + 4);
             nudMaxRedGreenDeviation.Width = nudWidth;
-            nudMaxRedGreenDeviation.Location = new Point(nudAmbiguousBars.Left, chbMaxRedGreenDeviation.Top - 1);
+            nudMaxRedGreenDeviation.Location = new Point(nudLeft, chbMaxRedGreenDeviation.Top - 1);
 
             // OOS Pattern Filter
             chbOOSPatternFilter.Location = new Point(border + 2, chbMaxRedGreenDeviation.Bottom + border + 4);
             nudoosPatternPercent.Width = nudWidth;
-            nudoosPatternPercent.Location = new Point(nudAmbiguousBars.Left, chbOOSPatternFilter.Top - 1);
+            nudoosPatternPercent.Location = new Point(nudLeft, chbOOSPatternFilter.Top - 1);
 
             // Balance lines pattern
             chbSmoothBalanceLines.Location = new Point(border + 2, chbOOSPatternFilter.Bottom + border + 4);
             nudSmoothBalancePercent.Width = nudWidth;
-            nudSmoothBalancePercent.Location = new Point(nudAmbiguousBars.Left, chbSmoothBalanceLines.Top - 1);
+            nudSmoothBalancePercent.Location = new Point(nudLeft, chbSmoothBalanceLines.Top - 1);
             nudSmoothBalanceCheckPoints.Width = nudWidth;
             nudSmoothBalanceCheckPoints.Location = new Point(nudSmoothBalancePercent.Left - nudWidth - border,
                                                              chbSmoothBalanceLines.Top - 1);

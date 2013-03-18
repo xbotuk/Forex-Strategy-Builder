@@ -141,6 +141,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
                 lblCalcStrInfo.Enabled = true;
                 lblCalcStrNumb.Enabled = true;
+                lblBenchmarkInfo.Enabled = true;
+                lblBenchmarkNumb.Enabled = true;
                 chbHideFsb.Enabled = true;
 
                 btnAccept.Enabled = false;
@@ -991,7 +993,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             // Searches the indicators' components to determine the Data.FirstBar 
             Data.FirstBar = Data.Strategy.SetFirstBar();
         }
-
 
         /// <summary>
         ///     Get the list of supported simple custom sorting options

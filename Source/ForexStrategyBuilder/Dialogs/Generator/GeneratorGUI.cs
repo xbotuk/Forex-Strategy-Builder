@@ -903,11 +903,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             progressBar.Size = new Size(ClientSize.Width - leftSideWidth - 3*border, (int) (Data.VerticalDlu*9));
             progressBar.Location = new Point(leftSideWidth + 2*border, btnAccept.Top - progressBar.Height - btnVertSpace);
 
-
-            // Tool Strip Strategy
-            toolStrip.Width = ClientSize.Width - leftSideWidth - border;
-            toolStrip.Location = new Point(toolStrip.Right + border, 0);
-
             // Panel Common
             pnlCommon.Size = new Size(rightSideWidth, optionsHeight);
             pnlCommon.Location = new Point(rightSideLocation, toolStrip.Bottom + border);
@@ -946,6 +941,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                                                     progressBar.Top - 3*border - pnlCommon.Bottom);
             infpnlAccountStatistics.Location = new Point(strategyField.Right + border, pnlCommon.Bottom + border);
 
+            int nudLeft = pnlCommon.ClientSize.Width - border - 2 - nudWidth;
+
             //chbPreservePermSL
             chbPreservePermSL.Location = new Point(border + 2, 26);
 
@@ -958,12 +955,12 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             // chbMaxOpeningLogicSlots
             chbMaxOpeningLogicSlots.Location = new Point(border + 2, chbPreserveBreakEven.Bottom + border + 14);
             nudMaxOpeningLogicSlots.Width = nudWidth;
-            nudMaxOpeningLogicSlots.Location = new Point(nudAmbiguousBars.Left, chbMaxOpeningLogicSlots.Top - 1);
+            nudMaxOpeningLogicSlots.Location = new Point(nudLeft, chbMaxOpeningLogicSlots.Top - 1);
 
             // chbMaxClosingLogicSlots
             chbMaxClosingLogicSlots.Location = new Point(border + 2, chbMaxOpeningLogicSlots.Bottom + border + 4);
             nudMaxClosingLogicSlots.Width = nudWidth;
-            nudMaxClosingLogicSlots.Location = new Point(nudAmbiguousBars.Left, chbMaxClosingLogicSlots.Top - 1);
+            nudMaxClosingLogicSlots.Location = new Point(nudLeft, chbMaxClosingLogicSlots.Top - 1);
 
             // Labels Strategy Calculations
             lblCalcStrInfo.Location = new Point(border - 1, pnlCommon.Height - nudMaxOpeningLogicSlots.Height - border);
@@ -971,15 +968,15 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             lblCalcStrNumb.Location = new Point(lblCalcStrInfo.Right + border, lblCalcStrInfo.Top - 3);
 
             // Labels Benchmark
-            lblBenchmarkNumb.Size = new Size(nudWidth, nudMaxOpeningLogicSlots.Height - 1);
-            lblBenchmarkNumb.Location = new Point(pnlCommon.ClientSize.Width - border - lblBenchmarkNumb.Width, lblCalcStrNumb.Top);
             lblBenchmarkInfo.Location = new Point(lblBenchmarkNumb.Left - lblBenchmarkInfo.Width - border, pnlCommon.Height - nudMaxOpeningLogicSlots.Height - border);
+            lblBenchmarkNumb.Size = new Size(nudWidth, nudMaxOpeningLogicSlots.Height - 1);
+            lblBenchmarkNumb.Location = new Point(nudLeft, lblCalcStrNumb.Top);
 
 
             // Working Minutes
             chbWorkingMinutes.Location = new Point(border + 2, 26);
             nudWorkingMinutes.Width = nudWidth;
-            nudWorkingMinutes.Location = new Point(nudMaxOpeningLogicSlots.Right - nudWidth, chbWorkingMinutes.Top - 1);
+            nudWorkingMinutes.Location = new Point(nudLeft, chbWorkingMinutes.Top - 1);
 
             //chbGenerateNewStrategy
             chbGenerateNewStrategy.Location = new Point(border + 2, chbWorkingMinutes.Bottom + border + 4);
@@ -990,7 +987,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             // chbOutOfSample
             chbOutOfSample.Location = new Point(border + 2, chbInitialOptimization.Bottom + border + 4);
             nudOutOfSample.Width = nudWidth;
-            nudOutOfSample.Location = new Point(nudAmbiguousBars.Left, chbOutOfSample.Top - 1);
+            nudOutOfSample.Location = new Point(nudLeft, chbOutOfSample.Top - 1);
 
             // Use default indicator values
             chbUseDefaultIndicatorValues.Location = new Point(border + 2, chbOutOfSample.Bottom + border + 4);
