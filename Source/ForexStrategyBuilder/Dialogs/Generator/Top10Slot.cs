@@ -93,7 +93,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             if (CustomSortingOption != String.Empty)
             {
                 paramNames[3] = CustomSortingOption;
-                paramValues[3] = CustomSortingValue.ToString(CultureInfo.InvariantCulture);
+                paramValues[3] = " " + CustomSortingValue.ToString("F2");
             }
 
             int maxParamNameLenght = 0;
