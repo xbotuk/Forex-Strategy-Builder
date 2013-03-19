@@ -852,6 +852,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             const int nudWidth = 55;
             pnlCriteriaBase.Width = 3*buttonWidth + 2*btnHrzSpace;
             int borderWidth = (pnlCriteriaBase.Width - pnlCriteriaBase.ClientSize.Width)/2;
+            maxCheckBoxWidth = maxCheckBoxWidth + 2 + SystemInformation.VerticalScrollBarWidth;
 
             if (maxCheckBoxWidth + 3*btnHrzSpace + nudWidth + 4 > pnlCriteriaBase.ClientSize.Width)
                 buttonWidthMultiplier = ((maxCheckBoxWidth + nudWidth + 3*btnHrzSpace + 2*borderWidth + 4)/3.0)/

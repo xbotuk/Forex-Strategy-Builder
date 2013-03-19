@@ -128,7 +128,9 @@
   <str><main>Recalculate the strategy.</main><alt>Преизчисляване на стратегията.</alt></str>
   <str><main>Quick Scan</main><alt>Бързо сканиране</alt></str>
   <str><main>Perform quick intrabar scan.</main><alt>Извършване на бързо вътребарово сканиране.</alt></str>
-  <str><main>Publish</main><alt>Публикуване</alt></str>
+  <str><main>Strategy Repository</main><alt>Хранилище на стратегии</alt></str>
+  <str><main>Download or upload strategies.</main><alt>Изтегляане или качване на стратегии.</alt></str>
+  <str><main>Publish to Forum</main><alt>Публикуване във форума</alt></str>
   <str><main>Publish the strategy in the program's forum.</main><alt>Публикуване на стратегията във форума на програмата.</alt></str>
   <str><main>Use Logical Groups</main><alt>Използване на логически групи</alt></str>
   <str><main>Groups add AND and OR logic interaction of the indicators.</main><alt>Групите добавят И и ИЛИ логическо взаимодействие на индикаторите.</alt></str>
@@ -207,6 +209,8 @@
   <str><main>Weekly Forex Outlook</main><alt>Седмичен форекс обзор</alt></str>
   <str><main>Forex Brokers</main><alt>Форекс брокери</alt></str>
 
+  <str><main>Go Pro</main><alt>Go Pro</alt></str>
+  <str><main>See Forex Strategy Builder Professional web page</main><alt>Посетете страницата на Forex Strategy Builder Professional</alt></str>
   <str><main>New Version</main><alt>Нова версия</alt></str>
   <str><main>New Beta</main><alt>Нова бета</alt></str>
   <str><main>Forum</main><alt>Форум</alt></str>
@@ -301,7 +305,7 @@
 
   <!-- Additional statistics -->
   <str><main>Additional Statistics</main><alt>Допълнителна статистика</alt></str>
-  <str><main>Show long/short balance lines on the chart and more statistics in the overview.</main><alt>Показване на балансните лини за къса и дълга позиция и повече статистически параметри.</alt></str>
+  <str><main>Show Long/Short Balance Lines on Account Chart</main><alt>Показване на дълъг/къс баланс</alt></str>
   <str><main>Profit factor</main><alt>Фактор печалба</alt></str>
   <str><main>Annualized profit</main><alt>Годишна печалба</alt></str>
   <str><main>Minimum account date</main><alt>Дата на минималната сметка</alt></str>
@@ -722,10 +726,7 @@
   <str><main>Select a random number of parameters.</main><alt>Избиране на случаен брой параметри.</alt></str>
   <str><main>Set Min / Max ± # steps.</main><alt>Поставяне на Min / Max на ± # стъпки.</alt></str>
   <str><main>Reset strategy parameters.</main><alt>Възстановяване на параметрите на стратегията.</alt></str>
-  <str><main>Show indicator parameters.</main><alt>Показване на параметрите на индикаторите.</alt></str>
-  <str><main>Show strategy limitations.</main><alt>Показване на ограниченията за стратегията.</alt></str>
   <str><main>Settings</main><alt>Настройки</alt></str>
-  <str><main>Show optimizer settings.</main><alt>Показване на настрийките на Оптимизатора</alt></str>
   <str><main>Hide FSB when Optimizer starts</main><alt>Скриване на FSB при стартиране на Оптимизатора</alt></str>
   <str><main>Optimizer writes a report for each optimized strategy</main><alt>Оптимизаторът записва рапорт за всяка оптимизирана стратегия</alt></str>
   <str><main>There are no parameters suitable for optimization.</main><alt>Няма подходящи за оптимизиране параметри.</alt></str>
@@ -748,8 +749,8 @@
   <str><main>Do not change the Permanent Take Profit</main><alt>Без промяна на постоянния Take Profit</alt></str>
   <str><main>Do not change the Break Even</main><alt>Без промяна на Break Even</alt></str>
   <str><main>Perform an initial optimization</main><alt>Извършване на първоначална оптимизация</alt></str>
-  <str><main>Working time</main><alt>Време за работа</alt></str>
-  <str><main>Set the number of minutes for the Generator to work.</main><alt>Настройване на броя минути за работа на генератора.</alt></str>
+  <str><main>Working time limit in minutes</main><alt>Време за работа в минути</alt></str>
+  <str><main>Save strategy slots Lock status</main><alt>Записване на статуса на слотовете</alt></str>
   <str><main>Calculations</main><alt>Изчисления</alt></str>
   <str><main>Maximum number of ambiguous bars</main><alt>Максимален брой двусмислени барове</alt></str>
   <str><main>Maximum equity drawdown</main><alt>Максимален спад на стойността</alt></str>
@@ -757,7 +758,10 @@
   <str><main>Maximum number of trades</main><alt>Максимален брой на сделките</alt></str>
   <str><main>Maximum number of opening logic slots</main><alt>Макс брой входящи логически слотове</alt></str>
   <str><main>Maximum number of closing logic slots</main><alt>Макс брой изходящи логически слотове</alt></str>
-  <str><main>Minimum win / loss trades ratio</main><alt>Минимално отношение печеливши / губещи сделки</alt></str>
+  <str><main>Minimum win / loss trades ratio</main><alt>Минимално отношение печеливши/губещи сделки</alt></str>
+  <str><main>Minimum Profit Per Day</main><alt>Минимална печалба на ден</alt></str>
+  <str><main>Minimum Sharpe ratio</main><alt>Минимален коефициент на Шарп</alt></str>
+  <str><main>Max long/short balance deviation</main><alt>Макс. отклонение дълъг/къс баланс</alt></str>
   <str><main>Out of sample testing, percent of OOS bars</main><alt>Тестване с неизвестни данни, процент OOS барове</alt></str>
   <str><main>Filter bad OOS performance</main><alt>Филтриране на лоши OOS резултати</alt></str>
   <str><main>Deviation percent.</main><alt>Процентно отклонение.</alt></str>
@@ -765,8 +769,12 @@
   <str><main>Check points count.</main><alt>Брой на точките за проверка.</alt></str>
   <str><main>Do you want to accept the generated strategy?</main><alt>Искате ли да приемете генерираната стратегия?</alt></str>
   <str><main>Common</main><alt>Общи</alt></str>
-  <str><main>Limitations</main><alt>Ограничения</alt></str>
+  <str><main>Criteria</main><alt>Критерии</alt></str>
+  <str><main>Acceptance Criteria</main><alt>Критерии за приемане</alt></str>
+  <str><main>Sorting</main><alt>Сортиране</alt></str>
+  <str><main>Custom Sorting</main><alt>Потребителско Сортиране</alt></str>
   <str><main>Top 10</main><alt>Топ 10</alt></str>
+  <str><main>Benchmark</main><alt>Скорост</alt></str>
   <str><main>Activate the strategy.</main><alt>Активиране на стратегията.</alt></str>
   <str><main>Automatically generated on</main><alt>Автоматично генерирана на</alt></str>
   <str><main>Modified by the strategy generator on</main><alt>Модифицирана от генератора на стратегии на</alt></str>
@@ -779,7 +787,11 @@
   <str><main>Ban all indicators.</main><alt>Отхвърляне на всички индикатори.</alt></str>
   <str><main>Banned Indicators</main><alt>Отхвърлени индикатори</alt></str>
   <str><main>banned</main><alt>отхвърлени</alt></str>
-
+  <str><main>Do not use custom sorting</main><alt>Без използване на потребителско сортиране</alt></str>
+  <str><main>Simple</main><alt>Нормално</alt></str>
+  <str><main>Advanced</main><alt>Допълнително</alt></str>
+  <str><main>Comparison Curve</main><alt>Крива за сравняване</alt></str>
+  
   <!-- Strategy Analyzer -->
   <str><main>Strategy Analyzer</main><alt>Анализатор на стратегии</alt></str>
   <str><main>Analyzer</main><alt>Анализатор</alt></str>
@@ -945,6 +957,7 @@
 
   <!-- Custom Indicators -->
   <str><main>Custom Indicators</main><alt>Потребителски индикатори</alt></str>
+  <str><main>Custom Indicators Repo</main><alt>Хранилище за потребителски индикатори</alt></str>
   <str><main>Reload the Custom Indicators</main><alt>Презареждане на потребителските индикатори</alt></str>
   <str><main>Open the Source Files Folder</main><alt>Отваряне на папката с изходните кодове</alt></str>
   <str><main>Custom Indicators Forum</main><alt>Форум за потребителски индикатори</alt></str>

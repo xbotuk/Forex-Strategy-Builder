@@ -1242,7 +1242,7 @@ namespace ForexStrategyBuilder
                     Alignment = ToolStripItemAlignment.Right,
                     Tag = "http://forexsb.com/wiki/fsbpro/start",
                     ForeColor = Color.Navy,
-                    ToolTipText = Language.T("See Forex Strategy Builder Professional web page...")
+                    ToolTipText = Language.T("See Forex Strategy Builder Professional web page") + "..."
                 };
             miGoPro.Click += MenuForexContentsOnClick;
 

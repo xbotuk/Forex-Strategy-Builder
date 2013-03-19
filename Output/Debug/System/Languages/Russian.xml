@@ -450,8 +450,16 @@
     <alt>Быстрое сканирование внутри бара.</alt>
   </str>
   <str>
-    <main>Publish</main>
-    <alt>Публиковать</alt>
+    <main>Strategy Repository</main>
+    <alt>Стратегия репозиторий</alt>
+  </str>
+  <str>
+    <main>Download or upload strategies.</main>
+    <alt>Скачать или загрузить стратегии.</alt>
+  </str>
+  <str>
+    <main>Publish to Forum</main>
+    <alt>Публикация на форуме</alt>
   </str>
   <str>
     <main>Publish the strategy in the program's forum.</main>
@@ -742,6 +750,14 @@
     <alt>Форекс брокеры</alt>
   </str>
   <str>
+    <main>Go Pro</main>
+    <alt>Go Pro</alt>
+  </str>
+  <str>
+    <main>See Forex Strategy Builder Professional web page</main>
+    <alt>Смотрите Forex Strategy Builder Professional веб-страницы</alt>
+  </str>
+  <str>
     <main>New Version</main>
     <alt>Новая версия</alt>
   </str>
@@ -821,7 +837,7 @@
   </str>
   <str>
     <main>Credits and Contributors</main>
-    <alt>Credits and Contributors</alt>
+    <alt>Кредиты и Авторы</alt>
   </str>
   <!-- Account Settings -->
   <str>
@@ -1076,8 +1092,8 @@
     <alt>Дополнительная статистика</alt>
   </str>
   <str>
-    <main>Show long/short balance lines on the chart and more statistics in the overview.</main>
-    <alt>Показать длинную/короткую балансную линию в графике и дополнительную статистику в обзор стратегии.</alt>
+    <main>Show Long/Short Balance Lines on Account Chart</main>
+    <alt>Показать длинные \ короткие линии баланса</alt>
   </str>
   <str>
     <main>Profit factor</main>
@@ -2620,20 +2636,8 @@
     <alt>Сброс параметров стратегии.</alt>
   </str>
   <str>
-    <main>Show indicator parameters.</main>
-    <alt>Показать параметры индикаторов.</alt>
-  </str>
-  <str>
-    <main>Show strategy limitations.</main>
-    <alt>Показать ограничения для стратегии.</alt>
-  </str>
-  <str>
     <main>Settings</main>
     <alt>Настройки</alt>
-  </str>
-  <str>
-    <main>Show optimizer settings.</main>
-    <alt>Показать настройки оптимизатора.</alt>
   </str>
   <str>
     <main>Hide FSB when Optimizer starts</main>
@@ -2710,12 +2714,12 @@
     <alt>Выполнить первоначальную оптимизацию</alt>
   </str>
   <str>
-    <main>Working time</main>
-    <alt>Время работы</alt>
+    <main>Working time limit in minutes</main>
+    <alt>Рабочее время в минуты</alt>
   </str>
   <str>
-    <main>Set the number of minutes for the Generator to work.</main>
-    <alt>Установить количество минут для работы Генератора.</alt>
+    <main>Save strategy slots Lock status</main>
+    <alt>Сохранить слоты стратегии Lock статус</alt>
   </str>
   <str>
     <main>Calculations</main>
@@ -2750,6 +2754,18 @@
     <alt>Минимальный коэффициент выигрыша/потери</alt>
   </str>
   <str>
+    <main>Minimum Profit Per Day</main>
+    <alt>Минимальная прибыли в день</alt>
+  </str>
+  <str>
+    <main>Minimum Sharpe ratio</main>
+    <alt>Минимальный коэффициент Шарпа</alt>
+  </str>
+  <str>
+    <main>Max long/short balance deviation</main>
+    <alt>Макс длинной / короткой баланс отклонений</alt>
+  </str>
+  <str>
     <main>Out of sample testing, percent of OOS bars</main>
     <alt>Вне зоны тестирования, процент OOS баров</alt>
   </str>
@@ -2778,12 +2794,28 @@
     <alt>Опции</alt>
   </str>
   <str>
-    <main>Limitations</main>
-    <alt>Ограничения</alt>
+    <main>Criteria</main>
+    <alt>Критерии</alt>
+  </str>
+  <str>
+    <main>Acceptance Criteria</main>
+    <alt>Критерии Приемки</alt>
+  </str>
+  <str>
+    <main>Sorting</main>
+    <alt>Сортировка</alt>
+  </str>
+  <str>
+    <main>Custom Sorting</main>
+    <alt>Пользовательская Сортировка</alt>
   </str>
   <str>
     <main>Top 10</main>
     <alt>Топ 10</alt>
+  </str>
+  <str>
+    <main>Benchmark</main>
+    <alt>Скорость</alt>
   </str>
   <str>
     <main>Activate the strategy.</main>
@@ -2832,6 +2864,22 @@
   <str>
     <main>banned</main>
     <alt>запрещено</alt>
+  </str>
+  <str>
+    <main>Do not use custom sorting</main>
+    <alt>Не используйте пользовательской сортировки</alt>
+  </str>
+  <str>
+    <main>Simple</main>
+    <alt>Простой</alt>
+  </str>
+  <str>
+    <main>Advanced</main>
+    <alt>Расширеный</alt>
+  </str>
+  <str>
+    <main>Comparison Curve</main>
+    <alt>Сравнение кривых</alt>
   </str>
   <!-- Strategy Analyzer -->
   <str>
@@ -3405,6 +3453,10 @@
   <str>
     <main>Custom Indicators</main>
     <alt>Пользовательские индикаторы</alt>
+  </str>
+  <str>
+    <main>Custom Indicators Repo</main>
+    <alt>Хранилище пользовательские индикаторы</alt>
   </str>
   <str>
     <main>Reload the Custom Indicators</main>

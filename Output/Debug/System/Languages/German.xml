@@ -450,8 +450,16 @@
     <alt>Schellen Intrabar-Scan durchführen.</alt>
   </str>
   <str>
-    <main>Publish</main>
-    <alt>Veröffentlichen</alt>
+    <main>Strategy Repository</main>
+    <alt>Strategy Repository</alt>
+  </str>
+  <str>
+    <main>Download or upload strategies.</main>
+    <alt>Download or upload strategies.</alt>
+  </str>
+  <str>
+    <main>Publish to Forum</main>
+    <alt>Publish to Forum</alt>
   </str>
   <str>
     <main>Publish the strategy in the program's forum.</main>
@@ -740,6 +748,14 @@
   <str>
     <main>Forex Brokers</main>
     <alt>Forex Brokers</alt>
+  </str>
+  <str>
+    <main>Go Pro</main>
+    <alt>Go Pro</alt>
+  </str>
+  <str>
+    <main>See Forex Strategy Builder Professional web page</main>
+    <alt>See Forex Strategy Builder Professional web page</alt>
   </str>
   <str>
     <main>New Version</main>
@@ -1076,8 +1092,8 @@
     <alt>Zusätzliche Statistiken</alt>
   </str>
   <str>
-    <main>Show long/short balance lines on the chart and more statistics in the overview.</main>
-    <alt>Zeige Long/Short Kontostandslinien im Chart und weitere Statistiken in der Übersicht</alt>
+    <main>Show Long/Short Balance Lines on Account Chart</main>
+    <alt>Show Long/Short Balance Lines on Account Chart</alt>
   </str>
   <str>
     <main>Profit factor</main>
@@ -2620,20 +2636,8 @@
     <alt>Reset strategy parameters.</alt>
   </str>
   <str>
-    <main>Show indicator parameters.</main>
-    <alt>Zeige Indikatorenparameter.</alt>
-  </str>
-  <str>
-    <main>Show strategy limitations.</main>
-    <alt>Zeige Strategie-Beschränkungen.</alt>
-  </str>
-  <str>
     <main>Settings</main>
     <alt>Einstellungen</alt>
-  </str>
-  <str>
-    <main>Show optimizer settings.</main>
-    <alt>Zeige Optimierungs-Einstellungen</alt>
   </str>
   <str>
     <main>Hide FSB when Optimizer starts</main>
@@ -2710,12 +2714,12 @@
     <alt>Führe ein initiale Optimierung durch</alt>
   </str>
   <str>
-    <main>Working time</main>
-    <alt>Arbeitszeit</alt>
+    <main>Working time limit in minutes</main>
+    <alt>Working time limit in minutes</alt>
   </str>
   <str>
-    <main>Set the number of minutes for the Generator to work.</main>
-    <alt>Stellen Sie hier ein, wie lange der Generator arbeiten darf.</alt>
+    <main>Save strategy slots Lock status</main>
+    <alt>Save strategy slots Lock status</alt>
   </str>
   <str>
     <main>Calculations</main>
@@ -2750,6 +2754,18 @@
     <alt>Minimales Gewinn/Verlust Verhältnis</alt>
   </str>
   <str>
+    <main>Minimum Profit Per Day</main>
+    <alt>Minimum Profit Per Day</alt>
+  </str>
+  <str>
+    <main>Minimum Sharpe ratio</main>
+    <alt>Minimum Sharpe ratio</alt>
+  </str>
+  <str>
+    <main>Max long/short balance deviation</main>
+    <alt>Max long/short balance deviation</alt>
+  </str>
+  <str>
     <main>Out of sample testing, percent of OOS bars</main>
     <alt>Out Of Sample Test, Prozent der OOS Kerzen</alt>
   </str>
@@ -2778,12 +2794,28 @@
     <alt>Häufig</alt>
   </str>
   <str>
-    <main>Limitations</main>
-    <alt>Beschränkungen</alt>
+    <main>Criteria</main>
+    <alt>Criteria</alt>
+  </str>
+  <str>
+    <main>Acceptance Criteria</main>
+    <alt>Acceptance Criteria</alt>
+  </str>
+  <str>
+    <main>Sorting</main>
+    <alt>Sorting</alt>
+  </str>
+  <str>
+    <main>Custom Sorting</main>
+    <alt>Custom Sorting</alt>
   </str>
   <str>
     <main>Top 10</main>
     <alt>Top 10</alt>
+  </str>
+  <str>
+    <main>Benchmark</main>
+    <alt>Benchmark</alt>
   </str>
   <str>
     <main>Activate the strategy.</main>
@@ -2832,6 +2864,22 @@
   <str>
     <main>banned</main>
     <alt>unterdrückt</alt>
+  </str>
+  <str>
+    <main>Do not use custom sorting</main>
+    <alt>Do not use custom sorting</alt>
+  </str>
+  <str>
+    <main>Simple</main>
+    <alt>Simple</alt>
+  </str>
+  <str>
+    <main>Advanced</main>
+    <alt>Advanced</alt>
+  </str>
+  <str>
+    <main>Comparison Curve</main>
+    <alt>Comparison Curve</alt>
   </str>
   <!-- Strategy Analyzer -->
   <str>
@@ -3405,6 +3453,10 @@
   <str>
     <main>Custom Indicators</main>
     <alt>Angepasste Indikatoren</alt>
+  </str>
+  <str>
+    <main>Custom Indicators Repo</main>
+    <alt>Custom Indicators Repo</alt>
   </str>
   <str>
     <main>Reload the Custom Indicators</main>

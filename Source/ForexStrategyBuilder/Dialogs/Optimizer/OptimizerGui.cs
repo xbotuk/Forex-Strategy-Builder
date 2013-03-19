@@ -30,7 +30,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             pnlParamsBase2 = new Panel();
             pnlCaptions = new Panel();
             pnlParams = new Panel();
-            pnlLimitations = new FancyPanel(Language.T("Limitations"));
+            pnlLimitations = new FancyPanel(Language.T("Acceptance Criteria"));
             pnlSettings = new FancyPanel(Language.T("Settings"));
             scrollBar = new VScrollBar();
             balanceChart = new SmallBalanceChart();
@@ -411,17 +411,13 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
 
             // Show Parameters
             aOptimizerButtons[(int) OptimizerButtons.ShowParams].Text = Language.T("Parameters");
-            aOptimizerButtons[(int) OptimizerButtons.ShowParams].ToolTipText = Language.T("Show indicator parameters.");
             aOptimizerButtons[(int) OptimizerButtons.ShowParams].Enabled = false;
 
             // Show Limitations
-            aOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Text = Language.T("Limitations");
-            aOptimizerButtons[(int) OptimizerButtons.ShowLimitations].ToolTipText =
-                Language.T("Show strategy limitations.");
+            aOptimizerButtons[(int) OptimizerButtons.ShowLimitations].Text = Language.T("Criteria");
 
             // Show Settings
             aOptimizerButtons[(int) OptimizerButtons.ShowSettings].Text = Language.T("Settings");
-            aOptimizerButtons[(int) OptimizerButtons.ShowSettings].ToolTipText = Language.T("Show optimizer settings.");
         }
 
         /// <summary>
