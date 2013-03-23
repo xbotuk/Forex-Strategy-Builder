@@ -30,9 +30,16 @@ namespace ForexStrategyBuilder
         /// </summary>
         static Instruments()
         {
+            string externalInstrumentsFile = string.Empty;
+            foreach (string arg in Environment.GetCommandLineArgs())
+                if (arg.StartsWith("-instrumentsfile="))
+                    externalInstrumentsFile = CommandLineParser.GetValue(arg);
+
             XMLInstruments = new XmlDocument();
-            PathToInstrumentsFile = Data.ProgramDir + Path.DirectorySeparatorChar + "System" +
-                                    Path.DirectorySeparatorChar + "instruments.xml";
+
+            PathToInstrumentsFile = String.IsNullOrEmpty(externalInstrumentsFile)
+                    ? Path.Combine(Path.Combine(Data.ProgramDir, "System"), "instruments.xml")
+                    : externalInstrumentsFile;
         }
 
         /// <summary>
