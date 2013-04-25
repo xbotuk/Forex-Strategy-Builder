@@ -33,6 +33,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private readonly CheckBox chbWorkingMinutes;
         private readonly CheckBox chbGenerateNewStrategy;
         private readonly CheckBox chbInitialOptimization;
+        private readonly CheckBox chbPreserveSameDirAction;
+        private readonly CheckBox chbPreserveOppDirAction;
         private readonly CheckBox chbPreserveBreakEven;
         private readonly CheckBox chbPreservePermSL;
         private readonly CheckBox chbPreservePermTP;
@@ -126,6 +128,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             btnGenerate = new Button();
             btnCancel = new Button();
             chbGenerateNewStrategy = new CheckBox();
+            chbPreserveSameDirAction = new CheckBox();
+            chbPreserveOppDirAction = new CheckBox();
             chbPreservePermSL = new CheckBox();
             chbPreservePermTP = new CheckBox();
             chbPreserveBreakEven = new CheckBox();
@@ -238,9 +242,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbHideFsb.CheckedChanged += HideFSBClick;
 
-            foreach (string arg in Environment.GetCommandLineArgs())
-                if (arg.StartsWith("-autostartgenerator"))
-                    BtnGenerateClick(this, new EventArgs());
+            if (Data.AutostartGenerator)
+                BtnGenerateClick(this, new EventArgs());
         }
 
         /// <summary>
@@ -389,6 +392,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             try
             {
                 chbGenerateNewStrategy.Checked = bool.Parse(options[i++]);
+                chbPreserveSameDirAction.Checked = bool.Parse(options[i++]);
+                chbPreserveOppDirAction.Checked = bool.Parse(options[i++]);
                 chbPreservePermSL.Checked = bool.Parse(options[i++]);
                 chbPreservePermTP.Checked = bool.Parse(options[i++]);
                 chbPreserveBreakEven.Checked = bool.Parse(options[i++]);
@@ -447,6 +452,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         {
             string options =
                 chbGenerateNewStrategy.Checked + ";" +
+                chbPreserveSameDirAction.Checked + ";" +
+                chbPreserveOppDirAction.Checked + ";" +
                 chbPreservePermSL.Checked + ";" +
                 chbPreservePermTP.Checked + ";" +
                 chbPreserveBreakEven.Checked + ";" +
@@ -500,6 +507,22 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         /// </summary>
         private void SetPanelCommon()
         {
+            // chbPreserveSameDirAction
+            chbPreserveSameDirAction.Parent = pnlCommon;
+            chbPreserveSameDirAction.Text = Language.T("Do not change the Same direction signal");
+            chbPreserveSameDirAction.AutoSize = true;
+            chbPreserveSameDirAction.Checked = true;
+            chbPreserveSameDirAction.ForeColor = LayoutColors.ColorControlText;
+            chbPreserveSameDirAction.BackColor = Color.Transparent;
+            
+            // chbPreserveOppDirAction
+            chbPreserveOppDirAction.Parent = pnlCommon;
+            chbPreserveOppDirAction.Text = Language.T("Do not change the Opposite direction signal");
+            chbPreserveOppDirAction.AutoSize = true;
+            chbPreserveOppDirAction.Checked = true;
+            chbPreserveOppDirAction.ForeColor = LayoutColors.ColorControlText;
+            chbPreserveOppDirAction.BackColor = Color.Transparent;
+
             // chbPreservPermSL
             chbPreservePermSL.Parent = pnlCommon;
             chbPreservePermSL.Text = Language.T("Do not change the Permanent Stop Loss");
@@ -944,17 +967,15 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             int nudLeft = pnlCommon.ClientSize.Width - border - 2 - nudWidth;
 
-            //chbPreservePermSL
-            chbPreservePermSL.Location = new Point(border + 2, 26);
-
-            //chbPreservePermTP
+            // Strategy Properties
+            chbPreserveSameDirAction.Location = new Point(border + 2, 26);
+            chbPreserveOppDirAction.Location = new Point(border + 2, chbPreserveSameDirAction.Bottom + border + 4);
+            chbPreservePermSL.Location = new Point(border + 2, chbPreserveOppDirAction.Bottom + border + 4);
             chbPreservePermTP.Location = new Point(border + 2, chbPreservePermSL.Bottom + border + 4);
-
-            //chbPreservebreakEven
             chbPreserveBreakEven.Location = new Point(border + 2, chbPreservePermTP.Bottom + border + 4);
 
             // chbMaxOpeningLogicSlots
-            chbMaxOpeningLogicSlots.Location = new Point(border + 2, chbPreserveBreakEven.Bottom + border + 14);
+            chbMaxOpeningLogicSlots.Location = new Point(border + 2, chbPreserveBreakEven.Bottom + border + 4);
             nudMaxOpeningLogicSlots.Width = nudWidth;
             nudMaxOpeningLogicSlots.Location = new Point(nudLeft, chbMaxOpeningLogicSlots.Top - 1);
 
@@ -1086,6 +1107,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 Data.Strategy = ClearStrategySlotsStatus(Data.Strategy);
 
             ParrentForm.Visible = true;
+            Data.AutostartGenerator = false;
         }
 
         /// <summary>

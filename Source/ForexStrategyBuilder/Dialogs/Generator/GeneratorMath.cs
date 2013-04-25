@@ -59,8 +59,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private long totalCalculations;
         private TimeSpan totalWorkTime;
 
-        // Out of Sample
-
         /// <summary>
         ///     BtnGenerate_Click
         /// </summary>
@@ -852,32 +850,29 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             indSlot.IsDefined = true;
         }
 
-        /// <summary>
-        ///     Generate random same and opposite signal action
-        /// </summary>
         private void GenerateSameOppSignal()
         {
-            if (strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
-            {
-                Data.Strategy.PropertiesStatus = strategyBest.PropertiesStatus;
-                Data.Strategy.SameSignalAction = strategyBest.SameSignalAction;
-                Data.Strategy.OppSignalAction = strategyBest.OppSignalAction;
-            }
-            else
-            {
-                Data.Strategy.SameSignalAction =
-                    (SameDirSignalAction) Enum.GetValues(typeof (SameDirSignalAction)).GetValue(random.Next(3));
-                Data.Strategy.OppSignalAction =
-                    (OppositeDirSignalAction) Enum.GetValues(typeof (OppositeDirSignalAction)).GetValue(random.Next(4));
+            Data.Strategy.PropertiesStatus = strategyBest.PropertiesStatus;
+            Data.Strategy.SameSignalAction = strategyBest.SameSignalAction;
+            Data.Strategy.OppSignalAction = strategyBest.OppSignalAction;
 
-                if (Data.Strategy.Slot[Data.Strategy.CloseSlot].IndicatorName == "Close and Reverse")
-                    Data.Strategy.OppSignalAction = OppositeDirSignalAction.Reverse;
-            }
+            if (strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
+                return;
+
+            if (!chbPreserveSameDirAction.Checked)
+                Data.Strategy.SameSignalAction =
+                    (SameDirSignalAction)
+                    Enum.GetValues(typeof (SameDirSignalAction)).GetValue(random.Next(3));
+
+            if (!chbPreserveOppDirAction.Checked)
+                Data.Strategy.OppSignalAction =
+                    (OppositeDirSignalAction)
+                    Enum.GetValues(typeof (OppositeDirSignalAction)).GetValue(random.Next(4));
+
+            if (Data.Strategy.Slot[Data.Strategy.CloseSlot].IndicatorName == "Close and Reverse")
+                Data.Strategy.OppSignalAction = OppositeDirSignalAction.Reverse;
         }
 
-        /// <summary>
-        ///     Generates the Permanent Stop Loss
-        /// </summary>
         private void GeneratePermanentSL()
         {
             if (chbPreservePermSL.Checked || strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
@@ -905,9 +900,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             }
         }
 
-        /// <summary>
-        ///     Generates the Permanent Take Profit
-        /// </summary>
         private void GeneratePermanentTP()
         {
             if (chbPreservePermTP.Checked || strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
@@ -935,9 +927,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             }
         }
 
-        /// <summary>
-        ///     Generates Break Even stop.
-        /// </summary>
         private void GenerateBreakEven()
         {
             if (chbPreserveBreakEven.Checked || strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
