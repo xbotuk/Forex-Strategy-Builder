@@ -55,7 +55,10 @@ namespace ForexStrategyBuilder
 
             foreach (string arg in Environment.GetCommandLineArgs())
                 if (arg.StartsWith("-autostartgenerator"))
+                {
+                    Data.AutostartGenerator = true;
                     ShowGenerator();
+                }
         }
 
         private bool IsDiscardSelectedIndexChange { get; set; }

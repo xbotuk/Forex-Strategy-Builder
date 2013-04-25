@@ -116,7 +116,8 @@ namespace ForexStrategyBuilder
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Save Instruments");
+                if (!Data.AutostartGenerator)
+                    MessageBox.Show(e.Message, "Save Instruments");
             }
         }
 

@@ -632,6 +632,7 @@ namespace ForexStrategyBuilder
         public static int GeneratorStarts { get; set; }
         public static int OptimizerStarts { get; set; }
         public static int SavedStrategies { get; set; }
+        public static bool AutostartGenerator { get; set; }
 
         #endregion
     }

@@ -98,7 +98,8 @@ namespace ForexStrategyBuilder
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Configuration");
+                if (!Data.AutostartGenerator)
+                    MessageBox.Show(e.Message, "Configuration");
             }
         }
 
@@ -113,7 +114,8 @@ namespace ForexStrategyBuilder
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Check for Updates");
+                if (!Data.AutostartGenerator)
+                    MessageBox.Show(e.Message, "Check for Updates");
             }
         }
 
@@ -158,7 +160,8 @@ namespace ForexStrategyBuilder
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Check for Updates");
+                if (!Data.AutostartGenerator)
+                    MessageBox.Show(e.Message, "Check for Updates");
             }
         }
 
@@ -214,7 +217,8 @@ namespace ForexStrategyBuilder
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Check for Updates");
+                if (!Data.AutostartGenerator)
+                    MessageBox.Show(e.Message, "Check for Updates");
             }
         }
 
