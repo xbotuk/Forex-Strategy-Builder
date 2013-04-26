@@ -8,6 +8,7 @@
 // A PARTICULAR PURPOSE.
 //==============================================================
 
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Reflection;
@@ -16,7 +17,7 @@ using Microsoft.CSharp;
 namespace ForexStrategyBuilder
 {
     /// <summary>
-    ///     CSharp_Compiler manages the compilation of source code to an assembly.
+    ///     CSharpCompiler manages the compilation of source code to an assembly.
     ///     This class is thread safe, so multiple threads are capable
     ///     to utilize it simultaneously.
     /// </summary>
@@ -30,8 +31,7 @@ namespace ForexStrategyBuilder
         /// </summary>
         public CSharpCompiler()
         {
-            codeProvider = new CSharpCodeProvider();
-            // Make sure we conduct all the operations "in memory".
+            codeProvider = new CSharpCodeProvider(new Dictionary<String, String> {{"CompilerVersion", "v3.5"}});
             compilationParameters = new CompilerParameters {GenerateInMemory = true};
         }
 
@@ -65,9 +65,11 @@ namespace ForexStrategyBuilder
                 // Compilation failed.
                 foreach (CompilerError error in compilerResults.Errors)
                 {
-                    string errorMessage = "Line " + error.Line + " Column " + error.Column + ": " + error.ErrorText +
-                                          ".";
                     int errorLine = error.Line;
+                    int errorColumn = error.Column;
+                    string errorText = error.ErrorText;
+
+                    string errorMessage = string.Format("Line {0} Column {1}: {2}.", errorLine, errorColumn, errorText);
 
                     if (!compilerErrors.ContainsKey(errorMessage))
                         compilerErrors.Add(errorMessage, errorLine);
