@@ -908,17 +908,6 @@ namespace ForexStrategyBuilder
 
             miCustomInd.DropDownItems.Add(new ToolStripSeparator());
 
-            var miExportAsCi = new ToolStripMenuItem
-                {
-                    Name = "miExportAsCI",
-                    Text = Language.T("Export the Strategy as a Custom Indicator"),
-                    Image = Resources.str_export_as_ci
-                };
-            miExportAsCi.Click += MenuToolsOnClick;
-            miCustomInd.DropDownItems.Add(miExportAsCi);
-
-            miCustomInd.DropDownItems.Add(new ToolStripSeparator());
-
             var miOpenIndFolder = new ToolStripMenuItem
                 {
                     Name = "miOpenIndFolder",
@@ -1001,15 +990,6 @@ namespace ForexStrategyBuilder
                 };
             miPivotPoints.Click += MenuToolsOnClick;
             miTools.DropDownItems.Add(miPivotPoints);
-
-            var miFibonacciLevels = new ToolStripMenuItem
-                {
-                    Name = "FibonacciLevels",
-                    Image = Resources.fibo_levels,
-                    Text = Language.T("Fibonacci Levels") + "..."
-                };
-            miFibonacciLevels.Click += MenuToolsOnClick;
-            miTools.DropDownItems.Add(miFibonacciLevels);
 
             miTools.DropDownItems.Add(new ToolStripSeparator());
 

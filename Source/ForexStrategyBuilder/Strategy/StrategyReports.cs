@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder
 {
@@ -398,9 +399,9 @@ namespace ForexStrategyBuilder
             var sb = new StringBuilder();
             string indicatorName = Data.Strategy.Slot[0].IndicatorName;
 
-            Indicator indOpen = IndicatorStore.ConstructIndicator(indicatorName, SlotTypes.Open);
+            Indicator indOpen = IndicatorManager.ConstructIndicator(indicatorName);
             indOpen.IndParam = Data.Strategy.Slot[0].IndParam;
-            indOpen.SetDescription(SlotTypes.Open);
+            indOpen.SetDescription();
 
             // Logical groups of the opening conditions.
             var opengroups = new List<string>();
@@ -476,10 +477,9 @@ namespace ForexStrategyBuilder
                             continue;
 
                         Indicator indOpenFilter =
-                            IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName,
-                                                              SlotTypes.OpenFilter);
+                            IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
                         indOpenFilter.IndParam = Data.Strategy.Slot[slot].IndParam;
-                        indOpenFilter.SetDescription(SlotTypes.OpenFilter);
+                        indOpenFilter.SetDescription();
 
                         if (indnumb < indInGroup)
                             sb.AppendLine("<li>" + indOpenFilter.EntryFilterLongDescription + "; " + Language.T("and") +
@@ -562,10 +562,9 @@ namespace ForexStrategyBuilder
                             continue;
 
                         Indicator indOpenFilter =
-                            IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName,
-                                                              SlotTypes.OpenFilter);
+                            IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
                         indOpenFilter.IndParam = Data.Strategy.Slot[slot].IndParam;
-                        indOpenFilter.SetDescription(SlotTypes.OpenFilter);
+                        indOpenFilter.SetDescription();
 
                         if (indnumb < indInGroup)
                             sb.AppendLine("<li>" + indOpenFilter.EntryFilterShortDescription + "; " + Language.T("and") +
@@ -597,9 +596,9 @@ namespace ForexStrategyBuilder
             int closingSlotNmb = Data.Strategy.CloseSlot;
             string indicatorName = Data.Strategy.Slot[closingSlotNmb].IndicatorName;
 
-            Indicator indClose = IndicatorStore.ConstructIndicator(indicatorName, SlotTypes.Close);
+            Indicator indClose = IndicatorManager.ConstructIndicator(indicatorName);
             indClose.IndParam = Data.Strategy.Slot[closingSlotNmb].IndParam;
-            indClose.SetDescription(SlotTypes.Close);
+            indClose.SetDescription();
 
             bool isGroups = false;
             var closegroups = new List<string>();
@@ -669,10 +668,9 @@ namespace ForexStrategyBuilder
                             continue;
 
                         Indicator indCloseFilter =
-                            IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName,
-                                                              SlotTypes.CloseFilter);
+                            IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
                         indCloseFilter.IndParam = Data.Strategy.Slot[slot].IndParam;
-                        indCloseFilter.SetDescription(SlotTypes.CloseFilter);
+                        indCloseFilter.SetDescription();
 
                         if (isGroups)
                         {
@@ -749,10 +747,9 @@ namespace ForexStrategyBuilder
                             continue;
 
                         Indicator indCloseFilter =
-                            IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName,
-                                                              SlotTypes.CloseFilter);
+                            IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
                         indCloseFilter.IndParam = Data.Strategy.Slot[slot].IndParam;
-                        indCloseFilter.SetDescription(SlotTypes.CloseFilter);
+                        indCloseFilter.SetDescription();
 
                         if (isGroups)
                         {

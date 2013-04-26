@@ -12,6 +12,10 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Indicators.Store;
+using ForexStrategyBuilder.Infrastructure.Entities;
+using ForexStrategyBuilder.Infrastructure.Enums;
 
 namespace ForexStrategyBuilder
 {
@@ -27,7 +31,7 @@ namespace ForexStrategyBuilder
         {
             StrategyName = "Unnamed";
             Symbol = "EURUSD";
-            DataPeriod = DataPeriods.day;
+            DataPeriod = DataPeriod.D1;
             Description = string.Empty;
             OppSignalAction = OppositeDirSignalAction.Nothing;
             SameSignalAction = SameDirSignalAction.Nothing;
@@ -78,7 +82,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Gets or sets the Data Period.
         /// </summary>
-        public DataPeriods DataPeriod { get; set; }
+        public DataPeriod DataPeriod { get; set; }
 
         /// <summary>
         ///     Gets or sets the Symbol.
@@ -258,8 +262,9 @@ namespace ForexStrategyBuilder
 
             Data.Strategy.StrategyName = "New";
 
-            var barOpening = new Bar_Opening(SlotTypes.Open);
-            barOpening.Calculate(SlotTypes.Open);
+            var barOpening = new BarOpening();
+            barOpening.Initialize(SlotTypes.Open);
+            barOpening.Calculate(new DataSet());
             Data.Strategy.Slot[openSlotNum].IndParam = barOpening.IndParam;
             Data.Strategy.Slot[openSlotNum].IndicatorName = barOpening.IndicatorName;
             Data.Strategy.Slot[openSlotNum].Component = barOpening.Component;
@@ -269,8 +274,9 @@ namespace ForexStrategyBuilder
             Data.Strategy.Slot[openSlotNum].MinValue = barOpening.SeparatedChartMinValue;
             Data.Strategy.Slot[openSlotNum].IsDefined = true;
 
-            var barClosing = new Bar_Closing(SlotTypes.Close);
-            barClosing.Calculate(SlotTypes.Close);
+            var barClosing = new BarClosing();
+            barClosing.Initialize(SlotTypes.Close);
+            barClosing.Calculate(new DataSet());
             Data.Strategy.Slot[closeSlotNum].IndParam = barClosing.IndParam;
             Data.Strategy.Slot[closeSlotNum].IndicatorName = barClosing.IndicatorName;
             Data.Strategy.Slot[closeSlotNum].Component = barClosing.Component;
@@ -522,11 +528,10 @@ namespace ForexStrategyBuilder
                 {
                     string sIndicatorName = Data.Strategy.Slot[slot].IndicatorName;
                     SlotTypes slotType = Data.Strategy.Slot[slot].SlotType;
-                    Indicator indicator = IndicatorStore.ConstructIndicator(sIndicatorName, slotType);
-
+                    Indicator indicator = IndicatorManager.ConstructIndicator(sIndicatorName);
+                    indicator.Initialize(slotType);
                     indicator.IndParam = Data.Strategy.Slot[slot].IndParam;
-
-                    indicator.Calculate(slotType);
+                    indicator.Calculate(Data.DataSet);
 
                     // Set the Data.Strategy
                     Slot[slot].IndicatorName = indicator.IndicatorName;

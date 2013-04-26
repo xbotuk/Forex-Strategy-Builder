@@ -17,6 +17,8 @@ using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Infrastructure.Enums;
+using ForexStrategyBuilder.Infrastructure.Interfaces;
 using ForexStrategyBuilder.Properties;
 
 namespace ForexStrategyBuilder
@@ -39,7 +41,7 @@ namespace ForexStrategyBuilder
             Df = "dd.MM.yy";
             AutoUsePrvBarValue = true;
             FirstBar = 40;
-            PeriodColor = new Dictionary<DataPeriods, Color>();
+            PeriodColor = new Dictionary<DataPeriod, Color>();
             AdditionalFolder = "Additional" + Path.DirectorySeparatorChar;
             SourceFolder = "Custom Indicators" + Path.DirectorySeparatorChar;
             DefaultStrategyDir = "Strategies" + Path.DirectorySeparatorChar;
@@ -209,7 +211,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     The scanner colors
         /// </summary>
-        public static Dictionary<DataPeriods, Color> PeriodColor { get; private set; }
+        public static Dictionary<DataPeriod, Color> PeriodColor { get; private set; }
 
         /// <summary>
         ///     Debug mode
@@ -221,7 +223,7 @@ namespace ForexStrategyBuilder
             get { return InstrProperties.Symbol; }
         }
 
-        public static DataPeriods Period { get; set; }
+        public static DataPeriod Period { get; set; }
 
         public static string PeriodString
         {
@@ -317,14 +319,14 @@ namespace ForexStrategyBuilder
             ColorDir = Path.Combine(SystemDir, ColorDir);
 
             // Scanner colors
-            PeriodColor.Add(DataPeriods.min1, Color.Yellow);
-            PeriodColor.Add(DataPeriods.min5, Color.Lime);
-            PeriodColor.Add(DataPeriods.min15, Color.Green);
-            PeriodColor.Add(DataPeriods.min30, Color.Orange);
-            PeriodColor.Add(DataPeriods.hour1, Color.DarkSalmon);
-            PeriodColor.Add(DataPeriods.hour4, Color.Peru);
-            PeriodColor.Add(DataPeriods.day, Color.Red);
-            PeriodColor.Add(DataPeriods.week, Color.DarkViolet);
+            PeriodColor.Add(DataPeriod.M1, Color.Yellow);
+            PeriodColor.Add(DataPeriod.M5, Color.Lime);
+            PeriodColor.Add(DataPeriod.M15, Color.Green);
+            PeriodColor.Add(DataPeriod.M30, Color.Orange);
+            PeriodColor.Add(DataPeriod.H1, Color.DarkSalmon);
+            PeriodColor.Add(DataPeriod.H4, Color.Peru);
+            PeriodColor.Add(DataPeriod.D1, Color.Red);
+            PeriodColor.Add(DataPeriod.W1, Color.DarkViolet);
         }
 
         /// <summary>
@@ -397,25 +399,25 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Converts a data period from DataPeriods type to string.
         /// </summary>
-        public static string DataPeriodToString(DataPeriods dataPeriod)
+        public static string DataPeriodToString(DataPeriod dataPeriod)
         {
             switch (dataPeriod)
             {
-                case DataPeriods.min1:
+                case DataPeriod.M1:
                     return "1 " + Language.T("Minute");
-                case DataPeriods.min5:
+                case DataPeriod.M5:
                     return "5 " + Language.T("Minutes");
-                case DataPeriods.min15:
+                case DataPeriod.M15:
                     return "15 " + Language.T("Minutes");
-                case DataPeriods.min30:
+                case DataPeriod.M30:
                     return "30 " + Language.T("Minutes");
-                case DataPeriods.hour1:
+                case DataPeriod.H1:
                     return "1 " + Language.T("Hour");
-                case DataPeriods.hour4:
+                case DataPeriod.H4:
                     return "4 " + Language.T("Hours");
-                case DataPeriods.day:
+                case DataPeriod.D1:
                     return "1 " + Language.T("Day");
-                case DataPeriods.week:
+                case DataPeriod.W1:
                     return "1 " + Language.T("Week");
                 default:
                     return String.Empty;
@@ -482,7 +484,7 @@ namespace ForexStrategyBuilder
         /// </summary>
         public static int LoadedIntraBarPeriods { get; set; }
 
-        public static DataPeriods[] IntraBarsPeriods { get; set; }
+        public static DataPeriod[] IntraBarsPeriods { get; set; }
 
         // Tick data
         //static Dictionary<DateTime, double[]> tickData;
@@ -514,7 +516,7 @@ namespace ForexStrategyBuilder
                 int startGenM1 = Bars - 1;
 
                 for (int i = 0; i < Bars; i++)
-                    if (IntraBarsPeriods[i] == DataPeriods.min1)
+                    if (IntraBarsPeriods[i] == DataPeriod.M1)
                     {
                         startGenM1 = i;
                         break;
@@ -633,6 +635,8 @@ namespace ForexStrategyBuilder
         public static int OptimizerStarts { get; set; }
         public static int SavedStrategies { get; set; }
         public static bool AutostartGenerator { get; set; }
+
+        public static IDataSet DataSet { get; set; }
 
         #endregion
     }

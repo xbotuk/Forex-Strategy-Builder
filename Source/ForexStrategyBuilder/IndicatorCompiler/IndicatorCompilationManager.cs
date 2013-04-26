@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder
 {
@@ -77,9 +78,6 @@ namespace ForexStrategyBuilder
                 return;
             }
 
-            // Rename namespaces
-            source = source.Replace("Forex_Strategy_Builder", "ForexStrategyBuilder");
-
             Dictionary<string, int> dictCompilationErrors;
             Assembly assembly = compiler.CompileSource(source, out dictCompilationErrors);
 
@@ -110,6 +108,9 @@ namespace ForexStrategyBuilder
                 return;
             }
 
+            newIndicator.CustomIndicator = true;
+            newIndicator.Initialize(SlotTypes.NotDefined);
+
             // Check for a repeated indicator name among the custom indicators
             foreach (Indicator indicator in CustomIndicatorsList)
                 if (indicator.IndicatorName == newIndicator.IndicatorName)
@@ -120,7 +121,7 @@ namespace ForexStrategyBuilder
                 }
 
             // Check for a repeated indicator name among the original indicators
-            foreach (string indicatorName in IndicatorStore.OriginalIndicatorNames)
+            foreach (string indicatorName in IndicatorManager.OriginalIndicatorNames)
                 if (indicatorName == newIndicator.IndicatorName)
                 {
                     errorMessages = "The name '" + indicatorName + "' found out in [" + Path.GetFileName(filePath) +
@@ -190,16 +191,12 @@ namespace ForexStrategyBuilder
                     // Looking for an appropriate constructor
                     foreach (ConstructorInfo constructorInfo in aConstructorInfo)
                     {
-                        ParameterInfo[] parameterInfo = constructorInfo.GetParameters();
-                        if (constructorInfo.IsConstructor &&
-                            constructorInfo.IsPublic &&
-                            parameterInfo.Length == 1 &&
-                            parameterInfo[0].ParameterType == typeof (SlotTypes))
+                        if (constructorInfo.IsConstructor && constructorInfo.IsPublic)
                         {
                             try
                             {
                                 errorMessage = string.Empty;
-                                return (Indicator) constructorInfo.Invoke(new object[] {SlotTypes.NotDefined});
+                                return (Indicator) constructorInfo.Invoke(null);
                             }
                             catch (Exception exc)
                             {

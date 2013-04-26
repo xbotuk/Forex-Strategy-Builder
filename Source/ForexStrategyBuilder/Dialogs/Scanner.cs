@@ -14,6 +14,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Infrastructure.Enums;
 
 namespace ForexStrategyBuilder
 {
@@ -320,7 +321,7 @@ namespace ForexStrategyBuilder
             g.DrawString(Language.T("Label"), fontInfo, brush, (xp7 + xp6)/2f, infoRowHeight, sf);
 
             brush = new SolidBrush(LayoutColors.ColorControlText);
-            int allPeriods = Enum.GetValues(typeof (DataPeriods)).Length;
+            int allPeriods = Enum.GetValues(typeof (DataPeriod)).Length;
             for (int period = 0; period <= allPeriods; period++)
             {
                 int y = (period + 2)*infoRowHeight;
@@ -364,9 +365,9 @@ namespace ForexStrategyBuilder
                     g.DrawString(percentage.ToString("F2"), fontInfo, brush, (xp6 + xp5)/2, y, sf);
 
                     var rectf = new RectangleF(xp6 + 10, y + 4, xp7 - xp6 - 20, 9);
-                    Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriods.min1], 60);
+                    Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriod.M1], 60);
                     rectf = new RectangleF(xp6 + 10, y + 7, xp7 - xp6 - 20, 3);
-                    Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriods.day], 60);
+                    Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriod.D1], 60);
                 }
             }
 
@@ -375,7 +376,7 @@ namespace ForexStrategyBuilder
                 int startY = isTickDataFile ? 3 : 2;
                 int y = (prd + startY)*infoRowHeight;
 
-                var period = (DataPeriods) Enum.GetValues(typeof (DataPeriods)).GetValue(prd);
+                var period = (DataPeriod) Enum.GetValues(typeof (DataPeriod)).GetValue(prd);
                 int intraBars = Data.IntraBars == null || !Data.IsIntrabarData ? 0 : Data.IntraBars[prd];
                 int fromBar = 0;
                 int untilBar = 0;
@@ -525,7 +526,7 @@ namespace ForexStrategyBuilder
         /// </summary>
         private void BgWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (Data.IsIntrabarData || Configs.UseTickData && Data.IsTickData || Data.Period == DataPeriods.min1)
+            if (Data.IsIntrabarData || Configs.UseTickData && Data.IsTickData || Data.Period == DataPeriod.M1)
                 Backtester.Scan();
 
             if (!CompactMode)
@@ -579,11 +580,11 @@ namespace ForexStrategyBuilder
         private void LoadData(BackgroundWorker worker)
         {
             int periodsToLoad = 0;
-            int allPeriods = Enum.GetValues(typeof (DataPeriods)).Length;
+            int allPeriods = Enum.GetValues(typeof (DataPeriod)).Length;
             Data.IntraBars = new int[allPeriods];
             Data.IntraBarData = new Bar[Data.Bars][];
             Data.IntraBarBars = new int[Data.Bars];
-            Data.IntraBarsPeriods = new DataPeriods[Data.Bars];
+            Data.IntraBarsPeriods = new DataPeriod[Data.Bars];
             Data.LoadedIntraBarPeriods = 0;
 
             for (int bar = 0; bar < Data.Bars; bar++)
@@ -595,7 +596,7 @@ namespace ForexStrategyBuilder
             // Counts how many periods to load
             for (int prd = 0; prd < allPeriods; prd++)
             {
-                var period = (DataPeriods) Enum.GetValues(typeof (DataPeriods)).GetValue(prd);
+                var period = (DataPeriod) Enum.GetValues(typeof (DataPeriod)).GetValue(prd);
                 if (period < Data.Period)
                 {
                     periodsToLoad++;
@@ -608,7 +609,7 @@ namespace ForexStrategyBuilder
                 if (worker.CancellationPending) break;
 
                 int loadedBars = 0;
-                var period = (DataPeriods) Enum.GetValues(typeof (DataPeriods)).GetValue(prd);
+                var period = (DataPeriod) Enum.GetValues(typeof (DataPeriod)).GetValue(prd);
 
                 SetLabelProgressText(Language.T("Loading:") + " " + Data.DataPeriodToString(period) + "...");
 
@@ -660,7 +661,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Loads the Intrabar data.
         /// </summary>
-        private int LoadIntrabarData(DataPeriods period)
+        private int LoadIntrabarData(DataPeriod period)
         {
             var instrument = new Instrument(Data.InstrProperties.Clone(), (int) period)
                 {
@@ -675,7 +676,7 @@ namespace ForexStrategyBuilder
 
             if (loadingResult == 0 && loadedIntrabars > 0)
             {
-                if (Data.Period != DataPeriods.week)
+                if (Data.Period != DataPeriod.W1)
                 {
                     if (instrument.DaysOff > 5)
                         warningMessage += Environment.NewLine + Language.T("Data for:") + " " + Data.Symbol + " " +

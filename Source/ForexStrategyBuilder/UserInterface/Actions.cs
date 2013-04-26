@@ -17,6 +17,8 @@ using System.Windows.Forms;
 using ForexStrategyBuilder.Common;
 using ForexStrategyBuilder.Dialogs.Generator;
 using ForexStrategyBuilder.Dialogs.Optimizer;
+using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Properties;
 
 namespace ForexStrategyBuilder
@@ -105,7 +107,7 @@ namespace ForexStrategyBuilder
                 CustomIndicators.LoadCustomIndicators();
             }
             else
-                IndicatorStore.CombineAllIndicators();
+                IndicatorManager.CombineAllIndicators();
         }
 
         private void ProvideStrategy()
@@ -441,7 +443,7 @@ namespace ForexStrategyBuilder
 
             //  Takes the instrument symbol and period
             string symbol = ComboBoxSymbol.Text;
-            var dataPeriod = (DataPeriods) Enum.GetValues(typeof (DataPeriods)).GetValue(ComboBoxPeriod.SelectedIndex);
+            var dataPeriod = (DataPeriod) Enum.GetValues(typeof (DataPeriod)).GetValue(ComboBoxPeriod.SelectedIndex);
             InstrumentProperties instrProperties = Instruments.InstrumentList[symbol].Clone();
 
             //  Makes an instance of class Instrument
@@ -457,7 +459,7 @@ namespace ForexStrategyBuilder
 
             // Loads the data
             int loadDataResult = useResource
-                                     ? instrument.LoadResourceData(Resources.EURUSD1440, DataPeriods.day)
+                                     ? instrument.LoadResourceData(Resources.EURUSD1440, DataPeriod.D1)
                                      : instrument.LoadData();
 
             if (instrument.Bars > 0 && loadDataResult == 0)
@@ -586,7 +588,7 @@ namespace ForexStrategyBuilder
                                 Language.T("Check your data file or the limits in \"Data Horizon\".");
             }
 
-            if (Data.DaysOff > 5 && Data.Period != DataPeriods.week)
+            if (Data.DaysOff > 5 && Data.Period != DataPeriod.W1)
             {
                 errorMessage += Language.T("Maximum days off") + " " + Data.DaysOff + Environment.NewLine +
                                 Language.T("The data is probably incomplete!") + Environment.NewLine +
@@ -665,7 +667,7 @@ namespace ForexStrategyBuilder
             foreach (IndicatorSlot slot in Data.Strategy.Slot)
             {
                 // Searching the strategy slots for a custom indicator
-                if (IndicatorStore.CustomIndicatorNames.Contains(slot.IndicatorName))
+                if (IndicatorManager.CustomIndicatorNames.Contains(slot.IndicatorName))
                 {
                     strategyHasCustomIndicator = true;
                     break;
@@ -821,11 +823,10 @@ namespace ForexStrategyBuilder
                 {
                     string indicatorName = indSlot.IndicatorName;
                     SlotTypes slotType = indSlot.SlotType;
-                    Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
-
+                    Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                    indicator.Initialize(slotType);
                     indicator.IndParam = indSlot.IndParam;
-
-                    indicator.Calculate(slotType);
+                    indicator.Calculate(Data.DataSet);
 
                     indSlot.IndicatorName = indicator.IndicatorName;
                     indSlot.IndParam = indicator.IndParam;
@@ -866,7 +867,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Sets the market according to the strategy
         /// </summary>
-        private void SetMarket(string symbol, DataPeriods dataPeriod)
+        private void SetMarket(string symbol, DataPeriod dataPeriod)
         {
             Data.InstrProperties = Instruments.InstrumentList[symbol].Clone();
             Data.Period = dataPeriod;
@@ -876,28 +877,28 @@ namespace ForexStrategyBuilder
 
             switch (dataPeriod)
             {
-                case DataPeriods.min1:
+                case DataPeriod.M1:
                     ComboBoxPeriod.SelectedIndex = 0;
                     break;
-                case DataPeriods.min5:
+                case DataPeriod.M5:
                     ComboBoxPeriod.SelectedIndex = 1;
                     break;
-                case DataPeriods.min15:
+                case DataPeriod.M15:
                     ComboBoxPeriod.SelectedIndex = 2;
                     break;
-                case DataPeriods.min30:
+                case DataPeriod.M30:
                     ComboBoxPeriod.SelectedIndex = 3;
                     break;
-                case DataPeriods.hour1:
+                case DataPeriod.H1:
                     ComboBoxPeriod.SelectedIndex = 4;
                     break;
-                case DataPeriods.hour4:
+                case DataPeriod.H4:
                     ComboBoxPeriod.SelectedIndex = 5;
                     break;
-                case DataPeriods.day:
+                case DataPeriod.D1:
                     ComboBoxPeriod.SelectedIndex = 6;
                     break;
-                case DataPeriods.week:
+                case DataPeriod.W1:
                     ComboBoxPeriod.SelectedIndex = 7;
                     break;
             }
@@ -976,7 +977,7 @@ namespace ForexStrategyBuilder
                     }
 
                     string symbol = Data.Symbol;
-                    DataPeriods dataPeriod = Data.Period;
+                    DataPeriod dataPeriod = Data.Period;
 
                     SetMarket(Data.Strategy.Symbol, Data.Strategy.DataPeriod);
 
@@ -1002,7 +1003,7 @@ namespace ForexStrategyBuilder
         /// </summary>
         private void PrepareScannerCompactMode()
         {
-            if (!Configs.Autoscan || (Data.Period == DataPeriods.min1 && !Configs.UseTickData)) return;
+            if (!Configs.Autoscan || (Data.Period == DataPeriod.M1 && !Configs.UseTickData)) return;
             ComboBoxSymbol.Enabled = false;
             ComboBoxPeriod.Enabled = false;
 

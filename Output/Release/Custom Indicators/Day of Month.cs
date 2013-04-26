@@ -1,33 +1,34 @@
-// Day of Month Indicator
-// Last changed on 2009-05-05
-// Part of Forex Strategy Builder & Forex Strategy Trader
-// Website http://forexsb.com/
-// Copyright (c) 2006 - 2009 Miroslav Popov - All rights reserved.
-// This code or any part of it cannot be used in other applications without a permission.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
+using System.Drawing;
+using ForexStrategyBuilder.Infrastructure.Entities;
+using ForexStrategyBuilder.Infrastructure.Enums;
+using ForexStrategyBuilder.Infrastructure.Interfaces;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder.Indicators
 {
-    /// <summary>
-    /// Day of Month Indicator
-    /// </summary>
     public class Day_of_Month : Indicator
     {
-        /// <summary>
-        /// Sets the default indicator parameters for the designated slot type
-        /// </summary>
-        public Day_of_Month(SlotTypes slotType)
+	    public Day_of_Month()
         {
-            // General properties
             IndicatorName   = "Day of Month";
             PossibleSlots   = SlotTypes.OpenFilter;
-			CustomIndicator = true;
+        }
 
+        public override void Initialize(SlotTypes slotType)
+        {
+            SlotType = slotType;
+			
             // Setting up the indicator parameters
-            IndParam = new IndicatorParam();
-            IndParam.IndicatorName = IndicatorName;
-            IndParam.SlotType      = slotType;
             IndParam.IndicatorType = TypeOfIndicator.DateTime;
 
             // The ComboBox parameters
@@ -56,15 +57,12 @@ namespace Forex_Strategy_Builder
             IndParam.NumParam[1].Point    = 0;
             IndParam.NumParam[1].Enabled  = true;
             IndParam.NumParam[1].ToolTip  = "Day of ending for the entry period.";
-
-            return;
         }
 
-        /// <summary>
-        /// Calculates the indicator's components
-        /// </summary>
-        public override void Calculate(SlotTypes slotType)
+        public override void Calculate(IDataSet dataSet)
         {
+            DataSet = dataSet;
+			
             // Reading the parameters
             int iFromDay  = (int)IndParam.NumParam[0].Value;
             int iUntilDay = (int)IndParam.NumParam[1].Value;
@@ -102,37 +100,25 @@ namespace Forex_Strategy_Builder
             Component[1].ShowInDynInfo = false;
             Component[1].FirstBar      = iFirstBar;
             Component[1].Value         = adBars;
-
-            return;
         }
 
-        /// <summary>
-        /// Sets the indicator logic description
-        /// </summary>
-        public override void SetDescription(SlotTypes slotType)
+        public override void SetDescription()
         {
             int iFromDay  = (int)IndParam.NumParam[0].Value;
             int iUntilDay = (int)IndParam.NumParam[1].Value;
 
             EntryFilterLongDescription  = "the day of month is from " + iFromDay + " (incl.) to " + iUntilDay + " (excl.)";
             EntryFilterShortDescription = "the day of month is from " + iFromDay + " (incl.) to " + iUntilDay + " (excl.)";
-
-            return;
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
             int iFromDay  = (int)IndParam.NumParam[0].Value;
             int iUntilDay = (int)IndParam.NumParam[1].Value;
 
-            string sString = IndicatorName + " (" +
+            return IndicatorName + " (" +
                 iFromDay  + ", " + // From
                 iUntilDay + ")";   // Until
-
-            return sString;
         }
     }
 }

@@ -19,6 +19,7 @@ using System.Media;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Infrastructure.Enums;
 
 namespace ForexStrategyBuilder.Dialogs
 {
@@ -397,14 +398,14 @@ namespace ForexStrategyBuilder.Dialogs
 
             int count1MinBars = ImportTicks(trueFxSourceDir, worker);
 
-            foreach (DataPeriods period in Enum.GetValues(typeof (DataPeriods)))
+            foreach (DataPeriod period in Enum.GetValues(typeof (DataPeriod)))
             {
                 if (count1MinBars < NudMinBars.Value*(int) period) continue;
 
-                if (period == DataPeriods.min1)
+                if (period == DataPeriod.M1)
                 {
                     CompileMinuteBars();
-                    SaveBars(minuteBarList, DataPeriods.min1);
+                    SaveBars(minuteBarList, DataPeriod.M1);
                     continue;
                 }
 
@@ -587,7 +588,7 @@ namespace ForexStrategyBuilder.Dialogs
                 binaryWriter.Write(bid);
         }
 
-        private List<Bar> CompileBars(IEnumerable<Bar> minList, DataPeriods period)
+        private List<Bar> CompileBars(IEnumerable<Bar> minList, DataPeriod period)
         {
             var barList = new List<Bar>();
             var lastBarEndTime = new DateTime();
@@ -634,7 +635,7 @@ namespace ForexStrategyBuilder.Dialogs
         /// <summary>
         ///     Saves bar data to a CSV file.
         /// </summary>
-        private void SaveBars(List<Bar> barList, DataPeriods period)
+        private void SaveBars(List<Bar> barList, DataPeriod period)
         {
             var sb = new StringBuilder();
             foreach (Bar bar in barList)

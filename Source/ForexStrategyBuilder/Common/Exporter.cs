@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder
 {
@@ -139,8 +140,7 @@ namespace ForexStrategyBuilder
 
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
             {
-                Indicator indicator = IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName,
-                                                                        Data.Strategy.Slot[slot].SlotType);
+                Indicator indicator = IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
 
                 sb.Append(indicator + "\t");
                 for (int i = 0; i < Data.Strategy.Slot[slot].Component.Length; i++)

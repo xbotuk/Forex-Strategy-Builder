@@ -9,6 +9,7 @@
 //==============================================================
 
 using System;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder.Dialogs.Optimizer
 {

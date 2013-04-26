@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder.Dialogs.Optimizer
 {
@@ -756,7 +757,8 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
         private void CalculateIndicator(int slot)
         {
             IndicatorParam ip = Data.Strategy.Slot[slot].IndParam;
-            Indicator indicator = IndicatorStore.ConstructIndicator(ip.IndicatorName, ip.SlotType);
+            Indicator indicator = IndicatorManager.ConstructIndicator(ip.IndicatorName);
+            indicator.Initialize(ip.SlotType);
 
             // List parameters
             for (int i = 0; i < 5; i++)
@@ -780,7 +782,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
                 indicator.IndParam.CheckParam[i].Enabled = ip.CheckParam[i].Enabled;
             }
 
-            indicator.Calculate(ip.SlotType);
+            indicator.Calculate(Data.DataSet);
 
             // Sets Data.Strategy
             Data.Strategy.Slot[slot].IndicatorName = indicator.IndicatorName;

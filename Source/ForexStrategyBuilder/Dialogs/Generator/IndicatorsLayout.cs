@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Properties;
 
 namespace ForexStrategyBuilder.Dialogs.Generator
@@ -340,16 +341,16 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             switch (currentSlotType)
             {
                 case SlotTypes.Open:
-                    currentIndicators = IndicatorStore.OpenPointIndicators;
+                    currentIndicators = IndicatorManager.OpenPointIndicators;
                     break;
                 case SlotTypes.OpenFilter:
-                    currentIndicators = IndicatorStore.OpenFilterIndicators;
+                    currentIndicators = IndicatorManager.OpenFilterIndicators;
                     break;
                 case SlotTypes.Close:
-                    currentIndicators = IndicatorStore.ClosePointIndicators;
+                    currentIndicators = IndicatorManager.ClosePointIndicators;
                     break;
                 case SlotTypes.CloseFilter:
-                    currentIndicators = IndicatorStore.CloseFilterIndicators;
+                    currentIndicators = IndicatorManager.CloseFilterIndicators;
                     break;
             }
 
@@ -461,19 +462,19 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 {
                     case SlotTypes.Open:
                         bannedEntryIndicators.Clear();
-                        bannedEntryIndicators.AddRange(IndicatorStore.OpenPointIndicators);
+                        bannedEntryIndicators.AddRange(IndicatorManager.OpenPointIndicators);
                         break;
                     case SlotTypes.OpenFilter:
                         bannedEntryFilterIndicators.Clear();
-                        bannedEntryFilterIndicators.AddRange(IndicatorStore.OpenFilterIndicators);
+                        bannedEntryFilterIndicators.AddRange(IndicatorManager.OpenFilterIndicators);
                         break;
                     case SlotTypes.Close:
                         bannedExitIndicators.Clear();
-                        bannedExitIndicators.AddRange(IndicatorStore.ClosePointIndicators);
+                        bannedExitIndicators.AddRange(IndicatorManager.ClosePointIndicators);
                         break;
                     case SlotTypes.CloseFilter:
                         bannedExitFilterIndicators.Clear();
-                        bannedExitFilterIndicators.AddRange(IndicatorStore.CloseFilterIndicators);
+                        bannedExitFilterIndicators.AddRange(IndicatorManager.CloseFilterIndicators);
                         break;
                 }
                 ArrangeIndicatorsSlots();

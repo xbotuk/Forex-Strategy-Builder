@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Properties;
 
 namespace ForexStrategyBuilder
@@ -373,8 +374,7 @@ namespace ForexStrategyBuilder
             var asIndicatorTexts = new string[Data.Strategy.Slots];
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
             {
-                Indicator indicator = IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName,
-                                                                        Data.Strategy.Slot[slot].SlotType);
+                Indicator indicator = IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
                 indicator.IndParam = Data.Strategy.Slot[slot].IndParam;
                 asIndicatorTexts[slot] = indicator.ToString();
                 indPanels += Data.Strategy.Slot[slot].SeparatedChart ? 1 : 0;
@@ -507,8 +507,7 @@ namespace ForexStrategyBuilder
                 }
                 if (isChart)
                 {
-                    Indicator indicator = IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName,
-                                                                            Data.Strategy.Slot[slot].SlotType);
+                    Indicator indicator = IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
                     indicator.IndParam = Data.Strategy.Slot[slot].IndParam;
                     if (!chartTitle.Contains(indicator.ToString()))
                         chartTitle += Environment.NewLine + indicator;
@@ -1619,8 +1618,7 @@ namespace ForexStrategyBuilder
 
 
             // Chart title
-            Indicator indicator = IndicatorStore.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName,
-                                                                    Data.Strategy.Slot[slot].SlotType);
+            Indicator indicator = IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
             indicator.IndParam = Data.Strategy.Slot[slot].IndParam;
             string indicatorText = indicator.ToString();
             Size sizeTitle = g.MeasureString(indicatorText, Font).ToSize();

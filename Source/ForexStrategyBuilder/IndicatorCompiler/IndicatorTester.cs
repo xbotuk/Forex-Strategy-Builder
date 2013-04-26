@@ -10,6 +10,7 @@
 
 using System;
 using System.Text;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder
 {
@@ -210,17 +211,17 @@ namespace ForexStrategyBuilder
 
             try
             {
-                indicator.Calculate(SlotTypes.NotDefined);
+                indicator.Calculate(Data.DataSet);
             }
             catch (Exception exc)
             {
-                sb.AppendLine("\tError when executing Calculate(SlotTypes.NotDefined). " + exc.Message);
+                sb.AppendLine("\tError when executing Calculate(). " + exc.Message);
                 isOk = false;
             }
 
             try
             {
-                indicator.SetDescription(SlotTypes.NotDefined);
+                indicator.SetDescription();
             }
             catch (Exception exc)
             {
@@ -263,7 +264,8 @@ namespace ForexStrategyBuilder
                 if (slotType == SlotTypes.NotDefined)
                     continue;
 
-                Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
+                Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                indicator.Initialize(slotType);
 
                 if (!indicator.TestPossibleSlot(slotType))
                     continue;
@@ -274,7 +276,7 @@ namespace ForexStrategyBuilder
 
                 try
                 {
-                    indicator.Calculate(slotType);
+                    indicator.Calculate(Data.DataSet);
                 }
                 catch (Exception exc)
                 {
@@ -289,7 +291,7 @@ namespace ForexStrategyBuilder
 
                 try
                 {
-                    indicator.Calculate(slotType);
+                    indicator.Calculate(Data.DataSet);
                 }
                 catch (Exception exc)
                 {

@@ -12,6 +12,8 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Infrastructure.Enums;
 
 namespace ForexStrategyBuilder.Utils
 {
@@ -35,8 +37,8 @@ namespace ForexStrategyBuilder.Utils
         private bool isUseTickDataDefault;
         private int leverageDefault;
         private int maxBarsDefault;
-        private DataPeriods period;
-        private DataPeriods periodDefault;
+        private DataPeriod period;
+        private DataPeriod periodDefault;
         private Strategy strategyDefault;
         private string symbol;
         private string symbolDefault;
@@ -79,11 +81,10 @@ namespace ForexStrategyBuilder.Utils
             {
                 string indicatorName = indSlot.IndicatorName;
                 SlotTypes slotType = indSlot.SlotType;
-                Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
-
+                Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                indicator.Initialize(slotType);
                 indicator.IndParam = indSlot.IndParam;
-
-                indicator.Calculate(slotType);
+                indicator.Calculate(Data.DataSet);
 
                 indSlot.IndicatorName = indicator.IndicatorName;
                 indSlot.IndParam = indicator.IndParam;
@@ -120,47 +121,47 @@ namespace ForexStrategyBuilder.Utils
                     MartingaleMultiplier = 2
                 };
 
-            Indicator indicator = IndicatorStore.ConstructIndicator("Bar Opening", SlotTypes.Open);
+            Indicator indicator = IndicatorManager.ConstructIndicator("Bar Opening");
             strategy.Slot[0].IndicatorName = indicator.IndicatorName;
             strategy.Slot[0].IndParam = indicator.IndParam.Clone();
             strategy.Slot[0].IsDefined = true;
 
-            indicator = IndicatorStore.ConstructIndicator("Moving Average", SlotTypes.OpenFilter);
+            indicator = IndicatorManager.ConstructIndicator("Moving Average");
             strategy.Slot[1].IndicatorName = indicator.IndicatorName;
             strategy.Slot[1].IndParam = indicator.IndParam.Clone();
             strategy.Slot[1].LogicalGroup = "A";
             strategy.Slot[1].IsDefined = true;
 
-            indicator = IndicatorStore.ConstructIndicator("MACD", SlotTypes.OpenFilter);
+            indicator = IndicatorManager.ConstructIndicator("MACD");
             strategy.Slot[2].IndicatorName = indicator.IndicatorName;
             strategy.Slot[2].IndParam = indicator.IndParam.Clone();
             strategy.Slot[2].LogicalGroup = "B";
             strategy.Slot[2].IsDefined = true;
 
-            indicator = IndicatorStore.ConstructIndicator("RSI", SlotTypes.OpenFilter);
+            indicator = IndicatorManager.ConstructIndicator("RSI");
             strategy.Slot[3].IndicatorName = indicator.IndicatorName;
             strategy.Slot[3].IndParam = indicator.IndParam.Clone();
             strategy.Slot[3].LogicalGroup = "C";
             strategy.Slot[3].IsDefined = true;
 
-            indicator = IndicatorStore.ConstructIndicator("ADX", SlotTypes.OpenFilter);
+            indicator = IndicatorManager.ConstructIndicator("ADX");
             strategy.Slot[4].IndicatorName = indicator.IndicatorName;
             strategy.Slot[4].IndParam = indicator.IndParam.Clone();
             strategy.Slot[4].LogicalGroup = "D";
             strategy.Slot[4].IsDefined = true;
 
-            indicator = IndicatorStore.ConstructIndicator("Bar Closing", SlotTypes.CloseFilter);
+            indicator = IndicatorManager.ConstructIndicator("Bar Closing");
             strategy.Slot[5].IndicatorName = indicator.IndicatorName;
             strategy.Slot[5].IndParam = indicator.IndParam.Clone();
             strategy.Slot[5].IsDefined = true;
 
-            indicator = IndicatorStore.ConstructIndicator("Moving Average", SlotTypes.CloseFilter);
+            indicator = IndicatorManager.ConstructIndicator("Moving Average");
             strategy.Slot[6].IndicatorName = indicator.IndicatorName;
             strategy.Slot[6].IndParam = indicator.IndParam.Clone();
             strategy.Slot[6].LogicalGroup = "a";
             strategy.Slot[6].IsDefined = true;
 
-            indicator = IndicatorStore.ConstructIndicator("RSI", SlotTypes.CloseFilter);
+            indicator = IndicatorManager.ConstructIndicator("RSI");
             strategy.Slot[7].IndicatorName = indicator.IndicatorName;
             strategy.Slot[7].IndParam = indicator.IndParam.Clone();
             strategy.Slot[7].LogicalGroup = "b";
@@ -193,10 +194,10 @@ namespace ForexStrategyBuilder.Utils
             var time = new DateTime(2000, 1, 1, 0, 0, 0);
             double open = 1.12345;
             int volume = 300;
-            period = DataPeriods.hour4;
+            period = DataPeriod.H4;
             for (int i = 0; i < maxBars; i++)
             {
-                time = time.AddMinutes((int) DataPeriods.hour1);
+                time = time.AddMinutes((int) DataPeriod.H1);
                 int multiplier = (time.DayOfYear%2 == 0) ? 1 : -1;
                 open = open + multiplier*0.00005;
                 double high = open + 0.00025;

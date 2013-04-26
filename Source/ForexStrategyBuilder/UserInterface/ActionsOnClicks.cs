@@ -21,6 +21,7 @@ using System.Xml;
 using ForexStrategyBuilder.Dialogs;
 using ForexStrategyBuilder.Dialogs.Analyzer;
 using ForexStrategyBuilder.Dialogs.JForex;
+using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Utils;
 
 namespace ForexStrategyBuilder
@@ -527,9 +528,6 @@ namespace ForexStrategyBuilder
                 case "PivotPoints":
                     ShowPivotPoints();
                     break;
-                case "FibonacciLevels":
-                    ShowFibonacciLevels();
-                    break;
                 case "Charges":
                     EditTradingCharges();
                     break;
@@ -566,12 +564,6 @@ namespace ForexStrategyBuilder
                     break;
                 case "miReloadInd":
                     Cursor = Cursors.WaitCursor;
-                    ReloadCustomIndicators();
-                    Cursor = Cursors.Default;
-                    break;
-                case "miExportAsCI":
-                    Cursor = Cursors.WaitCursor;
-                    StrategyToIndicator.ExportStrategyToIndicator();
                     ReloadCustomIndicators();
                     Cursor = Cursors.Default;
                     break;
@@ -812,15 +804,6 @@ namespace ForexStrategyBuilder
         {
             var pivotPointsCalculator = new PivotPointsCalculator();
             pivotPointsCalculator.Show();
-        }
-
-        /// <summary>
-        ///     Starts the Fibonacci Levels Calculator.
-        /// </summary>
-        private void ShowFibonacciLevels()
-        {
-            var fibonacciLevelsCalculator = new FibonacciLevelsCalculator();
-            fibonacciLevelsCalculator.Show();
         }
 
         /// <summary>

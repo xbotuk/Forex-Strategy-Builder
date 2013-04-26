@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Properties;
 
 namespace ForexStrategyBuilder
@@ -659,12 +660,12 @@ namespace ForexStrategyBuilder
                     trnIndicatorsMaOscillator, trnDateTime, trnCustomIndicators
                 });
 
-            foreach (string name in IndicatorStore.GetIndicatorNames(slotType))
+            foreach (string name in IndicatorManager.GetIndicatorNames(slotType))
             {
                 var trn = new TreeNode {Tag = true, Name = name, Text = name};
                 trnAll.Nodes.Add(trn);
 
-                Indicator indicator = IndicatorStore.ConstructIndicator(name, slotType);
+                Indicator indicator = IndicatorManager.ConstructIndicator(name);
                 TypeOfIndicator type = indicator.IndParam.IndicatorType;
 
                 if (indicator.CustomIndicator)
@@ -726,7 +727,8 @@ namespace ForexStrategyBuilder
         /// </summary>
         private void TrvIndicatorsLoadIndicator()
         {
-            Indicator indicator = IndicatorStore.ConstructIndicator(TrvIndicators.SelectedNode.Text, slotType);
+            Indicator indicator = IndicatorManager.ConstructIndicator(TrvIndicators.SelectedNode.Text);
+            indicator.Initialize(slotType);
             UpdateFromIndicatorParam(indicator.IndParam);
             SetDefaultGroup();
             CalculateIndicator(true);
@@ -738,7 +740,7 @@ namespace ForexStrategyBuilder
         /// </summary>
         private void BtnDefaultClick(object sender, EventArgs e)
         {
-            Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
+            Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
             UpdateFromIndicatorParam(indicator.IndParam);
             SetDefaultGroup();
             CalculateIndicator(true);
@@ -808,7 +810,8 @@ namespace ForexStrategyBuilder
             SetOppositeSignalBehaviour();
             SetClosingLogicConditions();
 
-            Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
+            Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+            indicator.Initialize(slotType);
 
             // List parameters
             for (int i = 0; i < 5; i++)
@@ -878,7 +881,7 @@ namespace ForexStrategyBuilder
 
             try
             {
-                indicator.Calculate(type);
+                indicator.Calculate(Data.DataSet);
 
                 okStatus = true;
             }
@@ -915,7 +918,7 @@ namespace ForexStrategyBuilder
             LblIndicatorWarning.Visible = !string.IsNullOrEmpty(warningMessage);
 
             // Set description.
-            indicator.SetDescription(slotType);
+            indicator.SetDescription();
             description = "Long position:" + Environment.NewLine;
             if (slotType == SlotTypes.Open)
             {
@@ -959,7 +962,7 @@ namespace ForexStrategyBuilder
         /// </summary>
         private void SetClosingLogicConditions()
         {
-            bool isClosingFiltersAllowed = IndicatorStore.ClosingIndicatorsWithClosingFilters.Contains(indicatorName);
+            bool isClosingFiltersAllowed = IndicatorManager.ClosingIndicatorsWithClosingFilters.Contains(indicatorName);
 
             // Removes or recovers closing logic slots.
             if (slotType == SlotTypes.Close && !isClosingFiltersAllowed && Data.Strategy.CloseFilters > 0)

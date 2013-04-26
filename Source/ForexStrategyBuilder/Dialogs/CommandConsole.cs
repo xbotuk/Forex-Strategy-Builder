@@ -15,6 +15,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder
 {
@@ -349,8 +350,7 @@ namespace ForexStrategyBuilder
                 var sb = new StringBuilder();
                 for (int iSlot = 0; iSlot < Data.Strategy.Slots; iSlot++)
                 {
-                    Indicator indicator = IndicatorStore.ConstructIndicator(Data.Strategy.Slot[iSlot].IndicatorName,
-                                                                            Data.Strategy.Slot[iSlot].SlotType);
+                    Indicator indicator = IndicatorManager.ConstructIndicator(Data.Strategy.Slot[iSlot].IndicatorName);
 
                     sb.Append(Environment.NewLine + indicator + Environment.NewLine + "Logic: " +
                               indicator.IndParam.ListParam[0].Text + Environment.NewLine + "-----------------" +

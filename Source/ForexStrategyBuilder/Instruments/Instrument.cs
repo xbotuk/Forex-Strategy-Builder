@@ -10,6 +10,7 @@
 
 using System;
 using System.IO;
+using ForexStrategyBuilder.Infrastructure.Enums;
 
 namespace ForexStrategyBuilder
 {
@@ -142,7 +143,7 @@ namespace ForexStrategyBuilder
         ///     Loads the data file
         /// </summary>
         /// <returns>0 - success</returns>
-        public int LoadResourceData(string data, DataPeriods period)
+        public int LoadResourceData(string data, DataPeriod period)
         {
             var dataParser = new DataParser();
             int respond = -1;

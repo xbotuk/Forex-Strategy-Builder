@@ -17,6 +17,7 @@ using System.Globalization;
 using System.IO;
 using System.Media;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Infrastructure.Enums;
 
 namespace ForexStrategyBuilder.Dialogs.JForex
 {
@@ -472,7 +473,7 @@ namespace ForexStrategyBuilder.Dialogs.JForex
 
             streamWriter.Close();
             streamReader.Close();
-            SetInfoText(file.Symbol + " " + Data.DataPeriodToString((DataPeriods) file.Period) + " - " +
+            SetInfoText(file.Symbol + " " + Data.DataPeriodToString((DataPeriod) file.Period) + " - " +
                         (Language.T("Bars")).ToLower() + ": " + bars + Environment.NewLine);
         }
 

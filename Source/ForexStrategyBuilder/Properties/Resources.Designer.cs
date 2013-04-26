@@ -1466,30 +1466,6 @@ namespace ForexStrategyBuilder.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Strategy to Indicator: #INDICATORNAME#
-        ///// Last changed on #MODIFIED#
-        ///// Part of Forex Strategy Builder
-        ///// Website http://forexsb.com/
-        ///// Copyright (c) 2006 - 2011 Miroslav Popov - All rights reserved.
-        ///// This code or any part of it cannot be used in other applications without a permission.
-        ///
-        ///using System;
-        ///using System.Collections.Generic;
-        ///
-        ///namespace Forex_Strategy_Builder
-        ///{
-        ///    /// &lt;summary&gt;
-        ///    /// Strategy to Indicator
-        ///    /// &lt;/summary&gt;
-        ///    public class Strategy_To_Indicator : Indicator        /// [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string StrategyToIndicator {
-            get {
-                return ResourceManager.GetString("StrategyToIndicator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap toggle {

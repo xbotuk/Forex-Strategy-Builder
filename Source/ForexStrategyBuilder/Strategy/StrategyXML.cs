@@ -13,6 +13,8 @@ using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
 using ForexStrategyBuilder.Common;
+using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Utils;
 
 namespace ForexStrategyBuilder
@@ -209,7 +211,9 @@ namespace ForexStrategyBuilder
             int closeFilters = int.Parse(xmlDocStrategy.GetElementsByTagName("closeFilters")[0].InnerText);
 
             // Create the strategy.
+// ReSharper disable UseObjectOrCollectionInitializer
             var tempStrategy = new Strategy(openFilters, closeFilters);
+// ReSharper restore UseObjectOrCollectionInitializer
 
             // Same and Opposite direction Actions
             tempStrategy.SameSignalAction =
@@ -223,9 +227,8 @@ namespace ForexStrategyBuilder
 
             // Market
             tempStrategy.Symbol = xmlDocStrategy.GetElementsByTagName("instrumentSymbol")[0].InnerText;
-            tempStrategy.DataPeriod =
-                (DataPeriods)
-                Enum.Parse(typeof (DataPeriods), xmlDocStrategy.GetElementsByTagName("instrumentPeriod")[0].InnerText);
+            string period = xmlDocStrategy.GetElementsByTagName("instrumentPeriod")[0].InnerText;
+            tempStrategy.DataPeriod = ImportDataPeriod(period);
 
             // Permanent Stop Loss
             tempStrategy.PermanentSL =
@@ -366,7 +369,8 @@ namespace ForexStrategyBuilder
 
                     // Indicator name.
                     string indicatorName = xmlSlotTagList[0].InnerText;
-                    Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
+                    Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                    indicator.Initialize(slotType);
 
                     for (int tag = 1; tag < xmlSlotTagList.Count; tag++)
                     {
@@ -443,7 +447,7 @@ namespace ForexStrategyBuilder
                     tempStrategy.Slot[slot].SlotStatus = slotStatus;
 
                     // Calculate the indicator.
-                    indicator.Calculate(slotType);
+                    indicator.Calculate(Data.DataSet);
                     tempStrategy.Slot[slot].IndicatorName = indicator.IndicatorName;
                     tempStrategy.Slot[slot].IndParam = indicator.IndParam;
                     tempStrategy.Slot[slot].Component = indicator.Component;
@@ -521,6 +525,35 @@ namespace ForexStrategyBuilder
             newElem.InnerText = text;
             if (xmlDocument.DocumentElement != null)
                 xmlDocument.DocumentElement.AppendChild(newElem);
+        }
+
+        private static DataPeriod ImportDataPeriod(string text)
+        {
+            try
+            {
+                return (DataPeriod) Enum.Parse(typeof (DataPeriod), text);
+            }
+            catch (Exception)
+            {
+                if (text == "min1")
+                    return DataPeriod.M1;
+                if (text == "min5")
+                    return DataPeriod.M5;
+                if (text == "min15")
+                    return DataPeriod.M15;
+                if (text == "min30")
+                    return DataPeriod.M30;
+                if (text == "hour1")
+                    return DataPeriod.H1;
+                if (text == "hour4")
+                    return DataPeriod.H4;
+                if (text == "day")
+                    return DataPeriod.D1;
+                if (text == "week")
+                    return DataPeriod.W1;
+            }
+
+            return DataPeriod.D1;
         }
     }
 }

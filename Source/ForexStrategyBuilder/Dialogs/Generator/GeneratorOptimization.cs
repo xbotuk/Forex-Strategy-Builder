@@ -10,6 +10,7 @@
 
 using System;
 using System.ComponentModel;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder.Dialogs.Generator
 {
@@ -287,7 +288,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                         NumericParam num = Data.Strategy.Slot[slot].IndParam.NumParam[param];
                         if (num.Caption == "Level" && !indSlot.IndParam.ListParam[0].Text.Contains("Level")) break;
 
-                        Indicator indicator = IndicatorStore.ConstructIndicator(indSlot.IndicatorName, indSlot.SlotType);
+                        Indicator indicator = IndicatorManager.ConstructIndicator(indSlot.IndicatorName);
                         double defaultValue = indicator.IndParam.NumParam[param].Value;
 
                         double numOldValue = num.Value;

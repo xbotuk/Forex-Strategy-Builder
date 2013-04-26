@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using ForexStrategyBuilder.CustomControls;
+using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Properties;
 
 namespace ForexStrategyBuilder
@@ -241,7 +242,7 @@ namespace ForexStrategyBuilder
             ButtonAddOpenFilter.Enabled = strategy.OpenFilters < Strategy.MaxOpenFilters;
 
             bool isClosingFiltersAllowed =
-                IndicatorStore.ClosingIndicatorsWithClosingFilters.Contains(
+                IndicatorManager.ClosingIndicatorsWithClosingFilters.Contains(
                     strategy.Slot[strategy.CloseSlot].IndicatorName);
 
             // Shows or not btnAddCloseFilter
@@ -932,7 +933,7 @@ namespace ForexStrategyBuilder
             const string text =
                 "You can use Closing Logic Conditions only if the Closing Point of the Position slot contains one of the following indicators:";
             string indicators = Environment.NewLine;
-            foreach (string indicator in IndicatorStore.ClosingIndicatorsWithClosingFilters)
+            foreach (string indicator in IndicatorManager.ClosingIndicatorsWithClosingFilters)
                 indicators += " - " + indicator + Environment.NewLine;
             MessageBox.Show(Language.T(text) + indicators, Language.T("Closing Logic Condition"), MessageBoxButtons.OK,
                             MessageBoxIcon.Asterisk);

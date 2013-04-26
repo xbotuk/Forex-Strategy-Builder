@@ -128,7 +128,6 @@
     <Compile Include="Enumerations\WayPointType.cs" />
     <Compile Include="Common\Colors.cs" />
     <Compile Include="Enumerations\SlotSizeMinMidMax.cs" />
-    <Compile Include="Enumerations\DataPeriods.cs" />
     <Compile Include="Common\StatsBuffer.cs" />
     <Compile Include="Dialogs\Generator\Top10Layout.cs">
       <SubType>Component</SubType>
@@ -140,7 +139,6 @@
     <Compile Include="Enumerations\IndicatorLogic.cs" />
     <Compile Include="Enumerations\BandIndLogic.cs" />
     <Compile Include="Enumerations\IndChartType.cs" />
-    <Compile Include="IndicatorBase\IndicatorSlot.cs" />
     <Compile Include="Enumerations\InstrumetType.cs" />
     <Compile Include="Enumerations\CommissionType.cs" />
     <Compile Include="Enumerations\CommissionScope.cs" />
@@ -152,6 +150,118 @@
     <Compile Include="Enumerations\PositionPriceDependence.cs" />
     <Compile Include="Enumerations\PermanentProtectionType.cs" />
     <Compile Include="Enumerations\StrategySlotStatus.cs" />
+    <Compile Include="Indicators\CheckParam.cs" />
+    <Compile Include="Indicators\Indicator.cs" />
+    <Compile Include="Indicators\IndicatorComp.cs" />
+    <Compile Include="Indicators\IndicatorParam.cs" />
+    <Compile Include="Indicators\IndicatorSlot.cs" />
+    <Compile Include="Indicators\IndicatorManager.cs" />
+    <Compile Include="Indicators\ListParam.cs" />
+    <Compile Include="Indicators\NumericParam.cs" />
+    <Compile Include="Indicators\Store\AcceleratorOscillator.cs" />
+    <Compile Include="Indicators\Store\AccountPercentStop.cs" />
+    <Compile Include="Indicators\Store\AccumulationDistribution.cs" />
+    <Compile Include="Indicators\Store\AtrMaOscillator.cs" />
+    <Compile Include="Indicators\Store\AwesomeOscillator.cs" />
+    <Compile Include="Indicators\Store\BalanceOfPower.cs" />
+    <Compile Include="Indicators\Store\BarClosing.cs" />
+    <Compile Include="Indicators\Store\BarOpening.cs" />
+    <Compile Include="Indicators\Store\BarRange.cs" />
+    <Compile Include="Indicators\Store\BbpMaOscillator.cs" />
+    <Compile Include="Indicators\Store\BearsPower.cs" />
+    <Compile Include="Indicators\Store\BollingerBands.cs" />
+    <Compile Include="Indicators\Store\BullsBearsPower.cs" />
+    <Compile Include="Indicators\Store\BullsPower.cs" />
+    <Compile Include="Indicators\Store\CciMAOscillator.cs" />
+    <Compile Include="Indicators\Store\CloseAndReverse.cs" />
+    <Compile Include="Indicators\Store\CommodityChannelIndex.cs" />
+    <Compile Include="Indicators\Store\CumulativeSum.cs" />
+    <Compile Include="Indicators\Store\DataBarsFilter.cs" />
+    <Compile Include="Indicators\Store\DateFilter.cs" />
+    <Compile Include="Indicators\Store\DayClosing.cs" />
+    <Compile Include="Indicators\Store\DayOpening.cs" />
+    <Compile Include="Indicators\Store\DaysOfWeek.cs" />
+    <Compile Include="Indicators\Store\DeMarker.cs" />
+    <Compile Include="Indicators\Store\DetrendedOscillator.cs" />
+    <Compile Include="Indicators\Store\DirectionalIndicators.cs" />
+    <Compile Include="Indicators\Store\DonchianChannel.cs" />
+    <Compile Include="Indicators\Store\EaseOfMovement.cs" />
+    <Compile Include="Indicators\Store\EnterOnce.cs" />
+    <Compile Include="Indicators\Store\EntryHour.cs" />
+    <Compile Include="Indicators\Store\EntryTime.cs" />
+    <Compile Include="Indicators\Store\Envelopes.cs" />
+    <Compile Include="Indicators\Store\ExitHour.cs" />
+    <Compile Include="Indicators\Store\FisherTransform.cs" />
+    <Compile Include="Indicators\Store\ForceIndex.cs" />
+    <Compile Include="Indicators\Store\Fractal.cs" />
+    <Compile Include="Indicators\Store\HeikenAshi.cs" />
+    <Compile Include="Indicators\Store\HourlyHighLow.cs" />
+    <Compile Include="Indicators\Store\IchimokuKinkoHyo.cs" />
+    <Compile Include="Indicators\Store\InsideBar.cs" />
+    <Compile Include="Indicators\Store\KeltnerChannel.cs" />
+    <Compile Include="Indicators\Store\LongOrShort.cs" />
+    <Compile Include="Indicators\Store\LotLimiter.cs" />
+    <Compile Include="Indicators\Store\MACD.cs" />
+    <Compile Include="Indicators\Store\MACDHistogram.cs" />
+    <Compile Include="Indicators\Store\MAOscillator.cs" />
+    <Compile Include="Indicators\Store\MarketFacilitationIndex.cs" />
+    <Compile Include="Indicators\Store\Momentum.cs" />
+    <Compile Include="Indicators\Store\MomentumMAOscillator.cs" />
+    <Compile Include="Indicators\Store\MoneyFlow.cs" />
+    <Compile Include="Indicators\Store\MoneyFlowIndex.cs" />
+    <Compile Include="Indicators\Store\MovingAverage.cs" />
+    <Compile Include="Indicators\Store\MovingAveragesCrossover.cs" />
+    <Compile Include="Indicators\Store\NarrowRange.cs" />
+    <Compile Include="Indicators\Store\NBarsExit.cs" />
+    <Compile Include="Indicators\Store\ObosMaOscillator.cs" />
+    <Compile Include="Indicators\Store\OnBalanceVolume.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfBbp.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfCci.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfMACD.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfMomentum.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfObos.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfRoc.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfRsi.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfTrix.cs" />
+    <Compile Include="Indicators\Store\OverboughtOversoldIndex.cs" />
+    <Compile Include="Indicators\Store\ParabolicSar.cs" />
+    <Compile Include="Indicators\Store\PercentChange.cs" />
+    <Compile Include="Indicators\Store\PivotPoints.cs" />
+    <Compile Include="Indicators\Store\PreviousBarClosing.cs" />
+    <Compile Include="Indicators\Store\PreviousBarOpening.cs" />
+    <Compile Include="Indicators\Store\PreviousHighLow.cs" />
+    <Compile Include="Indicators\Store\PriceMove.cs" />
+    <Compile Include="Indicators\Store\PriceOscillator.cs" />
+    <Compile Include="Indicators\Store\RandomFilter.cs" />
+    <Compile Include="Indicators\Store\RateOfChange.cs" />
+    <Compile Include="Indicators\Store\RelativeVigorIndex.cs" />
+    <Compile Include="Indicators\Store\RocMaOscillator.cs" />
+    <Compile Include="Indicators\Store\RossHook.cs" />
+    <Compile Include="Indicators\Store\RoundNumber.cs" />
+    <Compile Include="Indicators\Store\RSI.cs" />
+    <Compile Include="Indicators\Store\RsiMaOscillator.cs" />
+    <Compile Include="Indicators\Store\StandardDeviation.cs" />
+    <Compile Include="Indicators\Store\StarcBands.cs" />
+    <Compile Include="Indicators\Store\SteadyBands.cs" />
+    <Compile Include="Indicators\Store\Stochastics.cs" />
+    <Compile Include="Indicators\Store\StopLimit.cs" />
+    <Compile Include="Indicators\Store\StopLoss.cs" />
+    <Compile Include="Indicators\Store\TakeProfit.cs" />
+    <Compile Include="Indicators\Store\TopBottomPrice.cs" />
+    <Compile Include="Indicators\Store\TrailingStop.cs" />
+    <Compile Include="Indicators\Store\TrailingStopLimit.cs" />
+    <Compile Include="Indicators\Store\TrixIndex.cs" />
+    <Compile Include="Indicators\Store\TrixMAOscillator.cs" />
+    <Compile Include="Indicators\Store\WeekClosing.cs" />
+    <Compile Include="Indicators\Store\WilliamsPercentRange.cs" />
+    <Compile Include="Infrastructure\Entities\DataSet.cs" />
+    <Compile Include="Infrastructure\Entities\InfoRecord.cs" />
+    <Compile Include="Infrastructure\Enums\DataPeriod.cs" />
+    <Compile Include="Infrastructure\Enums\InfoRecordFlag.cs" />
+    <Compile Include="Infrastructure\Interfaces\IDataParams.cs" />
+    <Compile Include="Infrastructure\Interfaces\IDataSet.cs" />
+    <Compile Include="Infrastructure\Interfaces\IIndicator.cs" />
+    <Compile Include="Infrastructure\Interfaces\IInstrumentProperties.cs" />
     <Compile Include="UserInterface\SmallBalanceChartData.cs" />
     <Compile Include="Utils\Benchmark.cs" />
     <Compile Include="Utils\ColorMagic.cs" />
@@ -212,7 +322,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\Optimizer\Parameter.cs" />
-    <Compile Include="Indicators\N Bars Exit.cs" />
     <Compile Include="Dialogs\AboutScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -237,9 +346,6 @@
     <Compile Include="IndicatorCompiler\IndicatorCompilationManager.cs" />
     <Compile Include="IndicatorCompiler\CustomIndicators.cs" />
     <Compile Include="IndicatorCompiler\IndicatorTester.cs" />
-    <Compile Include="IndicatorBase\IndicatorStore.cs" />
-    <Compile Include="IndicatorCompiler\StrategyToIndicator.cs" />
-    <Compile Include="Indicators\Fibonacci.cs" />
     <Compile Include="Instruments\Bar.cs" />
     <Compile Include="CustomControls\ContextButton.cs">
       <SubType>Component</SubType>
@@ -275,30 +381,8 @@
     <Compile Include="Dialogs\EditTranslation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\FibonacciLevelsCalculator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="IndicatorBase\CheckParam.cs" />
     <Compile Include="Enumerations\SlotTypes.cs" />
-    <Compile Include="IndicatorBase\IndicatorComp.cs" />
-    <Compile Include="IndicatorBase\ListParam.cs" />
-    <Compile Include="IndicatorBase\NumericParam.cs" />
-    <Compile Include="Indicators\Ease of Movement.cs" />
-    <Compile Include="Indicators\Aroon Histogram.cs" />
-    <Compile Include="Indicators\Balance of Power.cs" />
-    <Compile Include="Indicators\Detrended Oscillator.cs" />
-    <Compile Include="Indicators\Fisher Transform.cs" />
-    <Compile Include="Indicators\Hourly High Low.cs" />
-    <Compile Include="Indicators\Ichimoku Kinko Hyo.cs" />
-    <Compile Include="Indicators\Inside Bar.cs" />
-    <Compile Include="Indicators\Narrow Range.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Indicators\Percent Change.cs" />
-    <Compile Include="Indicators\Previous Bar Closing.cs" />
-    <Compile Include="Indicators\Previous Bar Opening.cs" />
-    <Compile Include="Indicators\Relative Vigor Index.cs" />
-    <Compile Include="Indicators\Trailing Stop Limit.cs" />
+    <Compile Include="Indicators\Store\AroonHistogram.cs" />
     <Compile Include="Instruments\Instruments.cs" />
     <Compile Include="Dialogs\DataHorizon.cs">
       <SubType>Form</SubType>
@@ -311,26 +395,7 @@
     <Compile Include="Dialogs\Calculator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Indicators\Account Percent Stop.cs" />
-    <Compile Include="Indicators\ATR Stop.cs" />
-    <Compile Include="Indicators\Bar Range.cs" />
-    <Compile Include="Indicators\Day of Week.cs" />
-    <Compile Include="Indicators\DeMarker.cs" />
-    <Compile Include="Indicators\Enter Once.cs" />
-    <Compile Include="Indicators\Force Index.cs" />
-    <Compile Include="Indicators\Heiken Ashi.cs" />
-    <Compile Include="Indicators\Keltner Channel.cs" />
-    <Compile Include="Indicators\MACD Histogram.cs" />
-    <Compile Include="Indicators\Moving Averages Crossover.cs" />
-    <Compile Include="Indicators\Previous High Low.cs" />
-    <Compile Include="Indicators\Price Move.cs" />
-    <Compile Include="Indicators\Ross Hook.cs" />
-    <Compile Include="Indicators\Round Number.cs" />
-    <Compile Include="Indicators\Steady Bands.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Indicators\Top Bottom Price.cs" />
-    <Compile Include="Indicators\Week Closing.cs" />
+    <Compile Include="Indicators\Store\AtrStop.cs" />
     <Compile Include="CustomControls\FancyMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -376,56 +441,13 @@
     <Compile Include="Dialogs\Generator\GeneratorGUI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="IndicatorBase\IndicatorParam.cs" />
-    <Compile Include="Indicators\Data Bars Filter.cs" />
-    <Compile Include="Indicators\Date Filter.cs" />
-    <Compile Include="Indicators\Donchian Channel.cs" />
-    <Compile Include="Indicators\Entry Hour.cs" />
-    <Compile Include="Indicators\Entry Time.cs" />
-    <Compile Include="Indicators\Exit Hour.cs" />
-    <Compile Include="Indicators\Lot Limiter.cs" />
-    <Compile Include="Indicators\Stop Loss.cs" />
-    <Compile Include="Indicators\Take Profit.cs" />
     <Compile Include="Dialogs\Chart.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\ControlsMarket.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Indicators\ATR MA Oscillator.cs" />
-    <Compile Include="Indicators\BBP MA Oscillator.cs" />
-    <Compile Include="Indicators\Bears Power.cs" />
-    <Compile Include="Indicators\Bulls Power.cs" />
-    <Compile Include="Indicators\CCI MA Oscillator.cs" />
-    <Compile Include="Indicators\Commodity Channel Index.cs" />
-    <Compile Include="Indicators\Envelopes.cs" />
-    <Compile Include="Indicators\Market Facilitation Index.cs" />
-    <Compile Include="Indicators\Momentum MA Oscillator.cs" />
-    <Compile Include="Indicators\OBOS MA Oscillator.cs" />
-    <Compile Include="Indicators\On Balance Volume.cs" />
-    <Compile Include="Indicators\Oscillator of ATR.cs" />
-    <Compile Include="Indicators\Oscillator of BBP.cs" />
-    <Compile Include="Indicators\Oscillator of CCI.cs" />
-    <Compile Include="Indicators\Oscillator of MACD.cs" />
-    <Compile Include="Indicators\Oscillator of Momentum.cs" />
-    <Compile Include="Indicators\Oscillator of OBOS.cs" />
-    <Compile Include="Indicators\Oscillator of ROC.cs" />
-    <Compile Include="Indicators\Oscillator of RSI.cs" />
-    <Compile Include="Indicators\Oscillator of Trix.cs" />
-    <Compile Include="Indicators\Overbought Oversold Index.cs" />
-    <Compile Include="Indicators\Price Oscillator.cs" />
-    <Compile Include="Indicators\Cumulative Sum.cs" />
-    <Compile Include="Indicators\Long or Short.cs" />
-    <Compile Include="Indicators\Pivot Points.cs" />
-    <Compile Include="Indicators\Random Filter.cs" />
-    <Compile Include="Indicators\Rate of Change.cs" />
-    <Compile Include="Indicators\ROC MA Oscillator.cs" />
-    <Compile Include="Indicators\RSI MA Oscillator.cs" />
-    <Compile Include="Indicators\Standard Deviation.cs" />
-    <Compile Include="Indicators\Starc Bands.cs" />
-    <Compile Include="Indicators\Trix Index.cs" />
-    <Compile Include="Indicators\Trix MA Oscillator.cs" />
-    <Compile Include="Indicators\Williams Percent Range.cs" />
+    <Compile Include="Indicators\Store\OscillatorOfAtr.cs" />
     <Compile Include="Common\CheckUpdate.cs">
     </Compile>
     <Compile Include="Dialogs\Comparator.cs">
@@ -470,36 +492,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Common\Data.cs" />
-    <Compile Include="IndicatorBase\Indicator.cs" />
     <Compile Include="Dialogs\IndicatorDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Indicators\Accelerator Oscillator.cs" />
-    <Compile Include="Indicators\AccumulationDistribution.cs" />
-    <Compile Include="Indicators\ADX.cs" />
-    <Compile Include="Indicators\Alligator.cs" />
-    <Compile Include="Indicators\Average True Range.cs" />
-    <Compile Include="Indicators\Awesome Oscillator.cs" />
-    <Compile Include="Indicators\Bollinger Bands.cs" />
-    <Compile Include="Indicators\Bulls Bears Power.cs" />
-    <Compile Include="Indicators\Close and Reverse.cs" />
-    <Compile Include="Indicators\Day Opening.cs" />
-    <Compile Include="Indicators\Day Closing.cs" />
-    <Compile Include="Indicators\Directional Indicators.cs" />
-    <Compile Include="Indicators\Fractal.cs" />
-    <Compile Include="Indicators\MACD.cs" />
-    <Compile Include="Indicators\MA Oscillator.cs" />
-    <Compile Include="Indicators\Momentum.cs" />
-    <Compile Include="Indicators\Money Flow.cs" />
-    <Compile Include="Indicators\Money Flow Index.cs" />
-    <Compile Include="Indicators\Moving Average.cs" />
-    <Compile Include="Indicators\Parabolic SAR.cs" />
-    <Compile Include="Indicators\Bar Closing.cs" />
-    <Compile Include="Indicators\Bar Opening.cs" />
-    <Compile Include="Indicators\RSI.cs" />
-    <Compile Include="Indicators\Stochastics.cs" />
-    <Compile Include="Indicators\Stop Limit.cs" />
-    <Compile Include="Indicators\Trailing Stop.cs" />
+    <Compile Include="Indicators\Store\ADX.cs" />
+    <Compile Include="Indicators\Store\Alligator.cs" />
+    <Compile Include="Indicators\Store\AverageTrueRange.cs" />
     <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="Backtester\BacktesterCalculator.cs" />
     <Compile Include="UserInterface\MenuAndStatusBar.cs">
@@ -681,7 +679,6 @@
     <EmbeddedResource Include="Images\optimizer_select_all.png" />
     <EmbeddedResource Include="Images\optimizer_select_none.png" />
     <EmbeddedResource Include="Images\optimizer_select_random.png" />
-    <EmbeddedResource Include="Resources\StrategyToIndicator.txt" />
     <EmbeddedResource Include="Images\overoptimization-chart.png" />
     <EmbeddedResource Include="Images\cumulative-str.png" />
     <EmbeddedResource Include="Images\slot-size-max.png" />

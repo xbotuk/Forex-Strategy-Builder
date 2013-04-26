@@ -14,6 +14,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
 using ForexStrategyBuilder.CustomControls;
+using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Utils;
 
 namespace ForexStrategyBuilder
@@ -443,18 +444,18 @@ namespace ForexStrategyBuilder
 
             // Scanning note
             var fontNote = new Font(Font.FontFamily, Font.Size - 1);
-            if (Data.Period != DataPeriods.min1 && Configs.Autoscan && !Data.IsIntrabarData)
+            if (Data.Period != DataPeriod.M1 && Configs.Autoscan && !Data.IsIntrabarData)
                 g.DrawString(Language.T("Load intrabar data"), fontNote, Brushes.Red, xLeft, captionHeight - 2);
-            else if (Data.Period != DataPeriods.min1 && isScanPerformed)
+            else if (Data.Period != DataPeriod.M1 && isScanPerformed)
                 g.DrawString(Language.T("Scanned") + data.ModellingQuolity, fontNote, Brushes.LimeGreen, xLeft,
                              captionHeight - 2);
 
             // Scanned bars
             if (isScanPerformed && !isHideScanningLine &&
                 (Data.IntraBars != null && Data.IsIntrabarData ||
-                 Data.Period == DataPeriods.min1 && Data.IsTickData && Configs.UseTickData))
+                 Data.Period == DataPeriod.M1 && Data.IsTickData && Configs.UseTickData))
             {
-                DataPeriods dataPeriod = Data.Period;
+                DataPeriod dataPeriod = Data.Period;
                 Color color = Data.PeriodColor[Data.Period];
                 int fromBar = data.FirstBar;
                 for (int bar = data.FirstBar; bar < data.Bars; bar++)
@@ -489,9 +490,9 @@ namespace ForexStrategyBuilder
                     Data.GradientPaint(g, new RectangleF(xStart, yBottom + 4, xEnd - xStart + 2, 5), color, 60);
 
                     var rect = new RectangleF(xStart, yBottom + 4, xEnd - xStart + 2, 5);
-                    Data.GradientPaint(g, rect, Data.PeriodColor[DataPeriods.min1], 60);
+                    Data.GradientPaint(g, rect, Data.PeriodColor[DataPeriod.M1], 60);
                     rect = new RectangleF(xStart, yBottom + 6, xEnd - xStart + 2, 1);
-                    Data.GradientPaint(g, rect, Data.PeriodColor[DataPeriods.day], 60);
+                    Data.GradientPaint(g, rect, Data.PeriodColor[DataPeriod.D1], 60);
                 }
 
                 // Vertical coordinate axes

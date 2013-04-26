@@ -1,36 +1,33 @@
-// Moving Average of Oscillator Indicator
-// Last changed on 2009-05-15
-// Part of Forex Strategy Builder & Forex Strategy Trader
-// Website http://forexsb.com/
-// This code or any part of it cannot be used in other applications without a permission.
-// Copyright (c) 2006 - 2009 Miroslav Popov - All rights reserved.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
+using ForexStrategyBuilder.Infrastructure.Entities;
+using ForexStrategyBuilder.Infrastructure.Enums;
+using ForexStrategyBuilder.Infrastructure.Interfaces;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder.Indicators
 {
-    /// <summary>
-    /// MACD Histogram Indicator
-    /// </summary>
-    public class Moving_Average_of_Oscillator : Indicator
+    public class MAOfOscillator : Indicator
     {
-        /// <summary>
-        /// <summary>
-        /// Sets the default indicator parameters for the designated slot type
-        /// </summary>
-        public Moving_Average_of_Oscillator(SlotTypes slotType)
+        public MAOfOscillator()
         {
-            // General properties
             IndicatorName   = "Moving Average of Oscillator";
             PossibleSlots   = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart  = true;
-            CustomIndicator = true;
+        }
 
-            // Setting up the indicator parameters
-            IndParam = new IndicatorParam();
-            IndParam.IndicatorName = IndicatorName;
-            IndParam.SlotType      = slotType;
+        public override void Initialize(SlotTypes slotType)
+        {
+            SlotType = slotType;
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
@@ -103,18 +100,14 @@ namespace Forex_Strategy_Builder
 
             // The CheckBox parameters
             IndParam.CheckParam[0].Caption = "Use previous bar value";
-            IndParam.CheckParam[0].Checked = PrepareUsePrevBarValueCheckBox(slotType);
             IndParam.CheckParam[0].Enabled = true;
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
-
-            return;
         }
 
-        /// <summary>
-        /// Calculates the indicator's components
-        /// </summary>
-        public override void Calculate(SlotTypes slotType)
+        public override void Calculate(IDataSet dataSet)
         {
+            DataSet = dataSet;
+
             // Reading the parameters
             MAMethod  maMethod  = (MAMethod )IndParam.ListParam[1].Index;
             MAMethod  slMethod  = (MAMethod )IndParam.ListParam[3].Index;
@@ -164,14 +157,14 @@ namespace Forex_Strategy_Builder
             Component[2].Value     = new double[Bars];
 
             // Sets the Component's type
-            if (slotType == SlotTypes.OpenFilter)
+            if (SlotType == SlotTypes.OpenFilter)
             {
                 Component[1].DataType = IndComponentType.AllowOpenLong;
                 Component[1].CompName = "Is long entry allowed";
                 Component[2].DataType = IndComponentType.AllowOpenShort;
                 Component[2].CompName = "Is short entry allowed";
             }
-            else if (slotType == SlotTypes.CloseFilter)
+            else if (SlotType == SlotTypes.CloseFilter)
             {
                 Component[1].DataType = IndComponentType.ForceCloseLong;
                 Component[1].CompName = "Close out long position";
@@ -225,14 +218,12 @@ namespace Forex_Strategy_Builder
             }
 
             OscillatorLogic(iFirstBar, iPrvs, adHistogram, dLevel, -dLevel, ref Component[1], ref Component[2], indLogic);
-
-            return;
         }
 
         /// <summary>
         /// Sets the indicator logic description
         /// </summary>
-        public override void SetDescription(SlotTypes slotType)
+        public override void SetDescription()
         {
             string sLevelLong  = (IndParam.NumParam[3].Value == 0 ? "0" : IndParam.NumParam[3].ValueToString);
             string sLevelShort = (IndParam.NumParam[3].Value == 0 ? "0" : "-" + IndParam.NumParam[3].ValueToString);
@@ -303,16 +294,11 @@ namespace Forex_Strategy_Builder
                 default:
                     break;
             }
-
-            return;
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
+            return IndicatorName +
                 (IndParam.CheckParam[0].Checked ? "* (" : " (") +
                 IndParam.ListParam[1].Text         + ", " + // Method
                 IndParam.ListParam[2].Text         + ", " + // Price
@@ -320,8 +306,6 @@ namespace Forex_Strategy_Builder
                 IndParam.NumParam[0].ValueToString + ", " + // Slow MA period
                 IndParam.NumParam[1].ValueToString + ", " + // Fast MA period
                 IndParam.NumParam[2].ValueToString + ")";   // Signal MA period
-
-            return sString;
         }
     }
 }

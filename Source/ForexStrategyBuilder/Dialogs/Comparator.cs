@@ -15,6 +15,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Media;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Infrastructure.Enums;
 
 namespace ForexStrategyBuilder
 {
@@ -770,7 +771,7 @@ namespace ForexStrategyBuilder
             {
                 g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space - 1, yBottom, border + space - 1,
                            yBottom + 8);
-                DataPeriods dataPeriod = Data.Period;
+                DataPeriod dataPeriod = Data.Period;
                 Color color = Data.PeriodColor[Data.Period];
                 int iFromBar = Data.FirstBar;
                 for (int bar = Data.FirstBar; bar < Data.Bars; bar++)

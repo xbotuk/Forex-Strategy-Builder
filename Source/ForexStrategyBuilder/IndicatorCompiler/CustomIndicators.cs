@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Indicators;
 
 namespace ForexStrategyBuilder
 {
@@ -30,16 +31,16 @@ namespace ForexStrategyBuilder
             if (!Directory.Exists(Data.SourceFolder))
             {
                 MessageBox.Show("Custom indicators folder does not exist!", Language.T("Custom Indicators"));
-                IndicatorStore.ResetCustomIndicators(null);
-                IndicatorStore.CombineAllIndicators();
+                IndicatorManager.ResetCustomIndicators(null);
+                IndicatorManager.CombineAllIndicators();
                 return;
             }
 
             string[] pathInputFiles = Directory.GetFiles(Data.SourceFolder, "*.cs");
             if (pathInputFiles.Length == 0)
             {
-                IndicatorStore.ResetCustomIndicators(null);
-                IndicatorStore.CombineAllIndicators();
+                IndicatorManager.ResetCustomIndicators(null);
+                IndicatorManager.CombineAllIndicators();
                 return;
             }
 
@@ -64,8 +65,8 @@ namespace ForexStrategyBuilder
             }
 
             // Adds the custom indicators
-            IndicatorStore.ResetCustomIndicators(indicatorManager.CustomIndicatorsList);
-            IndicatorStore.CombineAllIndicators();
+            IndicatorManager.ResetCustomIndicators(indicatorManager.CustomIndicatorsList);
+            IndicatorManager.CombineAllIndicators();
 
             if (isError)
             {
@@ -103,7 +104,7 @@ namespace ForexStrategyBuilder
             okReport.AppendLine("<h1>" + Language.T("Custom Indicators") + "</h1>");
             okReport.AppendLine("<p>");
 
-            foreach (string indicatorName in IndicatorStore.CustomIndicatorNames)
+            foreach (string indicatorName in IndicatorManager.CustomIndicatorNames)
             {
                 string errorList;
                 if (!IndicatorTester.CustomIndicatorThoroughTest(indicatorName, out errorList))

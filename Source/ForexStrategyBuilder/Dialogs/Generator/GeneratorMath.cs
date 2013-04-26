@@ -15,6 +15,8 @@ using System.Globalization;
 using System.Media;
 using System.Windows.Forms;
 using ForexStrategyBuilder.CustomAnalytics;
+using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Infrastructure.Enums;
 
 namespace ForexStrategyBuilder.Dialogs.Generator
 {
@@ -300,10 +302,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 maxOpeningLogicSlots = lockedEntryFilters;
 
             if (lockedExitSlot != null &&
-                !IndicatorStore.ClosingIndicatorsWithClosingFilters.Contains(lockedExitSlot.IndicatorName))
+                !IndicatorManager.ClosingIndicatorsWithClosingFilters.Contains(lockedExitSlot.IndicatorName))
                 isExitLocked = true;
             else if (lockedExitSlot != null &&
-                     IndicatorStore.ClosingIndicatorsWithClosingFilters.Contains(lockedExitSlot.IndicatorName) &&
+                     IndicatorManager.ClosingIndicatorsWithClosingFilters.Contains(lockedExitSlot.IndicatorName) &&
                      lockedExitFilters >= maxClosingLogicSlots)
                 isExitLocked = true;
             else if (lockedExitSlot == null && lockedExitFilters > 0 && lockedExitFilters >= maxClosingLogicSlots)
@@ -354,24 +356,24 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             exitFilterIndicators.Clear();
 
             // Copy all no banned indicators
-            foreach (string indicator in IndicatorStore.OpenPointIndicators)
+            foreach (string indicator in IndicatorManager.OpenPointIndicators)
                 if (!indicatorsField.IsIndicatorBanned(SlotTypes.Open, indicator))
                     entryIndicators.Add(indicator);
-            foreach (string indicator in IndicatorStore.OpenFilterIndicators)
+            foreach (string indicator in IndicatorManager.OpenFilterIndicators)
                 if (!indicatorsField.IsIndicatorBanned(SlotTypes.OpenFilter, indicator))
                     entryFilterIndicators.Add(indicator);
-            foreach (string indicator in IndicatorStore.ClosePointIndicators)
+            foreach (string indicator in IndicatorManager.ClosePointIndicators)
                 if (!indicatorsField.IsIndicatorBanned(SlotTypes.Close, indicator))
                     exitIndicators.Add(indicator);
-            foreach (string indicator in IndicatorStore.ClosingIndicatorsWithClosingFilters)
+            foreach (string indicator in IndicatorManager.ClosingIndicatorsWithClosingFilters)
                 if (!indicatorsField.IsIndicatorBanned(SlotTypes.Close, indicator))
                     exitIndicatorsWithFilters.Add(indicator);
-            foreach (string indicator in IndicatorStore.CloseFilterIndicators)
+            foreach (string indicator in IndicatorManager.CloseFilterIndicators)
                 if (!indicatorsField.IsIndicatorBanned(SlotTypes.CloseFilter, indicator))
                     exitFilterIndicators.Add(indicator);
 
             // Remove special cases
-            bool isPeriodDayOrWeek = Data.Period == DataPeriods.day || Data.Period == DataPeriods.week;
+            bool isPeriodDayOrWeek = Data.Period == DataPeriod.D1 || Data.Period == DataPeriod.W1;
 
             if (entryIndicators.Contains("Fibonacci"))
                 entryIndicators.Remove("Fibonacci");
@@ -616,7 +618,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             try
             {
 #endif
-                indicator.Calculate(slotType);
+                indicator.Calculate(Data.DataSet);
                 totalCalculations++;
                 return true;
 #if !DEBUG
@@ -728,7 +730,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             // Exit filter slots
             if (
-                IndicatorStore.ClosingIndicatorsWithClosingFilters.Contains(
+                IndicatorManager.ClosingIndicatorsWithClosingFilters.Contains(
                     Data.Strategy.Slot[Data.Strategy.CloseSlot].IndicatorName) && closeFilters > 0)
             {
                 for (int i = 0; i < lockedExitFilters; i++)
@@ -793,7 +795,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         {
             string indicatorName = Data.Strategy.Slot[slot].IndicatorName;
             SlotTypes slotType = Data.Strategy.GetSlotType(slot);
-            Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
+            Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+            indicator.Initialize(slotType);
 
             // List parameters
             foreach (ListParam list in indicator.IndParam.ListParam)
@@ -974,10 +977,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             {
                 string indicatorName = indSlot.IndicatorName;
                 SlotTypes slotType = indSlot.SlotType;
-                Indicator indicator = IndicatorStore.ConstructIndicator(indicatorName, slotType);
-
+                Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                indicator.Initialize(slotType);
                 indicator.IndParam = indSlot.IndParam;
-                indicator.Calculate(slotType);
+                indicator.Calculate(Data.DataSet);
 
                 indSlot.Component = indicator.Component;
                 indSlot.IsDefined = true;

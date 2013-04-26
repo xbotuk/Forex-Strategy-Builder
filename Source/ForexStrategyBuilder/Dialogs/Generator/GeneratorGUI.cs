@@ -15,6 +15,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Properties;
 
 namespace ForexStrategyBuilder.Dialogs.Generator
@@ -1219,7 +1220,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
             {
                 string indName = Data.Strategy.Slot[slot].IndicatorName;
-                Indicator indicator = IndicatorStore.ConstructIndicator(indName, Data.Strategy.Slot[slot].SlotType);
+                Indicator indicator = IndicatorManager.ConstructIndicator(indName);
                 if (indicator.CustomIndicator)
                 {
                     customIndCount++;

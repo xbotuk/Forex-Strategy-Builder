@@ -1,35 +1,35 @@
-// Gator Oscillator Indicator
-// Last changed on 2009-05-15
-// Part of Forex Strategy Builder & Forex Strategy Trader
-// Website http://forexsb.com/
-// This code or any part of it cannot be used in other applications without a permission.
-// Copyright (c) 2006 - 2009 Miroslav Popov - All rights reserved.
+//==============================================================
+// Forex Strategy Builder
+// Copyright © Miroslav Popov. All rights reserved.
+//==============================================================
+// THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE.
+//==============================================================
 
 using System;
 using System.Drawing;
+using ForexStrategyBuilder.Infrastructure.Entities;
+using ForexStrategyBuilder.Infrastructure.Enums;
+using ForexStrategyBuilder.Infrastructure.Interfaces;
 
-namespace Forex_Strategy_Builder
+namespace ForexStrategyBuilder.Indicators
 {
-    /// <summary>
-    /// Gator Oscillator Indicator
-    /// </summary>
     public class Gator_Oscillator : Indicator
     {
-        /// <summary>
-        /// Sets the default indicator parameters for the designated slot type
-        /// </summary>
-        public Gator_Oscillator(SlotTypes slotType)
+        public Gator_Oscillator()
         {
             // General properties
             IndicatorName   = "Gator Oscillator";
             PossibleSlots   = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart  = true;
             CustomIndicator = true;
+        }
 
-            // Setting up the indicator parameters
-            IndParam = new IndicatorParam();
-            IndParam.IndicatorName = IndicatorName;
-            IndParam.SlotType      = slotType;
+        public override void Initialize(SlotTypes slotType)
+        {
+            SlotType = slotType;
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption  = "Logic";
@@ -102,18 +102,16 @@ namespace Forex_Strategy_Builder
 
             // The CheckBox parameters
             IndParam.CheckParam[0].Caption = "Use previous bar value";
-            IndParam.CheckParam[0].Checked = PrepareUsePrevBarValueCheckBox(slotType);
             IndParam.CheckParam[0].Enabled = true;
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
 
             return;
         }
 
-        /// <summary>
-        /// Calculates the indicator's components
-        /// </summary>
-        public override void Calculate(SlotTypes slotType)
+        public override void Calculate(IDataSet dataSet)
         {
+            DataSet = dataSet;
+
             MAMethod  maMethod  = (MAMethod )IndParam.ListParam[1].Index;
             BasePrice basePrice = (BasePrice)IndParam.ListParam[2].Index;
             int iNJaws  = (int)IndParam.NumParam[0].Value;
@@ -169,14 +167,14 @@ namespace Forex_Strategy_Builder
             Component[3].Value     = new double[Bars];
 
             // Sets the Component's type.
-            if (slotType == SlotTypes.OpenFilter)
+            if (SlotType == SlotTypes.OpenFilter)
             {
                 Component[2].DataType = IndComponentType.AllowOpenLong;
                 Component[2].CompName = "Is long entry allowed";
                 Component[3].DataType = IndComponentType.AllowOpenShort;
                 Component[3].CompName = "Is short entry allowed";
             }
-            else if (slotType == SlotTypes.CloseFilter)
+            else if (SlotType == SlotTypes.CloseFilter)
             {
                 Component[2].DataType = IndComponentType.ForceCloseLong;
                 Component[2].CompName = "Close out long position";
@@ -205,14 +203,9 @@ namespace Forex_Strategy_Builder
                 default:
                     break;
             }
-
-            return;
         }
 
-        /// <summary>
-        /// Sets the indicator logic description
-        /// </summary>
-        public override void SetDescription(SlotTypes slotType)
+        public override void SetDescription()
         {
             EntryFilterLongDescription  = "the " + ToString() + " ";
             EntryFilterShortDescription = "the " + ToString() + " ";
@@ -238,16 +231,11 @@ namespace Forex_Strategy_Builder
                 default:
                     break;
             }
-
-            return;
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
+            return IndicatorName +
                 (IndParam.CheckParam[0].Checked ? "* (" : " (") +
                 IndParam.ListParam[1].Text         + ", "+ // Method
                 IndParam.ListParam[2].Text         + ", "+ // Price
@@ -257,8 +245,6 @@ namespace Forex_Strategy_Builder
                 IndParam.NumParam[3].ValueToString + ", "+ // Teeth shift
                 IndParam.NumParam[4].ValueToString + ", "+ // Lips period
                 IndParam.NumParam[5].ValueToString + ")";  // Lips shift
-
-            return sString;
         }
     }
 }
