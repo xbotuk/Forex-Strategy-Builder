@@ -30,7 +30,9 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             pnlParamsBase2 = new Panel();
             pnlCaptions = new Panel();
             pnlParams = new Panel();
-            pnlLimitations = new FancyPanel(Language.T("Acceptance Criteria"));
+            pnlCriteriaBase = new FancyPanel(Language.T("Acceptance Criteria"));
+            criteriaPanel = new ScrollFlowPanel();
+            criteriaControls = new CriteriaControls();
             pnlSettings = new FancyPanel(Language.T("Settings"));
             scrollBar = new VScrollBar();
             balanceChart = new SmallBalanceChart();
@@ -79,8 +81,8 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             lblNoParams.Visible = false;
 
             // Panel Limitations
-            pnlLimitations.Parent = this;
-            pnlLimitations.Visible = false;
+            pnlCriteriaBase.Parent = this;
+            pnlCriteriaBase.Visible = false;
 
             // Panel Settings
             pnlSettings.Parent = this;
@@ -131,165 +133,19 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
         /// <summary>
         ///     Sets controls in panel Limitations
         /// </summary>
-        private void SetPanelLimitations()
+        private void SetCriteriaPanel()
         {
-            chbAmbiguousBars = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Maximum number of ambiguous bars"),
-                    Checked = false,
-                    AutoSize = true
-                };
+            criteriaControls.BackColor = LayoutColors.ColorControlBack;
+            criteriaControls.ForeColor = LayoutColors.ColorControlText;
+            criteriaControls.SetCriteriaPanel();
+            criteriaControls.SetSettings(Configs.CriteriaSettings);
 
-            nudAmbiguousBars = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudAmbiguousBars.BeginInit();
-            nudAmbiguousBars.Minimum = 0;
-            nudAmbiguousBars.Maximum = 100;
-            nudAmbiguousBars.Increment = 1;
-            nudAmbiguousBars.Value = 10;
-            nudAmbiguousBars.EndInit();
-
-            chbMaxDrawdown = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Checked = false,
-                    Text = Language.T("Maximum equity drawdown") + " [" +
-                           (Configs.AccountInMoney
-                                ? Configs.AccountCurrency + "]"
-                                : Language.T("pips") + "]"),
-                    AutoSize = true
-                };
-
-            nudMaxDrawdown = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudMaxDrawdown.BeginInit();
-            nudMaxDrawdown.Minimum = 0;
-            nudMaxDrawdown.Maximum = Configs.InitialAccount;
-            nudMaxDrawdown.Increment = 10;
-            nudMaxDrawdown.Value = Configs.InitialAccount/4M;
-            nudMaxDrawdown.EndInit();
-
-            chbEquityPercent = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency + "]",
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudEquityPercent = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudEquityPercent.BeginInit();
-            nudEquityPercent.Minimum = 1;
-            nudEquityPercent.Maximum = 100;
-            nudEquityPercent.Increment = 1;
-            nudEquityPercent.Value = 25;
-            nudEquityPercent.EndInit();
-
-            chbMinTrades = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Minimum number of trades"),
-                    Checked = true,
-                    AutoSize = true
-                };
-
-            nudMinTrades = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudMinTrades.BeginInit();
-            nudMinTrades.Minimum = 10;
-            nudMinTrades.Maximum = 1000;
-            nudMinTrades.Increment = 10;
-            nudMinTrades.Value = 100;
-            nudMinTrades.EndInit();
-
-            chbMaxTrades = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Maximum number of trades"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudMaxTrades = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudMaxTrades.BeginInit();
-            nudMaxTrades.Minimum = 10;
-            nudMaxTrades.Maximum = 10000;
-            nudMaxTrades.Increment = 10;
-            nudMaxTrades.Value = 1000;
-            nudMaxTrades.EndInit();
-
-            chbWinLossRatio = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Minimum win / loss trades ratio"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudWinLossRatio = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudWinLossRatio.BeginInit();
-            nudWinLossRatio.Minimum = 0.10M;
-            nudWinLossRatio.Maximum = 1;
-            nudWinLossRatio.Increment = 0.01M;
-            nudWinLossRatio.Value = 0.30M;
-            nudWinLossRatio.DecimalPlaces = 2;
-            nudWinLossRatio.EndInit();
-
-            chbOOSPatternFilter = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Filter bad OOS performance"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudoosPatternPercent = new NumericUpDown {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudoosPatternPercent.BeginInit();
-            nudoosPatternPercent.Minimum = 1;
-            nudoosPatternPercent.Maximum = 50;
-            nudoosPatternPercent.Value = 20;
-            nudoosPatternPercent.EndInit();
-            toolTip.SetToolTip(nudoosPatternPercent, Language.T("Deviation percent."));
-
-            chbSmoothBalanceLines = new CheckBox
-                {
-                    Parent = pnlLimitations,
-                    ForeColor = colorText,
-                    BackColor = Color.Transparent,
-                    Text = Language.T("Filter non-linear balance pattern"),
-                    Checked = false,
-                    AutoSize = true
-                };
-
-            nudSmoothBalancePercent = new NumericUpDown
-                {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudSmoothBalancePercent.BeginInit();
-            nudSmoothBalancePercent.Minimum = 1;
-            nudSmoothBalancePercent.Maximum = 50;
-            nudSmoothBalancePercent.Value = 20;
-            nudSmoothBalancePercent.EndInit();
-            toolTip.SetToolTip(nudSmoothBalancePercent, Language.T("Deviation percent."));
-
-            nudSmoothBalanceCheckPoints = new NumericUpDown
-                {Parent = pnlLimitations, TextAlign = HorizontalAlignment.Center};
-            nudSmoothBalanceCheckPoints.BeginInit();
-            nudSmoothBalanceCheckPoints.Minimum = 1;
-            nudSmoothBalanceCheckPoints.Maximum = 50;
-            nudSmoothBalanceCheckPoints.Value = 1;
-            nudSmoothBalanceCheckPoints.EndInit();
-            toolTip.SetToolTip(nudSmoothBalanceCheckPoints, Language.T("Check points count."));
+            criteriaPanel.Parent = pnlCriteriaBase;
+            criteriaPanel.Padding = new Padding(0);
+            criteriaPanel.Margin = new Padding(0);
+            criteriaPanel.ClearControls();
+            criteriaPanel.AddControl(criteriaControls);
+            criteriaPanel.SetControls();
         }
 
         /// <summary>
@@ -436,23 +292,6 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
                 if (int.Parse(options[i++]) < OptionsVersion) return;
                 chbOutOfSample.Checked = bool.Parse(options[i++]);
                 nudOutOfSample.Value = int.Parse(options[i++]);
-                chbAmbiguousBars.Checked = bool.Parse(options[i++]);
-                nudAmbiguousBars.Value = int.Parse(options[i++]);
-                chbMaxDrawdown.Checked = bool.Parse(options[i++]);
-                nudMaxDrawdown.Value = int.Parse(options[i++]);
-                chbMinTrades.Checked = bool.Parse(options[i++]);
-                nudMinTrades.Value = int.Parse(options[i++]);
-                chbMaxTrades.Checked = bool.Parse(options[i++]);
-                nudMaxTrades.Value = int.Parse(options[i++]);
-                chbWinLossRatio.Checked = bool.Parse(options[i++]);
-                nudWinLossRatio.Value = int.Parse(options[i++])/100M;
-                chbEquityPercent.Checked = bool.Parse(options[i++]);
-                nudEquityPercent.Value = int.Parse(options[i++]);
-                chbOOSPatternFilter.Checked = bool.Parse(options[i++]);
-                nudoosPatternPercent.Value = int.Parse(options[i++]);
-                chbSmoothBalanceLines.Checked = bool.Parse(options[i++]);
-                nudSmoothBalancePercent.Value = int.Parse(options[i++]);
-                nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
                 chbOptimizerWritesReport.Checked = bool.Parse(options[i++]);
                 chbHideFSB.Checked = bool.Parse(options[i++]);
                 formHeight = int.Parse(options[i++]);
@@ -474,23 +313,6 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
                 OptionsVersion + ";" +
                 chbOutOfSample.Checked + ";" +
                 nudOutOfSample.Value + ";" +
-                chbAmbiguousBars.Checked + ";" +
-                nudAmbiguousBars.Value + ";" +
-                chbMaxDrawdown.Checked + ";" +
-                nudMaxDrawdown.Value + ";" +
-                chbMinTrades.Checked + ";" +
-                nudMinTrades.Value + ";" +
-                chbMaxTrades.Checked + ";" +
-                nudMaxTrades.Value + ";" +
-                chbWinLossRatio.Checked + ";" +
-                ((int) (nudWinLossRatio.Value*100M)) + ";" +
-                chbEquityPercent.Checked + ";" +
-                nudEquityPercent.Value + ";" +
-                chbOOSPatternFilter.Checked + ";" +
-                nudoosPatternPercent.Value + ";" +
-                chbSmoothBalanceLines.Checked + ";" +
-                nudSmoothBalancePercent.Value + ";" +
-                nudSmoothBalanceCheckPoints.Value + ";" +
                 chbOptimizerWritesReport.Checked + ";" +
                 chbHideFSB.Checked + ";" +
                 Height + ";" +
@@ -544,9 +366,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
         /// </summary>
         private void NudOutOfSampleValueChanged(object sender, EventArgs e)
         {
-            isOOS = chbOutOfSample.Checked;
-            barOOS = Data.Bars - Data.Bars*(int) nudOutOfSample.Value/100 - 1;
-
+            SetOOS();
             balanceChart.OOSBar = barOOS;
 
             if (!isOOS) return;
@@ -560,8 +380,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
         /// </summary>
         private void ChbOutOfSampleCheckedChanged(object sender, EventArgs e)
         {
-            isOOS = chbOutOfSample.Checked;
-            barOOS = Data.Bars - Data.Bars*(int) nudOutOfSample.Value/100 - 1;
+            SetOOS();
 
             balanceChart.IsOOS = isOOS;
             balanceChart.OOSBar = barOOS;
@@ -570,6 +389,18 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             balanceChart.InitChart();
             balanceChart.Invalidate();
         }
+
+
+        /// <summary>
+        ///     Out of Sample
+        /// </summary>
+        private void SetOOS()
+        {
+            isOOS = chbOutOfSample.Checked;
+            barOOS = Data.Bars - Data.Bars * (int)nudOutOfSample.Value / 100 - 1;
+            targetBalanceRatio = 1 + (int)nudOutOfSample.Value / 100.0F;
+        }
+
 
         /// <summary>
         ///     Changes chart's settings after a button click.
@@ -583,7 +414,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             {
                 case OptimizerButtons.ShowParams:
                     pnlParamsBase.Visible = true;
-                    pnlLimitations.Visible = false;
+                    pnlCriteriaBase.Visible = false;
                     pnlSettings.Visible = false;
                     if (isOptimizing == false)
                         for (int i = 0; i <= (int) OptimizerButtons.SetStep15; i++)
@@ -594,7 +425,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
                     break;
                 case OptimizerButtons.ShowLimitations:
                     pnlParamsBase.Visible = false;
-                    pnlLimitations.Visible = true;
+                    pnlCriteriaBase.Visible = true;
                     pnlSettings.Visible = false;
                     for (int i = 0; i <= (int) OptimizerButtons.SetStep15; i++)
                         aOptimizerButtons[i].Enabled = false;
@@ -604,7 +435,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
                     break;
                 case OptimizerButtons.ShowSettings:
                     pnlParamsBase.Visible = false;
-                    pnlLimitations.Visible = false;
+                    pnlCriteriaBase.Visible = false;
                     pnlSettings.Visible = true;
                     for (int i = 0; i <= (int) OptimizerButtons.SetStep15; i++)
                         aOptimizerButtons[i].Enabled = false;
