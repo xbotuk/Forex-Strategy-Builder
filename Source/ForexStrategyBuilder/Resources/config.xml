@@ -33,6 +33,7 @@
   <showCustomIndicators>False</showCustomIndicators>
   <playSounds>True</playSounds>
   <optimizerWriteReport>False</optimizerWriteReport>
+  <criteriaSettings></criteriaSettings>
   <generatorOptions></generatorOptions>
   <optimizerOptions></optimizerOptions>
   <columnSeparator>,</columnSeparator>

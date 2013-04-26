@@ -11,73 +11,71 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ForexStrategyBuilder.CustomAnalytics;
 
-namespace ForexStrategyBuilder.Dialogs.Generator
+namespace ForexStrategyBuilder.Dialogs
 {
-    /// <summary>
-    ///     Strategy Generator
-    /// </summary>
-    public sealed partial class Generator
+    public class CriteriaControls : Panel
     {
-        private Panel pnlCriteriaControls;
-
+        private readonly ToolTip toolTip;
         private CheckBox chbAmbiguousBars;
-        private CheckBox chbMaxDrawdown;
         private CheckBox chbEquityPercent;
+        private CheckBox chbMaxDrawdown;
+        private CheckBox chbMaxRedGreenDeviation;
         private CheckBox chbMaxTrades;
+        private CheckBox chbMinProfitPerDay;
+        private CheckBox chbMinSharpeRatio;
         private CheckBox chbMinTrades;
-        private CheckBox chbWinLossRatio;
         private CheckBox chbOOSPatternFilter;
         private CheckBox chbSmoothBalanceLines;
-        private CheckBox chbMinSharpeRatio;
-        private CheckBox chbMinProfitPerDay;
-        private CheckBox chbMaxRedGreenDeviation;
-
+        private CheckBox chbWinLossRatio;
+        private CustomGeneratorAnalytics customGeneratorAnalytics;
 
         private NumericUpDown nudAmbiguousBars;
         private NumericUpDown nudEquityPercent;
-        private NumericUpDown nudMaxClosingLogicSlots;
         private NumericUpDown nudMaxDrawdown;
+        private NumericUpDown nudMaxRedGreenDeviation;
         private NumericUpDown nudMaxTrades;
+        private NumericUpDown nudMinProfitPerDay;
+        private NumericUpDown nudMinSharpeRatio;
         private NumericUpDown nudMinTrades;
         private NumericUpDown nudSmoothBalanceCheckPoints;
         private NumericUpDown nudSmoothBalancePercent;
         private NumericUpDown nudWinLossRatio;
         private NumericUpDown nudoosPatternPercent;
-        private NumericUpDown nudMinSharpeRatio;
-        private NumericUpDown nudMinProfitPerDay;
-        private NumericUpDown nudMaxRedGreenDeviation;
 
-        /// <summary>
-        ///     Sets controls in Criteria panel
-        /// </summary>
-        private void SetCriteriaPanel()
+        public CriteriaControls()
         {
-            pnlCriteriaControls = new Panel
-                {
-                    Height = 400,
-                    BackColor = LayoutColors.ColorControlBack,
-                    ForeColor = LayoutColors.ColorControlText,
-                    Margin = new Padding(0)
-                };
-            criteriaPanel.Parent = pnlCriteriaBase;
-            criteriaPanel.Padding = new Padding(0);
-            criteriaPanel.Margin = new Padding(0);
-            criteriaPanel.ClearControls();
-            criteriaPanel.AddControl(pnlCriteriaControls);
-            criteriaPanel.SetControls();
+            toolTip = new ToolTip();
 
+            Height = 400;
+            Margin = new Padding(0);
+
+        }
+
+        public CustomGeneratorAnalytics CustomGeneratorAnalytics
+        {
+            get { return customGeneratorAnalytics; }
+            set { customGeneratorAnalytics = value; }
+        }
+
+        public double TargetBalanceRatio { get; set; }
+        public int BarOOS { get; set; }
+        public bool OOSTesting { get; set; }
+
+        public void SetCriteriaPanel()
+        {
             chbAmbiguousBars = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Maximum number of ambiguous bars"),
                     Checked = true,
                     AutoSize = true
                 };
 
-            nudAmbiguousBars = new NumericUpDown {Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center};
+            nudAmbiguousBars = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudAmbiguousBars.BeginInit();
             nudAmbiguousBars.Minimum = 0;
             nudAmbiguousBars.Maximum = 100;
@@ -87,26 +85,26 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbMinProfitPerDay = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Minimum Profit Per Day") + " [" + Configs.AccountCurrency + "]",
                     Checked = true,
                     AutoSize = true
                 };
 
-            nudMinProfitPerDay = new NumericUpDown {Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center};
+            nudMinProfitPerDay = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudMinProfitPerDay.BeginInit();
             nudMinProfitPerDay.Minimum = 1;
             nudMinProfitPerDay.Maximum = 500;
-            nudMinProfitPerDay.Increment =1;
+            nudMinProfitPerDay.Increment = 1;
             nudMinProfitPerDay.Value = 1;
             nudMinProfitPerDay.EndInit();
 
             chbMaxDrawdown = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Maximum equity drawdown") + " [" +
                            (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]"),
@@ -114,7 +112,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     AutoSize = true
                 };
 
-            nudMaxDrawdown = new NumericUpDown {Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center};
+            nudMaxDrawdown = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudMaxDrawdown.BeginInit();
             nudMaxDrawdown.Minimum = 0;
             nudMaxDrawdown.Maximum = Configs.InitialAccount;
@@ -124,8 +122,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbEquityPercent = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text =
                         Language.T("Maximum equity drawdown") + " [% " + Configs.AccountCurrency +
@@ -134,7 +132,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     AutoSize = true
                 };
 
-            nudEquityPercent = new NumericUpDown {Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center};
+            nudEquityPercent = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudEquityPercent.BeginInit();
             nudEquityPercent.Minimum = 1;
             nudEquityPercent.Maximum = 100;
@@ -144,15 +142,15 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbMinTrades = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Minimum number of trades"),
                     Checked = true,
                     AutoSize = true
                 };
 
-            nudMinTrades = new NumericUpDown {Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center};
+            nudMinTrades = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudMinTrades.BeginInit();
             nudMinTrades.Minimum = 10;
             nudMinTrades.Maximum = 1000;
@@ -162,15 +160,15 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbMaxTrades = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Maximum number of trades"),
                     Checked = false,
                     AutoSize = true
                 };
 
-            nudMaxTrades = new NumericUpDown {Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center};
+            nudMaxTrades = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudMaxTrades.BeginInit();
             nudMaxTrades.Minimum = 10;
             nudMaxTrades.Maximum = 10000;
@@ -180,15 +178,15 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbWinLossRatio = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Minimum win / loss trades ratio"),
                     Checked = false,
                     AutoSize = true
                 };
 
-            nudWinLossRatio = new NumericUpDown {Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center};
+            nudWinLossRatio = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudWinLossRatio.BeginInit();
             nudWinLossRatio.Minimum = 0.10M;
             nudWinLossRatio.Maximum = 1;
@@ -199,15 +197,15 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbMinSharpeRatio = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Minimum Sharpe ratio"),
                     Checked = false,
                     AutoSize = true
                 };
 
-            nudMinSharpeRatio = new NumericUpDown {Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center};
+            nudMinSharpeRatio = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudMinSharpeRatio.BeginInit();
             nudMinSharpeRatio.Minimum = 0.1M;
             nudMinSharpeRatio.Maximum = 10.0M;
@@ -218,15 +216,15 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbMaxRedGreenDeviation = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Max long/short balance deviation"),
                     Checked = false,
                     AutoSize = true
                 };
 
-            nudMaxRedGreenDeviation = new NumericUpDown { Parent = pnlCriteriaControls, TextAlign = HorizontalAlignment.Center };
+            nudMaxRedGreenDeviation = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
             nudMaxRedGreenDeviation.BeginInit();
             nudMaxRedGreenDeviation.Minimum = 1;
             nudMaxRedGreenDeviation.Maximum = 100;
@@ -236,8 +234,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbOOSPatternFilter = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Filter bad OOS performance"),
                     Checked = false,
@@ -246,7 +244,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             nudoosPatternPercent = new NumericUpDown
                 {
-                    Parent = pnlCriteriaControls,
+                    Parent = this,
                     TextAlign = HorizontalAlignment.Center
                 };
             nudoosPatternPercent.BeginInit();
@@ -258,8 +256,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             chbSmoothBalanceLines = new CheckBox
                 {
-                    Parent = pnlCriteriaControls,
-                    ForeColor = colorText,
+                    Parent = this,
+                    ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Filter non-linear balance pattern"),
                     Checked = false,
@@ -268,7 +266,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             nudSmoothBalancePercent = new NumericUpDown
                 {
-                    Parent = pnlCriteriaControls,
+                    Parent = this,
                     TextAlign = HorizontalAlignment.Center
                 };
             nudSmoothBalancePercent.BeginInit();
@@ -280,7 +278,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             nudSmoothBalanceCheckPoints = new NumericUpDown
                 {
-                    Parent = pnlCriteriaControls,
+                    Parent = this,
                     TextAlign = HorizontalAlignment.Center
                 };
             nudSmoothBalanceCheckPoints.BeginInit();
@@ -290,17 +288,85 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             nudSmoothBalanceCheckPoints.EndInit();
             toolTip.SetToolTip(nudSmoothBalanceCheckPoints, Language.T("Check points count."));
 
-            pnlCriteriaControls.Resize += pnlCriteriaControls_Resize;
+            Resize += CriteriaControls_Resize;
         }
 
-        private void pnlCriteriaControls_Resize(object sender, EventArgs e)
+        public void SetSettings(string settingsString)
+        {
+            if (string.IsNullOrEmpty(settingsString))
+                return;
+
+            string[] options = settingsString.Split(';');
+            int i = 0;
+            try
+            {
+                chbAmbiguousBars.Checked = bool.Parse(options[i++]);
+                nudAmbiguousBars.Value = int.Parse(options[i++]);
+                chbMaxDrawdown.Checked = bool.Parse(options[i++]);
+                nudMaxDrawdown.Value = int.Parse(options[i++]);
+                chbMinTrades.Checked = bool.Parse(options[i++]);
+                nudMinTrades.Value = int.Parse(options[i++]);
+                chbMaxTrades.Checked = bool.Parse(options[i++]);
+                nudMaxTrades.Value = int.Parse(options[i++]);
+                chbWinLossRatio.Checked = bool.Parse(options[i++]);
+                nudWinLossRatio.Value = int.Parse(options[i++])/100M;
+                chbEquityPercent.Checked = bool.Parse(options[i++]);
+                nudEquityPercent.Value = int.Parse(options[i++]);
+                chbOOSPatternFilter.Checked = bool.Parse(options[i++]);
+                nudoosPatternPercent.Value = int.Parse(options[i++]);
+                chbSmoothBalanceLines.Checked = bool.Parse(options[i++]);
+                nudSmoothBalancePercent.Value = int.Parse(options[i++]);
+                nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
+                chbMinSharpeRatio.Checked = bool.Parse(options[i++]);
+                nudMinSharpeRatio.Value = int.Parse(options[i++])/100M;
+                chbMinProfitPerDay.Checked = bool.Parse(options[i++]);
+                nudMinProfitPerDay.Value = int.Parse(options[i++]);
+                chbMaxRedGreenDeviation.Checked = bool.Parse(options[i++]);
+                nudMaxRedGreenDeviation.Value = int.Parse(options[i]);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+        }
+
+        public string GetSettings()
+        {
+            string settingsString =
+                chbAmbiguousBars.Checked + ";" +
+                nudAmbiguousBars.Value + ";" +
+                chbMaxDrawdown.Checked + ";" +
+                nudMaxDrawdown.Value + ";" +
+                chbMinTrades.Checked + ";" +
+                nudMinTrades.Value + ";" +
+                chbMaxTrades.Checked + ";" +
+                nudMaxTrades.Value + ";" +
+                chbWinLossRatio.Checked + ";" +
+                ((int) (nudWinLossRatio.Value*100M)) + ";" +
+                chbEquityPercent.Checked + ";" +
+                nudEquityPercent.Value + ";" +
+                chbOOSPatternFilter.Checked + ";" +
+                nudoosPatternPercent.Value + ";" +
+                chbSmoothBalanceLines.Checked + ";" +
+                nudSmoothBalancePercent.Value + ";" +
+                nudSmoothBalanceCheckPoints.Value + ";" +
+                chbMinSharpeRatio.Checked + ";" +
+                ((int) (nudMinSharpeRatio.Value*100M)) + ";" +
+                chbMinProfitPerDay.Checked + ";" +
+                nudMinProfitPerDay.Value + ";" +
+                chbMaxRedGreenDeviation.Checked + ";" +
+                nudMaxRedGreenDeviation.Value;
+
+            return settingsString;
+        }
+
+        private void CriteriaControls_Resize(object sender, EventArgs e)
         {
             var panel = (Panel) sender;
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             const int nudWidth = 55;
             int nudLeft = panel.ClientSize.Width - border - nudWidth;
-
 
             // chbAmbiguousBars
             chbAmbiguousBars.Location = new Point(border + 2, 6);
@@ -363,26 +429,19 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                                                              chbSmoothBalanceLines.Top - 1);
         }
 
-        /// <summary>
-        ///     Check the strategy criteria
-        /// </summary>
-        private bool IsCriteriaFulfilled()
+        public bool IsCriteriaFulfilled()
         {
-            // The calculated strategy has higher profit
-            // or the same profit but lower number of slots
-            Backtester.CalculateAccountStats();
-
             // Criterion Max Ambiguous Bars
             if (chbAmbiguousBars.Checked && Backtester.AmbiguousBars > nudAmbiguousBars.Value)
             {
-                customAnalytics.CriterionAmbiguousBars++;
+                customGeneratorAnalytics.CriterionAmbiguousBars++;
                 return false;
             }
 
             // Criterion Min Profit per Day
             if (chbMinProfitPerDay.Checked && Backtester.MoneyProfitPerDay < (double) nudMinProfitPerDay.Value)
             {
-                customAnalytics.CriterionProfitPerDay++;
+                customGeneratorAnalytics.CriterionProfitPerDay++;
                 return false;
             }
 
@@ -392,62 +451,63 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                                            : Backtester.MaxEquityDrawdown;
             if (chbMaxDrawdown.Checked && maxEquityDrawdown > (double) nudMaxDrawdown.Value)
             {
-                customAnalytics.CriterionMaxEquityDD++;
+                customGeneratorAnalytics.CriterionMaxEquityDD++;
                 return false;
             }
 
             // Criterion Max Equity percent drawdown
             if (chbEquityPercent.Checked && Backtester.MoneyEquityPercentDrawdown > (double) nudEquityPercent.Value)
             {
-                customAnalytics.CriterionMaxEquityPercentDD++;
+                customGeneratorAnalytics.CriterionMaxEquityPercentDD++;
                 return false;
             }
 
             // Criterion Min Trades
             if (chbMinTrades.Checked && Backtester.ExecutedOrders < nudMinTrades.Value)
             {
-                customAnalytics.CriterionMinTrades++;
+                customGeneratorAnalytics.CriterionMinTrades++;
                 return false;
             }
 
             // Criterion Max Trades
             if (chbMaxTrades.Checked && Backtester.ExecutedOrders > nudMaxTrades.Value)
             {
-                customAnalytics.CriterionMaxTrades++;
+                customGeneratorAnalytics.CriterionMaxTrades++;
                 return false;
             }
 
             // Criterion Win / Loss ratio
             if (chbWinLossRatio.Checked && Backtester.WinLossRatio < (double) nudWinLossRatio.Value)
             {
-                customAnalytics.CriterionWinLossRatio++;
+                customGeneratorAnalytics.CriterionWinLossRatio++;
                 return false;
             }
 
             // Criterion Minimum Sharpe ratio
             if (chbMinSharpeRatio.Checked && Backtester.SharpeRatio < (double) nudMinSharpeRatio.Value)
             {
-                customAnalytics.CriterionSharpeRatio++;
+                customGeneratorAnalytics.CriterionSharpeRatio++;
                 return false;
             }
 
             // Criterion Red/Green Deviation
-            if (chbMaxRedGreenDeviation.Checked && Backtester.RedGreenBalanceDev > (double)nudMaxRedGreenDeviation.Value)
+            if (chbMaxRedGreenDeviation.Checked &&
+                Backtester.RedGreenBalanceDev > (double) nudMaxRedGreenDeviation.Value)
             {
-                customAnalytics.CriterionSharpeRatio++;
+                customGeneratorAnalytics.CriterionSharpeRatio++;
                 return false;
             }
 
             // OOS Pattern filter
-            if (chbOOSPatternFilter.Checked && chbOutOfSample.Checked)
+            if (chbOOSPatternFilter.Checked && OOSTesting)
             {
                 int netBalance = Backtester.NetBalance;
-                int oosBalance = Backtester.Balance(barOOS);
-                var targetBalance = (int) (oosBalance*targetBalanceRatio);
+                int oosBalance = Backtester.Balance(BarOOS);
+                var targetBalance = (int) (oosBalance*TargetBalanceRatio);
                 var minBalance = (int) (targetBalance*(1 - nudoosPatternPercent.Value/100));
                 if (netBalance < oosBalance || netBalance < minBalance)
                 {
-                    customAnalytics.CriterionOOSPatternFilter++;
+                    customGeneratorAnalytics.CriterionOOSPatternFilter++;
                     return false;
                 }
             }
@@ -470,7 +530,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     double maxBalance = targetBalance*(1 + maxPercentDeviation);
                     if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
                     {
-                        customAnalytics.CriterionSmoothBalanceLine++;
+                        customGeneratorAnalytics.CriterionSmoothBalanceLine++;
                         return false;
                     }
 
@@ -483,7 +543,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     maxBalance = targetBalance*(1 + maxPercentDeviation);
                     if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
                     {
-                        customAnalytics.CriterionSmoothBalanceLineLong++;
+                        customGeneratorAnalytics.CriterionSmoothBalanceLineLong++;
                         return false;
                     }
 
@@ -496,7 +556,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     maxBalance = targetBalance*(1 + maxPercentDeviation);
                     if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
                     {
-                        customAnalytics.CriterionSmoothBalanceLineShort++;
+                        customGeneratorAnalytics.CriterionSmoothBalanceLineShort++;
                         return false;
                     }
                 }

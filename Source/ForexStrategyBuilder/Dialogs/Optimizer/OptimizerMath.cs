@@ -22,6 +22,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
     public sealed partial class Optimizer
     {
         private double[] initialValues;
+        private float targetBalanceRatio = 1;
 
         /// <summary>
         ///     Sets the parameters.
@@ -411,12 +412,17 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
                 if (control.GetType() != typeof (Label))
                     control.Enabled = false;
 
-            foreach (Control control in pnlLimitations.Controls)
+            foreach (Control control in criteriaControls.Controls)
                 control.Enabled = false;
 
             foreach (Control control in pnlSettings.Controls)
                 control.Enabled = false;
             chbHideFSB.Enabled = true;
+
+            criteriaControls.OOSTesting = chbOutOfSample.Checked;
+            criteriaControls.BarOOS = (int)nudOutOfSample.Value;
+            criteriaControls.TargetBalanceRatio = targetBalanceRatio;
+
 
             // Start the bgWorker
             bgWorker.RunWorkerAsync();
@@ -507,10 +513,8 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
 
             foreach (Control control in pnlParams.Controls)
                 control.Enabled = true;
-
-            foreach (Control control in pnlLimitations.Controls)
+            foreach (Control control in criteriaControls.Controls)
                 control.Enabled = true;
-
             foreach (Control control in pnlSettings.Controls)
                 control.Enabled = true;
 
@@ -565,7 +569,8 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
                         FillInReport();
 
                     int balance = isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance;
-                    if (balance > bestBalance && IsLimitationsFulfilled())
+                    bool isCriteriaFulfilled = criteriaControls.IsCriteriaFulfilled();
+                    if (balance > bestBalance && isCriteriaFulfilled)
                     {
                         bestBalance = balance;
                         aParameter[param].BestValue = value;
@@ -692,7 +697,8 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
                             FillInReport();
 
                         int balance = isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance;
-                        if (balance > bestBalance && IsLimitationsFulfilled())
+                        bool isCriteriaFulfilled = criteriaControls.IsCriteriaFulfilled();
+                        if (balance > bestBalance && isCriteriaFulfilled)
                         {
                             bestBalance = balance;
                             aParameter[param1].BestValue = value1;
@@ -788,94 +794,6 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
 
             // Search the indicators' components to determine the Data.FirstBar
             Data.FirstBar = Data.Strategy.SetFirstBar();
-        }
-
-        /// <summary>
-        ///     Calculates the Limitations Criteria
-        /// </summary>
-        private bool IsLimitationsFulfilled()
-        {
-            // Limitation Max Ambiguous Bars
-            if (chbAmbiguousBars.Checked && Backtester.AmbiguousBars > nudAmbiguousBars.Value)
-                return false;
-
-            // Limitation Max Equity Drawdown
-            double maxEquityDrawdown = Configs.AccountInMoney
-                                           ? Backtester.MaxMoneyEquityDrawdown
-                                           : Backtester.MaxEquityDrawdown;
-            if (chbMaxDrawdown.Checked && maxEquityDrawdown > (double) nudMaxDrawdown.Value)
-                return false;
-
-            // Limitation Max Equity percent drawdown
-            if (chbEquityPercent.Checked && Backtester.MoneyEquityPercentDrawdown > (double) nudEquityPercent.Value)
-                return false;
-
-            // Limitation Min Trades
-            if (chbMinTrades.Checked && Backtester.ExecutedOrders < nudMinTrades.Value)
-                return false;
-
-            // Limitation Max Trades
-            if (chbMaxTrades.Checked && Backtester.ExecutedOrders > nudMaxTrades.Value)
-                return false;
-
-            // Limitation Win / Loss ratio
-            if (chbWinLossRatio.Checked && Backtester.WinLossRatio < (double) nudWinLossRatio.Value)
-                return false;
-
-            // OOS Pattern filter
-            if (chbOOSPatternFilter.Checked && chbOutOfSample.Checked)
-            {
-                int netBalance = Backtester.NetBalance;
-                int oosBalance = Backtester.Balance(barOOS);
-                float targetBalanceRatio = 1 + (int) nudOutOfSample.Value/100.0F;
-                var targetBalance = (int) (oosBalance*targetBalanceRatio);
-                var minBalance = (int) (targetBalance*(1 - nudoosPatternPercent.Value/100));
-                if (netBalance < oosBalance || netBalance < minBalance)
-                    return false;
-            }
-
-            // Smooth Balance Line
-            if (chbSmoothBalanceLines.Checked)
-            {
-                var checkPoints = (int) nudSmoothBalanceCheckPoints.Value;
-                var maxPercentDeviation = (double) (nudSmoothBalancePercent.Value/100);
-
-                for (int i = 1; i <= checkPoints; i++)
-                {
-                    int firstBar = Data.FirstBar;
-                    int bar = Data.FirstBar + i*(Data.Bars - firstBar)/(checkPoints + 1);
-                    double netBalance = Backtester.NetMoneyBalance;
-                    double startBalance = Backtester.MoneyBalance(firstBar);
-                    double checkPointBalance = Backtester.MoneyBalance(bar);
-                    double targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                    double minBalance = targetBalance*(1 - maxPercentDeviation);
-                    double maxBalance = targetBalance*(1 + maxPercentDeviation);
-                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                        return false;
-
-                    // Long balance line
-                    netBalance = Backtester.NetLongMoneyBalance;
-                    checkPointBalance = Backtester.LongMoneyBalance(bar);
-                    startBalance = Backtester.LongMoneyBalance(firstBar);
-                    targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                    minBalance = targetBalance*(1 - maxPercentDeviation);
-                    maxBalance = targetBalance*(1 + maxPercentDeviation);
-                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                        return false;
-
-                    // Short balance line
-                    netBalance = Backtester.NetShortMoneyBalance;
-                    checkPointBalance = Backtester.ShortMoneyBalance(bar);
-                    startBalance = Backtester.ShortMoneyBalance(firstBar);
-                    targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
-                    minBalance = targetBalance*(1 - maxPercentDeviation);
-                    maxBalance = targetBalance*(1 + maxPercentDeviation);
-                    if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
-                        return false;
-                }
-            }
-
-            return true;
         }
 
         /// <summary>

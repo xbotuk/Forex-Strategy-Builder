@@ -64,6 +64,7 @@ namespace ForexStrategyBuilder
         private const bool IsAdditionalStatisticsDefault = false;
         private const bool IsUseLogicalGroupsDefault = false;
         private const bool IsPlaySoundsDefault = true;
+        private const string CriteriaSettingsDefault = "";
         private const string GeneratorOptionsDefault = "";
         private const string OptimizerOptionsDefault = "";
         private const string ColumnSeparatorDefault = ",";
@@ -712,6 +713,17 @@ namespace ForexStrategyBuilder
             {
                 isPlaySounds = value;
                 SetNode("config/playSounds", value);
+            }
+        }
+
+        static string criteriaSettings = CriteriaSettingsDefault;
+        public static string CriteriaSettings
+        {
+            get { return criteriaSettings; }
+            set
+            {
+                criteriaSettings = value;
+                SetNode("config/criteriaSettings", value);
             }
         }
 
@@ -1401,6 +1413,7 @@ namespace ForexStrategyBuilder
             UseLogicalGroups           = IsUseLogicalGroupsDefault;
             PlaySounds                 = IsPlaySoundsDefault;
             GeneratorOptions           = GeneratorOptionsDefault;
+            CriteriaSettings           = CriteriaSettingsDefault;
             OptimizerOptions           = OptimizerOptionsDefault;
             ColumnSeparator            = ColumnSeparatorDefault;
             DecimalSeparator           = DecimalSeparatorDefault;
@@ -1501,6 +1514,7 @@ namespace ForexStrategyBuilder
             isLoadCustomIndicators       = ParseNode("config/loadCustomIndicators", IsLoadCustIndDefault);
             isShowCustomIndicators       = ParseNode("config/showCustomIndicators", IsShowCustIndDefault);
             isPlaySounds                 = ParseNode("config/playSounds", IsPlaySoundsDefault);
+            criteriaSettings             = ParseNode("config/criteriaSettings", CriteriaSettingsDefault);
             generatorOptions             = ParseNode("config/generatorOptions", GeneratorOptionsDefault);
             optimizerOptions             = ParseNode("config/optimizerOptions", OptimizerOptionsDefault);
             columnSeparator              = ParseNode("config/columnSeparator", ColumnSeparatorDefault);

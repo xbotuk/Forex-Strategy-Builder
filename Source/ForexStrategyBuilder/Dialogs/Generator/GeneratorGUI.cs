@@ -29,7 +29,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private readonly Button btnAccept;
         private readonly Button btnCancel;
         private readonly Button btnGenerate;
-
         private readonly CheckBox chbWorkingMinutes;
         private readonly CheckBox chbGenerateNewStrategy;
         private readonly CheckBox chbInitialOptimization;
@@ -52,6 +51,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private readonly FancyPanel pnlSorting;
         private readonly FancyPanel pnlTop10;
         private readonly ScrollFlowPanel criteriaPanel;
+        private readonly CriteriaControls criteriaControls;
         private readonly ProgressBar progressBar;
         private readonly Random random = new Random();
         private readonly StrategyLayout strategyField;
@@ -75,6 +75,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private Label lblCustomSortingAdvancedCompareTo;
 
         private NumericUpDown nudMaxOpeningLogicSlots;
+        private NumericUpDown nudMaxClosingLogicSlots;
         private NumericUpDown nudOutOfSample;
         private RadioButton rbnCustomSortingAdvanced;
         private RadioButton rbnCustomSortingNone;
@@ -112,10 +113,11 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             strategyField = new StrategyLayout(strategyBest);
             pnlCommon = new FancyPanel(Language.T("Common"));
             pnlCriteriaBase = new FancyPanel(Language.T("Acceptance Criteria"));
+            criteriaPanel = new ScrollFlowPanel();
+            criteriaControls = new CriteriaControls();
             pnlSettings = new FancyPanel(Language.T("Settings"));
             pnlSorting = new FancyPanel(Language.T("Custom Sorting"));
             pnlTop10 = new FancyPanel(Language.T("Top 10"));
-            criteriaPanel = new ScrollFlowPanel();
             pnlIndicators = new FancyPanel(Language.T("Indicators"));
             balanceChart = new SmallBalanceChart();
             infpnlAccountStatistics = new InfoPanel();
@@ -246,9 +248,21 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 BtnGenerateClick(this, new EventArgs());
         }
 
-        /// <summary>
-        ///     Sets Sorting Panel
-        /// </summary>
+        private void SetCriteriaPanel()
+        {
+            criteriaControls.BackColor = LayoutColors.ColorControlBack;
+            criteriaControls.ForeColor = LayoutColors.ColorControlText;
+            criteriaControls.SetCriteriaPanel();
+            criteriaControls.SetSettings(Configs.CriteriaSettings);
+
+            criteriaPanel.Parent = pnlCriteriaBase;
+            criteriaPanel.Padding = new Padding(0);
+            criteriaPanel.Margin = new Padding(0);
+            criteriaPanel.ClearControls();
+            criteriaPanel.AddControl(criteriaControls);
+            criteriaPanel.SetControls();
+        }
+
         private void SetPanelSorting()
         {
             rbnCustomSortingNone = new RadioButton
@@ -406,23 +420,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 nudOutOfSample.Value = int.Parse(options[i++]);
                 chbWorkingMinutes.Checked = bool.Parse(options[i++]);
                 nudWorkingMinutes.Value = int.Parse(options[i++]);
-                chbAmbiguousBars.Checked = bool.Parse(options[i++]);
-                nudAmbiguousBars.Value = int.Parse(options[i++]);
-                chbMaxDrawdown.Checked = bool.Parse(options[i++]);
-                nudMaxDrawdown.Value = int.Parse(options[i++]);
-                chbMinTrades.Checked = bool.Parse(options[i++]);
-                nudMinTrades.Value = int.Parse(options[i++]);
-                chbMaxTrades.Checked = bool.Parse(options[i++]);
-                nudMaxTrades.Value = int.Parse(options[i++]);
-                chbWinLossRatio.Checked = bool.Parse(options[i++]);
-                nudWinLossRatio.Value = int.Parse(options[i++])/100M;
-                chbEquityPercent.Checked = bool.Parse(options[i++]);
-                nudEquityPercent.Value = int.Parse(options[i++]);
-                chbOOSPatternFilter.Checked = bool.Parse(options[i++]);
-                nudoosPatternPercent.Value = int.Parse(options[i++]);
-                chbSmoothBalanceLines.Checked = bool.Parse(options[i++]);
-                nudSmoothBalancePercent.Value = int.Parse(options[i++]);
-                nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
                 chbUseDefaultIndicatorValues.Checked = bool.Parse(options[i++]);
                 chbSaveStrategySlotStatus.Checked = bool.Parse(options[i++]);
                 chbHideFsb.Checked = bool.Parse(options[i++]);
@@ -431,13 +428,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 rbnCustomSortingNone.Checked = bool.Parse(options[i++]);
                 cbxCustomSortingSimple.Text = options[i++];
                 cbxCustomSortingAdvanced.Text = options[i++];
-                cbxCustomSortingAdvancedCompareTo.Text = options[i++];
-                chbMinSharpeRatio.Checked = bool.Parse(options[i++]);
-                nudMinSharpeRatio.Value = int.Parse(options[i++]) / 100M;
-                chbMinProfitPerDay.Checked = bool.Parse(options[i++]);
-                nudMinProfitPerDay.Value = int.Parse(options[i++]);
-                chbMaxRedGreenDeviation.Checked = bool.Parse(options[i++]);
-                nudMaxRedGreenDeviation.Value = int.Parse(options[i]);
+                cbxCustomSortingAdvancedCompareTo.Text = options[i];
             }
             catch (Exception exception)
             {
@@ -466,23 +457,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 nudOutOfSample.Value + ";" +
                 chbWorkingMinutes.Checked + ";" +
                 nudWorkingMinutes.Value + ";" +
-                chbAmbiguousBars.Checked + ";" +
-                nudAmbiguousBars.Value + ";" +
-                chbMaxDrawdown.Checked + ";" +
-                nudMaxDrawdown.Value + ";" +
-                chbMinTrades.Checked + ";" +
-                nudMinTrades.Value + ";" +
-                chbMaxTrades.Checked + ";" +
-                nudMaxTrades.Value + ";" +
-                chbWinLossRatio.Checked + ";" +
-                ((int) (nudWinLossRatio.Value*100M)) + ";" +
-                chbEquityPercent.Checked + ";" +
-                nudEquityPercent.Value + ";" +
-                chbOOSPatternFilter.Checked + ";" +
-                nudoosPatternPercent.Value + ";" +
-                chbSmoothBalanceLines.Checked + ";" +
-                nudSmoothBalancePercent.Value + ";" +
-                nudSmoothBalanceCheckPoints.Value + ";" +
                 chbUseDefaultIndicatorValues.Checked + ";" +
                 chbSaveStrategySlotStatus.Checked + ";" +
                 chbHideFsb.Checked + ";" +
@@ -491,13 +465,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 rbnCustomSortingNone.Checked + ";" +
                 cbxCustomSortingSimple.Text + ";" +
                 cbxCustomSortingAdvanced.Text + ";" +
-                cbxCustomSortingAdvancedCompareTo.Text + ";" +
-                chbMinSharpeRatio.Checked + ";" +
-                ((int) (nudMinSharpeRatio.Value*100M)) + ";" +
-                chbMinProfitPerDay.Checked + ";" +
-                nudMinProfitPerDay.Value + ";" +
-                chbMaxRedGreenDeviation.Checked + ";" +
-                nudMaxRedGreenDeviation.Value;
+                cbxCustomSortingAdvancedCompareTo.Text;
 
             Configs.GeneratorOptions = options;
         }
@@ -859,12 +827,12 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             // Find correct size
             int maxCheckBoxWidth = 250;
-            foreach (Control control in pnlCriteriaControls.Controls)
+            foreach (Control control in pnlCommon.Controls)
             {
                 if (maxCheckBoxWidth < control.Width)
                     maxCheckBoxWidth = control.Width;
             }
-            foreach (Control control in pnlCommon.Controls)
+            foreach (Control control in criteriaControls.Controls)
             {
                 if (maxCheckBoxWidth < control.Width)
                     maxCheckBoxWidth = control.Width;
@@ -873,11 +841,11 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             var buttonWidth = (int) (Data.HorizontalDlu*60);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             const int nudWidth = 55;
-            pnlCriteriaBase.Width = 3*buttonWidth + 2*btnHrzSpace;
-            int borderWidth = (pnlCriteriaBase.Width - pnlCriteriaBase.ClientSize.Width)/2;
+            pnlCommon.Width = 3*buttonWidth + 2*btnHrzSpace;
+            int borderWidth = (pnlCommon.Width - pnlCommon.ClientSize.Width) / 2;
             maxCheckBoxWidth = maxCheckBoxWidth + 2 + SystemInformation.VerticalScrollBarWidth;
 
-            if (maxCheckBoxWidth + 3*btnHrzSpace + nudWidth + 4 > pnlCriteriaBase.ClientSize.Width)
+            if (maxCheckBoxWidth + 3 * btnHrzSpace + nudWidth + 4 > pnlCommon.ClientSize.Width)
                 buttonWidthMultiplier = ((maxCheckBoxWidth + nudWidth + 3*btnHrzSpace + 2*borderWidth + 4)/3.0)/
                                         buttonWidth;
 
@@ -1066,7 +1034,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private void GeneratorFormClosing(object sender, FormClosingEventArgs e)
         {
             if (!isReset)
+            {
                 SaveOptions();
+                Configs.CriteriaSettings = criteriaControls.GetSettings();
+            }
 
             if (isGenerating)
             {
@@ -1309,12 +1280,10 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             SetOOS();
             balanceChart.OOSBar = barOOS;
 
-            if (isOOS)
-            {
-                balanceChart.SetChartData();
-                balanceChart.InitChart();
-                balanceChart.Invalidate();
-            }
+            if (!isOOS) return;
+            balanceChart.SetChartData();
+            balanceChart.InitChart();
+            balanceChart.Invalidate();
         }
 
         /// <summary>
@@ -1775,6 +1744,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         {
             Configs.GeneratorOptions = "";
             Configs.BannedIndicators = "";
+            Configs.CriteriaSettings = "";
             isReset = true;
             Close();
         }

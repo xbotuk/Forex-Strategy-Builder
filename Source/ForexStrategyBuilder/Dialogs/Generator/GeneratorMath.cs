@@ -122,7 +122,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
                 foreach (Control control in pnlCommon.Controls)
                     control.Enabled = false;
-                foreach (Control control in pnlCriteriaControls.Controls)
+                foreach (Control control in criteriaControls.Controls)
                     control.Enabled = false;
                 foreach (Control control in pnlSettings.Controls)
                     control.Enabled = false;
@@ -155,6 +155,11 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
                 if (chbGenerateNewStrategy.Checked)
                     top10Field.ClearTop10Slots();
+
+                criteriaControls.CustomGeneratorAnalytics = customAnalytics;
+                criteriaControls.OOSTesting = chbOutOfSample.Checked;
+                criteriaControls.BarOOS = (int) nudOutOfSample.Value;
+                criteriaControls.TargetBalanceRatio = targetBalanceRatio;
 
                 bgWorker.RunWorkerAsync();
             }
@@ -207,7 +212,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             foreach (Control control in pnlCommon.Controls)
                 control.Enabled = true;
-            foreach (Control control in pnlCriteriaControls.Controls)
+            foreach (Control control in criteriaControls.Controls)
                 control.Enabled = true;
             foreach (Control control in pnlSettings.Controls)
                 control.Enabled = true;
@@ -486,7 +491,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                         PerformInitialOptimization(worker, isBetter);
 
                     totalWorkTime = currentBenchmarkTime.Add(DateTime.Now - startTime);
-                    benchmark = 0.0001 * Data.Bars * totalCalculations / totalWorkTime.TotalSeconds;
+                    benchmark = 0.0001*Data.Bars*totalCalculations/totalWorkTime.TotalSeconds;
                     SetBenchmarkText(benchmark);
                 }
 
@@ -528,15 +533,16 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             {
 #endif
                 Backtester.Calculate();
+                Backtester.CalculateAccountStats();
 
                 float value = 0;
                 customSortingOptionDisplay = String.Empty;
                 const double epsilon = 0.000001;
 
-                bool isLimitationsOk = IsCriteriaFulfilled();
+                bool isCriteriaFulfilled = criteriaControls.IsCriteriaFulfilled();
                 bool isBalanceOk = Backtester.NetBalance > 0;
 
-                if (isLimitationsOk && isBalanceOk)
+                if (isCriteriaFulfilled && isBalanceOk)
                 {
                     if (rbnCustomSortingNone.Checked)
                         value = (isOOS ? Backtester.Balance(barOOS) : Backtester.NetBalance);
@@ -576,6 +582,13 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     }
                     else
                         customAnalytics.CriterionFailsNomination++;
+                }
+
+                if (!isCriteriaFulfilled)
+                {
+                    int tempCriterionFailsNomination = customAnalytics.CriterionFailsNomination;
+                    customAnalytics = criteriaControls.CustomGeneratorAnalytics;
+                    customAnalytics.CriterionFailsNomination = tempCriterionFailsNomination;
                 }
 
                 SetLabelCyclesText(cycles.ToString(CultureInfo.InvariantCulture));
@@ -646,9 +659,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             RecalculateSlots();
         }
 
-        /// <summary>
-        ///     Generates a random strategy
-        /// </summary>
         private void GenerateStrategySlots()
         {
             // Determines the number of slots
@@ -738,9 +748,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             }
         }
 
-        /// <summary>
-        ///     Calculate the indicator in the designated slot
-        /// </summary>
         private void GenerateIndicatorName(int slot)
         {
             SlotTypes slotType = Data.Strategy.GetSlotType(slot);
@@ -782,9 +789,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             Data.Strategy.Slot[slot].IndicatorName = indicatorName;
         }
 
-        /// <summary>
-        ///     Calculate the indicator in the designated slot
-        /// </summary>
         private void GenerateIndicatorParameters(int slot)
         {
             string indicatorName = Data.Strategy.Slot[slot].IndicatorName;

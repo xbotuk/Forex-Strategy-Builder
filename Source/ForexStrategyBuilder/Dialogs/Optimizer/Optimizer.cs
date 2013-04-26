@@ -42,17 +42,10 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
         private Button btnCancel;
         private Button btnOptimize;
         private Button btnResetSettings;
-        private CheckBox chbAmbiguousBars;
-        private CheckBox chbEquityPercent;
         private CheckBox chbHideFSB;
-        private CheckBox chbMaxDrawdown;
-        private CheckBox chbMaxTrades;
-        private CheckBox chbMinTrades;
-        private CheckBox chbOOSPatternFilter;
         private CheckBox chbOptimizerWritesReport;
         private CheckBox chbOutOfSample;
-        private CheckBox chbSmoothBalanceLines;
-        private CheckBox chbWinLossRatio;
+        private NumericUpDown nudOutOfSample;
         private int checkedParams; // Count of the checked parameters
         private Color colorText;
         private int computedCycles; // Currently completed cycles
@@ -69,23 +62,15 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
         private OptimizerButtons lastSelectButton = OptimizerButtons.SelectRandom;
         private int lastSetStepButtonValue = 5;
         private Label lblNoParams;
-        private NumericUpDown nudAmbiguousBars;
-        private NumericUpDown nudEquityPercent;
-        private NumericUpDown nudMaxDrawdown;
-        private NumericUpDown nudMaxTrades;
-        private NumericUpDown nudMinTrades;
-        private NumericUpDown nudOutOfSample;
-        private NumericUpDown nudSmoothBalanceCheckPoints;
-        private NumericUpDown nudSmoothBalancePercent;
-        private NumericUpDown nudWinLossRatio;
-        private NumericUpDown nudoosPatternPercent;
         private int parameters; // Count of the NumericParameters
         private Panel pnlCaptions;
-        private FancyPanel pnlLimitations;
+        private FancyPanel pnlCriteriaBase;
         private Panel pnlParams;
         private Panel pnlParamsBase;
         private Panel pnlParamsBase2;
         private FancyPanel pnlSettings;
+        private ScrollFlowPanel criteriaPanel;
+        private CriteriaControls criteriaControls;
         private ProgressBar progressBar;
         private int progressPercent; // Reached progress in %
         private int protections; // Count of permanent protections
@@ -107,7 +92,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
 
             InitializeControls();
             SetupButtons();
-            SetPanelLimitations();
+            SetCriteriaPanel();
             SetPanelSettings();
             LoadOptions();
 
@@ -147,6 +132,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int buttonWidth = (ClientSize.Width - 4*btnHrzSpace)/3;
             int space = btnHrzSpace;
+            const int nudWidth = 55;
 
             // Button Cancel
             btnCancel.Size = new Size(buttonWidth, buttonHeight);
@@ -187,57 +173,11 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             // No Parameters
             lblNoParams.Location = new Point(5, 5);
 
-            // Panel Limitations
-            pnlLimitations.Size = pnlParamsBase.Size;
-            pnlLimitations.Location = pnlParamsBase.Location;
-
-            const int nudWidth = 55;
-
-            // chbAmbiguousBars
-            chbAmbiguousBars.Location = new Point(Border + 5, 27);
-
-            // nudAmbiguousBars
-            nudAmbiguousBars.Width = nudWidth;
-            nudAmbiguousBars.Location = new Point(pnlLimitations.ClientSize.Width - nudWidth - Border - 5,
-                                                  chbAmbiguousBars.Top - 1);
-
-            // MaxDrawdown
-            chbMaxDrawdown.Location = new Point(Border + 5, chbAmbiguousBars.Bottom + Border + 4);
-            nudMaxDrawdown.Width = nudWidth;
-            nudMaxDrawdown.Location = new Point(nudAmbiguousBars.Left, chbMaxDrawdown.Top - 1);
-
-            // MaxDrawdown %
-            chbEquityPercent.Location = new Point(Border + 5, nudMaxDrawdown.Bottom + Border + 4);
-            nudEquityPercent.Width = nudWidth;
-            nudEquityPercent.Location = new Point(nudAmbiguousBars.Left, chbEquityPercent.Top - 1);
-
-            // MinTrades
-            chbMinTrades.Location = new Point(Border + 5, chbEquityPercent.Bottom + Border + 4);
-            nudMinTrades.Width = nudWidth;
-            nudMinTrades.Location = new Point(nudAmbiguousBars.Left, chbMinTrades.Top - 1);
-
-            // MaxTrades
-            chbMaxTrades.Location = new Point(Border + 5, chbMinTrades.Bottom + Border + 4);
-            nudMaxTrades.Width = nudWidth;
-            nudMaxTrades.Location = new Point(nudAmbiguousBars.Left, chbMaxTrades.Top - 1);
-
-            // WinLossRatios
-            chbWinLossRatio.Location = new Point(Border + 5, chbMaxTrades.Bottom + Border + 4);
-            nudWinLossRatio.Width = nudWidth;
-            nudWinLossRatio.Location = new Point(nudAmbiguousBars.Left, chbWinLossRatio.Top - 1);
-
-            // OOS Pattern Filter
-            chbOOSPatternFilter.Location = new Point(Border + 5, chbWinLossRatio.Bottom + Border + 4);
-            nudoosPatternPercent.Width = nudWidth;
-            nudoosPatternPercent.Location = new Point(nudAmbiguousBars.Left, chbOOSPatternFilter.Top - 1);
-
-            // Balance lines pattern
-            chbSmoothBalanceLines.Location = new Point(Border + 5, chbOOSPatternFilter.Bottom + Border + 4);
-            nudSmoothBalancePercent.Width = nudWidth;
-            nudSmoothBalancePercent.Location = new Point(nudAmbiguousBars.Left, chbSmoothBalanceLines.Top - 1);
-            nudSmoothBalanceCheckPoints.Width = nudWidth;
-            nudSmoothBalanceCheckPoints.Location = new Point(nudSmoothBalancePercent.Left - nudWidth - Border,
-                                                             chbSmoothBalanceLines.Top - 1);
+            // Criteria Panel
+            pnlCriteriaBase.Size = pnlParamsBase.Size;
+            pnlCriteriaBase.Location = pnlParamsBase.Location;
+            criteriaPanel.Size = new Size(pnlCriteriaBase.Width - 2 * 2, pnlCriteriaBase.Height - (int)pnlCriteriaBase.CaptionHeight - 2);
+            criteriaPanel.Location = new Point(2, (int)pnlCriteriaBase.CaptionHeight);
 
             // Panel Settings
             pnlSettings.Size = pnlParamsBase.Size;
@@ -247,7 +187,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             chbOutOfSample.Location = new Point(Border + 5, 27);
             nudOutOfSample.Width = nudWidth;
             nudOutOfSample.Location = new Point(pnlSettings.ClientSize.Width - nudWidth - Border - 5,
-                                                chbOutOfSample.Top - 1);
+            chbOutOfSample.Top - 1);
 
             // chbOptimizerWritesReport
             chbOptimizerWritesReport.Location = new Point(Border + 5, chbOutOfSample.Bottom + Border + 4);
@@ -270,7 +210,10 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
         private void OptimizerFormClosing(object sender, FormClosingEventArgs e)
         {
             if (!isReset)
+            {
                 SaveOptions();
+                Configs.CriteriaSettings = criteriaControls.GetSettings();
+            }
 
             if (isOptimizing)
             {

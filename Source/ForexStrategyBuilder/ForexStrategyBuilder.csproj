@@ -93,11 +93,11 @@
     <Compile Include="CustomControls\ScrollFlowPanel.designer.cs">
       <DependentUpon>ScrollFlowPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\Analyzer\OverOptimizationChartLegend.cs">
+    <Compile Include="Dialogs\CriteriaControls.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dialogs\Generator\CriteriaPanel.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Dialogs\Analyzer\OverOptimizationChartLegend.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Dialogs\JForex\JForexDataFiles.cs" />
     <Compile Include="Dialogs\JForex\JForexImport.cs">
@@ -699,4 +699,5 @@
       <Name>CustomAnalytics</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
 </Project>
