@@ -152,6 +152,7 @@
     <Compile Include="Enumerations\StrategySlotStatus.cs" />
     <Compile Include="Indicators\CheckParam.cs" />
     <Compile Include="Indicators\Indicator.cs" />
+    <Compile Include="Indicators\IndicatorBaseCalc.cs" />
     <Compile Include="Indicators\IndicatorComp.cs" />
     <Compile Include="Indicators\IndicatorParam.cs" />
     <Compile Include="Indicators\IndicatorSlot.cs" />
@@ -255,13 +256,9 @@
     <Compile Include="Indicators\Store\WeekClosing.cs" />
     <Compile Include="Indicators\Store\WilliamsPercentRange.cs" />
     <Compile Include="Infrastructure\Entities\DataSet.cs" />
-    <Compile Include="Infrastructure\Entities\InfoRecord.cs" />
     <Compile Include="Infrastructure\Enums\DataPeriod.cs" />
-    <Compile Include="Infrastructure\Enums\InfoRecordFlag.cs" />
-    <Compile Include="Infrastructure\Interfaces\IDataParams.cs" />
     <Compile Include="Infrastructure\Interfaces\IDataSet.cs" />
     <Compile Include="Infrastructure\Interfaces\IIndicator.cs" />
-    <Compile Include="Infrastructure\Interfaces\IInstrumentProperties.cs" />
     <Compile Include="UserInterface\SmallBalanceChartData.cs" />
     <Compile Include="Utils\Benchmark.cs" />
     <Compile Include="Utils\ColorMagic.cs" />

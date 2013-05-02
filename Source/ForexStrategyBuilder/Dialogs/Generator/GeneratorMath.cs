@@ -158,7 +158,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 if (chbGenerateNewStrategy.Checked)
                     top10Field.ClearTop10Slots();
 
-                criteriaControls.CustomGeneratorAnalytics = customAnalytics;
                 criteriaControls.OOSTesting = chbOutOfSample.Checked;
                 criteriaControls.BarOOS = (int) nudOutOfSample.Value;
                 criteriaControls.TargetBalanceRatio = targetBalanceRatio;
@@ -584,13 +583,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     }
                     else
                         customAnalytics.CriterionFailsNomination++;
-                }
-
-                if (!isCriteriaFulfilled)
-                {
-                    int tempCriterionFailsNomination = customAnalytics.CriterionFailsNomination;
-                    customAnalytics = criteriaControls.CustomGeneratorAnalytics;
-                    customAnalytics.CriterionFailsNomination = tempCriterionFailsNomination;
                 }
 
                 SetLabelCyclesText(cycles.ToString(CultureInfo.InvariantCulture));

@@ -11,7 +11,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ForexStrategyBuilder.CustomAnalytics;
 
 namespace ForexStrategyBuilder.Dialogs
 {
@@ -29,7 +28,6 @@ namespace ForexStrategyBuilder.Dialogs
         private CheckBox chbOOSPatternFilter;
         private CheckBox chbSmoothBalanceLines;
         private CheckBox chbWinLossRatio;
-        private CustomGeneratorAnalytics customGeneratorAnalytics;
 
         private NumericUpDown nudAmbiguousBars;
         private NumericUpDown nudEquityPercent;
@@ -50,13 +48,6 @@ namespace ForexStrategyBuilder.Dialogs
 
             Height = 400;
             Margin = new Padding(0);
-
-        }
-
-        public CustomGeneratorAnalytics CustomGeneratorAnalytics
-        {
-            get { return customGeneratorAnalytics; }
-            set { customGeneratorAnalytics = value; }
         }
 
         public double TargetBalanceRatio { get; set; }
@@ -434,14 +425,12 @@ namespace ForexStrategyBuilder.Dialogs
             // Criterion Max Ambiguous Bars
             if (chbAmbiguousBars.Checked && Backtester.AmbiguousBars > nudAmbiguousBars.Value)
             {
-                customGeneratorAnalytics.CriterionAmbiguousBars++;
                 return false;
             }
 
             // Criterion Min Profit per Day
             if (chbMinProfitPerDay.Checked && Backtester.MoneyProfitPerDay < (double) nudMinProfitPerDay.Value)
             {
-                customGeneratorAnalytics.CriterionProfitPerDay++;
                 return false;
             }
 
@@ -451,42 +440,36 @@ namespace ForexStrategyBuilder.Dialogs
                                            : Backtester.MaxEquityDrawdown;
             if (chbMaxDrawdown.Checked && maxEquityDrawdown > (double) nudMaxDrawdown.Value)
             {
-                customGeneratorAnalytics.CriterionMaxEquityDD++;
                 return false;
             }
 
             // Criterion Max Equity percent drawdown
             if (chbEquityPercent.Checked && Backtester.MoneyEquityPercentDrawdown > (double) nudEquityPercent.Value)
             {
-                customGeneratorAnalytics.CriterionMaxEquityPercentDD++;
                 return false;
             }
 
             // Criterion Min Trades
             if (chbMinTrades.Checked && Backtester.ExecutedOrders < nudMinTrades.Value)
             {
-                customGeneratorAnalytics.CriterionMinTrades++;
                 return false;
             }
 
             // Criterion Max Trades
             if (chbMaxTrades.Checked && Backtester.ExecutedOrders > nudMaxTrades.Value)
             {
-                customGeneratorAnalytics.CriterionMaxTrades++;
                 return false;
             }
 
             // Criterion Win / Loss ratio
             if (chbWinLossRatio.Checked && Backtester.WinLossRatio < (double) nudWinLossRatio.Value)
             {
-                customGeneratorAnalytics.CriterionWinLossRatio++;
                 return false;
             }
 
             // Criterion Minimum Sharpe ratio
             if (chbMinSharpeRatio.Checked && Backtester.SharpeRatio < (double) nudMinSharpeRatio.Value)
             {
-                customGeneratorAnalytics.CriterionSharpeRatio++;
                 return false;
             }
 
@@ -494,7 +477,6 @@ namespace ForexStrategyBuilder.Dialogs
             if (chbMaxRedGreenDeviation.Checked &&
                 Backtester.RedGreenBalanceDev > (double) nudMaxRedGreenDeviation.Value)
             {
-                customGeneratorAnalytics.CriterionSharpeRatio++;
                 return false;
             }
 
@@ -507,7 +489,6 @@ namespace ForexStrategyBuilder.Dialogs
                 var minBalance = (int) (targetBalance*(1 - nudoosPatternPercent.Value/100));
                 if (netBalance < oosBalance || netBalance < minBalance)
                 {
-                    customGeneratorAnalytics.CriterionOOSPatternFilter++;
                     return false;
                 }
             }
@@ -530,7 +511,6 @@ namespace ForexStrategyBuilder.Dialogs
                     double maxBalance = targetBalance*(1 + maxPercentDeviation);
                     if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
                     {
-                        customGeneratorAnalytics.CriterionSmoothBalanceLine++;
                         return false;
                     }
 
@@ -543,7 +523,6 @@ namespace ForexStrategyBuilder.Dialogs
                     maxBalance = targetBalance*(1 + maxPercentDeviation);
                     if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
                     {
-                        customGeneratorAnalytics.CriterionSmoothBalanceLineLong++;
                         return false;
                     }
 
@@ -556,7 +535,6 @@ namespace ForexStrategyBuilder.Dialogs
                     maxBalance = targetBalance*(1 + maxPercentDeviation);
                     if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
                     {
-                        customGeneratorAnalytics.CriterionSmoothBalanceLineShort++;
                         return false;
                     }
                 }

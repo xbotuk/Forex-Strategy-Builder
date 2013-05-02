@@ -150,20 +150,5 @@ namespace ForexStrategyBuilder.Infrastructure.Interfaces
         ///     Sets the indicator logic description
         /// </summary>
         void SetDescription();
-
-        /// <summary>
-        ///     Converts indicator components to strategy data set time.
-        /// </summary>
-        void NormalizeComponents(IDataSet strategyDataSet);
-
-        /// <summary>
-        ///     Shifts signal with "shift" bars.
-        /// </summary>
-        void ShiftSignalAt(int shift);
-
-        /// <summary>
-        ///     Copy signal at any "shift" bars.
-        /// </summary>
-        void ShiftSignalAny(int shift);
     }
 }
