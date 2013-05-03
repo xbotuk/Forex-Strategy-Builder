@@ -255,7 +255,10 @@ namespace ForexStrategyBuilder.Indicators
 
         public static Indicator ConstructIndicator(string indicatorName)
         {
-            return (Indicator)Activator.CreateInstance(AllIndicators[indicatorName].GetType());
+            Indicator indicator = AllIndicators[indicatorName];
+            var instance = (Indicator) Activator.CreateInstance(indicator.GetType());
+            instance.CustomIndicator = indicator.CustomIndicator;
+            return instance;
         }
     }
 }
