@@ -666,6 +666,7 @@ namespace ForexStrategyBuilder
                 trnAll.Nodes.Add(trn);
 
                 Indicator indicator = IndicatorManager.ConstructIndicator(name);
+                indicator.Initialize(slotType);
                 TypeOfIndicator type = indicator.IndParam.IndicatorType;
 
                 if (indicator.CustomIndicator)

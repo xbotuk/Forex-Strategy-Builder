@@ -50,8 +50,8 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].ToolTip = "Logic of application of Oscillator.";
 
             IndParam.ListParam[1].Caption = "Smoothing method";
-            IndParam.ListParam[1].ItemList = Enum.GetNames(typeof(MAMethod));
-            IndParam.ListParam[1].Index = (int)MAMethod.Simple;
+            IndParam.ListParam[1].ItemList = Enum.GetNames(typeof (MAMethod));
+            IndParam.ListParam[1].Index = (int) MAMethod.Simple;
             IndParam.ListParam[1].Text = IndParam.ListParam[1].ItemList[IndParam.ListParam[1].Index];
             IndParam.ListParam[1].Enabled = true;
             IndParam.ListParam[1].ToolTip = "The Moving Average method used for smoothing the ATR value.";
@@ -82,15 +82,15 @@ namespace ForexStrategyBuilder.Indicators.Store
             DataSet = dataSet;
 
             // Reading the parameters
-            var period1 = (int)IndParam.NumParam[0].Value;
-            var period2 = (int)IndParam.NumParam[1].Value;
+            var period1 = (int) IndParam.NumParam[0].Value;
+            var period2 = (int) IndParam.NumParam[1].Value;
             int prvs = IndParam.CheckParam[0].Checked ? 1 : 0;
 
             // Calculation
             int firstBar = period1 + period2 + 2;
             var adOscillator = new double[Bars];
 
-            // ---------------------------------------------------------
+// ---------------------------------------------------------
             var atr1 = new AverageTrueRange();
             atr1.Initialize(SlotType);
 
@@ -109,7 +109,7 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             double[] adIndicator1 = atr1.Component[0].Value;
             double[] adIndicator2 = atr2.Component[0].Value;
-            // ----------------------------------------------------------
+// ----------------------------------------------------------
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -120,27 +120,27 @@ namespace ForexStrategyBuilder.Indicators.Store
             Component = new IndicatorComp[3];
 
             Component[0] = new IndicatorComp
-            {
-                CompName = "Histogram",
-                DataType = IndComponentType.IndicatorValue,
-                ChartType = IndChartType.Histogram,
-                FirstBar = firstBar,
-                Value = adOscillator
-            };
+                {
+                    CompName = "Histogram",
+                    DataType = IndComponentType.IndicatorValue,
+                    ChartType = IndChartType.Histogram,
+                    FirstBar = firstBar,
+                    Value = adOscillator
+                };
 
             Component[1] = new IndicatorComp
-            {
-                ChartType = IndChartType.NoChart,
-                FirstBar = firstBar,
-                Value = new double[Bars]
-            };
+                {
+                    ChartType = IndChartType.NoChart,
+                    FirstBar = firstBar,
+                    Value = new double[Bars]
+                };
 
             Component[2] = new IndicatorComp
-            {
-                ChartType = IndChartType.NoChart,
-                FirstBar = firstBar,
-                Value = new double[Bars]
-            };
+                {
+                    ChartType = IndChartType.NoChart,
+                    FirstBar = firstBar,
+                    Value = new double[Bars]
+                };
 
             // Sets the Component's type
             if (SlotType == SlotTypes.OpenFilter)

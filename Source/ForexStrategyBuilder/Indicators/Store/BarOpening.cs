@@ -33,14 +33,8 @@ namespace ForexStrategyBuilder.Indicators.Store
         {
             SlotType = slotType;
 
-            // Setting up the indicator parameters
-            IndParam = new IndicatorParam
-                {
-                    IndicatorName = IndicatorName,
-                    SlotType = slotType,
-                    IndicatorType = TypeOfIndicator.Additional,
-                    ExecutionTime = ExecutionTime.AtBarOpening
-                };
+            IndParam.IndicatorType = TypeOfIndicator.Additional;
+            IndParam.ExecutionTime = ExecutionTime.AtBarOpening;
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";

@@ -35,6 +35,8 @@ namespace ForexStrategyBuilder.Indicators.Store
         {
             SlotType = slotType;
 
+            IndParam.IndicatorType = TypeOfIndicator.OscillatorOfIndicators;
+
             // ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
             IndParam.ListParam[0].ItemList = new[]

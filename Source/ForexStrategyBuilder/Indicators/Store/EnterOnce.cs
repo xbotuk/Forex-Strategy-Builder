@@ -32,7 +32,6 @@ namespace ForexStrategyBuilder.Indicators.Store
         {
             SlotType = slotType;
 
-            IndParam.SlotType = slotType;
             IndParam.IndicatorType = TypeOfIndicator.DateTime;
 
             // The ComboBox parameters

@@ -17,20 +17,18 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 namespace ForexStrategyBuilder.Indicators.Store
 {
     /// <summary>
-    /// Moving Average Indicator
+    ///     Moving Average Indicator
     /// </summary>
     public class MovingAverage : Indicator
     {
         public MovingAverage()
         {
-            // General properties
             IndicatorName = "Moving Average";
             PossibleSlots = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close | SlotTypes.CloseFilter;
-            SeparatedChart = false;
         }
 
         /// <summary>
-        /// Sets the default indicator parameters for the designated slot type.
+        ///     Sets the default indicator parameters for the designated slot type.
         /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
@@ -117,7 +115,7 @@ namespace ForexStrategyBuilder.Indicators.Store
         }
 
         /// <summary>
-        /// Calculates the indicator's components
+        ///     Calculates the indicator's components
         /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
@@ -126,17 +124,17 @@ namespace ForexStrategyBuilder.Indicators.Store
             // Reading the parameters
             var maMethod = (MAMethod) IndParam.ListParam[1].Index;
             var price = (BasePrice) IndParam.ListParam[2].Index;
-            var iPeriod = (int) IndParam.NumParam[0].Value;
-            var iShift = (int) IndParam.NumParam[1].Value;
-            int iPrvs = IndParam.CheckParam[0].Checked ? 1 : 0;
+            var period = (int) IndParam.NumParam[0].Value;
+            var shift = (int) IndParam.NumParam[1].Value;
+            int previous = IndParam.CheckParam[0].Checked ? 1 : 0;
 
             // TimeExecution
-            if (price == BasePrice.Open && iPeriod == 1 && iShift == 0)
+            if (price == BasePrice.Open && period == 1 && shift == 0)
                 IndParam.ExecutionTime = ExecutionTime.AtBarOpening;
 
             // Calculation
-            double[] adMA = MovingAverage(iPeriod, iShift, maMethod, Price(price));
-            int iFirstBar = iPeriod + iShift + 1 + iPrvs;
+            double[] adMA = MovingAverage(period, shift, maMethod, Price(price));
+            int firstBar = period + shift + 1 + previous;
 
             // Saving the components
             if (SlotType == SlotTypes.Open || SlotType == SlotTypes.Close)
@@ -145,18 +143,18 @@ namespace ForexStrategyBuilder.Indicators.Store
 
                 Component[1] = new IndicatorComp {Value = new double[Bars]};
 
-                for (int iBar = iFirstBar; iBar < Bars; iBar++)
+                for (int bar = firstBar; bar < Bars; bar++)
                 {
                     // Covers the cases when the price can pass through the MA without a signal
-                    double dValue = adMA[iBar - iPrvs]; // Current value
-                    double dValue1 = adMA[iBar - iPrvs - 1]; // Previous value
-                    double dTempVal = dValue;
-                    if ((dValue1 > High[iBar - 1] && dValue < Open[iBar]) || // The Open price jumps above the indicator
-                        (dValue1 < Low[iBar - 1] && dValue > Open[iBar]) || // The Open price jumps below the indicator
-                        (Close[iBar - 1] < dValue && dValue < Open[iBar]) || // The Open price is in a positive gap
-                        (Close[iBar - 1] > dValue && dValue > Open[iBar])) // The Open price is in a negative gap
-                        dTempVal = Open[iBar];
-                    Component[1].Value[iBar] = dTempVal; // Entry or exit value
+                    double value = adMA[bar - previous]; // Current value
+                    double value1 = adMA[bar - previous - 1]; // Previous value
+                    double tempVal = value;
+                    if ((value1 > High[bar - 1] && value < Open[bar]) || // The Open price jumps above the indicator
+                        (value1 < Low[bar - 1] && value > Open[bar]) || // The Open price jumps below the indicator
+                        (Close[bar - 1] < value && value < Open[bar]) || // The Open price is in a positive gap
+                        (Close[bar - 1] > value && value > Open[bar])) // The Open price is in a negative gap
+                        tempVal = Open[bar];
+                    Component[1].Value[bar] = tempVal; // Entry or exit value
                 }
             }
             else
@@ -164,10 +162,10 @@ namespace ForexStrategyBuilder.Indicators.Store
                 Component = new IndicatorComp[3];
 
                 Component[1] = new IndicatorComp
-                    {ChartType = IndChartType.NoChart, FirstBar = iFirstBar, Value = new double[Bars]};
+                    {ChartType = IndChartType.NoChart, FirstBar = firstBar, Value = new double[Bars]};
 
                 Component[2] = new IndicatorComp
-                    {ChartType = IndChartType.NoChart, FirstBar = iFirstBar, Value = new double[Bars]};
+                    {ChartType = IndChartType.NoChart, FirstBar = firstBar, Value = new double[Bars]};
             }
 
             Component[0] = new IndicatorComp
@@ -176,7 +174,7 @@ namespace ForexStrategyBuilder.Indicators.Store
                     DataType = IndComponentType.IndicatorValue,
                     ChartType = IndChartType.Line,
                     ChartColor = Color.Red,
-                    FirstBar = iFirstBar,
+                    FirstBar = firstBar,
                     Value = adMA
                 };
 
@@ -209,34 +207,34 @@ namespace ForexStrategyBuilder.Indicators.Store
                 switch (IndParam.ListParam[0].Text)
                 {
                     case "Moving Average rises":
-                        IndicatorRisesLogic(iFirstBar, iPrvs, adMA, ref Component[1], ref Component[2]);
+                        IndicatorRisesLogic(firstBar, previous, adMA, ref Component[1], ref Component[2]);
                         break;
 
                     case "Moving Average falls":
-                        IndicatorFallsLogic(iFirstBar, iPrvs, adMA, ref Component[1], ref Component[2]);
+                        IndicatorFallsLogic(firstBar, previous, adMA, ref Component[1], ref Component[2]);
                         break;
 
                     case "The bar opens above Moving Average":
-                        BarOpensAboveIndicatorLogic(iFirstBar, iPrvs, adMA, ref Component[1], ref Component[2]);
+                        BarOpensAboveIndicatorLogic(firstBar, previous, adMA, ref Component[1], ref Component[2]);
                         break;
 
                     case "The bar opens below Moving Average":
-                        BarOpensBelowIndicatorLogic(iFirstBar, iPrvs, adMA, ref Component[1], ref Component[2]);
+                        BarOpensBelowIndicatorLogic(firstBar, previous, adMA, ref Component[1], ref Component[2]);
                         break;
 
                     case "The bar opens above Moving Average after opening below it":
-                        BarOpensAboveIndicatorAfterOpeningBelowLogic(iFirstBar, iPrvs, adMA, ref Component[1],
+                        BarOpensAboveIndicatorAfterOpeningBelowLogic(firstBar, previous, adMA, ref Component[1],
                                                                      ref Component[2]);
                         break;
 
                     case "The bar opens below Moving Average after opening above it":
-                        BarOpensBelowIndicatorAfterOpeningAboveLogic(iFirstBar, iPrvs, adMA, ref Component[1],
+                        BarOpensBelowIndicatorAfterOpeningAboveLogic(firstBar, previous, adMA, ref Component[1],
                                                                      ref Component[2]);
                         break;
 
                     case "The position opens above Moving Average":
                         Component[0].PosPriceDependence = PositionPriceDependence.BuyHigherSellLower;
-                        Component[0].UsePreviousBar = iPrvs;
+                        Component[0].UsePreviousBar = previous;
                         Component[1].DataType = IndComponentType.Other;
                         Component[1].ShowInDynInfo = false;
                         Component[2].DataType = IndComponentType.Other;
@@ -245,7 +243,7 @@ namespace ForexStrategyBuilder.Indicators.Store
 
                     case "The position opens below Moving Average":
                         Component[0].PosPriceDependence = PositionPriceDependence.BuyLowerSelHigher;
-                        Component[0].UsePreviousBar = iPrvs;
+                        Component[0].UsePreviousBar = previous;
                         Component[1].DataType = IndComponentType.Other;
                         Component[1].ShowInDynInfo = false;
                         Component[2].DataType = IndComponentType.Other;
@@ -253,18 +251,18 @@ namespace ForexStrategyBuilder.Indicators.Store
                         break;
 
                     case "The bar closes below Moving Average":
-                        BarClosesBelowIndicatorLogic(iFirstBar, iPrvs, adMA, ref Component[1], ref Component[2]);
+                        BarClosesBelowIndicatorLogic(firstBar, previous, adMA, ref Component[1], ref Component[2]);
                         break;
 
                     case "The bar closes above Moving Average":
-                        BarClosesAboveIndicatorLogic(iFirstBar, iPrvs, adMA, ref Component[1], ref Component[2]);
+                        BarClosesAboveIndicatorLogic(firstBar, previous, adMA, ref Component[1], ref Component[2]);
                         break;
                 }
             }
         }
 
         /// <summary>
-        /// Sets the indicator logic description
+        ///     Sets the indicator logic description
         /// </summary>
         public override void SetDescription()
         {
@@ -332,7 +330,7 @@ namespace ForexStrategyBuilder.Indicators.Store
         }
 
         /// <summary>
-        /// Indicator to string
+        ///     Indicator to string
         /// </summary>
         public override string ToString()
         {

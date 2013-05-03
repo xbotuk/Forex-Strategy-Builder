@@ -64,7 +64,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             adAd[0] = (Close[0] - Low[0]) - (High[0] - Close[0]);
             if ((High[0] - Low[0]) > 0)
             {
-                adAd[0] = adAd[0] / (High[0] - Low[0]) * Volume[0];
+                adAd[0] = adAd[0]/(High[0] - Low[0])*Volume[0];
             }
             else
             {
@@ -78,7 +78,7 @@ namespace ForexStrategyBuilder.Indicators.Store
 
                 if (dRange > 0)
                 {
-                    dDelta = Volume[iBar] * (2 * Close[iBar] - High[iBar] - Low[iBar]) / dRange;
+                    dDelta = Volume[iBar]*(2*Close[iBar] - High[iBar] - Low[iBar])/dRange;
                 }
 
                 adAd[iBar] = adAd[iBar - 1] + dDelta;
@@ -88,28 +88,28 @@ namespace ForexStrategyBuilder.Indicators.Store
             Component = new IndicatorComp[3];
 
             Component[0] = new IndicatorComp
-            {
-                CompName = "Accumulation Distribution",
-                DataType = IndComponentType.IndicatorValue,
-                ChartType = IndChartType.Line,
-                ChartColor = Color.Blue,
-                FirstBar = firstBar,
-                Value = adAd
-            };
+                {
+                    CompName = "Accumulation Distribution",
+                    DataType = IndComponentType.IndicatorValue,
+                    ChartType = IndChartType.Line,
+                    ChartColor = Color.Blue,
+                    FirstBar = firstBar,
+                    Value = adAd
+                };
 
             Component[1] = new IndicatorComp
-            {
-                ChartType = IndChartType.NoChart,
-                FirstBar = firstBar,
-                Value = new double[Bars]
-            };
+                {
+                    ChartType = IndChartType.NoChart,
+                    FirstBar = firstBar,
+                    Value = new double[Bars]
+                };
 
             Component[2] = new IndicatorComp
-            {
-                ChartType = IndChartType.NoChart,
-                FirstBar = firstBar,
-                Value = new double[Bars]
-            };
+                {
+                    ChartType = IndChartType.NoChart,
+                    FirstBar = firstBar,
+                    Value = new double[Bars]
+                };
 
             // Sets the Component's type
             if (SlotType == SlotTypes.OpenFilter)
