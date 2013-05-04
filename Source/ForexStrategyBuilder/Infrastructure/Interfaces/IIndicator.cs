@@ -130,6 +130,27 @@ namespace ForexStrategyBuilder.Infrastructure.Interfaces
         bool OverrideMainIndicator { get; set; }
 
         /// <summary>
+        ///     Gets environment type: true for a builder and false for a trader.
+        /// </summary>
+        bool IsBacktester { get; }
+
+        /// <summary>
+        ///     Gets or set if the indicator is listed in the FSB indicators list.
+        /// </summary>
+        bool ShowInBacktester { get; set; }
+
+        /// <summary>
+        ///     Gets or sets if Generator can use this indicator.
+        /// </summary>
+        bool ShowInGenerator { get; set; }
+
+
+        /// <summary>
+        ///     Gets or set if the indicator is listed in the FST indicators list.
+        /// </summary>
+        bool ShowInTrader { get; set; }
+
+        /// <summary>
         ///     Tests if this is one of the possible slots.
         /// </summary>
         /// <param name="slotType">The slot we test.</param>

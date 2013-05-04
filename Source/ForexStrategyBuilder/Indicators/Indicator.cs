@@ -30,6 +30,8 @@ namespace ForexStrategyBuilder.Indicators
             CustomIndicator = false;
             WarningMessage = string.Empty;
             AllowClosingFilters = false;
+            IsBacktester = true;
+
             SpecialValues = new double[] {};
             IndParam = new IndicatorParam();
             Component = new IndicatorComp[] {};
@@ -208,6 +210,11 @@ namespace ForexStrategyBuilder.Indicators
         public bool OverrideMainIndicator { get; set; }
         public string WarningMessage { get; protected set; }
 
+        public bool IsBacktester { get; private set; }
+        public bool ShowInBacktester { get; set; }
+        public bool ShowInGenerator { get; set; }
+        public bool ShowInTrader { get; set; }
+
         /// <summary>
         ///     Tests if this is one of the possible slots.
         /// </summary>
@@ -241,6 +248,5 @@ namespace ForexStrategyBuilder.Indicators
         public virtual void SetDescription()
         {
         }
-
     }
 }
