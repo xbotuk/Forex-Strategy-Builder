@@ -191,20 +191,22 @@ namespace ForexStrategyBuilder
                     // Looking for an appropriate constructor
                     foreach (ConstructorInfo constructorInfo in aConstructorInfo)
                     {
-                        if (constructorInfo.IsConstructor && constructorInfo.IsPublic)
+                        if (!constructorInfo.IsConstructor ||
+                            !constructorInfo.IsPublic ||
+                            constructorInfo.GetParameters().Length != 0)
+                            continue;
+
+                        errorMessage = string.Empty;
+                        try
                         {
-                            try
-                            {
-                                errorMessage = string.Empty;
-                                return (Indicator) constructorInfo.Invoke(null);
-                            }
-                            catch (Exception exc)
-                            {
-                                errorMessage = "ERROR: [" + indicatorFileName + "] " + exc.Message;
-                                if (!string.IsNullOrEmpty(exc.InnerException.Message))
-                                    errorMessage += Environment.NewLine + "\t" + exc.InnerException.Message;
-                                return null;
-                            }
+                            return (Indicator) constructorInfo.Invoke(null);
+                        }
+                        catch (Exception exc)
+                        {
+                            errorMessage = "ERROR: [" + indicatorFileName + "] " + exc.Message;
+                            if (exc.InnerException != null && !string.IsNullOrEmpty(exc.InnerException.Message))
+                                errorMessage += Environment.NewLine + "\t" + exc.InnerException.Message;
+                            return null;
                         }
                     }
 
