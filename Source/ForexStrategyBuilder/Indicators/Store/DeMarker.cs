@@ -16,17 +16,10 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     DeMarker Indicator
-    /// </summary>
     public class DeMarker : Indicator
     {
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public DeMarker()
         {
-            // General properties
             IndicatorName = "DeMarker";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
@@ -34,9 +27,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             SeparatedChartMaxValue = 1;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -88,9 +78,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -217,9 +204,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                             indLogic);
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             string sLevelLong = IndParam.NumParam[1].ValueToString;
@@ -290,17 +274,12 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
-                             (IndParam.CheckParam[0].Checked ? "* (" : " (") +
-                             IndParam.ListParam[1].Text + ", " + // Method
-                             IndParam.NumParam[0].ValueToString + ")"; // Period
-
-            return sString;
+            return IndicatorName +
+                    (IndParam.CheckParam[0].Checked ? "* (" : " (") +
+                    IndParam.ListParam[1].Text + ", " + // Method
+                    IndParam.NumParam[0].ValueToString + ")"; // Period
         }
     }
 }

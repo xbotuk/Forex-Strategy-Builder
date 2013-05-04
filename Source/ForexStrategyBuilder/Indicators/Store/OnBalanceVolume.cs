@@ -16,22 +16,15 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    /// On Balance Volume indicator
-    /// </summary>
     public class OnBalanceVolume : Indicator
     {
         public OnBalanceVolume()
         {
-            // General properties
             IndicatorName  = "On Balance Volume";
             PossibleSlots  = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -57,9 +50,6 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         }
 
-        /// <summary>
-        /// Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -128,7 +118,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
 
             // Calculation of the logic
-            IndicatorLogic indLogic = IndicatorLogic.It_does_not_act_as_a_filter;
+            var indLogic = IndicatorLogic.It_does_not_act_as_a_filter;
 
             switch (IndParam.ListParam[0].Text)
             {
@@ -147,18 +137,12 @@ namespace ForexStrategyBuilder.Indicators.Store
                 case "The On Balance Volume changes its direction downward":
                     indLogic = IndicatorLogic.The_indicator_changes_its_direction_downward;
                     break;
-
-                default:
-                    break;
             }
 
             OscillatorLogic(iFirstBar, iPrvs, adOBV, 0, 0, ref Component[1], ref Component[2], indLogic);
 
         }
 
-        /// <summary>
-        /// Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()        {
             EntryFilterLongDescription  = "the " + ToString() + " ";
             EntryFilterShortDescription = "the " + ToString() + " ";
@@ -194,21 +178,13 @@ namespace ForexStrategyBuilder.Indicators.Store
                     ExitFilterLongDescription   += "changes its direction downward";
                     ExitFilterShortDescription  += "changes its direction upward";
                     break;
-
-                default:
-                    break;
             }
 
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName + (IndParam.CheckParam[0].Checked ? "*" : "");
-
-            return sString;
+            return IndicatorName + (IndParam.CheckParam[0].Checked ? "*" : "");
         }
     }
 }

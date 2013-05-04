@@ -16,25 +16,16 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Detrended Oscillator Indicator
-    /// </summary>
     public class DetrendedOscillator : Indicator
     {
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public DetrendedOscillator()
         {
-            // General properties
+
             IndicatorName = "Detrended Oscillator";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -99,9 +90,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -212,9 +200,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             OscillatorLogic(iFirstBar, iPrvs, adDo, 0, 0, ref Component[1], ref Component[2], indLogic);
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             EntryFilterLongDescription = "the " + ToString() + " ";
@@ -282,20 +267,15 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
-                             (IndParam.CheckParam[0].Checked ? "* (" : " (") +
-                             IndParam.ListParam[1].Text + ", " + // Method1
-                             IndParam.NumParam[0].ValueToString + ", " + // Period1
-                             IndParam.ListParam[2].Text + ", " + // Method2
-                             IndParam.NumParam[1].ValueToString + ", " + // Period2
-                             IndParam.ListParam[3].Text + ")"; // Price
-
-            return sString;
+            return IndicatorName +
+                    (IndParam.CheckParam[0].Checked ? "* (" : " (") +
+                    IndParam.ListParam[1].Text + ", " + // Method1
+                    IndParam.NumParam[0].ValueToString + ", " + // Period1
+                    IndParam.ListParam[2].Text + ", " + // Method2
+                    IndParam.NumParam[1].ValueToString + ", " + // Period2
+                    IndParam.ListParam[3].Text + ")"; // Price
         }
     }
 }

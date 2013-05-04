@@ -15,25 +15,20 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Date Filter Indicator
-    /// </summary>
     public class DateFilter : Indicator
     {
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public DateFilter()
         {
-            // General properties
             IndicatorName = "Date Filter";
             PossibleSlots = SlotTypes.OpenFilter;
             IsDeafultGroupAll = true;
+            IsGeneratable = false;
+
+            if (IsBacktester)
+                WarningMessage =
+                    "This indicator is designed to be used in the backtester only. It doesn't work in the trader.";
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -68,9 +63,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[1].ToolTip = "The month.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -85,33 +77,36 @@ namespace ForexStrategyBuilder.Indicators.Store
             var values = new double[Bars];
 
             // Calculation of the logic.
-            switch (IndParam.ListParam[0].Text)
+            if (IsBacktester)
             {
-                case "Do not open positions after":
-                    for (int bar = firstBar; bar < Bars; bar++)
-                        if (Time[bar] < keyDate)
+                switch (IndParam.ListParam[0].Text)
+                {
+                    case "Do not open positions after":
+                        for (int bar = firstBar; bar < Bars; bar++)
+                            if (Time[bar] < keyDate)
+                                values[bar] = 1;
+                        break;
+
+                    case "Do not open positions before":
+                        for (int bar = firstBar; bar < Bars; bar++)
+                            if (Time[bar] >= keyDate)
+                            {
+                                firstBar = bar;
+                                break;
+                            }
+
+                        firstBar = Math.Min(firstBar, Bars - 300);
+
+                        for (int bar = firstBar; bar < Bars; bar++)
                             values[bar] = 1;
 
-                    break;
-
-                case "Do not open positions before":
-                    for (int bar = firstBar; bar < Bars; bar++)
-                    {
-                        if (Time[bar] >= keyDate)
-                        {
-                            firstBar = bar;
-                            break;
-                        }
-                    }
-
-                    firstBar = Math.Min(firstBar, Bars - 300);
-
-                    for (int bar = firstBar; bar < Bars; bar++)
-                    {
-                        values[bar] = 1;
-                    }
-
-                    break;
+                        break;
+                }
+            }
+            else
+            {
+                for (int bar = firstBar; bar < Bars; bar++)
+                    values[bar] = 1;
             }
 
             // Saving the components
@@ -138,11 +133,15 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
+            if (!IsBacktester)
+            {
+                EntryFilterLongDescription = "A back tester limitation. It hasn't effect on the trade.";
+                EntryFilterShortDescription = "A back tester limitation. It hasn't effect on the trade.";
+                return;
+            }
+
             var year = (int) IndParam.NumParam[0].Value;
             var month = (int) IndParam.NumParam[1].Value;
             var keyDate = new DateTime(year, month, 1);
@@ -164,9 +163,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName;

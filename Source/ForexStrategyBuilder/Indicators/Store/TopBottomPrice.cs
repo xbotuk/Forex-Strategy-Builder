@@ -16,21 +16,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Top Bottom Price Indicator
-    /// </summary>
     public class TopBottomPrice : Indicator
     {
         public TopBottomPrice()
         {
-            // General properties
             IndicatorName = "Top Bottom Price";
             PossibleSlots = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close | SlotTypes.CloseFilter;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -105,9 +98,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].ToolTip = "A vertical shift above the top and below the bottom price.";
         }
 
-        /// <summary>
-        ///     Checks if the period have been changed
-        /// </summary>
         private bool IsPeriodChanged(int bar)
         {
             bool bIsPeriodChanged = false;
@@ -131,9 +121,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             return bIsPeriodChanged;
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -343,9 +330,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var iShift = (int) IndParam.NumParam[0].Value;
@@ -460,9 +444,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

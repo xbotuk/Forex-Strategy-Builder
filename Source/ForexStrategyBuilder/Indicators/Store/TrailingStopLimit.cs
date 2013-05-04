@@ -14,15 +14,10 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Trailing Stop Limit Indicator
-    ///     The implementation of logic is in Market.AnalyzeClose(int bar)
-    /// </summary>
     public class TrailingStopLimit : Indicator
     {
         public TrailingStopLimit()
         {
-            // General properties
             IndicatorName = "Trailing Stop Limit";
             PossibleSlots = SlotTypes.Close;
             WarningMessage = "The Trailing Stop Limit indicator trails once per bar." +
@@ -30,9 +25,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                              " The Stop Loss remains constant during the whole bar. Take Profit level is constant by definition.";
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -77,9 +69,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[1].ToolTip = "The constant Take Profit value (in pips).";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -97,9 +86,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var iStopLoss = (int) IndParam.NumParam[0].Value;
@@ -113,9 +99,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                 " pips; Take Profit: " + iTakeProfit + " pips";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

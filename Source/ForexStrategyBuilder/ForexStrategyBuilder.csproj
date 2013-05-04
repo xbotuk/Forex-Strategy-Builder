@@ -180,6 +180,7 @@
     <Compile Include="Indicators\Store\DataBarsFilter.cs" />
     <Compile Include="Indicators\Store\DateFilter.cs" />
     <Compile Include="Indicators\Store\DayClosing.cs" />
+    <Compile Include="Indicators\Store\DayClosing2.cs" />
     <Compile Include="Indicators\Store\DayOpening.cs" />
     <Compile Include="Indicators\Store\DaysOfWeek.cs" />
     <Compile Include="Indicators\Store\DeMarker.cs" />
@@ -254,6 +255,7 @@
     <Compile Include="Indicators\Store\TrixIndex.cs" />
     <Compile Include="Indicators\Store\TrixMAOscillator.cs" />
     <Compile Include="Indicators\Store\WeekClosing.cs" />
+    <Compile Include="Indicators\Store\WeekClosing2.cs" />
     <Compile Include="Indicators\Store\WilliamsPercentRange.cs" />
     <Compile Include="Infrastructure\Entities\DataSet.cs" />
     <Compile Include="Infrastructure\Enums\DataPeriod.cs" />

@@ -19,7 +19,6 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public AccumulationDistribution()
         {
-            // General properties
             IndicatorName = "Accumulation Distribution";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;

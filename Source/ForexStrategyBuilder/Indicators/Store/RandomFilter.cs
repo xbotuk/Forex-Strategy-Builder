@@ -15,22 +15,16 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Random Filter Indicator
-    /// </summary>
     public class RandomFilter : Indicator
     {
         public RandomFilter()
         {
-            // General properties
             IndicatorName = "Random Filter";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             IsDeafultGroupAll = true;
+            IsGeneratable = false;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -88,9 +82,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -160,9 +151,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             EntryFilterLongDescription = ToString() + " allows a long position";
@@ -171,9 +159,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             ExitFilterShortDescription = ToString() + " allows closing";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

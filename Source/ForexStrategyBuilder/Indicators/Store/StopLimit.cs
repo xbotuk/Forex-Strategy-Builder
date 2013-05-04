@@ -16,22 +16,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    /// Stop Limit Indicator
-    /// The implementation of logic is in Market.AnalyseClose(int iBar)
-    /// </summary>
     public class StopLimit : Indicator
     {
         public StopLimit()
         {
-            // General properties
             IndicatorName = "Stop Limit";
             PossibleSlots = SlotTypes.Close;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -66,29 +58,20 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[1].ToolTip = "The Take Profit value (in pips).";
         }
 
-        /// <summary>
-        /// Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
         }
 
-        /// <summary>
-        /// Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
-            int iStopLoss   = (int)IndParam.NumParam[0].Value;
-            int iTakeProfit = (int)IndParam.NumParam[1].Value;
+            var stopLoss   = (int)IndParam.NumParam[0].Value;
+            var takeProfit = (int)IndParam.NumParam[1].Value;
 
-            ExitPointLongDescription  = "when the market falls " + iStopLoss + " pips or rises " + iTakeProfit + " pips from the last entry price";
-            ExitPointShortDescription = "when the market rises " + iStopLoss + " pips or falls " + iTakeProfit + " pips from the last entry price";
+            ExitPointLongDescription  = "when the market falls " + stopLoss + " pips or rises " + takeProfit + " pips from the last entry price";
+            ExitPointShortDescription = "when the market rises " + stopLoss + " pips or falls " + takeProfit + " pips from the last entry price";
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

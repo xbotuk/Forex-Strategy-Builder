@@ -84,6 +84,14 @@ namespace ForexStrategyBuilder.Indicators
         public static List<string> ClosingIndicatorsWithClosingFilters { get; private set; }
 
         /// <summary>
+        ///     Gets the names of all indicators.
+        /// </summary>
+        public static IEnumerable<string> AllIndicatorsNames
+        {
+            get { return new List<string>(AllIndicators.Keys); }
+        }
+
+        /// <summary>
         ///     Adds all indicators to the store.
         /// </summary>
         private static void AddOriginalIndicators()
@@ -114,6 +122,7 @@ namespace ForexStrategyBuilder.Indicators
             OriginalIndicators.Add("Data Bars Filter", new DataBarsFilter());
             OriginalIndicators.Add("Date Filter", new DateFilter());
             OriginalIndicators.Add("Day Closing", new DayClosing());
+            OriginalIndicators.Add("Day Closing 2", new DayClosing2());
             OriginalIndicators.Add("Day of Week", new DaysOfWeek());
             OriginalIndicators.Add("Day Opening", new DayOpening());
             OriginalIndicators.Add("DeMarker", new DeMarker());
@@ -189,6 +198,7 @@ namespace ForexStrategyBuilder.Indicators
             OriginalIndicators.Add("Trix Index", new TrixIndex());
             OriginalIndicators.Add("Trix MA Oscillator", new TrixMAOscillator());
             OriginalIndicators.Add("Week Closing", new WeekClosing());
+            OriginalIndicators.Add("Week Closing 2", new WeekClosing2());
             OriginalIndicators.Add("Williams' Percent Range", new WilliamsPercentRange());
         }
 
@@ -237,6 +247,8 @@ namespace ForexStrategyBuilder.Indicators
             foreach (var record in CustomIndicators)
                 if (!AllIndicators.ContainsKey(record.Key))
                     AllIndicators.Add(record.Key, record.Value);
+                else if (record.Value.OverrideMainIndicator)
+                    AllIndicators[record.Key] = record.Value;
 
             AllIndicators.Sort();
 
@@ -258,6 +270,7 @@ namespace ForexStrategyBuilder.Indicators
             Indicator indicator = AllIndicators[indicatorName];
             var instance = (Indicator) Activator.CreateInstance(indicator.GetType());
             instance.CustomIndicator = indicator.CustomIndicator;
+            instance.OverrideMainIndicator = indicator.OverrideMainIndicator;
             return instance;
         }
     }

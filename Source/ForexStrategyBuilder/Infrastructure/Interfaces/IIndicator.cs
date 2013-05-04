@@ -135,20 +135,9 @@ namespace ForexStrategyBuilder.Infrastructure.Interfaces
         bool IsBacktester { get; }
 
         /// <summary>
-        ///     Gets or set if the indicator is listed in the FSB indicators list.
-        /// </summary>
-        bool ShowInBacktester { get; set; }
-
-        /// <summary>
         ///     Gets or sets if Generator can use this indicator.
         /// </summary>
-        bool ShowInGenerator { get; set; }
-
-
-        /// <summary>
-        ///     Gets or set if the indicator is listed in the FST indicators list.
-        /// </summary>
-        bool ShowInTrader { get; set; }
+        bool IsGeneratable { get; set; }
 
         /// <summary>
         ///     Tests if this is one of the possible slots.

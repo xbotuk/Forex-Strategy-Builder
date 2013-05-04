@@ -15,22 +15,15 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Bulls Bears Power Indicator
-    /// </summary>
     public class BullsBearsPower : Indicator
     {
         public BullsBearsPower()
         {
-            // General properties
             IndicatorName = "Bulls Bears Power";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -82,9 +75,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -201,15 +191,12 @@ namespace ForexStrategyBuilder.Indicators.Store
             OscillatorLogic(iFirstBar, iPrvs, adBbp, dLevel, -dLevel, ref Component[1], ref Component[2], indLogic);
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
-            string sLevelLong = (Math.Abs(IndParam.NumParam[1].Value - 0) < Epsilon
+            string levelLong = (Math.Abs(IndParam.NumParam[1].Value - 0) < Epsilon
                                      ? "0"
                                      : IndParam.NumParam[1].ValueToString);
-            string sLevelShort = (Math.Abs(IndParam.NumParam[1].Value - 0) < Epsilon
+            string levelShort = (Math.Abs(IndParam.NumParam[1].Value - 0) < Epsilon
                                       ? "0"
                                       : "-" + IndParam.NumParam[1].ValueToString);
 
@@ -235,31 +222,31 @@ namespace ForexStrategyBuilder.Indicators.Store
                     break;
 
                 case "BBP is higher than the Level line":
-                    EntryFilterLongDescription += "is higher than the Level " + sLevelLong;
-                    EntryFilterShortDescription += "is lower than the Level " + sLevelShort;
-                    ExitFilterLongDescription += "is higher than the Level " + sLevelLong;
-                    ExitFilterShortDescription += "is lower than the Level " + sLevelShort;
+                    EntryFilterLongDescription += "is higher than the Level " + levelLong;
+                    EntryFilterShortDescription += "is lower than the Level " + levelShort;
+                    ExitFilterLongDescription += "is higher than the Level " + levelLong;
+                    ExitFilterShortDescription += "is lower than the Level " + levelShort;
                     break;
 
                 case "BBP is lower than the Level line":
-                    EntryFilterLongDescription += "is lower than the Level " + sLevelLong;
-                    EntryFilterShortDescription += "is higher than the Level " + sLevelShort;
-                    ExitFilterLongDescription += "is lower than the Level " + sLevelLong;
-                    ExitFilterShortDescription += "is higher than the Level " + sLevelShort;
+                    EntryFilterLongDescription += "is lower than the Level " + levelLong;
+                    EntryFilterShortDescription += "is higher than the Level " + levelShort;
+                    ExitFilterLongDescription += "is lower than the Level " + levelLong;
+                    ExitFilterShortDescription += "is higher than the Level " + levelShort;
                     break;
 
                 case "BBP crosses the Level line upward":
-                    EntryFilterLongDescription += "crosses the Level " + sLevelLong + " upward";
-                    EntryFilterShortDescription += "crosses the Level " + sLevelShort + " downward";
-                    ExitFilterLongDescription += "crosses the Level " + sLevelLong + " upward";
-                    ExitFilterShortDescription += "crosses the Level " + sLevelShort + " downward";
+                    EntryFilterLongDescription += "crosses the Level " + levelLong + " upward";
+                    EntryFilterShortDescription += "crosses the Level " + levelShort + " downward";
+                    ExitFilterLongDescription += "crosses the Level " + levelLong + " upward";
+                    ExitFilterShortDescription += "crosses the Level " + levelShort + " downward";
                     break;
 
                 case "BBP crosses the Level line downward":
-                    EntryFilterLongDescription += "crosses the Level " + sLevelLong + " downward";
-                    EntryFilterShortDescription += "crosses the Level " + sLevelShort + " upward";
-                    ExitFilterLongDescription += "crosses the Level " + sLevelLong + " downward";
-                    ExitFilterShortDescription += "crosses the Level " + sLevelShort + " upward";
+                    EntryFilterLongDescription += "crosses the Level " + levelLong + " downward";
+                    EntryFilterShortDescription += "crosses the Level " + levelShort + " upward";
+                    ExitFilterLongDescription += "crosses the Level " + levelLong + " downward";
+                    ExitFilterShortDescription += "crosses the Level " + levelShort + " upward";
                     break;
 
                 case "BBP changes its direction upward":
@@ -278,17 +265,12 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
+            return IndicatorName +
                              (IndParam.CheckParam[0].Checked ? "* (" : " (") +
                              IndParam.ListParam[1].Text + ", " + // Method
                              IndParam.NumParam[0].ValueToString + ")"; // Period
-
-            return sString;
         }
     }
 }

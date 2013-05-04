@@ -16,21 +16,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Moving Averages Crossover Indicator
-    /// </summary>
     public class MovingAveragesCrossover : Indicator
     {
         public MovingAveragesCrossover()
         {
-            // General properties
             IndicatorName = "Moving Averages Crossover";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -107,9 +100,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -207,9 +197,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             OscillatorLogic(iFirstBar, iPrvs, adMAOscillator, 0, 0, ref Component[2], ref Component[3], indLogic);
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             EntryFilterLongDescription = ToString() + "; Fast MA ";
@@ -249,9 +236,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName +

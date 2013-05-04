@@ -16,14 +16,10 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    /// Stochastics Indicator
-    /// </summary>
     public class Stochastics : Indicator
     {
         public Stochastics()
         {
-            // General properties
             IndicatorName  = "Stochastics";
             PossibleSlots  = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
@@ -31,9 +27,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             SeparatedChartMaxValue = 100;
         }
 
-        /// <summary>
-        ///     Sets default indicator parameters for designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -101,15 +94,12 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use indicator value from previous bar.";
         }
 
-        /// <summary>
-        /// Calculates indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
 
             // Reading parameters
-            MAMethod maMethod = (MAMethod)IndParam.ListParam[1].Index;
+            var maMethod = (MAMethod)IndParam.ListParam[1].Index;
             int iK     = (int)IndParam.NumParam[0].Value;
             int iDFast = (int)IndParam.NumParam[1].Value;
             int iDSlow = (int)IndParam.NumParam[2].Value;
@@ -305,9 +295,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        /// Sets indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             string sLevelLong  = IndParam.NumParam[3].ValueToString;
@@ -406,9 +393,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName +

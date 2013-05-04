@@ -8,31 +8,28 @@
 // A PARTICULAR PURPOSE.
 //==============================================================
 
+using System;
 using ForexStrategyBuilder.Infrastructure.Entities;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Trailing Stop Indicator
-    ///     The implementation of logic is in Market.AnalyzeClose(int bar)
-    /// </summary>
     public class TrailingStop : Indicator
     {
         public TrailingStop()
         {
-            // General properties
             IndicatorName = "Trailing Stop";
             PossibleSlots = SlotTypes.Close;
-            WarningMessage = "The Trailing Stop indicator trails once per bar." +
-                             " It means that the indicator doesn't move the position's SL at every new top / bottom, as in the real trade, but only when a new bar begins." +
-                             " The Stop Loss remains constant during the whole bar.";
+
+            if (IsBacktester)
+                WarningMessage = "The Trailing Stop indicator trails once per bar." +
+                                 Environment.NewLine +
+                                 "It means that the indicator doesn't move the position's SL at every new top / bottom, as in the real trade, but only when a new bar begins." +
+                                 Environment.NewLine +
+                                 "The Stop Loss remains constant during the whole bar.";
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -52,10 +49,19 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].ToolTip = "Logic of application of the indicator.";
 
             IndParam.ListParam[1].Caption = "Trailing mode";
-            IndParam.ListParam[1].ItemList = new[]
-                {
-                    "Trails once a bar"
-                };
+
+            if (IsBacktester)
+                IndParam.ListParam[1].ItemList = new[]
+                    {
+                        "Trails once a bar"
+                    };
+            else
+                IndParam.ListParam[1].ItemList = new[]
+                    {
+                        "Trails once a bar",
+                        "Trails at a new top/bottom"
+                    };
+
             IndParam.ListParam[1].Index = 0;
             IndParam.ListParam[1].Text = IndParam.ListParam[1].ItemList[IndParam.ListParam[1].Index];
             IndParam.ListParam[1].Enabled = true;
@@ -70,9 +76,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].ToolTip = "The Trailing Stop value (in pips).";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -90,18 +93,12 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             ExitPointLongDescription = "at the " + ToString() + " level";
             ExitPointShortDescription = "at the " + ToString() + " level";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

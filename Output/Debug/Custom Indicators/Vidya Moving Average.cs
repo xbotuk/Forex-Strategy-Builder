@@ -280,13 +280,8 @@ namespace ForexStrategyBuilder.Indicators
                     case "The bar closes above the Vidya Moving Average":
                         BarClosesAboveIndicatorLogic(iFirstBar, iPrvs, adMA, ref Component[1], ref Component[2]);
                         break;
-
-                    default:
-                        break;
                 }
             }
-
-            return;
         }
 
         public override void SetDescription()

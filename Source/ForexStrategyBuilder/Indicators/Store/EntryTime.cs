@@ -14,22 +14,16 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Entry Time indicator
-    /// </summary>
     public class EntryTime : Indicator
     {
         public EntryTime()
         {
-            // General properties
             IndicatorName = "Entry Time";
             PossibleSlots = SlotTypes.OpenFilter;
             IsDeafultGroupAll = true;
+            IsGeneratable = false;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -132,9 +126,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var iFromHour = (int) IndParam.NumParam[0].Value;
@@ -151,9 +142,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                                           " (excl.)";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             var iFromHour = (int) IndParam.NumParam[0].Value;
@@ -164,11 +152,9 @@ namespace ForexStrategyBuilder.Indicators.Store
             string sFromTime = iFromHour.ToString("00") + ":" + iFromMin.ToString("00");
             string sUntilTime = iUntilHour.ToString("00") + ":" + iUntilMin.ToString("00");
 
-            string sString = IndicatorName + " (" +
-                             sFromTime + " - " + // From
-                             sUntilTime + ")"; // Until
-
-            return sString;
+            return IndicatorName + " (" +
+                    sFromTime + " - " + // From
+                    sUntilTime + ")"; // Until
         }
     }
 }

@@ -15,22 +15,15 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Awesome Oscillator Indicator
-    /// </summary>
     public class AwesomeOscillator : Indicator
     {
         public AwesomeOscillator()
         {
-            // General properties
             IndicatorName = "Awesome Oscillator";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -96,9 +89,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -108,7 +98,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             var basePrice = (BasePrice) IndParam.ListParam[2].Index;
             var nSlow = (int) IndParam.NumParam[0].Value;
             var nFast = (int) IndParam.NumParam[1].Value;
-            double dLevel = IndParam.NumParam[3].Value;
+            double level = IndParam.NumParam[3].Value;
             int iPrvs = IndParam.CheckParam[0].Checked ? 1 : 0;
 
             // Calculation
@@ -182,22 +172,22 @@ namespace ForexStrategyBuilder.Indicators.Store
 
                 case "AO is higher than the Level line":
                     indicatorLogic = IndicatorLogic.The_indicator_is_higher_than_the_level_line;
-                    SpecialValues = new[] {dLevel, -dLevel};
+                    SpecialValues = new[] {level, -level};
                     break;
 
                 case "AO is lower than the Level line":
                     indicatorLogic = IndicatorLogic.The_indicator_is_lower_than_the_level_line;
-                    SpecialValues = new[] {dLevel, -dLevel};
+                    SpecialValues = new[] {level, -level};
                     break;
 
                 case "AO crosses the Level line upward":
                     indicatorLogic = IndicatorLogic.The_indicator_crosses_the_level_line_upward;
-                    SpecialValues = new[] {dLevel, -dLevel};
+                    SpecialValues = new[] {level, -level};
                     break;
 
                 case "AO crosses the Level line downward":
                     indicatorLogic = IndicatorLogic.The_indicator_crosses_the_level_line_downward;
-                    SpecialValues = new[] {dLevel, -dLevel};
+                    SpecialValues = new[] {level, -level};
                     break;
 
                 case "AO changes its direction upward":
@@ -211,7 +201,7 @@ namespace ForexStrategyBuilder.Indicators.Store
                     break;
             }
 
-            OscillatorLogic(iFirstBar, iPrvs, adAO, dLevel, -dLevel, ref Component[1], ref Component[2], indicatorLogic);
+            OscillatorLogic(iFirstBar, iPrvs, adAO, level, -level, ref Component[1], ref Component[2], indicatorLogic);
         }
 
         /// <summary>
@@ -291,19 +281,14 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
-                             (IndParam.CheckParam[0].Checked ? "* (" : " (") +
-                             IndParam.ListParam[1].Text + ", " + // Method
-                             IndParam.ListParam[2].Text + ", " + // Price
-                             IndParam.NumParam[0].ValueToString + ", " + // Slow MA period
-                             IndParam.NumParam[1].ValueToString + ")"; // Fast MA period
-
-            return sString;
+            return IndicatorName +
+                (IndParam.CheckParam[0].Checked ? "* (" : " (") +
+                IndParam.ListParam[1].Text + ", " + // Method
+                IndParam.ListParam[2].Text + ", " + // Price
+                IndParam.NumParam[0].ValueToString + ", " + // Slow MA period
+                IndParam.NumParam[1].ValueToString + ")"; // Fast MA period
         }
     }
 }

@@ -16,9 +16,6 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     RSI - Relative Strength Index Indicator
-    /// </summary>
     public class RSI : Indicator
     {
         public RSI()
@@ -31,9 +28,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             SeparatedChartMaxValue = 100;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -91,9 +85,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -221,9 +212,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             OscillatorLogic(firstBar, iPrvs, adRsi, dLevel, 100 - dLevel, ref Component[1], ref Component[2], indLogic);
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             string sLevelLong = IndParam.NumParam[1].ValueToString;
@@ -294,9 +282,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName +

@@ -19,7 +19,6 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public AtrStop()
         {
-            // General properties
             IndicatorName = "ATR Stop";
             PossibleSlots = SlotTypes.Close;
         }

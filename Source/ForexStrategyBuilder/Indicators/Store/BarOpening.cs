@@ -14,21 +14,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Bar Opening Indicator
-    /// </summary>
     public class BarOpening : Indicator
     {
         public BarOpening()
         {
-            // General properties
             IndicatorName = "Bar Opening";
             PossibleSlots = SlotTypes.Open;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;

@@ -14,9 +14,6 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Entry Hour Indicator
-    /// </summary>
     public class EntryHour : Indicator
     {
         public EntryHour()
@@ -27,9 +24,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IsDeafultGroupAll = true;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -72,9 +66,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[1].ToolTip = "The position's opening minute.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -108,9 +99,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var entryHour = (int) IndParam.NumParam[0].Value;
@@ -121,9 +109,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             EntryPointShortDescription = "at the beginning of the first bar after " + entryTime + " hours";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             var entryHour = (int) IndParam.NumParam[0].Value;

@@ -19,7 +19,6 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public AtrMaOscillator()
         {
-            // General properties
             IndicatorName = "ATR MA Oscillator";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;

@@ -16,21 +16,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Hourly High Low indicator
-    /// </summary>
     public class HourlyHighLow : Indicator
     {
         public HourlyHighLow()
         {
-            // General properties
             IndicatorName = "Hourly High Low";
             PossibleSlots = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close | SlotTypes.CloseFilter;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -122,9 +115,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[4].ToolTip = "A vertical shift above the high and below the low price.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -339,9 +329,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var iShift = (int) IndParam.NumParam[4].Value;
@@ -449,9 +436,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             var fromHour = (int) IndParam.NumParam[0].Value;

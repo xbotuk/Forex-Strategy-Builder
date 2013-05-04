@@ -14,9 +14,6 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Bar Closing Indicator
-    /// </summary>
     public class BarClosing : Indicator
     {
         public BarClosing()
@@ -27,9 +24,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             AllowClosingFilters = true;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -62,9 +56,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[1].Enabled = true;
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -82,9 +73,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             EntryPointLongDescription = "at the end of the bar";
@@ -93,9 +81,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             ExitPointShortDescription = "at the end of the bar";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName;

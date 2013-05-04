@@ -16,22 +16,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    /// Stop Loss Indicator
-    /// The implementation of logic is in Market.AnalyseClose(int iBar)
-    /// </summary>
     public class StopLoss : Indicator
     {
         public StopLoss()
         {
-            // General properties
             IndicatorName = "Stop Loss";
             PossibleSlots = SlotTypes.Close;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -59,17 +51,11 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].ToolTip = "The Stop value (in pips).";
         }
 
-        /// <summary>
-        /// Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
         }
 
-        /// <summary>
-        /// Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             int iStopLoss = (int)IndParam.NumParam[0].Value;
@@ -78,9 +64,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             ExitPointShortDescription = "when the market rises " + iStopLoss + " pips from the last entry price";
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

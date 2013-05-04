@@ -30,11 +30,13 @@ namespace ForexStrategyBuilder.Indicators
             CustomIndicator = false;
             WarningMessage = string.Empty;
             AllowClosingFilters = false;
-            IsBacktester = true;
 
             SpecialValues = new double[] {};
             IndParam = new IndicatorParam();
             Component = new IndicatorComp[] {};
+
+            IsBacktester = true;
+            IsGeneratable = true;
 
             ExitFilterShortDescription = "Not defined";
             EntryFilterShortDescription = "Not defined";
@@ -211,9 +213,12 @@ namespace ForexStrategyBuilder.Indicators
         public string WarningMessage { get; protected set; }
 
         public bool IsBacktester { get; private set; }
-        public bool ShowInBacktester { get; set; }
-        public bool ShowInGenerator { get; set; }
-        public bool ShowInTrader { get; set; }
+        public bool IsGeneratable { get; set; }
+
+        /// <summary>
+        ///     Fake property. It allows compatibility with the trader.
+        /// </summary>
+        protected DateTime ServerTime { get; set; }
 
         /// <summary>
         ///     Tests if this is one of the possible slots.

@@ -15,22 +15,15 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Pivot Points indicator
-    /// </summary>
     public class PivotPoints : Indicator
     {
         public PivotPoints()
         {
-            // General properties
             IndicatorName = "Pivot Points";
             PossibleSlots = SlotTypes.Open | SlotTypes.Close;
             SeparatedChart = false;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -92,9 +85,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -302,9 +292,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var iShift = (int) IndParam.NumParam[0].Value;
@@ -391,17 +378,14 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
+            string text = IndicatorName +
                              (IndParam.CheckParam[0].Checked ? "*" : "");
             if (IndParam.ListParam[1].Text == "One day")
-                sString += "(Daily)";
+                text += "(Daily)";
 
-            return sString;
+            return text;
         }
     }
 }

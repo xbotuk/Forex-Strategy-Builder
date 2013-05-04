@@ -20,7 +20,6 @@ namespace ForexStrategyBuilder.Indicators
     {
         public PercentBB()
         {
-            // General properties
             IndicatorName  = "Percent BB";
             PossibleSlots  = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
@@ -284,9 +283,6 @@ namespace ForexStrategyBuilder.Indicators
                     EntryFilterShortDescription += "changes its direction upward";
                     ExitFilterLongDescription   += "changes its direction downward";
                     ExitFilterShortDescription  += "changes its direction upward";
-                    break;
-
-                default:
                     break;
             }
         }

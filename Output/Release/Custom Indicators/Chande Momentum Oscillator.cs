@@ -16,9 +16,6 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators
 {
-    /// <summary>
-    /// CMO - Chande Momentum Oscillator
-    /// </summary>
     public class CMO : Indicator
     {
         public CMO()
@@ -29,13 +26,8 @@ namespace ForexStrategyBuilder.Indicators
             SeparatedChart = true;
             SeparatedChartMinValue = -100;
             SeparatedChartMaxValue = 100;
-			CustomIndicator = true;
         }
 
-
-        /// <summary>
-        /// Sets default indicator parameters for designated slot type
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
 		    SlotType = slotType;
@@ -86,9 +78,6 @@ namespace ForexStrategyBuilder.Indicators
             IndParam.CheckParam[0].ToolTip = "Use indicator value from previous bar.";
         }
 
-        /// <summary>
-        /// Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -221,9 +210,6 @@ namespace ForexStrategyBuilder.Indicators
             OscillatorLogic(iFirstBar, iPrvs, adCMO, dLevel, -dLevel, ref Component[1], ref Component[2], indLogic);
         }
 
-        /// <summary>
-        /// Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             string sLevelLong  = IndParam.NumParam[1].ValueToString;
@@ -294,9 +280,6 @@ namespace ForexStrategyBuilder.Indicators
             }
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName +

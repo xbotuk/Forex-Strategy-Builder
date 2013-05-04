@@ -662,20 +662,24 @@ namespace ForexStrategyBuilder
 
             foreach (string name in IndicatorManager.GetIndicatorNames(slotType))
             {
-                var trn = new TreeNode {Tag = true, Name = name, Text = name};
-                trnAll.Nodes.Add(trn);
-
                 Indicator indicator = IndicatorManager.ConstructIndicator(name);
                 indicator.Initialize(slotType);
                 TypeOfIndicator type = indicator.IndParam.IndicatorType;
 
+                Color nodeColor = LayoutColors.ColorControlText;
+                if (indicator.OverrideMainIndicator)
+                    nodeColor = Color.Brown;
+
+                var trn = new TreeNode {Tag = true, Name = name, Text = name, ForeColor = nodeColor};
+                trnAll.Nodes.Add(trn);
+
                 if (indicator.CustomIndicator)
                 {
-                    var trnCustom = new TreeNode {Tag = true, Name = name, Text = name};
+                    var trnCustom = new TreeNode {Tag = true, Name = name, Text = name, ForeColor = nodeColor};
                     trnCustomIndicators.Nodes.Add(trnCustom);
                 }
 
-                var trnGroups = new TreeNode {Tag = true, Name = name, Text = name};
+                var trnGroups = new TreeNode {Tag = true, Name = name, Text = name, ForeColor = nodeColor};
 
                 switch (type)
                 {

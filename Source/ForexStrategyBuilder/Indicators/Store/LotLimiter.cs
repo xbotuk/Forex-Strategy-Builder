@@ -8,6 +8,7 @@
 // A PARTICULAR PURPOSE.
 //==============================================================
 
+using ForexStrategyBuilder.Infrastructure.Entities;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 
@@ -17,20 +18,16 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public LotLimiter()
         {
-            // General properties
             IndicatorName = "Lot Limiter";
             PossibleSlots = SlotTypes.OpenFilter;
             IsDeafultGroupAll = true;
+            IsGeneratable = false;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
 
-            // Setting up the indicator parameters
             IndParam.IndicatorType = TypeOfIndicator.Additional;
 
             // The ComboBox parameters
@@ -50,17 +47,11 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].ToolTip = "Maximum number of open lots.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var maxLots = (int) IndParam.NumParam[0].Value;
@@ -71,9 +62,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                                           ". This rule overrides the maximum number of open lots set in the strategy properties dialog";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

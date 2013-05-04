@@ -20,7 +20,6 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public AroonHistogram()
         {
-            // General properties
             IndicatorName = "Aroon Histogram";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;

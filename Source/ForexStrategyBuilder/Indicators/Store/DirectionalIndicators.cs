@@ -16,26 +16,16 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Directional Indicators
-    /// </summary>
     public class DirectionalIndicators : Indicator
     {
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public DirectionalIndicators()
         {
-            // General properties
             IndicatorName = "Directional Indicators";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
             SeparatedChartMinValue = 0;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -90,9 +80,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -254,9 +241,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             EntryFilterLongDescription = ToString() + "; ";
@@ -352,18 +336,13 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
-                             (IndParam.CheckParam[0].Checked ? "* (" : " (") +
-                             IndParam.ListParam[1].Text + ", " + // Method
-                             IndParam.ListParam[2].Text + ", " + // Base price
-                             IndParam.NumParam[0].ValueToString + ")"; // Period
-
-            return sString;
+            return IndicatorName +
+                    (IndParam.CheckParam[0].Checked ? "* (" : " (") +
+                    IndParam.ListParam[1].Text + ", " + // Method
+                    IndParam.ListParam[2].Text + ", " + // Base price
+                    IndParam.NumParam[0].ValueToString + ")"; // Period
         }
     }
 }

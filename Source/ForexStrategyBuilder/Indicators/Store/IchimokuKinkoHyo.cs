@@ -16,22 +16,15 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Ichimoku Kinko Hyo indicator
-    /// </summary>
     public class IchimokuKinkoHyo : Indicator
     {
         public IchimokuKinkoHyo()
         {
-            // General properties
             IndicatorName = "Ichimoku Kinko Hyo";
             PossibleSlots = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close;
             SeparatedChart = false;
         }
 
-        /// <summary>
-        ///     Sets default indicator parameters for designated slot type
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -110,9 +103,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use indicator value from previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -458,9 +448,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Sets indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             switch (IndParam.ListParam[0].Text)
@@ -546,9 +533,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return string.Format("{0}{1} ({2}, {3}, {4})",

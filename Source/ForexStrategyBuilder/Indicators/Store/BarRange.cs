@@ -16,23 +16,16 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Bar Range Indicator
-    /// </summary>
     public class BarRange : Indicator
     {
         public BarRange()
         {
-            // General properties
             IndicatorName = "Bar Range";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
             SeparatedChartMinValue = 0;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -73,9 +66,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -176,9 +166,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             Component[2].Value = Component[1].Value;
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var nBars = (int) IndParam.NumParam[0].Value;
@@ -235,17 +222,12 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName +
-                             (IndParam.CheckParam[0].Checked ? "* (" : " (") +
-                             IndParam.NumParam[0].ValueToString + ", " + // Number of bars
-                             IndParam.NumParam[1].ValueToString + ")"; // Level
-
-            return sString;
+            return IndicatorName +
+                (IndParam.CheckParam[0].Checked ? "* (" : " (") +
+                IndParam.NumParam[0].ValueToString + ", " + // Number of bars
+                IndParam.NumParam[1].ValueToString + ")"; // Level
         }
     }
 }

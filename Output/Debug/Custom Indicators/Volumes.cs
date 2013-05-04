@@ -20,7 +20,6 @@ namespace ForexStrategyBuilder.Indicators
     {
         public Volumes()
         {
-            // General properties
             IndicatorName = "Volumes";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChartMinValue = 0;
@@ -57,8 +56,6 @@ namespace ForexStrategyBuilder.Indicators
             IndParam.CheckParam[0].Caption = "Use previous bar value";
             IndParam.CheckParam[0].Enabled = true;
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
-
-            return;
         }
 
         public override void Calculate(IDataSet dataSet)
@@ -151,12 +148,7 @@ namespace ForexStrategyBuilder.Indicators
                     }
                     SpecialValues = new double[1] { dLevel };
                     break;
-
-                default:
-                    break;
             }
-
-            return;
         }
 
         public override void SetDescription()
@@ -198,12 +190,7 @@ namespace ForexStrategyBuilder.Indicators
                     ExitFilterLongDescription   += "is lower than the Level " + sLevelLong;
                     ExitFilterShortDescription  += "is lower than the Level " + sLevelShort;
                     break;
-
-                default:
-                    break;
             }
-
-            return;
         }
 
         public override string ToString()

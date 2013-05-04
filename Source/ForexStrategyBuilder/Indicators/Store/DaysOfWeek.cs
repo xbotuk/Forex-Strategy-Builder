@@ -15,25 +15,16 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Day of Week Indicator
-    /// </summary>
     public class DaysOfWeek : Indicator
     {
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public DaysOfWeek()
         {
-            // General properties
+
             PossibleSlots = SlotTypes.OpenFilter;
             IndicatorName = "Day of Week";
             IsDeafultGroupAll = true;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -66,9 +57,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[2].ToolTip = "End day for the entry period.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -122,33 +110,23 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var dowFromDay = (DayOfWeek) IndParam.ListParam[1].Index;
             var dowUntilDay = (DayOfWeek) IndParam.ListParam[2].Index;
 
-            EntryFilterLongDescription = "the day of week is from " + dowFromDay + " (incl.) to " + dowUntilDay +
-                                         " (excl.)";
-            EntryFilterShortDescription = "the day of week is from " + dowFromDay + " (incl.) to " + dowUntilDay +
-                                          " (excl.)";
+            EntryFilterLongDescription = "the day of week is from " + dowFromDay + " (incl.) to " + dowUntilDay + " (excl.)";
+            EntryFilterShortDescription = "the day of week is from " + dowFromDay + " (incl.) to " + dowUntilDay + " (excl.)";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             var dowFromDay = (DayOfWeek) IndParam.ListParam[1].Index;
             var dowUntilDay = (DayOfWeek) IndParam.ListParam[2].Index;
 
-            string sString = IndicatorName + " (" +
-                             dowFromDay + ", " + // From
-                             dowUntilDay + ")"; // Until
-
-            return sString;
+            return IndicatorName + " (" +
+                    dowFromDay + ", " + // From
+                    dowUntilDay + ")"; // Until
         }
     }
 }

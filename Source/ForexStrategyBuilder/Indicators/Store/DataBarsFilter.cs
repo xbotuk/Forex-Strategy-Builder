@@ -15,25 +15,20 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Data Bars Filter Indicator
-    /// </summary>
     public class DataBarsFilter : Indicator
     {
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public DataBarsFilter()
         {
-            // General properties
             IndicatorName = "Data Bars Filter";
             PossibleSlots = SlotTypes.OpenFilter;
             IsDeafultGroupAll = true;
+            IsGeneratable = false;
+
+            if (IsBacktester)
+                WarningMessage =
+                    "This indicator is designed to be used in the backtester only. It doesn't work in the trader.";
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -71,9 +66,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[1].ToolTip = "The number of oldest bars.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -87,60 +79,45 @@ namespace ForexStrategyBuilder.Indicators.Store
             var adBars = new double[Bars];
 
             // Calculation of the logic
-            switch (IndParam.ListParam[0].Text)
-            {
-                case "Do not use the newest bars":
-                    for (int iBar = firstBar; iBar < Bars - newest; iBar++)
-                    {
-                        adBars[iBar] = 1;
-                    }
+			if (IsBacktester)
+			{
+				switch (IndParam.ListParam[0].Text)
+				{
+					case "Do not use the newest bars":
+						for (int iBar = firstBar; iBar < Bars - newest; iBar++)
+							adBars[iBar] = 1;
+						break;
+					case "Do not use the oldest bars":
+						firstBar = Math.Min(oldest, Bars - 300);
+						for (int bar = firstBar; bar < Bars; bar++)
+							adBars[bar] = 1;
+						break;
+					case "Do not use the newest bars and oldest bars":
+						firstBar = Math.Min(oldest, Bars - 300);
+						int iLastBar = Math.Max(firstBar + 300, Bars - newest);
+						for (int bar = firstBar; bar < iLastBar; bar++)
+							adBars[bar] = 1;
+						break;
+					case "Use the newest bars only":
+						firstBar = Math.Max(0, Bars - newest);
+						firstBar = Math.Min(firstBar, Bars - 300);
+						for (int bar = firstBar; bar < Bars; bar++)
+							adBars[bar] = 1;
+						break;
+					case "Use the oldest bars only":
+						oldest = Math.Max(300, oldest);
+						for (int bar = firstBar; bar < oldest; bar++)
+							adBars[bar] = 1;
+						break;
+				}
+			}
+			else
+			{
+				for (int bar = firstBar; bar < Bars; bar++)
+					adBars[bar] = 1;
+			}
 
-                    break;
-
-                case "Do not use the oldest bars":
-                    firstBar = Math.Min(oldest, Bars - 300);
-
-                    for (int bar = firstBar; bar < Bars; bar++)
-                    {
-                        adBars[bar] = 1;
-                    }
-
-                    break;
-
-                case "Do not use the newest bars and oldest bars":
-                    firstBar = Math.Min(oldest, Bars - 300);
-                    int iLastBar = Math.Max(firstBar + 300, Bars - newest);
-
-                    for (int bar = firstBar; bar < iLastBar; bar++)
-                    {
-                        adBars[bar] = 1;
-                    }
-
-                    break;
-
-                case "Use the newest bars only":
-                    firstBar = Math.Max(0, Bars - newest);
-                    firstBar = Math.Min(firstBar, Bars - 300);
-
-                    for (int bar = firstBar; bar < Bars; bar++)
-                    {
-                        adBars[bar] = 1;
-                    }
-
-                    break;
-
-                case "Use the oldest bars only":
-                    oldest = Math.Max(300, oldest);
-
-                    for (int bar = firstBar; bar < oldest; bar++)
-                    {
-                        adBars[bar] = 1;
-                    }
-
-                    break;
-            }
-
-            // Saving the components
+			// Saving the components
             Component = new IndicatorComp[2];
 
             Component[0] = new IndicatorComp
@@ -164,11 +141,15 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
+			if (!IsBacktester)
+			{
+				EntryFilterLongDescription  = "A back tester limitation. It hasn't effect on the trade.";
+				EntryFilterShortDescription = "A back tester limitation. It hasn't effect on the trade.";
+				return;
+			}
+		
             var newest = (int) IndParam.NumParam[0].Value;
             var oldest = (int) IndParam.NumParam[1].Value;
 
@@ -206,9 +187,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName;

@@ -16,21 +16,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    /// Bollinger Bands Indicator
-    /// </summary>
     public class BollingerBands : Indicator
     {
         public BollingerBands()
         {
-            // General properties
             IndicatorName = "Bollinger Bands";
             PossibleSlots = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close | SlotTypes.CloseFilter;
         }
 
-        /// <summary>
-        /// Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -494,9 +487,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return string.Format("{0}{1} ({2}, {3}, {4}, {5})",

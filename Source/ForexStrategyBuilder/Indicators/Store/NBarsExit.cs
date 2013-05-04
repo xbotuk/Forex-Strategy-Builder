@@ -15,23 +15,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     N Bars Stop Indicator
-    ///     Exit N Bars after entry
-    ///     The implementation of logic is in Market.AnalyzeClose(int bar)
-    /// </summary>
     public class NBarsExit : Indicator
     {
         public NBarsExit()
         {
-            // General properties
             IndicatorName = "N Bars Exit";
             PossibleSlots = SlotTypes.CloseFilter;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -59,12 +50,15 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].ToolTip = "The number of bars after entry to exit the position.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
+
+            if (!IsBacktester)
+            {
+                // FST sends the N bars for exit to the expert. Expert watches the position and closes it.
+                return;
+            }
 
             var nExit = (int) IndParam.NumParam[0].Value;
 
@@ -82,9 +76,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var nExit = (int) IndParam.NumParam[0].Value;
@@ -93,9 +84,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             ExitFilterShortDescription = nExit + " bars passed after the entry";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

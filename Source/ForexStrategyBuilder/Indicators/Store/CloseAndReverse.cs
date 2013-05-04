@@ -8,26 +8,20 @@
 // A PARTICULAR PURPOSE.
 //==============================================================
 
+using ForexStrategyBuilder.Infrastructure.Entities;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    /// Close and Reverse
-    /// </summary>
     public class CloseAndReverse : Indicator
     {
         public CloseAndReverse()
         {
-            // General properties
             IndicatorName = "Close and Reverse";
             PossibleSlots = SlotTypes.Close;
         }
 
-        /// <summary>
-        /// Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -44,26 +38,17 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].ToolTip = "Logic of application of the indicator.";
         }
 
-        /// <summary>
-        /// Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
         }
 
-        /// <summary>
-        /// Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             ExitPointLongDescription = "and open a new short one, at the entry price, when a sell entry signal arises";
             ExitPointShortDescription = "and open a new long one, at the entry price, when a buy entry signal arises";
         }
 
-        /// <summary>
-        /// Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName;

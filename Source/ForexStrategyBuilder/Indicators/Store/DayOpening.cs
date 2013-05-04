@@ -14,25 +14,16 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Day Opening Indicator
-    /// </summary>
     public class DayOpening : Indicator
     {
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public DayOpening()
         {
-            // General properties
+
             IndicatorName = "Day Opening";
             PossibleSlots = SlotTypes.Open;
             SeparatedChart = false;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -56,9 +47,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[1].ToolTip = "The execution price of all entry orders.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -83,23 +71,15 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             EntryPointLongDescription = "at the beginning of the day";
             EntryPointShortDescription = "at the beginning of the day";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName;
-
-            return sString;
+            return IndicatorName;
         }
     }
 }

@@ -8,27 +8,20 @@
 // A PARTICULAR PURPOSE.
 //==============================================================
 
+using ForexStrategyBuilder.Infrastructure.Entities;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Take Profit Indicator
-    ///     The implementation of logic is in Backtester.AnalyzeClose(int bar)
-    /// </summary>
     public class TakeProfit : Indicator
     {
         public TakeProfit()
         {
-            // General properties
             IndicatorName = "Take Profit";
             PossibleSlots = SlotTypes.Close;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -56,17 +49,11 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].ToolTip = "The Take Profit value (in pips).";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             var iTakeProfit = (int) IndParam.NumParam[0].Value;
@@ -75,9 +62,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             ExitPointShortDescription = "when the market falls " + iTakeProfit + " pips from the last entry price";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

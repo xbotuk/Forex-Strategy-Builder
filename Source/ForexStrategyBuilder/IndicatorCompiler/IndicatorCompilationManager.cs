@@ -124,9 +124,10 @@ namespace ForexStrategyBuilder
             foreach (string indicatorName in IndicatorManager.OriginalIndicatorNames)
                 if (indicatorName == newIndicator.IndicatorName)
                 {
-                    errorMessages = "The name '" + indicatorName + "' found out in [" + Path.GetFileName(filePath) +
-                                    "] is already in use.";
-                    return;
+                    newIndicator.OverrideMainIndicator = true;
+                    //errorMessages = "The name '" + indicatorName + "' found out in [" + Path.GetFileName(filePath) +
+                    //                "] is already in use.";
+                    //return;
                 }
 
             // Test the new custom indicator

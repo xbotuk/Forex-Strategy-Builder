@@ -18,20 +18,16 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public LongOrShort()
         {
-            // General properties
             IndicatorName = "Long or Short";
             PossibleSlots = SlotTypes.OpenFilter;
             IsDeafultGroupAll = true;
+            IsGeneratable = false;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type.
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
 
-            // Setting up the indicator parameters
             IndParam.IndicatorType = TypeOfIndicator.Additional;
 
             // The ComboBox parameters
@@ -47,9 +43,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].ToolTip = "Logic of application of the indicator.";
         }
 
-        /// <summary>
-        ///     Calculates the indicator's components
-        /// </summary>
         public override void Calculate(IDataSet dataSet)
         {
             DataSet = dataSet;
@@ -96,9 +89,6 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             // Calculation of the logic
@@ -116,14 +106,9 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
-            string sString = IndicatorName;
-
-            return sString;
+            return IndicatorName;
         }
     }
 }

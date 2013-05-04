@@ -20,11 +20,9 @@ namespace ForexStrategyBuilder.Indicators
     {
         public Gator_Oscillator()
         {
-            // General properties
             IndicatorName   = "Gator Oscillator";
             PossibleSlots   = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart  = true;
-            CustomIndicator = true;
         }
 
         public override void Initialize(SlotTypes slotType)
@@ -104,8 +102,6 @@ namespace ForexStrategyBuilder.Indicators
             IndParam.CheckParam[0].Caption = "Use previous bar value";
             IndParam.CheckParam[0].Enabled = true;
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
-
-            return;
         }
 
         public override void Calculate(IDataSet dataSet)
@@ -199,9 +195,6 @@ namespace ForexStrategyBuilder.Indicators
 						Component[3].Value[iBar] = (adUpperGator[iBar - iPrvs] - adLowerGator[iBar - iPrvs]) < (adUpperGator[iBar - iPrvs - 1] - adLowerGator[iBar - iPrvs - 1]) - Sigma() ? 1 : 0;
 					}
                     break;
-
-                default:
-                    break;
             }
         }
 
@@ -226,9 +219,6 @@ namespace ForexStrategyBuilder.Indicators
                     EntryFilterShortDescription += "contracts";
                     ExitFilterLongDescription   += "contracts";
                     ExitFilterShortDescription  += "contracts";
-                    break;
-
-                default:
                     break;
             }
         }

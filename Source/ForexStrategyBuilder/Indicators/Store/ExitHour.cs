@@ -14,21 +14,14 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators.Store
 {
-    /// <summary>
-    ///     Exit Hour Indicator
-    /// </summary>
     public class ExitHour : Indicator
     {
         public ExitHour()
         {
-            // General properties
             IndicatorName = "Exit Hour";
             PossibleSlots = SlotTypes.Close;
         }
 
-        /// <summary>
-        ///     Sets the default indicator parameters for the designated slot type
-        /// </summary>
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
@@ -107,18 +100,12 @@ namespace ForexStrategyBuilder.Indicators.Store
                 };
         }
 
-        /// <summary>
-        ///     Sets the indicator logic description
-        /// </summary>
         public override void SetDescription()
         {
             ExitPointLongDescription = "at the end of the last bar before " + IndParam.NumParam[0].Value + " o'clock";
             ExitPointShortDescription = "at the end of the last bar before " + IndParam.NumParam[0].Value + " o'clock";
         }
 
-        /// <summary>
-        ///     Indicator to string
-        /// </summary>
         public override string ToString()
         {
             return IndicatorName + " (" +

@@ -212,9 +212,6 @@ namespace ForexStrategyBuilder.Indicators
                 case "The OsMA changes its direction downward":
                     indLogic = IndicatorLogic.The_indicator_changes_its_direction_downward;
                     break;
-
-                default:
-                    break;
             }
 
             OscillatorLogic(iFirstBar, iPrvs, adHistogram, dLevel, -dLevel, ref Component[1], ref Component[2], indLogic);
@@ -289,9 +286,6 @@ namespace ForexStrategyBuilder.Indicators
                     EntryFilterShortDescription += "changes its direction upward";
                     ExitFilterLongDescription   += "changes its direction downward";
                     ExitFilterShortDescription  += "changes its direction upward";
-                    break;
-
-                default:
                     break;
             }
         }

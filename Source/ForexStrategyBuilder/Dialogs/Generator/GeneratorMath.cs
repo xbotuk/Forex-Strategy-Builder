@@ -355,27 +355,45 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             exitFilterIndicators.Clear();
 
             // Copy all no banned indicators
-            foreach (string indicator in IndicatorManager.OpenPointIndicators)
-                if (!indicatorsField.IsIndicatorBanned(SlotTypes.Open, indicator))
-                    entryIndicators.Add(indicator);
-            foreach (string indicator in IndicatorManager.OpenFilterIndicators)
-                if (!indicatorsField.IsIndicatorBanned(SlotTypes.OpenFilter, indicator))
-                    entryFilterIndicators.Add(indicator);
-            foreach (string indicator in IndicatorManager.ClosePointIndicators)
-                if (!indicatorsField.IsIndicatorBanned(SlotTypes.Close, indicator))
-                    exitIndicators.Add(indicator);
-            foreach (string indicator in IndicatorManager.ClosingIndicatorsWithClosingFilters)
-                if (!indicatorsField.IsIndicatorBanned(SlotTypes.Close, indicator))
-                    exitIndicatorsWithFilters.Add(indicator);
-            foreach (string indicator in IndicatorManager.CloseFilterIndicators)
-                if (!indicatorsField.IsIndicatorBanned(SlotTypes.CloseFilter, indicator))
-                    exitFilterIndicators.Add(indicator);
+            foreach (string indicatorName in IndicatorManager.OpenPointIndicators)
+                if (!indicatorsField.IsIndicatorBanned(SlotTypes.Open, indicatorName))
+                    entryIndicators.Add(indicatorName);
+            foreach (string indicatorName in IndicatorManager.OpenFilterIndicators)
+                if (!indicatorsField.IsIndicatorBanned(SlotTypes.OpenFilter, indicatorName))
+                    entryFilterIndicators.Add(indicatorName);
+            foreach (string indicatorName in IndicatorManager.ClosePointIndicators)
+                if (!indicatorsField.IsIndicatorBanned(SlotTypes.Close, indicatorName))
+                    exitIndicators.Add(indicatorName);
+            foreach (string indicatorName in IndicatorManager.ClosingIndicatorsWithClosingFilters)
+                if (!indicatorsField.IsIndicatorBanned(SlotTypes.Close, indicatorName))
+                    exitIndicatorsWithFilters.Add(indicatorName);
+            foreach (string indicatorName in IndicatorManager.CloseFilterIndicators)
+                if (!indicatorsField.IsIndicatorBanned(SlotTypes.CloseFilter, indicatorName))
+                    exitFilterIndicators.Add(indicatorName);
+
+            // Remove not generatable indicators
+            foreach (string indicatorName in IndicatorManager.AllIndicatorsNames)
+            {
+                var indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                indicator.Initialize(SlotTypes.Open);
+                if (!indicator.IsGeneratable && entryIndicators.Contains(indicatorName))
+                    entryIndicators.Remove(indicatorName);
+                indicator.Initialize(SlotTypes.OpenFilter);
+                if (!indicator.IsGeneratable && entryFilterIndicators.Contains(indicatorName))
+                    entryFilterIndicators.Remove(indicatorName);
+                indicator.Initialize(SlotTypes.Close);
+                if (!indicator.IsGeneratable && exitIndicators.Contains(indicatorName))
+                    exitIndicators.Remove(indicatorName);
+                if (!indicator.IsGeneratable && exitIndicatorsWithFilters.Contains(indicatorName))
+                    exitIndicatorsWithFilters.Remove(indicatorName);
+                indicator.Initialize(SlotTypes.CloseFilter);
+                if (!indicator.IsGeneratable && exitFilterIndicators.Contains(indicatorName))
+                    exitFilterIndicators.Remove(indicatorName);
+            }
 
             // Remove special cases
             bool isPeriodDayOrWeek = Data.Period == DataPeriod.D1 || Data.Period == DataPeriod.W1;
 
-            if (entryIndicators.Contains("Fibonacci"))
-                entryIndicators.Remove("Fibonacci");
             if (entryIndicators.Contains("Day Opening") && isPeriodDayOrWeek)
                 entryIndicators.Remove("Day Opening");
             if (entryIndicators.Contains("Hourly High Low") && isPeriodDayOrWeek)
@@ -383,18 +401,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             if (entryIndicators.Contains("Entry Hour") && isPeriodDayOrWeek)
                 entryIndicators.Remove("Entry Hour");
 
-            if (entryFilterIndicators.Contains("Random Filter"))
-                entryFilterIndicators.Remove("Random Filter");
-            if (entryFilterIndicators.Contains("Data Bars Filter"))
-                entryFilterIndicators.Remove("Data Bars Filter");
-            if (entryFilterIndicators.Contains("Date Filter"))
-                entryFilterIndicators.Remove("Date Filter");
-            if (entryFilterIndicators.Contains("Long or Short"))
-                entryFilterIndicators.Remove("Long or Short");
-            if (entryFilterIndicators.Contains("Entry Time"))
-                entryFilterIndicators.Remove("Entry Time");
-            if (entryFilterIndicators.Contains("Lot Limiter"))
-                entryFilterIndicators.Remove("Lot Limiter");
             if (entryFilterIndicators.Contains("Hourly High Low") && isPeriodDayOrWeek)
                 entryFilterIndicators.Remove("Hourly High Low");
 
@@ -416,8 +422,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 strategyBest.PropertiesStatus == StrategySlotStatus.Locked)
                 exitIndicatorsWithFilters.Remove("Close and Reverse");
 
-            if (exitFilterIndicators.Contains("Random Filter"))
-                exitFilterIndicators.Remove("Random Filter");
             if (exitFilterIndicators.Contains("Hourly High Low") && isPeriodDayOrWeek)
                 exitFilterIndicators.Remove("Hourly High Low");
         }
