@@ -43,12 +43,13 @@ namespace ForexStrategyBuilder
             FirstBar = 40;
             PeriodColor = new Dictionary<DataPeriod, Color>();
             AdditionalFolder = "Additional" + Path.DirectorySeparatorChar;
-            SourceFolder = "Custom Indicators" + Path.DirectorySeparatorChar;
+            SourceFolder = "Indicators" + Path.DirectorySeparatorChar;
             DefaultStrategyDir = "Strategies" + Path.DirectorySeparatorChar;
             ColorDir = "Colors" + Path.DirectorySeparatorChar;
             LanguageDir = "Languages" + Path.DirectorySeparatorChar;
             SystemDir = "System" + Path.DirectorySeparatorChar;
-            ProgramDir = "";
+            LibraryDir = "Library" + Path.DirectorySeparatorChar;
+            UserFilesDir = "User Files";
             ProgramName = "Forex Strategy Builder";
             IsProgramReleaseCandidate = false;
             IsProgramBeta = false;
@@ -113,7 +114,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Gets the program current working directory.
         /// </summary>
-        public static string ProgramDir { get; private set; }
+        public static string UserFilesDir { get; private set; }
 
         /// <summary>
         ///     Gets the path to System Dir.
@@ -144,6 +145,11 @@ namespace ForexStrategyBuilder
         ///     Gets or sets the docs directory.
         /// </summary>
         private static string OfflineDocsDir { get; set; }
+
+        /// <summary>
+        ///     Gets the path to Lybrary Dir.
+        /// </summary>
+        public static string LibraryDir { get; private set; }
 
         /// <summary>
         ///     Gets the path to Default Strategy Dir.
@@ -308,15 +314,17 @@ namespace ForexStrategyBuilder
             PointChar = cultureInfo.NumberFormat.NumberDecimalSeparator.ToCharArray()[0];
 
             // Set the working directories
-            ProgramDir = Directory.GetCurrentDirectory();
-            DefaultOfflineDataDir = Path.Combine(ProgramDir, OfflineDataDir);
+            UserFilesDir = Path.Combine(Directory.GetCurrentDirectory(), UserFilesDir);
+
+            DefaultOfflineDataDir = Path.Combine(UserFilesDir, OfflineDataDir);
             OfflineDataDir = DefaultOfflineDataDir;
-            OfflineDocsDir = Path.Combine(ProgramDir, OfflineDocsDir);
-            StrategyDir = Path.Combine(ProgramDir, DefaultStrategyDir);
-            SourceFolder = Path.Combine(ProgramDir, SourceFolder);
-            SystemDir = Path.Combine(ProgramDir, SystemDir);
+            OfflineDocsDir = Path.Combine(UserFilesDir, OfflineDocsDir);
+            StrategyDir = Path.Combine(UserFilesDir, DefaultStrategyDir);
+            SourceFolder = Path.Combine(UserFilesDir, SourceFolder);
+            SystemDir = Path.Combine(UserFilesDir, SystemDir);
             LanguageDir = Path.Combine(SystemDir, LanguageDir);
             ColorDir = Path.Combine(SystemDir, ColorDir);
+            LibraryDir = Path.Combine(SystemDir, LibraryDir);
 
             // Scanner colors
             PeriodColor.Add(DataPeriod.M1, Color.Yellow);

@@ -38,7 +38,7 @@ namespace ForexStrategyBuilder
             XMLInstruments = new XmlDocument();
 
             PathToInstrumentsFile = String.IsNullOrEmpty(externalInstrumentsFile)
-                    ? Path.Combine(Path.Combine(Data.ProgramDir, "System"), "instruments.xml")
+                    ? Path.Combine(Path.Combine(Data.UserFilesDir, "System"), "instruments.xml")
                     : externalInstrumentsFile;
         }
 

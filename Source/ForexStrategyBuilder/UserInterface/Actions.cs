@@ -122,7 +122,7 @@ namespace ForexStrategyBuilder
                     lastStrategy = Configs.LastStrategy;
                 else
                 {
-                    string sPath = Path.Combine(Data.ProgramDir, Data.DefaultStrategyDir);
+                    string sPath = Path.Combine(Data.UserFilesDir, Data.DefaultStrategyDir);
                     lastStrategy = Path.Combine(sPath, Configs.LastStrategy);
                 }
                 if (File.Exists(lastStrategy))
@@ -192,7 +192,7 @@ namespace ForexStrategyBuilder
                     {
                         string strategyPath = Path.GetDirectoryName(Data.LoadedSavedStrategy) +
                                               Path.DirectorySeparatorChar;
-                        string defaultPath = Path.Combine(Data.ProgramDir, Data.DefaultStrategyDir);
+                        string defaultPath = Path.Combine(Data.UserFilesDir, Data.DefaultStrategyDir);
                         if (strategyPath == defaultPath)
                             Data.LoadedSavedStrategy = Path.GetFileName(Data.LoadedSavedStrategy);
                     }
@@ -648,7 +648,7 @@ namespace ForexStrategyBuilder
             else if (dialogResult == DialogResult.Cancel)
                 return;
 
-            Data.StrategyDir = Path.Combine(Data.ProgramDir, Data.DefaultStrategyDir);
+            Data.StrategyDir = Path.Combine(Data.UserFilesDir, Data.DefaultStrategyDir);
 
             if (OpenStrategy(Path.Combine(Data.StrategyDir, "New.xml")) == 0)
             {
@@ -691,7 +691,7 @@ namespace ForexStrategyBuilder
             if (strategyHasCustomIndicator)
             {
                 // Load and calculate a new strategy
-                Data.StrategyDir = Path.Combine(Data.ProgramDir, Data.DefaultStrategyDir);
+                Data.StrategyDir = Path.Combine(Data.UserFilesDir, Data.DefaultStrategyDir);
 
                 if (OpenStrategy(Path.Combine(Data.StrategyDir, "New.xml")) == 0)
                 {

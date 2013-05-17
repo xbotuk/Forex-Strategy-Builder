@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<update>
+  <versions>
+    <release>2760000</release>
+    <beta>2770400</beta>
+  </versions>
+  <brokers>
+    <broker>
+      <title>Vantage FX</title>
+      <link>http://www.vantagefx.com</link>
+    </broker>
+  </brokers>
+</update>

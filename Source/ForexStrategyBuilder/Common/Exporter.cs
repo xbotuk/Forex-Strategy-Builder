@@ -425,7 +425,7 @@ namespace ForexStrategyBuilder
             var sfdExport = new SaveFileDialog
                 {
                     AddExtension = true,
-                    InitialDirectory = Data.ProgramDir,
+                    InitialDirectory = Data.UserFilesDir,
                     Title = Language.T("Export"),
                     FileName = fileName
                 };
