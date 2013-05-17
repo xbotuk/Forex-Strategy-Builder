@@ -16,11 +16,10 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators
 {
-    public class CMO : Indicator
+    public class ChandeMomentumOscillator : Indicator
     {
-        public CMO()
+        public ChandeMomentumOscillator()
         {
-            // General properties
             IndicatorName  = "Chande Momentum Oscillator";
             PossibleSlots  = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;

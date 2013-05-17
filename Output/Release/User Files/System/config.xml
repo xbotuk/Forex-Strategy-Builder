@@ -31,7 +31,7 @@
   <cutBadData>False</cutBadData>
   <cutSatSunData>False</cutSatSunData>
   <loadCustomIndicators>True</loadCustomIndicators>
-  <showCustomIndicators>False</showCustomIndicators>
+  <showCustomIndicators>True</showCustomIndicators>
   <playSounds>True</playSounds>
   <optimizerWriteReport>False</optimizerWriteReport>
   <criteriaSettings>

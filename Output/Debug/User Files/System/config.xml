@@ -31,7 +31,7 @@
   <cutBadData>False</cutBadData>
   <cutSatSunData>False</cutSatSunData>
   <loadCustomIndicators>True</loadCustomIndicators>
-  <showCustomIndicators>False</showCustomIndicators>
+  <showCustomIndicators>True</showCustomIndicators>
   <playSounds>True</playSounds>
   <optimizerWriteReport>False</optimizerWriteReport>
   <criteriaSettings>True;10;False;2500;True;100;False;1000;False;30;True;25;False;20;False;20;1;False;20;True;1;False;40</criteriaSettings>
@@ -62,8 +62,8 @@
   <showPriceChartOnAccountChart>False</showPriceChartOnAccountChart>
   <analyzerHideFSB>True</analyzerHideFSB>
   <sendUsageStats>True</sendUsageStats>
-  <mainScreenWidth>1292</mainScreenWidth>
-  <mainScreenHeight>874</mainScreenHeight>
+  <mainScreenWidth>1486</mainScreenWidth>
+  <mainScreenHeight>910</mainScreenHeight>
   <showStatusBar>True</showStatusBar>
   <strategyDirWatch>False</strategyDirWatch>
   <truefxImportDestFolder>

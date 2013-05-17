@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LibrariesSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Records>
+    <item>
+      <key>
+        <string>Chande Momentum Oscillator</string>
+      </key>
+      <value>
+        <LibRecord>
+          <Name>Chande Momentum Oscillator</Name>
+          <SorcePath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Indicators\Chande Momentum Oscillator.cs</SorcePath>
+          <DllPath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Libraries\Chande Momentum Oscillator.dll</DllPath>
+          <SurceModificationTime>2013-05-17T15:45:13.8389586+03:00</SurceModificationTime>
+          <DllModificationTime>2013-05-17T17:38:55.6054177+03:00</DllModificationTime>
+        </LibRecord>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Day of Month</string>
+      </key>
+      <value>
+        <LibRecord>
+          <Name>Day of Month</Name>
+          <SorcePath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Indicators\Day of Month.cs</SorcePath>
+          <DllPath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Libraries\Day of Month.dll</DllPath>
+          <SurceModificationTime>2013-05-17T15:46:50.9102612+03:00</SurceModificationTime>
+          <DllModificationTime>2013-05-17T17:38:55.7605215+03:00</DllModificationTime>
+        </LibRecord>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Gator Oscillator</string>
+      </key>
+      <value>
+        <LibRecord>
+          <Name>Gator Oscillator</Name>
+          <SorcePath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Indicators\Gator Oscillator.cs</SorcePath>
+          <DllPath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Libraries\Gator Oscillator.dll</DllPath>
+          <SurceModificationTime>2013-05-17T15:48:30.5098089+03:00</SurceModificationTime>
+          <DllModificationTime>2013-05-17T17:38:55.9296482+03:00</DllModificationTime>
+        </LibRecord>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Momentum MT</string>
+      </key>
+      <value>
+        <LibRecord>
+          <Name>Momentum MT</Name>
+          <SorcePath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Indicators\Momentum MT.cs</SorcePath>
+          <DllPath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Libraries\Momentum MT.dll</DllPath>
+          <SurceModificationTime>2013-05-17T15:44:45.9030137+03:00</SurceModificationTime>
+          <DllModificationTime>2013-05-17T17:38:56.0957589+03:00</DllModificationTime>
+        </LibRecord>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Moving Average of Oscillator</string>
+      </key>
+      <value>
+        <LibRecord>
+          <Name>Moving Average of Oscillator</Name>
+          <SorcePath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Indicators\Moving Average of Oscillator.cs</SorcePath>
+          <DllPath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Libraries\Moving Average of Oscillator.dll</DllPath>
+          <SurceModificationTime>2013-05-15T18:50:24.9357824+03:00</SurceModificationTime>
+          <DllModificationTime>2013-05-17T17:38:56.2658808+03:00</DllModificationTime>
+        </LibRecord>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Percent BB</string>
+      </key>
+      <value>
+        <LibRecord>
+          <Name>Percent BB</Name>
+          <SorcePath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Indicators\Percent BB.cs</SorcePath>
+          <DllPath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Libraries\Percent BB.dll</DllPath>
+          <SurceModificationTime>2013-05-15T18:50:24.9988256+03:00</SurceModificationTime>
+          <DllModificationTime>2013-05-17T17:38:56.435995+03:00</DllModificationTime>
+        </LibRecord>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Vidya Moving Average</string>
+      </key>
+      <value>
+        <LibRecord>
+          <Name>Vidya Moving Average</Name>
+          <SorcePath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Indicators\Vidya Moving Average.cs</SorcePath>
+          <DllPath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Libraries\Vidya Moving Average.dll</DllPath>
+          <SurceModificationTime>2013-05-15T18:50:24.9998246+03:00</SurceModificationTime>
+          <DllModificationTime>2013-05-17T17:38:56.6071188+03:00</DllModificationTime>
+        </LibRecord>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>Volumes</string>
+      </key>
+      <value>
+        <LibRecord>
+          <Name>Volumes</Name>
+          <SorcePath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Indicators\Volumes.cs</SorcePath>
+          <DllPath>D:\GitHub\Forex-Strategy-Builder\Output\Debug\User Files\Libraries\Volumes.dll</DllPath>
+          <SurceModificationTime>2013-05-15T18:50:24.9998246+03:00</SurceModificationTime>
+          <DllModificationTime>2013-05-17T17:38:56.7672871+03:00</DllModificationTime>
+        </LibRecord>
+      </value>
+    </item>
+  </Records>
+</LibrariesSettings>

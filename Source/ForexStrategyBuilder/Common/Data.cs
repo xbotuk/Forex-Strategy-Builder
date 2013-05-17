@@ -48,7 +48,7 @@ namespace ForexStrategyBuilder
             ColorDir = "Colors" + Path.DirectorySeparatorChar;
             LanguageDir = "Languages" + Path.DirectorySeparatorChar;
             SystemDir = "System" + Path.DirectorySeparatorChar;
-            LibraryDir = "Library" + Path.DirectorySeparatorChar;
+            LibraryDir = "Libraries" + Path.DirectorySeparatorChar;
             UserFilesDir = "User Files";
             ProgramName = "Forex Strategy Builder";
             IsProgramReleaseCandidate = false;
@@ -322,9 +322,9 @@ namespace ForexStrategyBuilder
             StrategyDir = Path.Combine(UserFilesDir, DefaultStrategyDir);
             SourceFolder = Path.Combine(UserFilesDir, SourceFolder);
             SystemDir = Path.Combine(UserFilesDir, SystemDir);
+            LibraryDir = Path.Combine(UserFilesDir, LibraryDir);
             LanguageDir = Path.Combine(SystemDir, LanguageDir);
             ColorDir = Path.Combine(SystemDir, ColorDir);
-            LibraryDir = Path.Combine(SystemDir, LibraryDir);
 
             // Scanner colors
             PeriodColor.Add(DataPeriod.M1, Color.Yellow);

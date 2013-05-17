@@ -271,6 +271,7 @@ namespace ForexStrategyBuilder.Indicators
             var instance = (Indicator) Activator.CreateInstance(indicator.GetType());
             instance.CustomIndicator = indicator.CustomIndicator;
             instance.OverrideMainIndicator = indicator.OverrideMainIndicator;
+            instance.LoaddedFromDll = indicator.LoaddedFromDll;
             return instance;
         }
     }

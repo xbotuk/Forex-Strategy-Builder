@@ -84,6 +84,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utils\SerializableDictionary.cs" />
     <Compile Include="CustomControls\CloseButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -261,6 +262,9 @@
     <Compile Include="Infrastructure\Enums\DataPeriod.cs" />
     <Compile Include="Infrastructure\Interfaces\IDataSet.cs" />
     <Compile Include="Infrastructure\Interfaces\IIndicator.cs" />
+    <Compile Include="Library\Libraries.cs" />
+    <Compile Include="Library\LibrariesSettings.cs" />
+    <Compile Include="Library\LibRecord.cs" />
     <Compile Include="UserInterface\SmallBalanceChartData.cs" />
     <Compile Include="Utils\Benchmark.cs" />
     <Compile Include="Utils\ColorMagic.cs" />

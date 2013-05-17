@@ -14,6 +14,8 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Infrastructure.Interfaces;
+using ForexStrategyBuilder.Library;
 
 namespace ForexStrategyBuilder
 {
@@ -61,53 +63,82 @@ namespace ForexStrategyBuilder
             return assemblies;
         }
 
+
+        public void LoadDllIndicator(string dllPath, out string errorMessages)
+        {
+            errorMessages = string.Empty;
+            Assembly assembly = Assembly.LoadFrom(dllPath);
+            Type[] types = assembly.GetTypes();
+            foreach (Type type in types)
+            {
+                if (!typeof (IIndicator).IsAssignableFrom(type))
+                    continue;
+
+                var newIndicator = Activator.CreateInstance(type) as Indicator;
+
+                if (newIndicator == null)
+                {
+                    errorMessages = "Cannot load: " + dllPath;
+                    return;
+                }
+
+                newIndicator.LoaddedFromDll = true;
+                IntegrateIndicator(dllPath, out errorMessages, newIndicator);
+                return;
+            }
+        }
+
+
         /// <summary>
         ///     Load file, compile it and create/load the indicators into the CustomIndicatorsList.
         /// </summary>
-        /// <param name="filePath">Path to the source file</param>
+        /// <param name="sourcePath">Path to the source file</param>
         /// <param name="errorMessages">Resulting error messages, if any.</param>
-        public void LoadCompileSourceFile(string filePath, out string errorMessages)
+        public LibRecord LoadCompileSourceFile(string sourcePath, out string errorMessages)
         {
             string errorLoadSourceFile;
-            string source = LoadSourceFile(filePath, out errorLoadSourceFile);
+            string sourceCode = LoadSourceFile(sourcePath, out errorLoadSourceFile);
 
-            if (string.IsNullOrEmpty(source))
+            if (string.IsNullOrEmpty(sourceCode))
             {
-                // Source file loading failed.
                 errorMessages = errorLoadSourceFile;
-                return;
+                return null;
             }
 
             Dictionary<string, int> dictCompilationErrors;
-            Assembly assembly = compiler.CompileSource(source, out dictCompilationErrors);
+            Assembly assembly = compiler.CompileSource(sourceCode, out dictCompilationErrors);
 
             if (assembly == null)
             {
-                // Assembly compilation failed.
                 var sbCompilationError = new StringBuilder();
                 sbCompilationError.AppendLine("ERROR: Indicator compilation failed in file [" +
-                                              Path.GetFileName(filePath) + "]");
+                                              Path.GetFileName(sourcePath) + "]");
 
                 foreach (string error in dictCompilationErrors.Keys)
-                {
                     sbCompilationError.AppendLine('\t' + error);
-                }
 
                 errorMessages = sbCompilationError.ToString();
-                return;
+                return null;
             }
 
             string errorGetIndicator;
-            string indicatorFileName = Path.GetFileNameWithoutExtension(filePath);
+            string indicatorFileName = Path.GetFileNameWithoutExtension(sourcePath);
             Indicator newIndicator = GetIndicatorInstanceFromAssembly(assembly, indicatorFileName, out errorGetIndicator);
 
             if (newIndicator == null)
             {
-                // Getting an indicator instance failed.
                 errorMessages = errorGetIndicator;
-                return;
+                return null;
             }
 
+            if (IntegrateIndicator(sourcePath, out errorMessages, newIndicator))
+                return ExportIndicatorAsDll(sourcePath, sourceCode);
+
+            return null;
+        }
+
+        private bool IntegrateIndicator(string filePath, out string errorMessages, Indicator newIndicator)
+        {
             newIndicator.CustomIndicator = true;
             newIndicator.Initialize(SlotTypes.NotDefined);
 
@@ -115,35 +146,53 @@ namespace ForexStrategyBuilder
             foreach (Indicator indicator in CustomIndicatorsList)
                 if (indicator.IndicatorName == newIndicator.IndicatorName)
                 {
-                    errorMessages = "The name '" + newIndicator.IndicatorName + "' found out in [" +
-                                    Path.GetFileName(filePath) + "] is already in use.";
-                    return;
+                    errorMessages = "Indicator '" + newIndicator.IndicatorName + "' found in [" +
+                                    Path.GetFileName(filePath) + "] is already loaded.";
+                    return false;
                 }
 
             // Check for a repeated indicator name among the original indicators
             foreach (string indicatorName in IndicatorManager.OriginalIndicatorNames)
                 if (indicatorName == newIndicator.IndicatorName)
-                {
                     newIndicator.OverrideMainIndicator = true;
-                    //errorMessages = "The name '" + indicatorName + "' found out in [" + Path.GetFileName(filePath) +
-                    //                "] is already in use.";
-                    //return;
-                }
 
             // Test the new custom indicator
             string errorTestIndicator;
             if (!IndicatorTester.CustomIndicatorFastTest(newIndicator, out errorTestIndicator))
             {
-                // Testing the indicator failed.
                 errorMessages = errorTestIndicator;
-                return;
+                return false;
             }
 
             // Adds the custom indicator to the list
             CustomIndicatorsList.Add(newIndicator);
 
             errorMessages = string.Empty;
+            return true;
         }
+
+        private LibRecord ExportIndicatorAsDll(string sourcePath, string sourceCode)
+        {
+            string name = Path.GetFileNameWithoutExtension(sourcePath);
+            string targedPath = Path.Combine(Data.LibraryDir, name + ".dll");
+
+            compiler.CompileSourceToDll(sourceCode, targedPath);
+
+            var sourceInfo = new FileInfo(sourcePath);
+            var targedInfo = new FileInfo(targedPath);
+
+            var record = new LibRecord
+                {
+                    Name = name,
+                    SorcePath = sourcePath,
+                    SurceModificationTime = sourceInfo.LastWriteTime,
+                    DllPath = targedPath,
+                    DllModificationTime = targedInfo.LastWriteTime,
+                };
+
+            return record;
+        }
+
 
         /// <summary>
         ///     Reads the source code from file contents.

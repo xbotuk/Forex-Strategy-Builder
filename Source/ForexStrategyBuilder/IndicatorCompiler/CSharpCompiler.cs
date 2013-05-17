@@ -32,7 +32,7 @@ namespace ForexStrategyBuilder
         public CSharpCompiler()
         {
             codeProvider = new CSharpCodeProvider(new Dictionary<String, String> {{"CompilerVersion", "v3.5"}});
-            compilationParameters = new CompilerParameters {GenerateInMemory = true};
+            compilationParameters = new CompilerParameters();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace ForexStrategyBuilder
         public Assembly CompileSource(string source, out Dictionary<string, int> compilerErrors)
         {
             compilerErrors = new Dictionary<string, int>();
-
+            compilationParameters.GenerateInMemory = true;
             CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilationParameters, source);
 
             if (compilerResults.Errors.Count > 0)
@@ -79,6 +79,17 @@ namespace ForexStrategyBuilder
             }
 
             return compilerResults.CompiledAssembly;
+        }
+
+        /// <summary>
+        ///     Compiles a single source file to dll.
+        /// </summary>
+        public void CompileSourceToDll(string source, string targedFileName)
+        {
+            compilationParameters.GenerateInMemory = false;
+            compilationParameters.OutputAssembly = targedFileName;
+
+            codeProvider.CompileAssemblyFromSource(compilationParameters, source);
         }
     }
 }

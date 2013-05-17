@@ -16,9 +16,9 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators
 {
-    public class Gator_Oscillator : Indicator
+    public class GatorOscillator : Indicator
     {
-        public Gator_Oscillator()
+        public GatorOscillator()
         {
             IndicatorName   = "Gator Oscillator";
             PossibleSlots   = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
@@ -29,12 +29,12 @@ namespace ForexStrategyBuilder.Indicators
         {
             SlotType = slotType;
 
-            // The ComboBox parameters
+            // ComboBox parameters
             IndParam.ListParam[0].Caption  = "Logic";
             IndParam.ListParam[0].ItemList = new string[]
             {
-                "The Gator Oscillator expands",
-                "The Gator Oscillator contracts"
+                "Gator Oscillator expands",
+                "Gator Oscillator contracts"
             };
             IndParam.ListParam[0].Index    = 0;
             IndParam.ListParam[0].Text     = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
@@ -46,22 +46,22 @@ namespace ForexStrategyBuilder.Indicators
             IndParam.ListParam[1].Index    = (int)MAMethod.Smoothed;
             IndParam.ListParam[1].Text     = IndParam.ListParam[1].ItemList[IndParam.ListParam[1].Index];
             IndParam.ListParam[1].Enabled  = true;
-            IndParam.ListParam[1].ToolTip  = "The method of Moving Average used for the calculations.";
+            IndParam.ListParam[1].ToolTip  = "method of Moving Average used for the calculations.";
 
             IndParam.ListParam[2].Caption  = "Base price";
             IndParam.ListParam[2].ItemList = Enum.GetNames(typeof(BasePrice));
             IndParam.ListParam[2].Index    = (int)BasePrice.Median;
             IndParam.ListParam[2].Text     = IndParam.ListParam[2].ItemList[IndParam.ListParam[2].Index];
             IndParam.ListParam[2].Enabled  = true;
-            IndParam.ListParam[2].ToolTip  = "The price the indicator is based on.";
+            IndParam.ListParam[2].ToolTip  = "price the indicator is based on.";
 
-            // The NumericUpDown parameters
+            // NumericUpDown parameters
             IndParam.NumParam[0].Caption = "Jaws period";
             IndParam.NumParam[0].Value   = 13;
             IndParam.NumParam[0].Min     = 1;
             IndParam.NumParam[0].Max     = 200;
             IndParam.NumParam[0].Enabled = true;
-            IndParam.NumParam[0].ToolTip = "The Moving Average period.";
+            IndParam.NumParam[0].ToolTip = "Moving Average period.";
 
             IndParam.NumParam[1].Caption = "Jaws shift";
             IndParam.NumParam[1].Value   = 8;
@@ -75,7 +75,7 @@ namespace ForexStrategyBuilder.Indicators
             IndParam.NumParam[2].Min     = 1;
             IndParam.NumParam[2].Max     = 200;
             IndParam.NumParam[2].Enabled = true;
-            IndParam.NumParam[2].ToolTip = "The Moving Average period.";
+            IndParam.NumParam[2].ToolTip = "Moving Average period.";
 
             IndParam.NumParam[3].Caption = "Teeth shift";
             IndParam.NumParam[3].Value   = 5;
@@ -89,7 +89,7 @@ namespace ForexStrategyBuilder.Indicators
             IndParam.NumParam[4].Min     = 1;
             IndParam.NumParam[4].Max     = 200;
             IndParam.NumParam[4].Enabled = true;
-            IndParam.NumParam[4].ToolTip = "The Moving Average period.";
+            IndParam.NumParam[4].ToolTip = "Moving Average period.";
 
             IndParam.NumParam[5].Caption = "Lips shift";
             IndParam.NumParam[5].Value   = 3;
@@ -98,7 +98,7 @@ namespace ForexStrategyBuilder.Indicators
             IndParam.NumParam[5].Enabled = true;
             IndParam.NumParam[5].ToolTip = "How many bars to shift with.";
 
-            // The CheckBox parameters
+            // CheckBox parameters
             IndParam.CheckParam[0].Caption = "Use previous bar value";
             IndParam.CheckParam[0].Enabled = true;
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
@@ -180,7 +180,7 @@ namespace ForexStrategyBuilder.Indicators
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The Gator Oscillator expands":
+                case "Gator Oscillator expands":
 					for (int iBar = iFirstBar; iBar < Bars; iBar++)
 					{
 						Component[2].Value[iBar] = (adUpperGator[iBar - iPrvs] - adLowerGator[iBar - iPrvs]) > (adUpperGator[iBar - iPrvs - 1] - adLowerGator[iBar - iPrvs - 1]) + Sigma() ? 1 : 0;
@@ -188,7 +188,7 @@ namespace ForexStrategyBuilder.Indicators
 					}
                     break;
 
-                case "The Gator Oscillator contracts":
+                case "Gator Oscillator contracts":
 					for (int iBar = iFirstBar; iBar < Bars; iBar++)
 					{
 						Component[2].Value[iBar] = (adUpperGator[iBar - iPrvs] - adLowerGator[iBar - iPrvs]) < (adUpperGator[iBar - iPrvs - 1] - adLowerGator[iBar - iPrvs - 1]) - Sigma() ? 1 : 0;
@@ -207,14 +207,14 @@ namespace ForexStrategyBuilder.Indicators
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The Gator Oscillator expands":
+                case "Gator Oscillator expands":
                     EntryFilterLongDescription  += "expands";
                     EntryFilterShortDescription += "expands";
                     ExitFilterLongDescription   += "expands";
                     ExitFilterShortDescription  += "expands";
                     break;
 
-                case "The Gator Oscillator contracts":
+                case "Gator Oscillator contracts":
                     EntryFilterLongDescription  += "contracts";
                     EntryFilterShortDescription += "contracts";
                     ExitFilterLongDescription   += "contracts";

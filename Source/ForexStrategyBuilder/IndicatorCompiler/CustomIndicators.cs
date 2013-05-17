@@ -9,52 +9,57 @@
 //==============================================================
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Library;
 
 namespace ForexStrategyBuilder
 {
     public static class CustomIndicators
     {
-        private static IndicatorCompilationManager indicatorManager;
+        private static readonly Libraries Libraries = new Libraries();
 
         /// <summary>
         ///     Load Source Files
         /// </summary>
         public static void LoadCustomIndicators()
         {
-            indicatorManager = new IndicatorCompilationManager();
-
-            if (!Directory.Exists(Data.SourceFolder))
-            {
-                MessageBox.Show("Custom indicators folder does not exist!", Language.T("Custom Indicators"));
-                IndicatorManager.ResetCustomIndicators(null);
-                IndicatorManager.CombineAllIndicators();
-                return;
-            }
-
-            string[] pathInputFiles = Directory.GetFiles(Data.SourceFolder, "*.cs");
-            if (pathInputFiles.Length == 0)
-            {
-                IndicatorManager.ResetCustomIndicators(null);
-                IndicatorManager.CombineAllIndicators();
-                return;
-            }
+            string[] pathCsFiles = Directory.GetFiles(Data.SourceFolder, "*.cs");
 
             var errorReport = new StringBuilder();
             errorReport.AppendLine("<h1>" + Language.T("Custom Indicators") + "</h1>");
             bool isError = false;
 
-            foreach (string filePath in pathInputFiles)
-            {
-                string errorMessages;
-                indicatorManager.LoadCompileSourceFile(filePath, out errorMessages);
+            string libSettingsPath = Path.Combine(Data.SystemDir, "Libraries.xml");
+            Libraries.LoadSettings(libSettingsPath);
 
-                if (!string.IsNullOrEmpty(errorMessages))
+            var compiledDlls = new List<string>();
+
+            var indicatorManager = new IndicatorCompilationManager();
+            if (pathCsFiles.Length != 0)
+            {
+                foreach (string filePath in pathCsFiles)
                 {
+                    string errorMessages;
+                    if (Libraries.IfDllRelevant(filePath))
+                    {
+                        Console.WriteLine("Relevant: " + Path.GetFileName(filePath));
+                        continue;
+                    }
+                        Console.WriteLine("Not relevant: " + Path.GetFileName(filePath));
+
+                    LibRecord record = indicatorManager.LoadCompileSourceFile(filePath, out errorMessages);
+                    if (record != null)
+                    {
+                        Console.WriteLine("Added dll: " + record.Name);
+                        Libraries.AddRecord(record);
+                        compiledDlls.Add(record.Name);
+                    }
+
+                    if (string.IsNullOrEmpty(errorMessages)) continue;
                     isError = true;
 
                     errorReport.AppendLine("<h2>File name: " + Path.GetFileName(filePath) + "</h2>");
@@ -63,6 +68,33 @@ namespace ForexStrategyBuilder
                     errorReport.AppendLine("<p>" + error + "</p>");
                 }
             }
+
+            string[] pathDllFiles = Directory.GetFiles(Data.LibraryDir, "*.dll");
+            if (pathDllFiles.Length != 0)
+            {
+                foreach (string filePath in pathDllFiles)
+                {
+                    string name = Path.GetFileNameWithoutExtension(filePath);
+                    Console.WriteLine("Found dll: " + name);
+                    if (compiledDlls.Contains(name))
+                        continue;
+
+                    string errorMessages;
+                    indicatorManager.LoadDllIndicator(Libraries.GetDllPath(filePath), out errorMessages);
+                    Console.WriteLine("Loaded dll: " + name);
+
+                    if (string.IsNullOrEmpty(errorMessages))
+                        continue;
+                    isError = true;
+
+                    errorReport.AppendLine("<h2>File name: " + Path.GetFileName(filePath) + "</h2>");
+                    string error = errorMessages.Replace(Environment.NewLine, "</br>");
+                    error = error.Replace("\t", "&nbsp; &nbsp; &nbsp;");
+                    errorReport.AppendLine("<p>" + error + "</p>");
+                }
+            }
+
+            Libraries.SaveSettings(libSettingsPath);
 
             // Adds the custom indicators
             IndicatorManager.ResetCustomIndicators(indicatorManager.CustomIndicatorsList);
@@ -74,9 +106,6 @@ namespace ForexStrategyBuilder
                     {BoxWidth = 550, BoxHeight = 340, TopMost = true};
                 msgBox.Show();
             }
-
-            if (Configs.ShowCustomIndicators)
-                ShowLoadedCustomIndicators();
         }
 
         /// <summary>
@@ -124,7 +153,11 @@ namespace ForexStrategyBuilder
             okReport.AppendLine("</p>");
 
             var result = new CustomIndicatorsTestResult
-                {IsErrors = isErrors, ErrorReport = errorReport.ToString(), OkReport = okReport.ToString()};
+                {
+                    IsErrors = isErrors,
+                    ErrorReport = errorReport.ToString(),
+                    OkReport = okReport.ToString()
+                };
 
             e.Result = result;
         }
@@ -151,16 +184,18 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Shows the loaded custom indicators.
         /// </summary>
-        private static void ShowLoadedCustomIndicators()
+        public static void ShowLoadedCustomIndicators()
         {
-            if (indicatorManager.CustomIndicatorsList.Count == 0)
-                return;
-
             var loadedIndicators = new StringBuilder();
-            loadedIndicators.AppendLine("<h1>" + Language.T("Custom Indicators") + "</h1>");
+            loadedIndicators.AppendLine("<h1>" + Language.T("Custom Indicators") +  "</h1>");
+            loadedIndicators.AppendLine("<p>Loaded " + IndicatorManager.CustomIndicatorNames.Count + " indicators.</p>");
             loadedIndicators.AppendLine("<p>");
-            foreach (Indicator indicator in indicatorManager.CustomIndicatorsList)
-                loadedIndicators.AppendLine(indicator + "</br>");
+            foreach (string indicatorName in IndicatorManager.CustomIndicatorNames)
+            {
+                var indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                string dll = indicator.LoaddedFromDll ? " (dll)" : " (cs)";
+                loadedIndicators.AppendLine(indicatorName + dll + "</br>");
+            }
             loadedIndicators.AppendLine("</p>");
 
             var msgBox = new FancyMessageBox(loadedIndicators.ToString(), Language.T("Custom Indicators"))

@@ -28,6 +28,7 @@ namespace ForexStrategyBuilder.Indicators
             SeparatedChartMaxValue = double.MinValue;
             IsDiscreteValues = false;
             CustomIndicator = false;
+            LoaddedFromDll = false;
             WarningMessage = string.Empty;
             AllowClosingFilters = false;
 
@@ -62,6 +63,11 @@ namespace ForexStrategyBuilder.Indicators
         ///     Shows if the indicator is custom.
         /// </summary>
         public bool CustomIndicator { get; set; }
+
+        /// <summary>
+        ///     Shows if the indicator is loadded from a dll.
+        /// </summary>
+        public bool LoaddedFromDll { get; set; }
 
         /// <summary>
         ///     Time frame of the loaded historical data

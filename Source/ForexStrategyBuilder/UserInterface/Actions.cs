@@ -105,6 +105,9 @@ namespace ForexStrategyBuilder
             {
                 UpdateStatusLabel("- loading custom indicators...");
                 CustomIndicators.LoadCustomIndicators();
+
+                if (Configs.ShowCustomIndicators)
+                    CustomIndicators.ShowLoadedCustomIndicators();
             }
             else
                 IndicatorManager.CombineAllIndicators();
@@ -687,6 +690,9 @@ namespace ForexStrategyBuilder
 
             // Reload all the custom indicators
             CustomIndicators.LoadCustomIndicators();
+
+            if (Configs.ShowCustomIndicators)
+                CustomIndicators.ShowLoadedCustomIndicators();
 
             if (strategyHasCustomIndicator)
             {
