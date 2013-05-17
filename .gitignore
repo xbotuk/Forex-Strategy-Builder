@@ -17,6 +17,7 @@ obj
 /Output/Debug/User Files/System/config.xml
 /Output/Debug/User Files/System/fsb-update.xml
 /Output/Debug/User Files/System/instruments.xml
+/Output/Debug/User Files/System/Libraries.xml
 /Output/Debug/User Files/Strategies/*.csv
 /Output/Release/*.config
 /Output/Release/*.pdb
@@ -27,3 +28,4 @@ obj
 /Output/Release/User Files/System/config.xml
 /Output/Release/User Files/System/fsb-update.xml
 /Output/Release/User Files/System/instruments.xml
+/Output/Release/User Files/System/Libraries.xml
