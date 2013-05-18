@@ -24,6 +24,7 @@ namespace ForexStrategyBuilder.Dialogs
         private CheckBox chbMaxTrades;
         private CheckBox chbMinProfitPerDay;
         private CheckBox chbMinSharpeRatio;
+        private CheckBox chbMaxConsecLosses;
         private CheckBox chbMinTrades;
         private CheckBox chbOOSPatternFilter;
         private CheckBox chbSmoothBalanceLines;
@@ -36,6 +37,7 @@ namespace ForexStrategyBuilder.Dialogs
         private NumericUpDown nudMaxTrades;
         private NumericUpDown nudMinProfitPerDay;
         private NumericUpDown nudMinSharpeRatio;
+        private NumericUpDown nudMaxConsecLosses;
         private NumericUpDown nudMinTrades;
         private NumericUpDown nudSmoothBalanceCheckPoints;
         private NumericUpDown nudSmoothBalancePercent;
@@ -205,6 +207,24 @@ namespace ForexStrategyBuilder.Dialogs
             nudMinSharpeRatio.DecimalPlaces = 1;
             nudMinSharpeRatio.EndInit();
 
+            chbMaxConsecLosses = new CheckBox
+                {
+                    Parent = this,
+                    ForeColor = ForeColor,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Max consecutive losses"),
+                    Checked = false,
+                    AutoSize = true
+                };
+
+            nudMaxConsecLosses = new NumericUpDown {Parent = this, TextAlign = HorizontalAlignment.Center};
+            nudMaxConsecLosses.BeginInit();
+            nudMaxConsecLosses.Minimum = 1;
+            nudMaxConsecLosses.Maximum = 100;
+            nudMaxConsecLosses.Increment = 1;
+            nudMaxConsecLosses.Value = 5;
+            nudMaxConsecLosses.EndInit();
+
             chbMaxRedGreenDeviation = new CheckBox
                 {
                     Parent = this,
@@ -310,6 +330,8 @@ namespace ForexStrategyBuilder.Dialogs
                 nudSmoothBalanceCheckPoints.Value = int.Parse(options[i++]);
                 chbMinSharpeRatio.Checked = bool.Parse(options[i++]);
                 nudMinSharpeRatio.Value = int.Parse(options[i++])/100M;
+                chbMaxConsecLosses.Checked = bool.Parse(options[i++]);
+                nudMaxConsecLosses.Value = int.Parse(options[i++]);
                 chbMinProfitPerDay.Checked = bool.Parse(options[i++]);
                 nudMinProfitPerDay.Value = int.Parse(options[i++]);
                 chbMaxRedGreenDeviation.Checked = bool.Parse(options[i++]);
@@ -343,6 +365,8 @@ namespace ForexStrategyBuilder.Dialogs
                 nudSmoothBalanceCheckPoints.Value + ";" +
                 chbMinSharpeRatio.Checked + ";" +
                 ((int) (nudMinSharpeRatio.Value*100M)) + ";" +
+                chbMaxConsecLosses.Checked + ";" +
+                nudMaxConsecLosses.Value + ";" +
                 chbMinProfitPerDay.Checked + ";" +
                 nudMinProfitPerDay.Value + ";" +
                 chbMaxRedGreenDeviation.Checked + ";" +
@@ -401,8 +425,13 @@ namespace ForexStrategyBuilder.Dialogs
             nudMinSharpeRatio.Width = nudWidth;
             nudMinSharpeRatio.Location = new Point(nudLeft, chbMinSharpeRatio.Top - 1);
 
+            // Max consecutive losses
+            chbMaxConsecLosses.Location = new Point(border + 2, chbMinSharpeRatio.Bottom + border + 4);
+            nudMaxConsecLosses.Width = nudWidth;
+            nudMaxConsecLosses.Location = new Point(nudLeft, chbMaxConsecLosses.Top - 1);
+
             // Red/Green Deviation
-            chbMaxRedGreenDeviation.Location = new Point(border + 2, chbMinSharpeRatio.Bottom + border + 4);
+            chbMaxRedGreenDeviation.Location = new Point(border + 2, chbMaxConsecLosses.Bottom + border + 4);
             nudMaxRedGreenDeviation.Width = nudWidth;
             nudMaxRedGreenDeviation.Location = new Point(nudLeft, chbMaxRedGreenDeviation.Top - 1);
 
@@ -469,6 +498,12 @@ namespace ForexStrategyBuilder.Dialogs
 
             // Criterion Minimum Sharpe ratio
             if (chbMinSharpeRatio.Checked && Backtester.SharpeRatio < (double) nudMinSharpeRatio.Value)
+            {
+                return false;
+            }
+
+            // Max consecutive losses
+            if (chbMaxConsecLosses.Checked && Backtester.MaxConsecutiveLosses > nudMaxConsecLosses.Value)
             {
                 return false;
             }

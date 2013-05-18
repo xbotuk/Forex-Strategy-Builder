@@ -195,6 +195,11 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
+        ///     Gets the count of max consecutve losses.
+        /// </summary>
+        public static int MaxConsecutiveLosses { get; private set; }
+
+        /// <summary>
         ///     Gets the count of sent orders
         /// </summary>
         public static int SentOrders { get; private set; }
@@ -358,6 +363,7 @@ namespace ForexStrategyBuilder
             minEquity = 0;
             maxEquityDrawdown = 0;
             maxDrawdown = 0;
+            MaxConsecutiveLosses = 0;
 
             MaxMoneyBalance = Configs.InitialAccount;
             minMoneyBalance = Configs.InitialAccount;
@@ -543,6 +549,26 @@ namespace ForexStrategyBuilder
             if (TestedDays < 1)
                 TestedDays = 1;
 
+            // Max consecutive loses
+            int sum = 0;
+            for (int pos = 0; pos < PositionsTotal; pos++)
+            {
+                Position position = PosFromNumb(pos);
+
+                if (position.Transaction != Transaction.Close &&
+                    position.Transaction != Transaction.Reduce &&
+                    position.Transaction != Transaction.Reverse)
+                    continue; // There is no profit/loss taken.
+
+                if (position.ProfitLoss < micron)
+                    sum++;
+                else if (position.ProfitLoss > micron)
+                    sum = 0;
+
+                if (sum > MaxConsecutiveLosses)
+                    MaxConsecutiveLosses = sum;
+            }
+
             CalculateAdditionalStats();
 
             if (Configs.AccountInMoney)
@@ -564,6 +590,7 @@ namespace ForexStrategyBuilder
                     Language.T("Ambiguous bars"),
                     Language.T("Profit per day"),
                     Language.T("Sharpe ratio"),
+                    Language.T("Max consecutive losses"),
                     Language.T("Tested bars"),
                     Language.T("Initial account"),
                     Language.T("Account balance"),
@@ -599,6 +626,7 @@ namespace ForexStrategyBuilder
             AccountStatsValue[i++] = AmbiguousBars.ToString(CultureInfo.InvariantCulture);
             AccountStatsValue[i++] = MoneyProfitPerDay.ToString("F2") + unit;
             AccountStatsValue[i++] = SharpeRatio.ToString("F2");
+            AccountStatsValue[i++] = MaxConsecutiveLosses.ToString(CultureInfo.InvariantCulture);
             AccountStatsValue[i++] = (Bars - FirstBar).ToString(CultureInfo.InvariantCulture);
             AccountStatsValue[i++] = Configs.InitialAccount.ToString("F2") + unit;
             AccountStatsValue[i++] = NetMoneyBalance.ToString("F2") + unit;
@@ -640,8 +668,9 @@ namespace ForexStrategyBuilder
             AccountStatsFlags[0] = AmbiguousBars > 0 && !IsScanPerformed;
             AccountStatsFlags[1] = InterpolationMethod != InterpolationMethod.Pessimistic;
             AccountStatsFlags[2] = AmbiguousBars > 0;
-            AccountStatsFlags[7] = NetMoneyBalance < Configs.InitialAccount;
-            AccountStatsFlags[10] = MaxDrawdown > Configs.InitialAccount/2;
+            AccountStatsFlags[5] = MaxConsecutiveLosses > 6;
+            AccountStatsFlags[8] = NetMoneyBalance < Configs.InitialAccount;
+            AccountStatsFlags[11] = MaxDrawdown > Configs.InitialAccount/2;
         }
 
         /// <summary>
@@ -656,6 +685,7 @@ namespace ForexStrategyBuilder
                     Language.T("Ambiguous bars"),
                     Language.T("Profit per day"),
                     Language.T("Sharpe ratio"),
+                    Language.T("Max consecutive losses"),
                     Language.T("Tested bars"),
                     Language.T("Account balance"),
                     Language.T("Minimum account"),
@@ -688,6 +718,7 @@ namespace ForexStrategyBuilder
             AccountStatsValue[i++] = AmbiguousBars.ToString(CultureInfo.InvariantCulture);
             AccountStatsValue[i++] = ProfitPerDay + unit;
             AccountStatsValue[i++] = SharpeRatio.ToString("F2");
+            AccountStatsValue[i++] = MaxConsecutiveLosses.ToString(CultureInfo.InvariantCulture);
             AccountStatsValue[i++] = (Bars - FirstBar).ToString(CultureInfo.InvariantCulture);
             AccountStatsValue[i++] = NetBalance + unit;
             AccountStatsValue[i++] = MinBalance + unit;
@@ -715,8 +746,9 @@ namespace ForexStrategyBuilder
             AccountStatsFlags[0] = AmbiguousBars > 0 && !IsScanPerformed;
             AccountStatsFlags[1] = InterpolationMethod != InterpolationMethod.Pessimistic;
             AccountStatsFlags[2] = AmbiguousBars > 0;
-            AccountStatsFlags[6] = NetBalance < 0;
-            AccountStatsFlags[9] = MaxDrawdown > 500;
+            AccountStatsFlags[5] = MaxConsecutiveLosses > 6;
+            AccountStatsFlags[7] = NetBalance < 0;
+            AccountStatsFlags[10] = MaxDrawdown > 500;
         }
 
         /// <summary>
