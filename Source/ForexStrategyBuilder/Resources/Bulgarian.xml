@@ -761,6 +761,7 @@
   <str><main>Minimum win / loss trades ratio</main><alt>Минимално отношение печеливши/губещи сделки</alt></str>
   <str><main>Minimum Profit Per Day</main><alt>Минимална печалба на ден</alt></str>
   <str><main>Minimum Sharpe ratio</main><alt>Минимален коефициент на Шарп</alt></str>
+  <str><main>Max consecutive losses</main><alt>Максимум последвателни загуби</alt></str>
   <str><main>Max long/short balance deviation</main><alt>Макс. отклонение дълъг/къс баланс</alt></str>
   <str><main>Out of sample testing, percent of OOS bars</main><alt>Тестване с неизвестни данни, процент OOS барове</alt></str>
   <str><main>Filter bad OOS performance</main><alt>Филтриране на лоши OOS резултати</alt></str>
@@ -942,11 +943,6 @@
   <str><main>Pivot Points</main><alt>Pivot points</alt></str>
   <str><main>Support</main><alt>Подкрепа</alt></str>
   <str><main>Resistance</main><alt>Съпротива</alt></str>
-  
-  <!-- Fibonacci Levels Calculator -->
-  <str><main>Fibonacci Levels</main><alt>Нива на Фибоначи</alt></str>
-  <str><main>First price</main><alt>Първа цена</alt></str>
-  <str><main>Second price</main><alt>Втора цена</alt></str>
 
   <!-- Language Phrases -->
   <str><main>Language Phrases</main><alt>Езикови Фрази</alt></str>

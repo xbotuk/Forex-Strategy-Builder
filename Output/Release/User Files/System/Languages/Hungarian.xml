@@ -2763,6 +2763,10 @@
     <alt>Minimum Sharpe ratio</alt>
   </str>
   <str>
+    <main>Max consecutive losses</main>
+    <alt>Max consecutive losses</alt>
+  </str>
+  <str>
     <main>Max long/short balance deviation</main>
     <alt>Max long/short balance deviation</alt>
   </str>
@@ -3415,19 +3419,6 @@
   <str>
     <main>Resistance</main>
     <alt>Ellenállás</alt>
-  </str>
-  <!-- Fibonacci Levels Calculator -->
-  <str>
-    <main>Fibonacci Levels</main>
-    <alt>Fibonacci szintek</alt>
-  </str>
-  <str>
-    <main>First price</main>
-    <alt>Első ár</alt>
-  </str>
-  <str>
-    <main>Second price</main>
-    <alt>Második ár</alt>
   </str>
   <!-- Language Phrases -->
   <str>

@@ -2762,6 +2762,10 @@
     <alt>Минимален коефициент на Шарп</alt>
   </str>
   <str>
+    <main>Max consecutive losses</main>
+    <alt>Максимум последвателни загуби</alt>
+  </str>
+  <str>
     <main>Max long/short balance deviation</main>
     <alt>Макс. отклонение дълъг/къс баланс</alt>
   </str>
@@ -3414,19 +3418,6 @@
   <str>
     <main>Resistance</main>
     <alt>Съпротива</alt>
-  </str>
-  <!-- Fibonacci Levels Calculator -->
-  <str>
-    <main>Fibonacci Levels</main>
-    <alt>Нива на Фибоначи</alt>
-  </str>
-  <str>
-    <main>First price</main>
-    <alt>Първа цена</alt>
-  </str>
-  <str>
-    <main>Second price</main>
-    <alt>Втора цена</alt>
   </str>
   <!-- Language Phrases -->
   <str>

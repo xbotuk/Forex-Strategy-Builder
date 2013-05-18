@@ -2762,6 +2762,10 @@
     <alt>Минимальный коэффициент Шарпа</alt>
   </str>
   <str>
+    <main>Max consecutive losses</main>
+    <alt>Max consecutive losses</alt>
+  </str>
+  <str>
     <main>Max long/short balance deviation</main>
     <alt>Макс длинной / короткой баланс отклонений</alt>
   </str>
@@ -3414,19 +3418,6 @@
   <str>
     <main>Resistance</main>
     <alt>Сопротивление</alt>
-  </str>
-  <!-- Fibonacci Levels Calculator -->
-  <str>
-    <main>Fibonacci Levels</main>
-    <alt>Уровни Фибоначчи</alt>
-  </str>
-  <str>
-    <main>First price</main>
-    <alt>Первая цена</alt>
-  </str>
-  <str>
-    <main>Second price</main>
-    <alt>Вторая цена</alt>
   </str>
   <!-- Language Phrases -->
   <str>
