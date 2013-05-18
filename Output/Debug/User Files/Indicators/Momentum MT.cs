@@ -16,9 +16,9 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators
 {
-    public class MomentumMT : Indicator
+    public class MomentumMT_Pro : Indicator
     {
-        public MomentumMT()
+        public MomentumMT_Pro()
         {
             IndicatorName = "Momentum MT";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;

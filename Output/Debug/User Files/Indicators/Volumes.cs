@@ -30,21 +30,21 @@ namespace ForexStrategyBuilder.Indicators
         {
             SlotType = slotType;
 
-            // The ComboBox parameters
+            // ComboBox parameters
             IndParam.ListParam[0].Caption  = "Logic";
             IndParam.ListParam[0].ItemList = new string[]
             {
-                "The Volume rises",
-                "The Volume falls",
-                "The Volume is higher than the Level line",
-                "The Volume is lower than the Level line",
+                "Volume rises",
+                "Volume falls",
+                "Volume is higher than the Level line",
+                "Volume is lower than the Level line",
             };
             IndParam.ListParam[0].Index   = 0;
             IndParam.ListParam[0].Text    = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
             IndParam.ListParam[0].ToolTip = "Logic of application of the indicator.";
 
-            // The NumericUpDown parameters
+            // NumericUpDown parameters
             IndParam.NumParam[0].Caption = "Level";
             IndParam.NumParam[0].Value   = 1000;
             IndParam.NumParam[0].Min     = 0;
@@ -52,7 +52,7 @@ namespace ForexStrategyBuilder.Indicators
             IndParam.NumParam[0].Enabled = true;
             IndParam.NumParam[0].ToolTip = "A critical level (for the appropriate logic).";
 
-            // The CheckBox parameters
+            // CheckBox parameters
             IndParam.CheckParam[0].Caption = "Use previous bar value";
             IndParam.CheckParam[0].Enabled = true;
             IndParam.CheckParam[0].ToolTip = "Use the indicator value from the previous bar.";
@@ -115,7 +115,7 @@ namespace ForexStrategyBuilder.Indicators
             // Calculation of the logic
             switch (IndParam.ListParam[0].Text)
             {
-                case "The Volume rises":
+                case "Volume rises":
                     for (int iBar = iPrvs + 1; iBar < Bars; iBar++)
                     {
                         Component[1].Value[iBar] = adVolumes[iBar - iPrvs] > adVolumes[iBar - iPrvs - 1] + Sigma() ? 1 : 0;
@@ -123,7 +123,7 @@ namespace ForexStrategyBuilder.Indicators
                     }
                     break;
 
-                case "The Volume falls":
+                case "Volume falls":
                     for (int iBar = iPrvs + 1; iBar < Bars; iBar++)
                     {
                         Component[1].Value[iBar] = adVolumes[iBar - iPrvs] < adVolumes[iBar - iPrvs - 1] - Sigma() ? 1 : 0;
@@ -131,7 +131,7 @@ namespace ForexStrategyBuilder.Indicators
                     }
                     break;
 
-                case "The Volume is higher than the Level line":
+                case "Volume is higher than the Level line":
                     for (int iBar = iPrvs; iBar < Bars; iBar++)
                     {
                         Component[1].Value[iBar] = adVolumes[iBar - iPrvs] > dLevel + Sigma() ? 1 : 0;
@@ -140,7 +140,7 @@ namespace ForexStrategyBuilder.Indicators
                     SpecialValues = new double[1] { dLevel };
                     break;
 
-                case "The Volume is lower than the Level line":
+                case "Volume is lower than the Level line":
                     for (int iBar = iPrvs; iBar < Bars; iBar++)
                     {
                         Component[1].Value[iBar] = adVolumes[iBar - iPrvs] < dLevel - Sigma() ? 1 : 0;
@@ -156,35 +156,35 @@ namespace ForexStrategyBuilder.Indicators
             string sLevelLong  = IndParam.NumParam[0].ValueToString;
             string sLevelShort = IndParam.NumParam[0].ValueToString;
 
-            EntryFilterLongDescription  = "the " + ToString() + " ";
-            EntryFilterShortDescription = "the " + ToString() + " ";
-            ExitFilterLongDescription   = "the " + ToString() + " ";
-            ExitFilterShortDescription  = "the " + ToString() + " ";
+            EntryFilterLongDescription  = ToString() + " ";
+            EntryFilterShortDescription = ToString() + " ";
+            ExitFilterLongDescription   = ToString() + " ";
+            ExitFilterShortDescription  = ToString() + " ";
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The Volume rises":
+                case "Volume rises":
                     EntryFilterLongDescription  += "rises";
                     EntryFilterShortDescription += "rises";
                     ExitFilterLongDescription   += "rises";
                     ExitFilterShortDescription  += "rises";
                     break;
 
-                case "The Volume falls":
+                case "Volume falls":
                     EntryFilterLongDescription  += "falls";
                     EntryFilterShortDescription += "falls";
                     ExitFilterLongDescription   += "falls";
                     ExitFilterShortDescription  += "falls";
                     break;
 
-                case "The Volume is higher than the Level line":
+                case "Volume is higher than the Level line":
                     EntryFilterLongDescription  += "is higher than the Level " + sLevelLong;
                     EntryFilterShortDescription += "is higher than the Level " + sLevelShort;
                     ExitFilterLongDescription   += "is higher than the Level " + sLevelLong;
                     ExitFilterShortDescription  += "is higher than the Level " + sLevelShort;
                     break;
 
-                case "The Volume is lower than the Level line":
+                case "Volume is lower than the Level line":
                     EntryFilterLongDescription  += "is lower than the Level " + sLevelLong;
                     EntryFilterShortDescription += "is lower than the Level " + sLevelShort;
                     ExitFilterLongDescription   += "is lower than the Level " + sLevelLong;
