@@ -112,7 +112,12 @@ namespace ForexStrategyBuilder
         public static int ProgramId { get; private set; }
 
         /// <summary>
-        ///     Gets the program current working directory.
+        ///     Gets the program directory.
+        /// </summary>
+        public static string ProgramsDir { get; private set; }
+
+        /// <summary>
+        ///     Gets the Users Files directory.
         /// </summary>
         public static string UserFilesDir { get; private set; }
 
@@ -314,7 +319,8 @@ namespace ForexStrategyBuilder
             PointChar = cultureInfo.NumberFormat.NumberDecimalSeparator.ToCharArray()[0];
 
             // Set the working directories
-            UserFilesDir = Path.Combine(Directory.GetCurrentDirectory(), UserFilesDir);
+            ProgramsDir = Directory.GetCurrentDirectory();
+            UserFilesDir = Path.Combine(ProgramsDir, UserFilesDir);
 
             DefaultOfflineDataDir = Path.Combine(UserFilesDir, OfflineDataDir);
             OfflineDataDir = DefaultOfflineDataDir;

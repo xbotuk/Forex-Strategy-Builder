@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 using ForexStrategyBuilder.Library;
@@ -205,10 +206,8 @@ namespace ForexStrategyBuilder
             var sourceInfo = new FileInfo(sourcePath);
             var record = new LibRecord
                 {
-                    FileName = name,
-                    SorcePath = sourcePath,
-                    SurceLastWriteTime = sourceInfo.LastWriteTime,
-                    DllPath = targedPath,
+                    SourceFileName = name,
+                    SourceLastWriteTime = sourceInfo.LastWriteTime,
                 };
 
             return record;

@@ -9,24 +9,19 @@
 //==============================================================using System;
 
 using System;
-using System.IO;
 
 namespace ForexStrategyBuilder.Library
 {
     public class LibRecord
     {
-        public string FileName { get; set; }
-        public string SorcePath { get; set; }
-        public string DllPath { get; set; }
-        public DateTime SurceLastWriteTime { get; set; }
+        public string SourceFileName { get; set; }
+        public DateTime SourceLastWriteTime { get; set; }
 
         public override string ToString()
         {
-            return string.Format("{0} {1} {2} {3}",
-                                 FileName,
-                                 Path.GetFileName(SorcePath),
-                                 Path.GetFileName(DllPath),
-                                 SurceLastWriteTime.ToShortDateString());
+            return string.Format("{0} {1}",
+                                 SourceFileName,
+                                 SourceLastWriteTime.ToShortDateString());
         }
     }
 }

@@ -26,15 +26,13 @@ namespace ForexStrategyBuilder.Library
             if (record == null)
                 return false;
 
-            var sourceInfo = new FileInfo(record.SorcePath);
+            var sourceInfo = new FileInfo(sourcePath);
 
-            if (!File.Exists(record.SorcePath))
+            if (record.SourceLastWriteTime != sourceInfo.LastWriteTime)
                 return false;
 
-            if (!File.Exists(record.DllPath))
-                return false;
-
-            if (record.SurceLastWriteTime != sourceInfo.LastWriteTime)
+            string dllPath = Path.Combine(Data.LibraryDir, Path.GetFileNameWithoutExtension(sourcePath) + ".dll");
+            if (!File.Exists(dllPath))
                 return false;
 
             return true;
@@ -42,10 +40,10 @@ namespace ForexStrategyBuilder.Library
 
         public void AddRecord(LibRecord record)
         {
-            if (settings.Records.ContainsKey(record.FileName))
-                settings.Records[record.FileName] = record;
+            if (settings.Records.ContainsKey(record.SourceFileName))
+                settings.Records[record.SourceFileName] = record;
             else
-                settings.Records.Add(record.FileName, record);
+                settings.Records.Add(record.SourceFileName, record);
         }
 
         private LibRecord ReadRecord(string name)
@@ -81,14 +79,6 @@ namespace ForexStrategyBuilder.Library
             {
                 xmlSerializer.Serialize(writer, settings);
             }
-        }
-
-        public string GetDllPath(string sourcePath)
-        {
-            string name = Path.GetFileNameWithoutExtension(sourcePath);
-            LibRecord record = ReadRecord(name);
-
-            return record == null ? string.Empty : record.DllPath;
         }
     }
 }
