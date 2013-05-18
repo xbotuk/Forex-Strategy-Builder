@@ -27,8 +27,8 @@ namespace ForexStrategyBuilder
         /// </summary>
         public static void LoadCustomIndicators()
         {
-            string[] pathCsFiles = Directory.GetFiles(Data.SourceFolder, "*.cs");
-
+            var compiledDlls = new List<string>();
+            var indicatorManager = new IndicatorCompilationManager();
             var errorReport = new StringBuilder();
             errorReport.AppendLine("<h1>" + Language.T("Custom Indicators") + "</h1>");
             bool isError = false;
@@ -36,33 +36,27 @@ namespace ForexStrategyBuilder
             string libSettingsPath = Path.Combine(Data.SystemDir, "Libraries.xml");
             Libraries.LoadSettings(libSettingsPath);
 
-            var compiledDlls = new List<string>();
-
-            var indicatorManager = new IndicatorCompilationManager();
+            string[] pathCsFiles = Directory.GetFiles(Data.SourceFolder, "*.cs");
             if (pathCsFiles.Length != 0)
             {
-                foreach (string filePath in pathCsFiles)
+                foreach (string sourcePath in pathCsFiles)
                 {
                     string errorMessages;
-                    if (Libraries.IfDllRelevant(filePath))
-                    {
-                        Console.WriteLine("Relevant: " + Path.GetFileName(filePath));
+                    if (Libraries.IsSourceCompiled(sourcePath))
                         continue;
-                    }
-                        Console.WriteLine("Not relevant: " + Path.GetFileName(filePath));
 
-                    LibRecord record = indicatorManager.LoadCompileSourceFile(filePath, out errorMessages);
+                    LibRecord record = indicatorManager.LoadCompileSourceFile(sourcePath, out errorMessages);
+
                     if (record != null)
                     {
-                        Console.WriteLine("Added dll: " + record.Name);
                         Libraries.AddRecord(record);
-                        compiledDlls.Add(record.Name);
+                        compiledDlls.Add(Path.GetFileNameWithoutExtension(sourcePath));
                     }
 
                     if (string.IsNullOrEmpty(errorMessages)) continue;
                     isError = true;
 
-                    errorReport.AppendLine("<h2>File name: " + Path.GetFileName(filePath) + "</h2>");
+                    errorReport.AppendLine("<h2>File name: " + Path.GetFileName(sourcePath) + "</h2>");
                     string error = errorMessages.Replace(Environment.NewLine, "</br>");
                     error = error.Replace("\t", "&nbsp; &nbsp; &nbsp;");
                     errorReport.AppendLine("<p>" + error + "</p>");
@@ -72,22 +66,21 @@ namespace ForexStrategyBuilder
             string[] pathDllFiles = Directory.GetFiles(Data.LibraryDir, "*.dll");
             if (pathDllFiles.Length != 0)
             {
-                foreach (string filePath in pathDllFiles)
+                foreach (string dllPath in pathDllFiles)
                 {
-                    string name = Path.GetFileNameWithoutExtension(filePath);
-                    Console.WriteLine("Found dll: " + name);
-                    if (compiledDlls.Contains(name))
+                    string fileName = Path.GetFileNameWithoutExtension(dllPath);
+                    if (compiledDlls.Contains(fileName))
                         continue;
 
                     string errorMessages;
-                    indicatorManager.LoadDllIndicator(Libraries.GetDllPath(filePath), out errorMessages);
-                    Console.WriteLine("Loaded dll: " + name);
+
+                    indicatorManager.LoadDllIndicator(dllPath, out errorMessages);
 
                     if (string.IsNullOrEmpty(errorMessages))
                         continue;
                     isError = true;
 
-                    errorReport.AppendLine("<h2>File name: " + Path.GetFileName(filePath) + "</h2>");
+                    errorReport.AppendLine("<h2>File name: " + Path.GetFileName(dllPath) + "</h2>");
                     string error = errorMessages.Replace(Environment.NewLine, "</br>");
                     error = error.Replace("\t", "&nbsp; &nbsp; &nbsp;");
                     errorReport.AppendLine("<p>" + error + "</p>");
@@ -187,12 +180,12 @@ namespace ForexStrategyBuilder
         public static void ShowLoadedCustomIndicators()
         {
             var loadedIndicators = new StringBuilder();
-            loadedIndicators.AppendLine("<h1>" + Language.T("Custom Indicators") +  "</h1>");
+            loadedIndicators.AppendLine("<h1>" + Language.T("Custom Indicators") + "</h1>");
             loadedIndicators.AppendLine("<p>Loaded " + IndicatorManager.CustomIndicatorNames.Count + " indicators.</p>");
             loadedIndicators.AppendLine("<p>");
             foreach (string indicatorName in IndicatorManager.CustomIndicatorNames)
             {
-                var indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
                 string dll = indicator.LoaddedFromDll ? " (dll)" : " (cs)";
                 loadedIndicators.AppendLine(indicatorName + dll + "</br>");
             }

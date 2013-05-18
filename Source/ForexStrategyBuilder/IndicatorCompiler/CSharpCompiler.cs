@@ -23,7 +23,8 @@ namespace ForexStrategyBuilder
     /// </summary>
     public class CSharpCompiler
     {
-        private readonly CompilerParameters compilationParameters;
+        private readonly CompilerParameters compilerParametersCs;
+        private readonly CompilerParameters compilerParametersDll;
         private volatile CSharpCodeProvider codeProvider;
 
         /// <summary>
@@ -32,7 +33,8 @@ namespace ForexStrategyBuilder
         public CSharpCompiler()
         {
             codeProvider = new CSharpCodeProvider(new Dictionary<String, String> {{"CompilerVersion", "v3.5"}});
-            compilationParameters = new CompilerParameters();
+            compilerParametersCs = new CompilerParameters();
+            compilerParametersDll = new CompilerParameters();
         }
 
         /// <summary>
@@ -44,7 +46,8 @@ namespace ForexStrategyBuilder
         {
             lock (this)
             {
-                compilationParameters.ReferencedAssemblies.Add(assembly.Location);
+                compilerParametersCs.ReferencedAssemblies.Add(assembly.Location);
+                compilerParametersDll.ReferencedAssemblies.Add(assembly.Location);
             }
         }
 
@@ -57,8 +60,8 @@ namespace ForexStrategyBuilder
         public Assembly CompileSource(string source, out Dictionary<string, int> compilerErrors)
         {
             compilerErrors = new Dictionary<string, int>();
-            compilationParameters.GenerateInMemory = true;
-            CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilationParameters, source);
+            compilerParametersCs.GenerateInMemory = true;
+            CompilerResults compilerResults = codeProvider.CompileAssemblyFromSource(compilerParametersCs, source);
 
             if (compilerResults.Errors.Count > 0)
             {
@@ -86,10 +89,9 @@ namespace ForexStrategyBuilder
         /// </summary>
         public void CompileSourceToDll(string source, string targedFileName)
         {
-            compilationParameters.GenerateInMemory = false;
-            compilationParameters.OutputAssembly = targedFileName;
-
-            codeProvider.CompileAssemblyFromSource(compilationParameters, source);
+            compilerParametersDll.GenerateInMemory = false;
+            compilerParametersDll.OutputAssembly = targedFileName;
+            codeProvider.CompileAssemblyFromSource(compilerParametersDll, source);
         }
     }
 }

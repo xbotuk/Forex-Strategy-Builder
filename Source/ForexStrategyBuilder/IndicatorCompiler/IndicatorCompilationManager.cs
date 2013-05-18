@@ -63,7 +63,9 @@ namespace ForexStrategyBuilder
             return assemblies;
         }
 
-
+        /// <summary>
+        ///     Loads an indicator from a dll.
+        /// </summary>
         public void LoadDllIndicator(string dllPath, out string errorMessages)
         {
             errorMessages = string.Empty;
@@ -74,7 +76,17 @@ namespace ForexStrategyBuilder
                 if (!typeof (IIndicator).IsAssignableFrom(type))
                     continue;
 
-                var newIndicator = Activator.CreateInstance(type) as Indicator;
+                Indicator newIndicator;
+
+                try
+                {
+                    newIndicator = Activator.CreateInstance(type) as Indicator;
+                }
+                catch (Exception exception)
+                {
+                    errorMessages = "ERROR: Loading '" + Path.GetFileName(dllPath) + "': " + exception.Message;
+                    return;
+                }
 
                 if (newIndicator == null)
                 {
@@ -82,12 +94,13 @@ namespace ForexStrategyBuilder
                     return;
                 }
 
+                newIndicator.Initialize(SlotTypes.NotDefined);
+                newIndicator.CustomIndicator = true;
                 newIndicator.LoaddedFromDll = true;
                 IntegrateIndicator(dllPath, out errorMessages, newIndicator);
                 return;
             }
         }
-
 
         /// <summary>
         ///     Load file, compile it and create/load the indicators into the CustomIndicatorsList.
@@ -97,7 +110,7 @@ namespace ForexStrategyBuilder
         public LibRecord LoadCompileSourceFile(string sourcePath, out string errorMessages)
         {
             string errorLoadSourceFile;
-            string sourceCode = LoadSourceFile(sourcePath, out errorLoadSourceFile);
+            string sourceCode = LoadSourceCode(sourcePath, out errorLoadSourceFile);
 
             if (string.IsNullOrEmpty(sourceCode))
             {
@@ -131,23 +144,29 @@ namespace ForexStrategyBuilder
                 return null;
             }
 
+            newIndicator.Initialize(SlotTypes.NotDefined);
+            newIndicator.CustomIndicator = true;
+
             if (IntegrateIndicator(sourcePath, out errorMessages, newIndicator))
                 return ExportIndicatorAsDll(sourcePath, sourceCode);
 
             return null;
         }
 
+        /// <summary>
+        ///     Checks and stores the indicator.
+        /// </summary>
         private bool IntegrateIndicator(string filePath, out string errorMessages, Indicator newIndicator)
         {
-            newIndicator.CustomIndicator = true;
-            newIndicator.Initialize(SlotTypes.NotDefined);
+            errorMessages = string.Empty;
 
             // Check for a repeated indicator name among the custom indicators
             foreach (Indicator indicator in CustomIndicatorsList)
                 if (indicator.IndicatorName == newIndicator.IndicatorName)
                 {
-                    errorMessages = "Indicator '" + newIndicator.IndicatorName + "' found in [" +
-                                    Path.GetFileName(filePath) + "] is already loaded.";
+                    errorMessages = string.Format("Indicator '{0}' found in [{1}] is already loaded.",
+                                                  newIndicator.IndicatorName,
+                                                  Path.GetFileName(filePath));
                     return false;
                 }
 
@@ -167,10 +186,15 @@ namespace ForexStrategyBuilder
             // Adds the custom indicator to the list
             CustomIndicatorsList.Add(newIndicator);
 
-            errorMessages = string.Empty;
             return true;
         }
 
+        /// <summary>
+        ///     Compiles and saves a dll from source code.
+        /// </summary>
+        /// <param name="sourcePath">Path to cs file.</param>
+        /// <param name="sourceCode">Source code</param>
+        /// <returns></returns>
         private LibRecord ExportIndicatorAsDll(string sourcePath, string sourceCode)
         {
             string name = Path.GetFileNameWithoutExtension(sourcePath);
@@ -179,50 +203,46 @@ namespace ForexStrategyBuilder
             compiler.CompileSourceToDll(sourceCode, targedPath);
 
             var sourceInfo = new FileInfo(sourcePath);
-            var targedInfo = new FileInfo(targedPath);
-
             var record = new LibRecord
                 {
-                    Name = name,
+                    FileName = name,
                     SorcePath = sourcePath,
-                    SurceModificationTime = sourceInfo.LastWriteTime,
+                    SurceLastWriteTime = sourceInfo.LastWriteTime,
                     DllPath = targedPath,
-                    DllModificationTime = targedInfo.LastWriteTime,
                 };
 
             return record;
         }
 
-
         /// <summary>
-        ///     Reads the source code from file contents.
+        ///     Reads the source code from a file.
         /// </summary>
-        private string LoadSourceFile(string pathToIndicator, out string errorLoadSourceFile)
+        private string LoadSourceCode(string sourcePath, out string errorLoadSourceFile)
         {
-            string result = string.Empty;
+            string sourceCode = string.Empty;
 
-            if (!File.Exists(pathToIndicator))
+            if (!File.Exists(sourcePath))
             {
-                errorLoadSourceFile = "ERROR The source file does not exist: " + Path.GetFileName(pathToIndicator);
-                return result;
+                errorLoadSourceFile = "ERROR The source file does not exist: " + Path.GetFileName(sourcePath);
+                return sourceCode;
             }
 
             try
             {
-                using (var sr = new StreamReader(pathToIndicator))
+                using (var sr = new StreamReader(sourcePath))
                 {
-                    result = sr.ReadToEnd();
+                    sourceCode = sr.ReadToEnd();
                     sr.Close();
                 }
             }
             catch
             {
-                errorLoadSourceFile = "ERROR Cannot read the file: " + Path.GetFileName(pathToIndicator);
-                return result;
+                errorLoadSourceFile = "ERROR Cannot read the file: " + Path.GetFileName(sourcePath);
+                return sourceCode;
             }
 
             errorLoadSourceFile = string.Empty;
-            return result;
+            return sourceCode;
         }
 
         /// <summary>

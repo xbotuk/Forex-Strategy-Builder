@@ -18,7 +18,7 @@ namespace ForexStrategyBuilder.Library
     {
         private LibrariesSettings settings;
 
-        public bool IfDllRelevant(string sourcePath)
+        public bool IsSourceCompiled(string sourcePath)
         {
             string name = Path.GetFileNameWithoutExtension(sourcePath);
             LibRecord record = ReadRecord(name);
@@ -34,7 +34,7 @@ namespace ForexStrategyBuilder.Library
             if (!File.Exists(record.DllPath))
                 return false;
 
-            if (record.SurceModificationTime != sourceInfo.LastWriteTime)
+            if (record.SurceLastWriteTime != sourceInfo.LastWriteTime)
                 return false;
 
             return true;
@@ -42,10 +42,10 @@ namespace ForexStrategyBuilder.Library
 
         public void AddRecord(LibRecord record)
         {
-            if (settings.Records.ContainsKey(record.Name))
-                settings.Records[record.Name] = record;
+            if (settings.Records.ContainsKey(record.FileName))
+                settings.Records[record.FileName] = record;
             else
-                settings.Records.Add(record.Name, record);
+                settings.Records.Add(record.FileName, record);
         }
 
         private LibRecord ReadRecord(string name)
@@ -83,9 +83,9 @@ namespace ForexStrategyBuilder.Library
             }
         }
 
-        public string GetDllPath(string filePath)
+        public string GetDllPath(string sourcePath)
         {
-            string name = Path.GetFileNameWithoutExtension(filePath);
+            string name = Path.GetFileNameWithoutExtension(sourcePath);
             LibRecord record = ReadRecord(name);
 
             return record == null ? string.Empty : record.DllPath;

@@ -15,19 +15,18 @@ namespace ForexStrategyBuilder.Library
 {
     public class LibRecord
     {
-        public string Name { get; set; }
+        public string FileName { get; set; }
         public string SorcePath { get; set; }
         public string DllPath { get; set; }
-        public DateTime SurceModificationTime { get; set; }
-        public DateTime DllModificationTime { get; set; }
+        public DateTime SurceLastWriteTime { get; set; }
 
         public override string ToString()
         {
             return string.Format("{0} {1} {2} {3}",
-                                 Name,
+                                 FileName,
                                  Path.GetFileName(SorcePath),
                                  Path.GetFileName(DllPath),
-                                 DllModificationTime.ToShortDateString());
+                                 SurceLastWriteTime.ToShortDateString());
         }
     }
 }
