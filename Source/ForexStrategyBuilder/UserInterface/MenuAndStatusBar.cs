@@ -908,6 +908,17 @@ namespace ForexStrategyBuilder
 
             miCustomInd.DropDownItems.Add(new ToolStripSeparator());
 
+            var miExportAsCi = new ToolStripMenuItem
+            {
+                Name = "miExportAsCI",
+                Text = Language.T("Export the Strategy as a Custom Indicator"),
+                Image = Resources.str_export_as_ci
+            };
+            miExportAsCi.Click += MenuToolsOnClick;
+            miCustomInd.DropDownItems.Add(miExportAsCi);
+
+            miCustomInd.DropDownItems.Add(new ToolStripSeparator());
+
             var miOpenIndFolder = new ToolStripMenuItem
                 {
                     Name = "miOpenIndFolder",

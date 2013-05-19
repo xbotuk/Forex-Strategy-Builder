@@ -570,6 +570,12 @@ namespace ForexStrategyBuilder
                 case "miCheckInd":
                     CustomIndicators.TestCustomIndicators();
                     break;
+                case "miExportAsCI":
+                    Cursor = Cursors.WaitCursor;
+                    StrategyToIndicator.ExportStrategyToIndicator();
+                    ReloadCustomIndicators();
+                    Cursor = Cursors.Default;
+                    break;
                 case "Calculator":
                     ShowCalculator();
                     break;

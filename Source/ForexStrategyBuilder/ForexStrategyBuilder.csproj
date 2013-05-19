@@ -84,6 +84,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IndicatorCompiler\StrategyToIndicator.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />
     <Compile Include="CustomControls\CloseButton.cs">
       <SubType>Component</SubType>
@@ -559,6 +560,7 @@
     <Content Include="Images\truefx_ico.png" />
     <Content Include="Resources\config.xml" />
     <Content Include="Resources\fsb-update.xml" />
+    <Content Include="Resources\StrategyToIndicator.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
