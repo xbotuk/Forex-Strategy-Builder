@@ -84,6 +84,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[1].Index = 0;
             IndParam.ListParam[1].Text = IndParam.ListParam[1].ItemList[IndParam.ListParam[1].Index];
             IndParam.ListParam[1].Enabled = true;
+            IndParam.ListParam[1].ToolTip = "Indicator uses High and Low prices.";
 
             // The NumericUpDown parameters
             IndParam.NumParam[0].Caption = "Period";

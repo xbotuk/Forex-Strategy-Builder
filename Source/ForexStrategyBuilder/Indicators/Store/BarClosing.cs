@@ -58,6 +58,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[1].Index = 0;
             IndParam.ListParam[1].Text = IndParam.ListParam[1].ItemList[IndParam.ListParam[1].Index];
             IndParam.ListParam[1].Enabled = true;
+            IndParam.ListParam[1].ToolTip = "Indicator opens or closes a position at Close price.";
         }
 
         public override void Calculate(IDataSet dataSet)

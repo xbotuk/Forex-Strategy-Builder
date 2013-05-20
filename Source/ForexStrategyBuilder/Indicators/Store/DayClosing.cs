@@ -41,14 +41,14 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
-            IndParam.ListParam[1].ToolTip = "The execution price of all exit orders.";
+            IndParam.ListParam[0].ToolTip = "The execution price of all exit orders.";
 
             IndParam.ListParam[1].Caption = "Base price";
             IndParam.ListParam[1].ItemList = new[] {"Close"};
             IndParam.ListParam[1].Index = 0;
             IndParam.ListParam[1].Text = IndParam.ListParam[1].ItemList[IndParam.ListParam[1].Index];
             IndParam.ListParam[1].Enabled = true;
-            IndParam.ListParam[1].ToolTip = "Exit price of the position.";
+            IndParam.ListParam[1].ToolTip = "Indicator closes a position at Close price.";
         }
 
         public override void Calculate(IDataSet dataSet)
