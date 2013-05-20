@@ -585,7 +585,7 @@ namespace ForexStrategyBuilder
                     Text = Language.T("Strategy Repository") + "...",
                     Image = Resources.repo,
                     ToolTipText = Language.T("Download or upload strategies."),
-                    Tag = @"http://repo.forexsb.com/strategy/list_all"
+                    Tag = @"http://repo.forexsb.com/repository_strategies/"
                 };
             miStrategyRepo.Click += MenuForexContentsOnClick;
             miStrategy.DropDownItems.Add(miStrategyRepo);
@@ -941,7 +941,7 @@ namespace ForexStrategyBuilder
                 {
                     Text = Language.T("Custom Indicators Repo") + "...",
                     Image = Resources.repo,
-                    Tag = "http://repo.forexsb.com/forex_indicators/"
+                    Tag = "http://repo.forexsb.com/repository_indicators/"
                 };
             miCustIndRepo.Click += MenuHelpContentsOnClick;
             miCustomInd.DropDownItems.Add(miCustIndRepo);
