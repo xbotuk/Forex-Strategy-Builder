@@ -54,7 +54,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the account balance in pips
+        ///     Gets the account balance in points
         /// </summary>
         public static int NetBalance
         {
@@ -62,7 +62,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the max balance in pips
+        ///     Gets the max balance in points
         /// </summary>
         public static int MaxBalance
         {
@@ -70,7 +70,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the min balance in pips
+        ///     Gets the min balance in points
         /// </summary>
         public static int MinBalance
         {
@@ -107,7 +107,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the min equity in pips
+        ///     Gets the min equity in points
         /// </summary>
         public static int MinEquity
         {
@@ -151,7 +151,7 @@ namespace ForexStrategyBuilder
         public static double MaxMoneyEquityDrawdown { get; private set; }
 
         /// <summary>
-        ///     The total earned pips
+        ///     The total earned points
         /// </summary>
         public static int GrossProfit
         {
@@ -164,7 +164,7 @@ namespace ForexStrategyBuilder
         public static double GrossMoneyProfit { get; private set; }
 
         /// <summary>
-        ///     The total lost pips
+        ///     The total lost points
         /// </summary>
         public static int GrossLoss
         {
@@ -321,7 +321,7 @@ namespace ForexStrategyBuilder
         public static bool[] AccountStatsFlags { get; private set; }
 
         /// <summary>
-        ///     Returns the Balance Drawdown in pips
+        ///     Returns the Balance Drawdown in points
         /// </summary>
         public static int BalanceDrawdown(int bar)
         {
@@ -329,7 +329,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Returns the Equity Drawdown in pips
+        ///     Returns the Equity Drawdown in points
         /// </summary>
         public static int EquityDrawdown(int bar)
         {
@@ -674,7 +674,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Generate the Account Statistics in pips.
+        ///     Generate the Account Statistics in points.
         /// </summary>
         private static void GenerateAccountStats()
         {
@@ -710,7 +710,7 @@ namespace ForexStrategyBuilder
                     Language.T("Balance without charges")
                 };
 
-            string unit = " " + Language.T("pips");
+            string unit = " " + Language.T("points");
             AccountStatsValue = new string[AccountStatsParam.Length];
             int i = 0;
             AccountStatsValue[i++] = IsScanPerformed ? Language.T("Accomplished") : Language.T("Not accomplished");
@@ -822,7 +822,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Calculates the commission in pips.
+        ///     Calculates the commission in points.
         /// </summary>
         public static double Commission(double lots, double price, bool isPosClosing)
         {
@@ -834,16 +834,16 @@ namespace ForexStrategyBuilder
             if (InstrProperties.CommissionTime == CommissionTime.open && isPosClosing)
                 return 0; // Commission is not applied to the position closing
 
-            if (InstrProperties.CommissionType == CommissionType.pips)
+            if (InstrProperties.CommissionUnit == ChargeUnit.Points)
                 commission = InstrProperties.Commission;
 
-            else if (InstrProperties.CommissionType == CommissionType.percents)
+            else if (InstrProperties.CommissionUnit == ChargeUnit.Percents)
             {
                 commission = (price/InstrProperties.Point)*(InstrProperties.Commission/100);
                 return commission;
             }
 
-            else if (InstrProperties.CommissionType == CommissionType.money)
+            else if (InstrProperties.CommissionUnit == ChargeUnit.Money)
                 commission = InstrProperties.Commission/(InstrProperties.Point*InstrProperties.LotSize);
 
             if (InstrProperties.CommissionScope == CommissionScope.lot)
@@ -865,18 +865,18 @@ namespace ForexStrategyBuilder
             if (InstrProperties.CommissionTime == CommissionTime.open && isPosClosing)
                 return 0; // Commission is not applied to the position closing
 
-            if (InstrProperties.CommissionType == CommissionType.pips)
+            if (InstrProperties.CommissionUnit == ChargeUnit.Points)
                 commission = InstrProperties.Commission*InstrProperties.Point*InstrProperties.LotSize/
                              AccountExchangeRate(price);
 
-            else if (InstrProperties.CommissionType == CommissionType.percents)
+            else if (InstrProperties.CommissionUnit == ChargeUnit.Percents)
             {
                 commission = lots*InstrProperties.LotSize*price*(InstrProperties.Commission/100)/
                              AccountExchangeRate(price);
                 return commission;
             }
 
-            else if (InstrProperties.CommissionType == CommissionType.money)
+            else if (InstrProperties.CommissionUnit == ChargeUnit.Money)
                 commission = InstrProperties.Commission/AccountExchangeRate(price);
 
             if (InstrProperties.CommissionScope == CommissionScope.lot)
@@ -892,42 +892,42 @@ namespace ForexStrategyBuilder
         {
             double point = InstrProperties.Point;
             int lotSize = InstrProperties.LotSize;
-            double swapLongPips = 0; // Swap long in pips
-            double swapShortPips = 0; // Swap short in pips
-            if (InstrProperties.SwapType == CommissionType.pips)
+            double swapLongPoints = 0; // Swap long in points
+            double swapShortPoints = 0; // Swap short in points
+            if (InstrProperties.SwapUnit == ChargeUnit.Points)
             {
-                swapLongPips = InstrProperties.SwapLong;
-                swapShortPips = InstrProperties.SwapShort;
+                swapLongPoints = InstrProperties.SwapLong;
+                swapShortPoints = InstrProperties.SwapShort;
             }
-            else if (InstrProperties.SwapType == CommissionType.percents)
+            else if (InstrProperties.SwapUnit == ChargeUnit.Percents)
             {
-                swapLongPips = (price/point)*(0.01*InstrProperties.SwapLong/365);
-                swapShortPips = (price/point)*(0.01*InstrProperties.SwapShort/365);
+                swapLongPoints = (price/point)*(0.01*InstrProperties.SwapLong/365);
+                swapShortPoints = (price/point)*(0.01*InstrProperties.SwapShort/365);
             }
-            else if (InstrProperties.SwapType == CommissionType.money)
+            else if (InstrProperties.SwapUnit == ChargeUnit.Money)
             {
-                swapLongPips = InstrProperties.SwapLong/(point*lotSize);
-                swapShortPips = InstrProperties.SwapShort/(point*lotSize);
+                swapLongPoints = InstrProperties.SwapLong/(point*lotSize);
+                swapShortPoints = InstrProperties.SwapShort/(point*lotSize);
             }
 
-            double rollover = lots*lotSize*(posDir == PosDirection.Long ? swapLongPips : -swapShortPips)*point*
+            double rollover = lots*lotSize*(posDir == PosDirection.Long ? swapLongPoints : -swapShortPoints)*point*
                               daysRollover/AccountExchangeRate(price);
 
             return rollover;
         }
 
         /// <summary>
-        ///     Converts pips to money.
+        ///     Converts points to money.
         /// </summary>
-        public static double PipsToMoney(double pips, int bar)
+        public static double PointsToMoney(double points, int bar)
         {
-            return pips*InstrProperties.Point*InstrProperties.LotSize/AccountExchangeRate(Close[bar]);
+            return points*InstrProperties.Point*InstrProperties.LotSize/AccountExchangeRate(Close[bar]);
         }
 
         /// <summary>
-        ///     Converts money to pips.
+        ///     Converts money to points.
         /// </summary>
-        public static double MoneyToPips(double money, int bar)
+        public static double MoneyToPoints(double money, int bar)
         {
             return money*AccountExchangeRate(Close[bar])/(InstrProperties.Point*InstrProperties.LotSize);
         }

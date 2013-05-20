@@ -49,7 +49,7 @@ namespace ForexStrategyBuilder
         private int selectedRow; // The number of the selected row
         private int shownPos; // How many positions are shown
         private string[] titlesInMoney; // Journal title
-        private string[] titlesInPips; // Journal title
+        private string[] titlesInPoints; // Journal title
         private VScrollBar vScrollBar;
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace ForexStrategyBuilder
                     g.MeasureString(longestBacktestEval, font).Width)
                     longestBacktestEval = Language.T(eval.ToString());
 
-            titlesInPips = new[]
+            titlesInPoints = new[]
                 {
                     Language.T("Position"),
                     Language.T("Bar"),
@@ -375,7 +375,7 @@ namespace ForexStrategyBuilder
                 }
                 else
                 {
-                    // In pips
+                    // In points
                     if (position.Transaction == Transaction.Open ||
                         position.Transaction == Transaction.Add ||
                         position.Transaction == Transaction.Reverse)
@@ -506,7 +506,7 @@ namespace ForexStrategyBuilder
                                        (ShowTransfers ? "" : " " + Language.T("without Transfers")) +
                                        (Configs.AccountInMoney
                                             ? " [" + Configs.AccountCurrency + "]"
-                                            : " [" + Language.T("pips") + "]");
+                                            : " [" + Language.T("points") + "]");
             g.DrawString(stringCaptionText, font, brushCaptionText, new RectangleF(Point.Empty, size), stringFormat);
             g.SetClip(new RectangleF(Border, rowHeight, ClientSize.Width - 2*Border, rowHeight));
             if (Configs.AccountInMoney)
@@ -519,10 +519,10 @@ namespace ForexStrategyBuilder
             }
             else
             {
-                g.DrawString(titlesInPips[0], font, brushCaptionText, scroll + (scaledX[0] + scaledX[1])/2,
+                g.DrawString(titlesInPoints[0], font, brushCaptionText, scroll + (scaledX[0] + scaledX[1])/2,
                              rowHeight, stringFormat);
                 for (int i = 1; i < columns; i++)
-                    g.DrawString(titlesInPips[i], font, brushCaptionText, scroll + (scaledX[i] + scaledX[i + 1])/2,
+                    g.DrawString(titlesInPoints[i], font, brushCaptionText, scroll + (scaledX[i] + scaledX[i + 1])/2,
                                  rowHeight, stringFormat);
             }
             g.ResetClip();

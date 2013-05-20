@@ -186,7 +186,7 @@ namespace ForexStrategyBuilder.Utils
                     Spread = 6,
                     SwapLong = 0.25,
                     SwapShort = 0.25,
-                    SwapType = CommissionType.pips
+                    SwapUnit = ChargeUnit.Points
                 };
 
             int maxBars = 2*Configs.MaxBars;

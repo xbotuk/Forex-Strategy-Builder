@@ -111,7 +111,7 @@ namespace ForexStrategyBuilder
         public static string[] AdditionalStatsValueShort { get; private set; }
 
         /// <summary>
-        ///     Gets the long balance in pips.
+        ///     Gets the long balance in points.
         /// </summary>
         public static int NetLongBalance
         {
@@ -119,7 +119,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the short balance in pips.
+        ///     Gets the short balance in points.
         /// </summary>
         public static int NetShortBalance
         {
@@ -127,7 +127,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the max long balance in pips.
+        ///     Gets the max long balance in points.
         /// </summary>
         public static int MaxLongBalance
         {
@@ -135,7 +135,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the max short balance in pips.
+        ///     Gets the max short balance in points.
         /// </summary>
         public static int MaxShortBalance
         {
@@ -143,7 +143,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the min long balance in pips.
+        ///     Gets the min long balance in points.
         /// </summary>
         public static int MinLongBalance
         {
@@ -151,7 +151,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Gets the min short balance in pips.
+        ///     Gets the min short balance in points.
         /// </summary>
         public static int MinShortBalance
         {
@@ -203,7 +203,7 @@ namespace ForexStrategyBuilder
         public static double MinShortMoneyBalance { get; private set; }
 
         /// <summary>
-        ///     Returns the long balance at the end of the bar in pips.
+        ///     Returns the long balance at the end of the bar in points.
         /// </summary>
         public static int LongBalance(int bar)
         {
@@ -211,7 +211,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Returns the short balance at the end of the bar in pips.
+        ///     Returns the short balance at the end of the bar in points.
         /// </summary>
         public static int ShortBalance(int bar)
         {
@@ -574,11 +574,11 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Sets the additional stats in pips.
+        ///     Sets the additional stats in points.
         /// </summary>
         private static void SetAdditionalStats()
         {
-            string unit = " " + Language.T("pips");
+            string unit = " " + Language.T("points");
 
             AdditionalStatsParamName = new[]
                 {

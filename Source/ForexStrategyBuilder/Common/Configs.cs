@@ -550,7 +550,7 @@ namespace ForexStrategyBuilder
 
         static bool isAccountInMoney = IsAccountInMoneyDefault;
         /// <summary>
-        /// Whether to express the account in currency or in pips
+        /// Whether to express the account in currency or in points
         /// </summary>
         public static bool AccountInMoney
         {

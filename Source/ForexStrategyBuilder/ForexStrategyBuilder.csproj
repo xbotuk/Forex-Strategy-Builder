@@ -142,7 +142,7 @@
     <Compile Include="Enumerations\BandIndLogic.cs" />
     <Compile Include="Enumerations\IndChartType.cs" />
     <Compile Include="Enumerations\InstrumetType.cs" />
-    <Compile Include="Enumerations\CommissionType.cs" />
+    <Compile Include="Enumerations\ChargeUnit.cs" />
     <Compile Include="Enumerations\CommissionScope.cs" />
     <Compile Include="Enumerations\CommissionTime.cs" />
     <Compile Include="Enumerations\OppositeDirSignalAction.cs" />
@@ -558,7 +558,9 @@
     <Content Include="Images\repo.png" />
     <Content Include="Images\toggle.png" />
     <Content Include="Images\truefx_ico.png" />
-    <Content Include="Resources\config.xml" />
+    <Content Include="Resources\config.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\fsb-update.xml" />
     <Content Include="Resources\StrategyToIndicator.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -575,7 +577,9 @@
     <EmbeddedResource Include="Resources\Bulgarian.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\instruments.xml" />
+    <EmbeddedResource Include="Resources\instruments.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Images\account_sett.png" />
     <EmbeddedResource Include="Images\balance_chart.png" />
     <EmbeddedResource Include="Images\bar_chart.png" />

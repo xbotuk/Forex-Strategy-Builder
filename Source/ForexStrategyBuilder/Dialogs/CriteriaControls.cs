@@ -100,7 +100,7 @@ namespace ForexStrategyBuilder.Dialogs
                     ForeColor = ForeColor,
                     BackColor = Color.Transparent,
                     Text = Language.T("Maximum equity drawdown") + " [" +
-                           (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]"),
+                           (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("points") + "]"),
                     Checked = false,
                     AutoSize = true
                 };

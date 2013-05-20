@@ -1342,7 +1342,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                                              ? Backtester.MoneyBalance(barOOS).ToString("F2") + " " +
                                                Configs.AccountCurrency
                                              : Backtester.Balance(barOOS).ToString(CultureInfo.InvariantCulture) + " " +
-                                               Language.T("pips"));
+                                               Language.T("points"));
                 GeneratedDescription += " (" + Data.Time[barOOS].ToShortDateString() + " " +
                                         Data.Time[barOOS].ToShortTimeString() + "  " + Language.T("Bar") + ": " +
                                         barOOS.ToString(CultureInfo.InvariantCulture) + ")";

@@ -80,7 +80,7 @@ namespace ForexStrategyBuilder.Common
         }
 
         /// <summary>
-        ///     Returns the position's Profit Loss in pips.
+        ///     Returns the position's Profit Loss in points.
         /// </summary>
         public static int ProfitLoss(int bar)
         {
@@ -96,7 +96,7 @@ namespace ForexStrategyBuilder.Common
         }
 
         /// <summary>
-        ///     Returns the Floating Profit Loss at the end of the bar in pips
+        ///     Returns the Floating Profit Loss at the end of the bar in points
         /// </summary>
         public static int FloatingPL(int bar)
         {
@@ -186,7 +186,7 @@ namespace ForexStrategyBuilder.Common
         }
 
         /// <summary>
-        ///     Returns the account balance at the end of the bar in pips
+        ///     Returns the account balance at the end of the bar in points
         /// </summary>
         public static int Balance(int bar)
         {
@@ -194,7 +194,7 @@ namespace ForexStrategyBuilder.Common
         }
 
         /// <summary>
-        ///     Returns the equity at the end of the bar in pips
+        ///     Returns the equity at the end of the bar in points
         /// </summary>
         public static int Equity(int bar)
         {

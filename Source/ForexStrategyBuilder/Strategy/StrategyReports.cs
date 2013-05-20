@@ -52,26 +52,26 @@ namespace ForexStrategyBuilder
                 strBBCode += "   None." + nl2;
 
             strBBCode += "Market: " + Data.Symbol + " " + Data.PeriodString + nl;
-            strBBCode += "Spread in pips: " + Data.InstrProperties.Spread.ToString("F2") + nl;
+            strBBCode += "Spread in points: " + Data.InstrProperties.Spread.ToString("F2") + nl;
             strBBCode += "Swap Long in " +
-                         (Data.InstrProperties.SwapType == CommissionType.money
+                         (Data.InstrProperties.SwapUnit == ChargeUnit.Money
                               ? Data.InstrProperties.PriceIn
-                              : Data.InstrProperties.SwapType.ToString()) + ": " +
+                              : Data.InstrProperties.SwapUnit.ToString()) + ": " +
                          Data.InstrProperties.SwapLong.ToString("F2") + nl;
             strBBCode += "Swap Short in " +
-                         (Data.InstrProperties.SwapType == CommissionType.money
+                         (Data.InstrProperties.SwapUnit == ChargeUnit.Money
                               ? Data.InstrProperties.PriceIn
-                              : Data.InstrProperties.SwapType.ToString()) + ": " +
+                              : Data.InstrProperties.SwapUnit.ToString()) + ": " +
                          Data.InstrProperties.SwapShort.ToString("F2") + nl;
             strBBCode += "Commission per " +
                          Data.InstrProperties.CommissionScope.ToString() + " at " +
                          (Data.InstrProperties.CommissionTime == CommissionTime.open ? "opening" : "opening and closing") +
                          " in " +
-                         (Data.InstrProperties.CommissionType == CommissionType.money
+                         (Data.InstrProperties.CommissionUnit == ChargeUnit.Money
                               ? Data.InstrProperties.PriceIn
-                              : Data.InstrProperties.CommissionType.ToString()) + ": " +
+                              : Data.InstrProperties.CommissionUnit.ToString()) + ": " +
                          Data.InstrProperties.Commission.ToString("F2") + nl;
-            strBBCode += "Slippage in pips: " + Data.InstrProperties.Slippage + nl2;
+            strBBCode += "Slippage in points: " + Data.InstrProperties.Slippage + nl2;
 
             strBBCode += UseAccountPercentEntry ? "Use account % for margin round to whole lots" + nl : "";
             string tradingUnit = UseAccountPercentEntry ? "% of the account for margin" : "";
@@ -89,11 +89,11 @@ namespace ForexStrategyBuilder
             strBBCode += "Interpolation method: " + Backtester.InterpolationMethodToString() + nl;
             strBBCode += "Ambiguous bars: " + Backtester.AmbiguousBars + nl;
             strBBCode += "Tested bars: " + (Data.Bars - Data.FirstBar) + nl;
-            strBBCode += "Balance: [b]" + Backtester.NetBalance + " pips (" + Backtester.NetMoneyBalance.ToString("F2") +
+            strBBCode += "Balance: [b]" + Backtester.NetBalance + " points (" + Backtester.NetMoneyBalance.ToString("F2") +
                          " " + Data.InstrProperties.PriceIn + ")[/b]" + nl;
-            strBBCode += "Minimum account: " + Backtester.MinBalance + " pips (" +
+            strBBCode += "Minimum account: " + Backtester.MinBalance + " points (" +
                          Backtester.MinMoneyBalance.ToString("F2") + " " + Data.InstrProperties.PriceIn + ")" + nl;
-            strBBCode += "Maximum drawdown: " + Backtester.MaxDrawdown + " pips (" +
+            strBBCode += "Maximum drawdown: " + Backtester.MaxDrawdown + " points (" +
                          Backtester.MaxMoneyDrawdown.ToString("F2") + " " + Data.InstrProperties.PriceIn + ")" + nl;
             strBBCode += "Time in position: " + Backtester.TimeInPosition + " %" + nl;
             strBBCode += nl;
@@ -312,7 +312,7 @@ namespace ForexStrategyBuilder
                 sb.AppendLine("<p>" + Language.T("The Permanent Stop Loss limits the loss of a position to") +
                               (Data.Strategy.PermanentSLType == PermanentProtectionType.Absolute ? " (Abs) " : " ") +
                               Data.Strategy.PermanentSL);
-                sb.AppendLine(Language.T("pips per open lot (plus the charged spread and rollover).") + "</p>");
+                sb.AppendLine(Language.T("points per open lot (plus the charged spread and rollover).") + "</p>");
             }
 
             if (!Data.Strategy.UsePermanentTP)
@@ -324,7 +324,7 @@ namespace ForexStrategyBuilder
                 sb.AppendLine("<p>" + Language.T("The Permanent Take Profit closes a position at") +
                               (Data.Strategy.PermanentTPType == PermanentProtectionType.Absolute ? " (Abs) " : " ") +
                               Data.Strategy.PermanentTP);
-                sb.AppendLine(Language.T("pips profit.") + "</p>");
+                sb.AppendLine(Language.T("points profit.") + "</p>");
             }
 
             if (Data.Strategy.UseBreakEven)
@@ -333,7 +333,7 @@ namespace ForexStrategyBuilder
                               Language.T(
                                   "The position's Stop Loss will be set to Break Even price when the profit reaches") +
                               " " + Data.Strategy.BreakEven);
-                sb.AppendLine(Language.T("pips") + "." + "</p>");
+                sb.AppendLine(Language.T("points") + "." + "</p>");
             }
 
             sb.AppendLine("<p>--------------<br />");
@@ -902,14 +902,14 @@ namespace ForexStrategyBuilder
         {
             var sb = new StringBuilder();
 
-            string swapUnit = (Data.InstrProperties.SwapType == CommissionType.money
+            string swapUnit = (Data.InstrProperties.SwapUnit == ChargeUnit.Money
                                    ? Data.InstrProperties.PriceIn
-                                   : Language.T(Data.InstrProperties.SwapType.ToString()));
+                                   : Language.T(Data.InstrProperties.SwapUnit.ToString()));
             string commission = Language.T("Commission") + " " + Data.InstrProperties.CommissionScopeToString + " " +
                                 Data.InstrProperties.CommissionTimeToString;
-            string commUnit = (Data.InstrProperties.CommissionType == CommissionType.money
+            string commUnit = (Data.InstrProperties.CommissionUnit == ChargeUnit.Money
                                    ? Data.InstrProperties.PriceIn
-                                   : Language.T(Data.InstrProperties.CommissionType.ToString()));
+                                   : Language.T(Data.InstrProperties.CommissionUnit.ToString()));
 
             sb.AppendLine("<h3>" + Language.T("Market") + "</h3>");
             sb.AppendLine("<table class=\"fsb_table_cleen\" cellspacing=\"0\">");
@@ -934,8 +934,8 @@ namespace ForexStrategyBuilder
             sb.AppendLine("<h3>" + Language.T("Charges") + "</h3>");
             sb.AppendLine("<table class=\"fsb_table_cleen\" cellspacing=\"0\">");
             sb.AppendLine("<tr><td>" + Language.T("Spread") + "</td><td> - " +
-                          Data.InstrProperties.Spread.ToString("F2") + " " + Language.T("pips") + "</td><td>(" +
-                          Backtester.PipsToMoney(Data.InstrProperties.Spread, Data.Bars - 1).ToString("F2") + " " +
+                          Data.InstrProperties.Spread.ToString("F2") + " " + Language.T("points") + "</td><td>(" +
+                          Backtester.PointsToMoney(Data.InstrProperties.Spread, Data.Bars - 1).ToString("F2") + " " +
                           Configs.AccountCurrency + "*)</td></tr>");
             sb.AppendLine("<tr><td>" + Language.T("Swap number for a long position rollover") + "</td><td> - " +
                           Data.InstrProperties.SwapLong.ToString("F2") + " " + swapUnit + "</td><td>(" +
@@ -950,8 +950,8 @@ namespace ForexStrategyBuilder
                           Backtester.CommissionInMoney(1, Data.Close[Data.Bars - 1], false).ToString("F2") + " " +
                           Configs.AccountCurrency + "*)</td></tr>");
             sb.AppendLine("<tr><td>" + Language.T("Slippage") + "</td><td> - " +
-                          Plural("pip", Data.InstrProperties.Slippage) + "</td><td>(" +
-                          Backtester.PipsToMoney(Data.InstrProperties.Slippage, Data.Bars - 1).ToString("F2") + " " +
+                          Plural("point", Data.InstrProperties.Slippage) + "</td><td>(" +
+                          Backtester.PointsToMoney(Data.InstrProperties.Slippage, Data.Bars - 1).ToString("F2") + " " +
                           Configs.AccountCurrency + "*)</td></tr>");
             sb.AppendLine("</table>");
 
@@ -1017,14 +1017,14 @@ namespace ForexStrategyBuilder
             sb.AppendLine("<h3>" + Language.T("Permanent Protection") + "</h3>");
             string permSL = Data.Strategy.UsePermanentSL
                                 ? (Data.Strategy.PermanentSLType == PermanentProtectionType.Absolute ? "(Abs) " : "") +
-                                  Data.Strategy.PermanentSL + " " + Language.T("pips")
+                                  Data.Strategy.PermanentSL + " " + Language.T("points")
                                 : "- " + Language.T("None");
             string permTP = Data.Strategy.UsePermanentTP
                                 ? (Data.Strategy.PermanentTPType == PermanentProtectionType.Absolute ? "(Abs) " : "") +
-                                  Data.Strategy.PermanentTP + " " + Language.T("pips")
+                                  Data.Strategy.PermanentTP + " " + Language.T("points")
                                 : "- " + Language.T("None");
             string brkEven = Data.Strategy.UseBreakEven
-                                 ? Data.Strategy.BreakEven + " " + Language.T("pips")
+                                 ? Data.Strategy.BreakEven + " " + Language.T("points")
                                  : "- " + Language.T("None");
             sb.AppendLine("<table cellspacing=\"0\">");
             sb.AppendLine("<tr><td>" + Language.T("Permanent Stop Loss") + "</td><td>" + permSL + "</td></tr>");

@@ -330,12 +330,12 @@
     <alt>Visualizar la cuenta y la estadistica en divisa.</alt>
   </str>
   <str>
-    <main>Information in Pips</main>
-    <alt>Informacion en Pips</alt>
+    <main>Information in Points</main>
+    <alt>Informacion en points</alt>
   </str>
   <str>
-    <main>Display the account and the statistics in pips.</main>
-    <alt>Visualizar la cuenta y la estadistica en pips.</alt>
+    <main>Display the account and the statistics in points.</main>
+    <alt>Visualizar la cuenta y la estadistica en points.</alt>
   </str>
   <str>
     <main>Account Settings</main>
@@ -538,8 +538,8 @@
     <alt>Posiciones</alt>
   </str>
   <str>
-    <main>Export positions in pips as a spreadsheet.</main>
-    <alt>Exportar las posiciones en pips como  tabla electronica.</alt>
+    <main>Export positions in points as a spreadsheet.</main>
+    <alt>Exportar las posiciones en points como  tabla electronica.</alt>
   </str>
   <str>
     <main>Positions in Currency</main>
@@ -1075,8 +1075,8 @@
     <alt>Desconectado</alt>
   </str>
   <str>
-    <main>pips</main>
-    <alt>pips</alt>
+    <main>points</main>
+    <alt>points</alt>
   </str>
   <str>
     <main>pip</main>
@@ -1414,8 +1414,8 @@
     <alt>El Stop Perdida Permanente limita la perdida de la posicion a</alt>
   </str>
   <str>
-    <main>pips per open lot (plus the charged spread and rollover).</main>
-    <alt>pips por lote abierto (mas el margen y el rollover devengados).</alt>
+    <main>points per open lot (plus the charged spread and rollover).</main>
+    <alt>points por lote abierto (mas el margen y el rollover devengados).</alt>
   </str>
   <str>
     <main>The strategy does not use a Permanent Take Profit.</main>
@@ -1426,8 +1426,8 @@
     <alt>La Permanent Take Profit cierra una posición en beneficio del</alt>
   </str>
   <str>
-    <main>pips profit.</main>
-    <alt>pips.</alt>
+    <main>points profit.</main>
+    <alt>points.</alt>
   </str>
   <str>
     <main>The position's Stop Loss will be set to Break Even price when the profit reaches</main>
@@ -2313,8 +2313,8 @@
     <alt>Diferencia entre los precios de Compra y Venta.</alt>
   </str>
   <str>
-    <main>Number of pips you lose due to an inaccurate order execution.</main>
-    <alt>El numero de pips que Usted pierde por motivo de una ejecucion imprecisa de las ordenes.</alt>
+    <main>Number of points you lose due to an inaccurate order execution.</main>
+    <alt>El numero de points que Usted pierde por motivo de una ejecucion imprecisa de las ordenes.</alt>
   </str>
   <!-- Data Horizon -->
   <str>

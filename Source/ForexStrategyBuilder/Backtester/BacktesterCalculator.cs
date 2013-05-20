@@ -214,7 +214,7 @@ namespace ForexStrategyBuilder
         {
             int sessionPosition;
             Position position;
-            double pipsToMoneyRate = InstrProperties.Point*InstrProperties.LotSize/AccountExchangeRate(price);
+            double pointsToMoneyRate = InstrProperties.Point*InstrProperties.LotSize/AccountExchangeRate(price);
             bool isAbsoluteSL = Strategy.UsePermanentSL && Strategy.PermanentSLType == PermanentProtectionType.Absolute;
             bool isAbsoluteTP = Strategy.UsePermanentTP && Strategy.PermanentTPType == PermanentProtectionType.Absolute;
 
@@ -248,9 +248,9 @@ namespace ForexStrategyBuilder
                     position.Balance = PosFromNumb(totalPositions - 1).Balance - position.Commission;
                     position.Equity = position.Balance + position.FloatingPL;
 
-                    position.MoneySpread = lots*InstrProperties.Spread*pipsToMoneyRate;
+                    position.MoneySpread = lots*InstrProperties.Spread*pointsToMoneyRate;
                     position.MoneyCommission = CommissionInMoney(lots, price, false);
-                    position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                    position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                     position.MoneyFloatingPL = lots*(Close[bar] - position.PosPrice)*InstrProperties.LotSize/
                                                AccountExchangeRate(price);
                     position.MoneyProfitLoss = 0;
@@ -292,9 +292,9 @@ namespace ForexStrategyBuilder
                     position.Balance = PosFromNumb(totalPositions - 1).Balance - position.Commission;
                     position.Equity = position.Balance + position.FloatingPL;
 
-                    position.MoneySpread = lots*InstrProperties.Spread*pipsToMoneyRate;
+                    position.MoneySpread = lots*InstrProperties.Spread*pointsToMoneyRate;
                     position.MoneyCommission = CommissionInMoney(lots, price, false);
-                    position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                    position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                     position.MoneyFloatingPL = lots*(position.PosPrice - Close[bar])*InstrProperties.LotSize/
                                                AccountExchangeRate(price);
                     position.MoneyProfitLoss = 0;
@@ -359,7 +359,7 @@ namespace ForexStrategyBuilder
                 position.Equity = position.Balance;
 
                 position.MoneyCommission = CommissionInMoney(lots, price, true);
-                position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyFloatingPL = 0;
                 position.MoneyProfitLoss = lots*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) -
                                            position.MoneySlippage;
@@ -390,7 +390,7 @@ namespace ForexStrategyBuilder
                 position.Equity = position.Balance;
 
                 position.MoneyCommission = CommissionInMoney(lots, price, true);
-                position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyFloatingPL = 0;
                 position.MoneyProfitLoss = lots*(priceOld - price)*InstrProperties.LotSize/AccountExchangeRate(price) -
                                            position.MoneySlippage;
@@ -424,9 +424,9 @@ namespace ForexStrategyBuilder
                 position.Balance -= position.Commission;
                 position.Equity = position.Balance + position.FloatingPL;
 
-                position.MoneySpread = lots*InstrProperties.Spread*pipsToMoneyRate;
+                position.MoneySpread = lots*InstrProperties.Spread*pointsToMoneyRate;
                 position.MoneyCommission = CommissionInMoney(lots, price, false);
-                position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyFloatingPL = (lotsOld + lots)*(Close[bar] - position.PosPrice)*InstrProperties.LotSize/
                                            AccountExchangeRate(price);
                 position.MoneyProfitLoss = 0;
@@ -458,9 +458,9 @@ namespace ForexStrategyBuilder
                 position.Balance -= position.Commission;
                 position.Equity = position.Balance + position.FloatingPL;
 
-                position.MoneySpread = lots*InstrProperties.Spread*pipsToMoneyRate;
+                position.MoneySpread = lots*InstrProperties.Spread*pointsToMoneyRate;
                 position.MoneyCommission = CommissionInMoney(lots, price, false);
-                position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyFloatingPL = (lotsOld + lots)*(position.PosPrice - Close[bar])*InstrProperties.LotSize/
                                            AccountExchangeRate(price);
                 position.MoneyProfitLoss = 0;
@@ -489,7 +489,7 @@ namespace ForexStrategyBuilder
                 position.Equity = position.Balance + position.FloatingPL;
 
                 position.MoneyCommission = CommissionInMoney(lots, price, true);
-                position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyFloatingPL = (lotsOld - lots)*(Close[bar] - priceOld)*InstrProperties.LotSize/
                                            AccountExchangeRate(price);
                 position.MoneyProfitLoss = lots*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) -
@@ -521,7 +521,7 @@ namespace ForexStrategyBuilder
                 position.Equity = position.Balance + position.FloatingPL;
 
                 position.MoneyCommission = CommissionInMoney(lots, price, true);
-                position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyFloatingPL = (lotsOld - lots)*(priceOld - Close[bar])*InstrProperties.LotSize/
                                            AccountExchangeRate(price);
                 position.MoneyProfitLoss = lots*(priceOld - price)*InstrProperties.LotSize/AccountExchangeRate(price) -
@@ -553,14 +553,14 @@ namespace ForexStrategyBuilder
                 position.Balance += position.ProfitLoss - position.Commission;
                 position.Equity = position.Balance + position.FloatingPL;
 
-                position.MoneySpread = (lots - lotsOld)*InstrProperties.Spread*pipsToMoneyRate;
+                position.MoneySpread = (lots - lotsOld)*InstrProperties.Spread*pointsToMoneyRate;
                 position.MoneyCommission = CommissionInMoney(lotsOld, price, true) +
                                            CommissionInMoney(lots - lotsOld, price, false);
-                position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyFloatingPL = (lots - lotsOld)*(position.PosPrice - Close[bar])*InstrProperties.LotSize/
                                            AccountExchangeRate(price);
                 position.MoneyProfitLoss = lotsOld*(price - priceOld)*InstrProperties.LotSize/AccountExchangeRate(price) -
-                                           lotsOld*InstrProperties.Slippage*pipsToMoneyRate;
+                                           lotsOld*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyBalance += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
@@ -588,14 +588,14 @@ namespace ForexStrategyBuilder
                 position.Balance += position.ProfitLoss - position.Commission;
                 position.Equity = position.Balance + position.FloatingPL;
 
-                position.MoneySpread = (lots - lotsOld)*InstrProperties.Spread*pipsToMoneyRate;
+                position.MoneySpread = (lots - lotsOld)*InstrProperties.Spread*pointsToMoneyRate;
                 position.MoneyCommission = CommissionInMoney(lotsOld, price, true) +
                                            CommissionInMoney(lots - lotsOld, price, false);
-                position.MoneySlippage = lots*InstrProperties.Slippage*pipsToMoneyRate;
+                position.MoneySlippage = lots*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyFloatingPL = (lots - lotsOld)*(Close[bar] - position.PosPrice)*InstrProperties.LotSize/
                                            AccountExchangeRate(price);
                 position.MoneyProfitLoss = lotsOld*(priceOld - price)*InstrProperties.LotSize/AccountExchangeRate(price) -
-                                           lotsOld*InstrProperties.Slippage*pipsToMoneyRate;
+                                           lotsOld*InstrProperties.Slippage*pointsToMoneyRate;
                 position.MoneyBalance += position.MoneyProfitLoss - position.MoneyCommission;
                 position.MoneyEquity = position.MoneyBalance + position.MoneyFloatingPL;
 
@@ -1084,37 +1084,37 @@ namespace ForexStrategyBuilder
                 if (days > 0)
                 {
                     // Calculate the Rollover fee
-                    double swapLongPips = 0;
-                    double swapShortPips = 0;
+                    double swapLongPoints = 0;
+                    double swapShortPoints = 0;
 
-                    if (InstrProperties.SwapType == CommissionType.pips)
+                    if (InstrProperties.SwapUnit == ChargeUnit.Points)
                     {
-                        swapLongPips = InstrProperties.SwapLong;
-                        swapShortPips = InstrProperties.SwapShort;
+                        swapLongPoints = InstrProperties.SwapLong;
+                        swapShortPoints = InstrProperties.SwapShort;
                     }
-                    else if (InstrProperties.SwapType == CommissionType.percents)
+                    else if (InstrProperties.SwapUnit == ChargeUnit.Percents)
                     {
-                        swapLongPips = (Close[bar - 1]/InstrProperties.Point)*(0.01*InstrProperties.SwapLong/365);
-                        swapShortPips = (Close[bar - 1]/InstrProperties.Point)*(0.01*InstrProperties.SwapShort/365);
+                        swapLongPoints = (Close[bar - 1]/InstrProperties.Point)*(0.01*InstrProperties.SwapLong/365);
+                        swapShortPoints = (Close[bar - 1]/InstrProperties.Point)*(0.01*InstrProperties.SwapShort/365);
                     }
-                    else if (InstrProperties.SwapType == CommissionType.money)
+                    else if (InstrProperties.SwapUnit == ChargeUnit.Money)
                     {
-                        swapLongPips = InstrProperties.SwapLong/(InstrProperties.Point*InstrProperties.LotSize);
-                        swapShortPips = InstrProperties.SwapShort/(InstrProperties.Point*InstrProperties.LotSize);
+                        swapLongPoints = InstrProperties.SwapLong/(InstrProperties.Point*InstrProperties.LotSize);
+                        swapShortPoints = InstrProperties.SwapShort/(InstrProperties.Point*InstrProperties.LotSize);
                     }
 
                     if (position.PosDir == PosDirection.Long)
                     {
-                        position.PosPrice += InstrProperties.Point*days*swapLongPips;
-                        position.Rollover = position.PosLots*days*swapLongPips;
-                        position.MoneyRollover = position.PosLots*days*swapLongPips*InstrProperties.Point*
+                        position.PosPrice += InstrProperties.Point*days*swapLongPoints;
+                        position.Rollover = position.PosLots*days*swapLongPoints;
+                        position.MoneyRollover = position.PosLots*days*swapLongPoints*InstrProperties.Point*
                                                  InstrProperties.LotSize/AccountExchangeRate(Close[bar - 1]);
                     }
                     else
                     {
-                        position.PosPrice += InstrProperties.Point*days*swapShortPips;
-                        position.Rollover = -position.PosLots*days*swapShortPips;
-                        position.MoneyRollover = -position.PosLots*days*swapShortPips*InstrProperties.Point*
+                        position.PosPrice += InstrProperties.Point*days*swapShortPoints;
+                        position.Rollover = -position.PosLots*days*swapShortPoints;
+                        position.MoneyRollover = -position.PosLots*days*swapShortPoints*InstrProperties.Point*
                                                  InstrProperties.LotSize/AccountExchangeRate(Close[bar - 1]);
                     }
                 }
@@ -1189,7 +1189,7 @@ namespace ForexStrategyBuilder
                 {
                     double deltaMoney = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*
                                         MoneyBalance(bar - 1)/(100*position.PosLots);
-                    double deltaStop = Math.Max(MoneyToPips(deltaMoney, bar), 5)*InstrProperties.Point;
+                    double deltaStop = Math.Max(MoneyToPoints(deltaMoney, bar), 5)*InstrProperties.Point;
                     double stop = position.FormOrdPrice +
                                   (position.PosDir == PosDirection.Long ? -deltaStop : deltaStop);
                     Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar - 1] = stop;
@@ -1771,7 +1771,7 @@ namespace ForexStrategyBuilder
 
         private static void AnalyseStopLossExit(int bar)
         {
-            // The stop is exactly n pips below the entry point (also when add, reduce, reverse)
+            // The stop is exactly n points below the entry point (also when add, reduce, reverse)
             double deltaStop = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
 
             // If there is a position, sends a Stop Order for it.
@@ -2180,7 +2180,7 @@ namespace ForexStrategyBuilder
                 double lots = session[bar].Summary.PosLots;
                 double deltaMoney = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*MoneyBalance(bar)/
                                     (100*lots);
-                double deltaStop = Math.Max(MoneyToPips(deltaMoney, bar), 5)*InstrProperties.Point;
+                double deltaStop = Math.Max(MoneyToPoints(deltaMoney, bar), 5)*InstrProperties.Point;
                 double stop = session[bar].Summary.FormOrdPrice - deltaStop;
                 string note = Language.T("Stop order to position") + " " + (toPos + 1);
 
@@ -2197,7 +2197,7 @@ namespace ForexStrategyBuilder
                 double lots = session[bar].Summary.PosLots;
                 double deltaMoney = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*
                                     MoneyBalance(bar)/(100*lots);
-                double deltaStop = Math.Max(MoneyToPips(deltaMoney, bar), 5)*InstrProperties.Point;
+                double deltaStop = Math.Max(MoneyToPoints(deltaMoney, bar), 5)*InstrProperties.Point;
                 double stop = session[bar].Summary.FormOrdPrice + deltaStop;
                 string note = Language.T("Stop order to position") + " " + (toPos + 1);
 
@@ -2220,7 +2220,7 @@ namespace ForexStrategyBuilder
                     double stop = entryOrder.OrdPrice;
                     double deltaMoney = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*MoneyBalance(bar)/
                                         (100*lots);
-                    double deltaStop = -Math.Max(MoneyToPips(deltaMoney, bar), 5)*InstrProperties.Point;
+                    double deltaStop = -Math.Max(MoneyToPoints(deltaMoney, bar), 5)*InstrProperties.Point;
                     string note = Language.T("Stop Order to order") + " " + (ifOrder + 1);
 
                     if (entryOrder.OrdDir == OrderDirection.Buy)

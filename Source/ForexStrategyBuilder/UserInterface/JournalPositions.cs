@@ -33,7 +33,7 @@ namespace ForexStrategyBuilder
         private int selectedBarOld; // The old selected bar
         private int shownPos; // How many positions are shown
         private string[] titlesMoney; // Journal title
-        private string[] titlesPips; // Journal title
+        private string[] titlesPoints; // Journal title
         private VScrollBar vScrollBar;
         private int visibleWidth; // The visible part width of the panel
         private int[] xColumns; // The horizontal position of the column
@@ -106,7 +106,7 @@ namespace ForexStrategyBuilder
                     g.MeasureString(longestTransaction, font).Width)
                     longestTransaction = Language.T(transaction.ToString());
 
-            titlesPips = new[]
+            titlesPoints = new[]
                 {
                     Language.T("Position"),
                     Language.T("Transaction"),
@@ -334,7 +334,7 @@ namespace ForexStrategyBuilder
             string caption = Language.T("Positions During the Bar") +
                              (Configs.AccountInMoney
                                   ? " [" + Configs.AccountCurrency + "]"
-                                  : " [" + Language.T("pips") + "]");
+                                  : " [" + Language.T("points") + "]");
             g.DrawString(caption, font, brushCaptionText, new RectangleF(Point.Empty, size), sf);
             g.SetClip(new RectangleF(Border, rowHeight, ClientSize.Width - 2*Border, rowHeight));
             if (Configs.AccountInMoney)
@@ -343,7 +343,7 @@ namespace ForexStrategyBuilder
                                  rowHeight, sf);
             else
                 for (int i = 0; i < columns; i++)
-                    g.DrawString(titlesPips[i], font, brushCaptionText, hScroll + (xScaled[i] + xScaled[i + 1])/2,
+                    g.DrawString(titlesPoints[i], font, brushCaptionText, hScroll + (xScaled[i] + xScaled[i + 1])/2,
                                  rowHeight, sf);
             g.ResetClip();
 

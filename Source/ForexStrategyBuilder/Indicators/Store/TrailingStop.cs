@@ -73,7 +73,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].Min = 5;
             IndParam.NumParam[0].Max = 5000;
             IndParam.NumParam[0].Enabled = true;
-            IndParam.NumParam[0].ToolTip = "The Trailing Stop value (in pips).";
+            IndParam.NumParam[0].ToolTip = "The Trailing Stop value (in points).";
         }
 
         public override void Calculate(IDataSet dataSet)

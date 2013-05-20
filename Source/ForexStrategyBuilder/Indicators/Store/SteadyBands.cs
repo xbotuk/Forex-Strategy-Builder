@@ -104,7 +104,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].Enabled = true;
             IndParam.NumParam[0].ToolTip = "The central Moving Average period.";
 
-            IndParam.NumParam[1].Caption = "Margin in pips";
+            IndParam.NumParam[1].Caption = "Margin in points";
             IndParam.NumParam[1].Value = 40;
             IndParam.NumParam[1].Min = 1;
             IndParam.NumParam[1].Max = 2000;
@@ -520,7 +520,7 @@ namespace ForexStrategyBuilder.Indicators.Store
                    IndParam.ListParam[1].Text + ", " + // Method
                    IndParam.ListParam[2].Text + ", " + // Price
                    IndParam.NumParam[0].ValueToString + ", " + // MA period
-                   IndParam.NumParam[1].ValueToString + ")"; // Margin in Pips
+                   IndParam.NumParam[1].ValueToString + ")"; // Margin in points
         }
     }
 }

@@ -330,12 +330,12 @@
     <alt>Показать аккаунт и статистику в валюте.</alt>
   </str>
   <str>
-    <main>Information in Pips</main>
-    <alt>Информация в пипсах</alt>
+    <main>Information in Points</main>
+    <alt>Информация в пунктах</alt>
   </str>
   <str>
-    <main>Display the account and the statistics in pips.</main>
-    <alt>Показать аккаунт и статистику в пипсах.</alt>
+    <main>Display the account and the statistics in points.</main>
+    <alt>Показать аккаунт и статистику в пунктах.</alt>
   </str>
   <str>
     <main>Account Settings</main>
@@ -538,8 +538,8 @@
     <alt>Позиции</alt>
   </str>
   <str>
-    <main>Export positions in pips as a spreadsheet.</main>
-    <alt>Экспорт позиции в пипсах в форме электронной таблицы.</alt>
+    <main>Export positions in points as a spreadsheet.</main>
+    <alt>Экспорт позиции в пунктах в форме электронной таблицы.</alt>
   </str>
   <str>
     <main>Positions in Currency</main>
@@ -1075,8 +1075,8 @@
     <alt>Выключен</alt>
   </str>
   <str>
-    <main>pips</main>
-    <alt>пипсы</alt>
+    <main>points</main>
+    <alt>пунктов</alt>
   </str>
   <str>
     <main>pip</main>
@@ -1414,8 +1414,8 @@
     <alt>Постоянный стоп лосс, ограничивает убыток позиции до</alt>
   </str>
   <str>
-    <main>pips per open lot (plus the charged spread and rollover).</main>
-    <alt>пипсы на открытый лот (плюс начисленный спред и ролловер).</alt>
+    <main>points per open lot (plus the charged spread and rollover).</main>
+    <alt>пункты на открытый лот (плюс начисленный спред и ролловер).</alt>
   </str>
   <str>
     <main>The strategy does not use a Permanent Take Profit.</main>
@@ -1426,8 +1426,8 @@
     <alt>Постоянный тейк профит закрывает позиции на</alt>
   </str>
   <str>
-    <main>pips profit.</main>
-    <alt>пипсы прибыли.</alt>
+    <main>points profit.</main>
+    <alt>пункты прибыли.</alt>
   </str>
   <str>
     <main>The position's Stop Loss will be set to Break Even price when the profit reaches</main>
@@ -2313,8 +2313,8 @@
     <alt>Разница между ценами спроса и предложения.</alt>
   </str>
   <str>
-    <main>Number of pips you lose due to an inaccurate order execution.</main>
-    <alt>Количество пипсов, которое Вы теряете из-за неточного выполнения ордера.</alt>
+    <main>Number of points you lose due to an inaccurate order execution.</main>
+    <alt>Количество пунктов, которое Вы теряете из-за неточного выполнения ордера.</alt>
   </str>
   <!-- Data Horizon -->
   <str>

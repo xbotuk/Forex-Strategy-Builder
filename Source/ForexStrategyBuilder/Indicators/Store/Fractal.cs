@@ -285,8 +285,8 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             if (iShift > 0)
             {
-                sUpperTrade = iShift + " pips above ";
-                sLowerTrade = iShift + " pips below ";
+                sUpperTrade = iShift + " points above ";
+                sLowerTrade = iShift + " points below ";
             }
             else if (iShift == 0)
             {
@@ -295,8 +295,8 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
             else
             {
-                sUpperTrade = -iShift + " pips below ";
-                sLowerTrade = -iShift + " pips above ";
+                sUpperTrade = -iShift + " points below ";
+                sLowerTrade = -iShift + " points above ";
             }
 
             switch (IndParam.ListParam[0].Text)

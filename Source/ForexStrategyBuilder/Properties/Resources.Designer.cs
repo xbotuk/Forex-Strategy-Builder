@@ -800,10 +800,10 @@ namespace ForexStrategyBuilder.Properties {
         ///    &lt;digits&gt;5&lt;/digits&gt;
         ///    &lt;contractSize&gt;100000&lt;/contractSize&gt;
         ///    &lt;spread&gt;20&lt;/spread&gt;
-        ///    &lt;swapType&gt;pips&lt;/swapType&gt;
+        ///    &lt;swapType&gt;points&lt;/swapType&gt;
         ///    &lt;swapLong&gt;2&lt;/swapLong&gt;
         ///    &lt;swapShort&gt;-2&lt;/swapShort&gt;
-        ///    &lt;commissionType&gt;pips&lt;/commissionType&gt;
+        ///    &lt;commissionType&gt;points&lt;/commissionType&gt;
         ///    &lt;commissionScope&gt;lot&lt;/commissionScope&gt;
         ///    &lt;commissionTime&gt;openclose&lt;/commissionTime&gt;
         ///    &lt;commission&gt;0&lt;/commission&gt;

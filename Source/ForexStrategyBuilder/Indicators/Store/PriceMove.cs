@@ -55,7 +55,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].Min = 0;
             IndParam.NumParam[0].Max = 2000;
             IndParam.NumParam[0].Enabled = true;
-            IndParam.NumParam[0].ToolTip = "The price move in pips.";
+            IndParam.NumParam[0].ToolTip = "The price move in points.";
 
             // The CheckBox parameters
             IndParam.CheckParam[0].Caption = "Use previous bar value";
@@ -134,16 +134,16 @@ namespace ForexStrategyBuilder.Indicators.Store
             switch (IndParam.ListParam[0].Text)
             {
                 case "Enter long after an upward move":
-                    EntryPointLongDescription = iMargin + " pips above the" + sPrevious + " bar " + sBasePrice +
+                    EntryPointLongDescription = iMargin + " points above the" + sPrevious + " bar " + sBasePrice +
                                                 " price";
-                    EntryPointShortDescription = iMargin + " pips below the" + sPrevious + " bar " + sBasePrice +
+                    EntryPointShortDescription = iMargin + " points below the" + sPrevious + " bar " + sBasePrice +
                                                  " price";
                     break;
 
                 case "Enter long after a downward move":
-                    EntryPointLongDescription = iMargin + " pips below the" + sPrevious + " bar " + sBasePrice +
+                    EntryPointLongDescription = iMargin + " points below the" + sPrevious + " bar " + sBasePrice +
                                                 " price";
-                    EntryPointShortDescription = iMargin + " pips above the" + sPrevious + " bar " + sBasePrice +
+                    EntryPointShortDescription = iMargin + " points above the" + sPrevious + " bar " + sBasePrice +
                                                  " price";
                     break;
             }
@@ -154,7 +154,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             return IndicatorName +
                    (IndParam.CheckParam[0].Checked ? "* (" : " (") +
                    IndParam.ListParam[1].Text + ", " + // Base Price
-                   IndParam.NumParam[0].ValueToString + ")"; // Margin in Pips
+                   IndParam.NumParam[0].ValueToString + ")"; // Margin in points
         }
     }
 }

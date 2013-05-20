@@ -144,7 +144,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Whether to express account in pips or in currency
+        ///     Whether to express account in points or in currency
         /// </summary>
         protected override void AccountShowInMoneyOnClick(object sender, EventArgs e)
         {
@@ -153,12 +153,12 @@ namespace ForexStrategyBuilder
                 case "miAccountShowInMoney":
                     Configs.AccountInMoney = true;
                     MiAccountShowInMoney.Checked = true;
-                    MiAccountShowInPips.Checked = false;
+                    MiAccountShowInPoints.Checked = false;
                     break;
-                case "miAccountShowInPips":
+                case "miAccountShowInPoints":
                     Configs.AccountInMoney = false;
                     MiAccountShowInMoney.Checked = false;
-                    MiAccountShowInPips.Checked = true;
+                    MiAccountShowInPoints.Checked = true;
                     break;
             }
 

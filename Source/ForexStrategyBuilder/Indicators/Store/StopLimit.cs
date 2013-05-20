@@ -48,14 +48,14 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].Min     = 5;
             IndParam.NumParam[0].Max     = 5000;
             IndParam.NumParam[0].Enabled = true;
-            IndParam.NumParam[0].ToolTip = "The Stop Loss value (in pips).";
+            IndParam.NumParam[0].ToolTip = "The Stop Loss value (in points).";
 
             IndParam.NumParam[1].Caption = "Take Profit";
             IndParam.NumParam[1].Value   = 200;
             IndParam.NumParam[1].Min     = 5;
             IndParam.NumParam[1].Max     = 5000;
             IndParam.NumParam[1].Enabled = true;
-            IndParam.NumParam[1].ToolTip = "The Take Profit value (in pips).";
+            IndParam.NumParam[1].ToolTip = "The Take Profit value (in points).";
         }
 
         public override void Calculate(IDataSet dataSet)
@@ -68,8 +68,8 @@ namespace ForexStrategyBuilder.Indicators.Store
             var stopLoss   = (int)IndParam.NumParam[0].Value;
             var takeProfit = (int)IndParam.NumParam[1].Value;
 
-            ExitPointLongDescription  = "when the market falls " + stopLoss + " pips or rises " + takeProfit + " pips from the last entry price";
-            ExitPointShortDescription = "when the market rises " + stopLoss + " pips or falls " + takeProfit + " pips from the last entry price";
+            ExitPointLongDescription  = "when the market falls " + stopLoss + " points or rises " + takeProfit + " points from the last entry price";
+            ExitPointShortDescription = "when the market rises " + stopLoss + " points or falls " + takeProfit + " points from the last entry price";
         }
 
         public override string ToString()

@@ -114,7 +114,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             }
             int unitLeft = valLeft + maxParamValueLenght;
 
-            string unit = (Configs.AccountInMoney ? " " + Configs.AccountCurrency : " " + Language.T("pips"));
+            string unit = (Configs.AccountInMoney ? " " + Configs.AccountCurrency : " " + Language.T("points"));
             var unitWidth = (int) g.MeasureString(unit, Font).Width;
 
             for (int i = 0; i < 4; i++)

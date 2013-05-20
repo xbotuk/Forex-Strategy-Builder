@@ -329,14 +329,14 @@ namespace ForexStrategyBuilder
             TbxPropSpread.BackColor = LayoutColors.ColorControlBack;
             TbxPropSpread.ForeColor = colorText;
             TbxPropSpread.Enabled = false;
-            TbxPropSpread.Text = Language.T("pips");
+            TbxPropSpread.Text = Language.T("points");
 
             // TbxPropSlippage
             TbxPropSlippage.Parent = PnlProperties;
             TbxPropSlippage.BackColor = LayoutColors.ColorControlBack;
             TbxPropSlippage.ForeColor = colorText;
             TbxPropSlippage.Enabled = false;
-            TbxPropSlippage.Text = Language.T("pips");
+            TbxPropSlippage.Text = Language.T("points");
 
             // TbxPropPriceIn
             TbxPropPriceIn.Parent = PnlProperties;
@@ -368,7 +368,7 @@ namespace ForexStrategyBuilder
             CbxPropSwap.Parent = PnlProperties;
             CbxPropSwap.Name = "CbxPropSwap";
             CbxPropSwap.DropDownStyle = ComboBoxStyle.DropDownList;
-            CbxPropSwap.Items.AddRange(new object[] {Language.T("pips"), Language.T("percent"), Language.T("money")});
+            CbxPropSwap.Items.AddRange(new object[] {Language.T("points"), Language.T("percent"), Language.T("money")});
             CbxPropSwap.SelectedIndex = 0;
 
             // CbxPropCommission
@@ -376,7 +376,7 @@ namespace ForexStrategyBuilder
             CbxPropCommission.Name = "CbxPropCommission";
             CbxPropCommission.DropDownStyle = ComboBoxStyle.DropDownList;
             CbxPropCommission.Items.AddRange(new object[]
-                {Language.T("pips"), Language.T("percent"), Language.T("money")});
+                {Language.T("points"), Language.T("percent"), Language.T("money")});
             CbxPropCommission.SelectedIndex = 0;
             CbxPropCommission.SelectedIndexChanged += CbxPropCommissionSelectedIndexChanged;
 
@@ -484,7 +484,7 @@ namespace ForexStrategyBuilder
             NudPropSlippage.Value = 0;
             NudPropSlippage.EndInit();
             toolTip.SetToolTip(NudPropSlippage,
-                               Language.T("Number of pips you lose due to an inaccurate order execution."));
+                               Language.T("Number of points you lose due to an inaccurate order execution."));
 
             // NumericUpDown NUDPropAccountRate
             NudPropAccountRate.BeginInit();
@@ -849,8 +849,8 @@ namespace ForexStrategyBuilder
             TbxPropPoint.Text = (1/Math.Pow(10, (float) NudPropDigits.Value)).ToString("0.#####");
             TbxPropPriceIn.Text = instrPropSelectedInstrument.PriceIn;
             TbxPropFileName.Text = instrPropSelectedInstrument.BaseFileName;
-            CbxPropSwap.SelectedIndex = (int) instrPropSelectedInstrument.SwapType;
-            CbxPropCommission.SelectedIndex = (int) instrPropSelectedInstrument.CommissionType;
+            CbxPropSwap.SelectedIndex = (int) instrPropSelectedInstrument.SwapUnit;
+            CbxPropCommission.SelectedIndex = (int) instrPropSelectedInstrument.CommissionUnit;
             CbxPropCommScope.SelectedIndex = (int) instrPropSelectedInstrument.CommissionScope;
             CbxPropCommTime.SelectedIndex = (int) instrPropSelectedInstrument.CommissionTime;
             NudPropDigits.Value = instrPropSelectedInstrument.Digits;
@@ -878,10 +878,10 @@ namespace ForexStrategyBuilder
             instrPropSelectedInstrument.Comment = TbxPropComment.Text;
             instrPropSelectedInstrument.PriceIn = TbxPropPriceIn.Text;
             instrPropSelectedInstrument.BaseFileName = TbxPropFileName.Text;
-            instrPropSelectedInstrument.SwapType =
-                (CommissionType) Enum.GetValues(typeof (CommissionType)).GetValue(CbxPropSwap.SelectedIndex);
-            instrPropSelectedInstrument.CommissionType =
-                (CommissionType) Enum.GetValues(typeof (CommissionType)).GetValue(CbxPropCommission.SelectedIndex);
+            instrPropSelectedInstrument.SwapUnit =
+                (ChargeUnit) Enum.GetValues(typeof (ChargeUnit)).GetValue(CbxPropSwap.SelectedIndex);
+            instrPropSelectedInstrument.CommissionUnit =
+                (ChargeUnit) Enum.GetValues(typeof (ChargeUnit)).GetValue(CbxPropCommission.SelectedIndex);
             instrPropSelectedInstrument.CommissionScope =
                 (CommissionScope) Enum.GetValues(typeof (CommissionScope)).GetValue(CbxPropCommScope.SelectedIndex);
             instrPropSelectedInstrument.CommissionTime =

@@ -604,7 +604,7 @@ namespace ForexStrategyBuilder
             const int border = 2;
 
             // Chart Title
-            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("pips")) + "]";
+            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("points")) + "]";
             string str = Language.T("Balance Chart") + unit;
             var font = new Font(Font.FontFamily, 9);
             var fCaptionHeight = (float) Math.Max(font.Height, 18);

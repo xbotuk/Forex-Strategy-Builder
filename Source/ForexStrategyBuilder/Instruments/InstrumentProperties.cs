@@ -47,8 +47,8 @@ namespace ForexStrategyBuilder
         public double RateToUSD { get; set; }
         public double RateToEUR { get; set; }
         public InstrumetType InstrType { get; set; }
-        public CommissionType SwapType { get; set; }
-        public CommissionType CommissionType { get; set; }
+        public ChargeUnit SwapUnit { get; set; }
+        public ChargeUnit CommissionUnit { get; set; }
         public CommissionScope CommissionScope { get; set; }
         public CommissionTime CommissionTime { get; set; }
         public double Point { get; private set; }
@@ -74,11 +74,11 @@ namespace ForexStrategyBuilder
         {
             get
             {
-                switch (CommissionType)
+                switch (CommissionUnit)
                 {
-                    case CommissionType.pips:
-                        return Language.T("pips");
-                    case CommissionType.percents:
+                    case ChargeUnit.Points:
+                        return Language.T("points");
+                    case ChargeUnit.Percents:
                         return Language.T("percent");
                     default:
                         return Language.T("money");
@@ -110,10 +110,10 @@ namespace ForexStrategyBuilder
             Digits = 2;
             LotSize = 100;
             Spread = 4;
-            SwapType = CommissionType.percents;
+            SwapUnit = ChargeUnit.Percents;
             SwapLong = -5;
             SwapShort = -1;
-            CommissionType = CommissionType.percents;
+            CommissionUnit = ChargeUnit.Percents;
             CommissionScope = CommissionScope.deal;
             CommissionTime = CommissionTime.openclose;
             Commission = 0.25f;
@@ -132,10 +132,10 @@ namespace ForexStrategyBuilder
             Digits = (symbol.Contains("JPY") ? 3 : 5);
             LotSize = 100000;
             Spread = 20;
-            SwapType = CommissionType.pips;
+            SwapUnit = ChargeUnit.Points;
             SwapLong = 2;
             SwapShort = -2;
-            CommissionType = CommissionType.pips;
+            CommissionUnit = ChargeUnit.Points;
             CommissionScope = CommissionScope.lot;
             CommissionTime = CommissionTime.openclose;
             Commission = 0;
@@ -159,10 +159,10 @@ namespace ForexStrategyBuilder
                     Digits = Digits,
                     LotSize = LotSize,
                     Spread = Spread,
-                    SwapType = SwapType,
+                    SwapUnit = SwapUnit,
                     SwapLong = SwapLong,
                     SwapShort = SwapShort,
-                    CommissionType = CommissionType,
+                    CommissionUnit = CommissionUnit,
                     CommissionScope = CommissionScope,
                     CommissionTime = CommissionTime,
                     Commission = Commission,

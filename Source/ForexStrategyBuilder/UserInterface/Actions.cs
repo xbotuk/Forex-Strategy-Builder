@@ -1307,15 +1307,15 @@ namespace ForexStrategyBuilder
         private void SetInstrumentDataStatusBar()
         {
             string swapUnit = "p";
-            if (Data.InstrProperties.SwapType == CommissionType.money)
+            if (Data.InstrProperties.SwapUnit == ChargeUnit.Money)
                 swapUnit = "m";
-            else if (Data.InstrProperties.SwapType == CommissionType.percents)
+            else if (Data.InstrProperties.SwapUnit == ChargeUnit.Percents)
                 swapUnit = "%";
 
             string commUnit = "p";
-            if (Data.InstrProperties.CommissionType == CommissionType.money)
+            if (Data.InstrProperties.CommissionUnit == ChargeUnit.Money)
                 commUnit = "m";
-            else if (Data.InstrProperties.CommissionType == CommissionType.percents)
+            else if (Data.InstrProperties.CommissionUnit == ChargeUnit.Percents)
                 commUnit = "%";
 
             StatusLabelInstrument =

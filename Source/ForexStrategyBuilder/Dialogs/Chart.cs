@@ -1785,7 +1785,7 @@ namespace ForexStrategyBuilder
 
             // Chart title
             string sTitle = Language.T("Floating P/L") + " [" +
-                            (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]");
+                            (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("points") + "]");
             Size szTitle = g.MeasureString(sTitle, Font).ToSize();
             g.FillRectangle(brushBack, new Rectangle(spcLeft, 0, szTitle.Width, szTitle.Height));
             g.DrawString(sTitle, Font, brushFore, spcLeft, 0);
@@ -1891,7 +1891,7 @@ namespace ForexStrategyBuilder
 
             // Chart title
             string sTitle = Language.T("Balance") + " / " + Language.T("Equity") +
-                            " [" + (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]");
+                            " [" + (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("points") + "]");
             Size szTitle = g.MeasureString(sTitle, Font).ToSize();
             g.FillRectangle(brushBack, new Rectangle(spcLeft, 0, szTitle.Width, szTitle.Height));
             g.DrawString(sTitle, Font, brushFore, spcLeft, 0);
@@ -1924,7 +1924,7 @@ namespace ForexStrategyBuilder
             aiInfoType = new int[200];
             infoRows = 0;
 
-            string sUnit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("pips")) + "]";
+            string sUnit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("points")) + "]";
 
             // Dynamic info titles
             asInfoTitle[infoRows++] = Language.T("Bar number");
@@ -2012,7 +2012,7 @@ namespace ForexStrategyBuilder
             aiInfoType = new int[200];
             infoRows = 0;
 
-            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("pips")) + "]";
+            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("points")) + "]";
 
             // Dynamic info titles
             asInfoTitle[infoRows++] = Language.T("Bar number");

@@ -21,7 +21,7 @@ namespace ForexStrategyBuilder
     public static class Instruments
     {
         private static readonly string PathToInstrumentsFile;
-        private static readonly XmlDocument XMLInstruments;
+        private static readonly XmlDocument XmlInstruments;
         private static Dictionary<String, InstrumentProperties> dictInstrument;
         private static bool isReset;
 
@@ -35,11 +35,11 @@ namespace ForexStrategyBuilder
                 if (arg.StartsWith("-instrumentsfile="))
                     externalInstrumentsFile = CommandLineParser.GetValue(arg);
 
-            XMLInstruments = new XmlDocument();
+            XmlInstruments = new XmlDocument();
 
             PathToInstrumentsFile = String.IsNullOrEmpty(externalInstrumentsFile)
-                    ? Path.Combine(Path.Combine(Data.UserFilesDir, "System"), "instruments.xml")
-                    : externalInstrumentsFile;
+                                        ? Path.Combine(Path.Combine(Data.UserFilesDir, "System"), "instruments.xml")
+                                        : externalInstrumentsFile;
         }
 
         /// <summary>
@@ -70,16 +70,16 @@ namespace ForexStrategyBuilder
         {
             try
             {
-                XMLInstruments.Load(PathToInstrumentsFile);
+                XmlInstruments.Load(PathToInstrumentsFile);
             }
             catch (FileNotFoundException)
             {
-                XMLInstruments.LoadXml(Resources.instruments);
+                XmlInstruments.LoadXml(Resources.instruments);
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Load Instruments");
-                XMLInstruments.LoadXml(Resources.instruments);
+                XmlInstruments.LoadXml(Resources.instruments);
             }
 
             try
@@ -97,7 +97,7 @@ namespace ForexStrategyBuilder
         /// </summary>
         public static void ResetInstruments()
         {
-            XMLInstruments.LoadXml(Resources.instruments);
+            XmlInstruments.LoadXml(Resources.instruments);
             ParseInstruments();
             SaveInstruments();
             isReset = true;
@@ -112,7 +112,7 @@ namespace ForexStrategyBuilder
 
             try
             {
-                GenerateXMLFile().Save(PathToInstrumentsFile);
+                GenerateXmlFile().Save(PathToInstrumentsFile);
             }
             catch (Exception e)
             {
@@ -126,12 +126,12 @@ namespace ForexStrategyBuilder
         /// </summary>
         private static void ParseInstruments()
         {
-            int instrumentsCount = XMLInstruments.GetElementsByTagName("instrument").Count;
+            int instrumentsCount = XmlInstruments.GetElementsByTagName("instrument").Count;
             dictInstrument = new Dictionary<string, InstrumentProperties>(instrumentsCount);
 
             try
             {
-                foreach (XmlNode nodeInstr in XMLInstruments.GetElementsByTagName("instrument"))
+                foreach (XmlNode nodeInstr in XmlInstruments.GetElementsByTagName("instrument"))
                 {
                     string symbol = nodeInstr.SelectSingleNode("symbol").InnerText;
                     var instrType =
@@ -143,15 +143,10 @@ namespace ForexStrategyBuilder
                             Digits = int.Parse(nodeInstr.SelectSingleNode("digits").InnerText),
                             LotSize = int.Parse(nodeInstr.SelectSingleNode("contractSize").InnerText),
                             Spread = StringToFloat(nodeInstr.SelectSingleNode("spread").InnerText),
-                            SwapType =
-                                (CommissionType)
-                                Enum.Parse(typeof (CommissionType), nodeInstr.SelectSingleNode("swapType").InnerText),
+                            SwapUnit = ParseChargeUnit(nodeInstr.SelectSingleNode("swapType").InnerText),
                             SwapLong = StringToFloat(nodeInstr.SelectSingleNode("swapLong").InnerText),
                             SwapShort = StringToFloat(nodeInstr.SelectSingleNode("swapShort").InnerText),
-                            CommissionType =
-                                (CommissionType)
-                                Enum.Parse(typeof (CommissionType),
-                                           nodeInstr.SelectSingleNode("commissionType").InnerText),
+                            CommissionUnit = ParseChargeUnit(nodeInstr.SelectSingleNode("commissionType").InnerText),
                             CommissionScope =
                                 (CommissionScope)
                                 Enum.Parse(typeof (CommissionScope),
@@ -179,7 +174,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Generates instrument.xml file.
         /// </summary>
-        private static XmlDocument GenerateXMLFile()
+        private static XmlDocument GenerateXmlFile()
         {
             // Create the XmlDocument.
             var xmlDoc = new XmlDocument();
@@ -224,7 +219,7 @@ namespace ForexStrategyBuilder
                 instrument.AppendChild(element);
 
                 element = xmlDoc.CreateElement("swapType");
-                element.InnerText = instrProp.SwapType.ToString();
+                element.InnerText = instrProp.SwapUnit.ToString();
                 instrument.AppendChild(element);
 
                 element = xmlDoc.CreateElement("swapLong");
@@ -236,7 +231,7 @@ namespace ForexStrategyBuilder
                 instrument.AppendChild(element);
 
                 element = xmlDoc.CreateElement("commissionType");
-                element.InnerText = instrProp.CommissionType.ToString();
+                element.InnerText = instrProp.CommissionUnit.ToString();
                 instrument.AppendChild(element);
 
                 element = xmlDoc.CreateElement("commissionScope");
@@ -298,6 +293,17 @@ namespace ForexStrategyBuilder
             }
 
             return output;
+        }
+
+        private static ChargeUnit ParseChargeUnit(string input)
+        {
+            if (input == "Points" || input == "pips")
+                return ChargeUnit.Points;
+            if (input == "Money" || input == "money")
+                return ChargeUnit.Money;
+            if (input == "Percents" || input == "percents")
+                return ChargeUnit.Percents;
+            return ChargeUnit.Points;
         }
     }
 }

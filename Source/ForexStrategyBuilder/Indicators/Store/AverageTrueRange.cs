@@ -69,13 +69,13 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].Enabled = true;
             IndParam.NumParam[0].ToolTip = "The period of ATR smoothing.";
 
-            IndParam.NumParam[1].Caption = "Level [pips]";
+            IndParam.NumParam[1].Caption = "Level [points]";
             IndParam.NumParam[1].Value = 100;
             IndParam.NumParam[1].Min = 0;
             IndParam.NumParam[1].Max = 2000;
             IndParam.NumParam[1].Point = 0;
             IndParam.NumParam[1].Enabled = true;
-            IndParam.NumParam[1].ToolTip = "A critical level in pips(for the appropriate logic).";
+            IndParam.NumParam[1].ToolTip = "A critical level in points(for the appropriate logic).";
 
             // The CheckBox parameters
             IndParam.CheckParam[0].Caption = "Use previous bar value";

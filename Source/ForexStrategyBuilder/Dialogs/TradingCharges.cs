@@ -66,7 +66,7 @@ namespace ForexStrategyBuilder
             LblSpread.ForeColor = colorText;
             LblSpread.BackColor = Color.Transparent;
             LblSpread.AutoSize = true;
-            LblSpread.Text = Language.T("Spread") + " [" + Language.T("pips") + "]";
+            LblSpread.Text = Language.T("Spread") + " [" + Language.T("points") + "]";
 
             // Label Swap Long
             LblSwapLong.Parent = PnlBase;
@@ -74,9 +74,9 @@ namespace ForexStrategyBuilder
             LblSwapLong.BackColor = Color.Transparent;
             LblSwapLong.AutoSize = true;
             LblSwapLong.Text = Language.T("Swap number for a long position rollover") + " [" +
-                               (Data.InstrProperties.SwapType == CommissionType.money
+                               (Data.InstrProperties.SwapUnit == ChargeUnit.Money
                                     ? Data.InstrProperties.PriceIn
-                                    : Language.T(Data.InstrProperties.SwapType.ToString())) + "]" +
+                                    : Language.T(Data.InstrProperties.SwapUnit.ToString())) + "]" +
                                Environment.NewLine +
                                "(" + Language.T("A positive value decreases your profit.") + ")";
 
@@ -86,9 +86,9 @@ namespace ForexStrategyBuilder
             LblSwapShort.BackColor = Color.Transparent;
             LblSwapShort.AutoSize = true;
             LblSwapShort.Text = Language.T("Swap number for a short position rollover") + " [" +
-                                (Data.InstrProperties.SwapType == CommissionType.money
+                                (Data.InstrProperties.SwapUnit == ChargeUnit.Money
                                      ? Data.InstrProperties.PriceIn
-                                     : Language.T(Data.InstrProperties.SwapType.ToString())) + "]" +
+                                     : Language.T(Data.InstrProperties.SwapUnit.ToString())) + "]" +
                                 Environment.NewLine +
                                 "(" + Language.T("A negative value decreases your profit.") + ")";
 
@@ -101,7 +101,7 @@ namespace ForexStrategyBuilder
                                  Data.InstrProperties.CommissionTypeToString + " " +
                                  Data.InstrProperties.CommissionScopeToString + " " +
                                  Data.InstrProperties.CommissionTimeToString +
-                                 (Data.InstrProperties.CommissionType == CommissionType.money
+                                 (Data.InstrProperties.CommissionUnit == ChargeUnit.Money
                                       ? " [" + Data.InstrProperties.PriceIn + "]"
                                       : "");
 
@@ -110,7 +110,7 @@ namespace ForexStrategyBuilder
             LblSlippage.ForeColor = colorText;
             LblSlippage.BackColor = Color.Transparent;
             LblSlippage.AutoSize = true;
-            LblSlippage.Text = Language.T("Slippage") + " [" + Language.T("pips") + "]";
+            LblSlippage.Text = Language.T("Slippage") + " [" + Language.T("points") + "]";
 
             // NumericUpDown Spread
             NudSpread.BeginInit();
@@ -177,7 +177,7 @@ namespace ForexStrategyBuilder
             NudSlippage.Increment = 1;
             NudSlippage.Value = 0;
             NudSlippage.EndInit();
-            toolTip.SetToolTip(NudSlippage, Language.T("Number of pips you lose due to an inaccurate order execution."));
+            toolTip.SetToolTip(NudSlippage, Language.T("Number of points you lose due to an inaccurate order execution."));
 
             //Button btnEditInstrument
             BtnEditInstrument.Parent = this;

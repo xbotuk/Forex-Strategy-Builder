@@ -206,7 +206,7 @@ namespace ForexStrategyBuilder
             sb.Append("Forex Strategy Builder v" + Data.ProgramVersion + stage + Environment.NewLine);
             sb.Append("Strategy name: " + Data.Strategy.StrategyName + Environment.NewLine);
             sb.Append("Exported on " + DateTime.Now + Environment.NewLine);
-            sb.Append(Data.Symbol + " " + Data.PeriodString + "; Values in pips" + Environment.NewLine);
+            sb.Append(Data.Symbol + " " + Data.PeriodString + "; Values in points" + Environment.NewLine);
 
             sb.Append("Bar Numb\t");
             sb.Append("Date\t");
@@ -280,7 +280,7 @@ namespace ForexStrategyBuilder
             sb.Append("Forex Strategy Builder v" + Data.ProgramVersion + stage + Environment.NewLine);
             sb.Append("Strategy name: " + Data.Strategy.StrategyName + Environment.NewLine);
             sb.Append("Exported on " + DateTime.Now + Environment.NewLine);
-            sb.Append(Data.Symbol + " " + Data.PeriodString + "; Values in pips" + Environment.NewLine);
+            sb.Append(Data.Symbol + " " + Data.PeriodString + "; Values in points" + Environment.NewLine);
 
             sb.Append("Pos Numb\t");
             sb.Append("Bar Numb\t");

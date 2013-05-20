@@ -34,7 +34,7 @@ namespace ForexStrategyBuilder
         }
 
         protected ToolStripMenuItem MiAccountShowInMoney { get; private set; }
-        protected ToolStripMenuItem MiAccountShowInPips { get; private set; }
+        protected ToolStripMenuItem MiAccountShowInPoints { get; private set; }
         protected ToolStripMenuItem MiForex { get; private set; }
         protected ToolStripMenuItem MiJournalByBars { get; private set; }
         protected ToolStripMenuItem MiJournalByPos { get; private set; }
@@ -371,15 +371,15 @@ namespace ForexStrategyBuilder
             MiAccountShowInMoney.Click += AccountShowInMoneyOnClick;
             miAccount.DropDownItems.Add(MiAccountShowInMoney);
 
-            MiAccountShowInPips = new ToolStripMenuItem
+            MiAccountShowInPoints = new ToolStripMenuItem
                 {
-                    Name = "miAccountShowInPips",
-                    Text = Language.T("Information in Pips"),
-                    ToolTipText = Language.T("Display the account and the statistics in pips."),
+                    Name = "miAccountShowInPoints",
+                    Text = Language.T("Information in Points"),
+                    ToolTipText = Language.T("Display the account and the statistics in points."),
                     Checked = !Configs.AccountInMoney
                 };
-            MiAccountShowInPips.Click += AccountShowInMoneyOnClick;
-            miAccount.DropDownItems.Add(MiAccountShowInPips);
+            MiAccountShowInPoints.Click += AccountShowInMoneyOnClick;
+            miAccount.DropDownItems.Add(MiAccountShowInPoints);
 
             miAccount.DropDownItems.Add(new ToolStripSeparator());
 
@@ -719,7 +719,7 @@ namespace ForexStrategyBuilder
                 {
                     Name = "positions",
                     Text = Language.T("Positions") + "...",
-                    ToolTipText = Language.T("Export positions in pips as a spreadsheet."),
+                    ToolTipText = Language.T("Export positions in points as a spreadsheet."),
                     Image = Resources.export
                 };
             miExpPositions.Click += ExportOnClick;
@@ -729,7 +729,7 @@ namespace ForexStrategyBuilder
                 {
                     Name = "positionsNoTransfer",
                     Text = Language.T("Positions") + " " + Language.T("without Transfers") + "...",
-                    ToolTipText = Language.T("Export positions in pips as a spreadsheet."),
+                    ToolTipText = Language.T("Export positions in points as a spreadsheet."),
                     Image = Resources.export
                 };
             miExpPositionsNoTransfer.Click += ExportOnClick;
@@ -1369,7 +1369,7 @@ namespace ForexStrategyBuilder
         }
 
         /// <summary>
-        ///     Whether to express account in pips or in currency
+        ///     Whether to express account in points or in currency
         /// </summary>
         protected virtual void AccountShowInMoneyOnClick(object sender, EventArgs e)
         {

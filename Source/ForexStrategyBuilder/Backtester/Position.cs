@@ -117,7 +117,7 @@ namespace ForexStrategyBuilder
         public double Equity { get; set; }
 
         /// <summary>
-        ///     Charged spread [pips]
+        ///     Charged spread [points]
         /// </summary>
         public double Spread { get; set; }
 
@@ -127,12 +127,12 @@ namespace ForexStrategyBuilder
         public double Rollover { get; set; }
 
         /// <summary>
-        ///     Charged commission [pips]
+        ///     Charged commission [points]
         /// </summary>
         public double Commission { get; set; }
 
         /// <summary>
-        ///     Charged slippage [pips]
+        ///     Charged slippage [points]
         /// </summary>
         public double Slippage { get; set; }
 
@@ -316,14 +316,14 @@ namespace ForexStrategyBuilder
             pos += "Abs Permanent TP     " + AbsoluteTP + nl;
             pos += "Break Even Activated " + IsBreakEvenActivated + nl;
             pos += "---------------------------------" + nl;
-            pos += "Spread      [pips] " + Spread + nl;
-            pos += "Rollover    [pips] " + Rollover + nl;
-            pos += "Commission  [pips] " + Commission + nl;
-            pos += "Slippage    [pips] " + Slippage + nl;
-            pos += "Floating PL [pips] " + FloatingPL + nl;
-            pos += "Profit Loss [pips] " + ProfitLoss + nl;
-            pos += "Balance     [pips] " + Balance + nl;
-            pos += "Equity      [pips] " + Equity + nl;
+            pos += "Spread      [points] " + Spread + nl;
+            pos += "Rollover    [points] " + Rollover + nl;
+            pos += "Commission  [points] " + Commission + nl;
+            pos += "Slippage    [points] " + Slippage + nl;
+            pos += "Floating PL [points] " + FloatingPL + nl;
+            pos += "Profit Loss [points] " + ProfitLoss + nl;
+            pos += "Balance     [points] " + Balance + nl;
+            pos += "Equity      [points] " + Equity + nl;
             pos += "---------------------------------" + nl;
             pos += "Spread      [" + ac + "]  " + MoneySpread + nl;
             pos += "Rollover    [" + ac + "]  " + MoneyRollover + nl;

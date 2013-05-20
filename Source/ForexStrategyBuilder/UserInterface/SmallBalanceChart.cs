@@ -222,7 +222,7 @@ namespace ForexStrategyBuilder
 
             // Chart Title
             chartTitle = Language.T("Balance / Equity Chart") + " [" +
-                         (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("pips") + "]");
+                         (Configs.AccountInMoney ? Configs.AccountCurrency + "]" : Language.T("points") + "]");
             font = new Font(Font.FontFamily, 9);
             captionHeight = Math.Max(font.Height, 18);
             rectfCaption = new RectangleF(0, 0, ClientSize.Width, captionHeight);
@@ -549,10 +549,10 @@ namespace ForexStrategyBuilder
                                                Data.Time[bar].ToString("HH:mm"),
                                                Language.T("Balance"),
                                                data.Balance[bar],
-                                               Language.T("pips"),
+                                               Language.T("points"),
                                                Language.T("Equity"),
                                                data.Equity[bar],
-                                               Language.T("pips"));
+                                               Language.T("points"));
 
             if (Configs.AdditionalStatistics)
             {
@@ -568,10 +568,10 @@ namespace ForexStrategyBuilder
                     CurrentBarInfo += String.Format(" {0}: {1} {2} {3}: {4} {5}",
                                                     Language.T("Long balance"),
                                                     data.LongBalance[bar],
-                                                    Language.T("pips"),
+                                                    Language.T("points"),
                                                     Language.T("Short balance"),
                                                     data.ShortBalance[bar],
-                                                    Language.T("pips"));
+                                                    Language.T("points"));
             }
             if (Configs.ShowPriceChartOnAccountChart)
                 CurrentBarInfo += String.Format(" {0}: {1}",

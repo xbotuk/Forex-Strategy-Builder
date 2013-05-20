@@ -887,7 +887,7 @@ namespace ForexStrategyBuilder
                          bar == Data.Bars - 1)
                 {
                     if (Data.TickData[bar] == null &&
-                        (Math.Abs(Data.Open[bar] - bidTicks[0]) < 10*Data.InstrProperties.Pip))
+                        (Math.Abs(Data.Open[bar] - bidTicks[0]) < 10*Data.InstrProperties.Point))
                         Data.TickData[bar] = bidTicks;
                     else
                         AddTickData(bar, bidTicks);

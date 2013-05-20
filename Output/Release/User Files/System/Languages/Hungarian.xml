@@ -331,11 +331,11 @@
     <alt>Számlaegyenleg és statisztika devizában.</alt>
   </str>
   <str>
-    <main>Information in Pips</main>
+    <main>Information in Points</main>
     <alt>Információ pontokban</alt>
   </str>
   <str>
-    <main>Display the account and the statistics in pips.</main>
+    <main>Display the account and the statistics in points.</main>
     <alt>Számlaegyenleg és statisztika pontokban.</alt>
   </str>
   <str>
@@ -539,7 +539,7 @@
     <alt>Pozíciók</alt>
   </str>
   <str>
-    <main>Export positions in pips as a spreadsheet.</main>
+    <main>Export positions in points as a spreadsheet.</main>
     <alt>Exportál pozíciót pip-ben munkalapként.</alt>
   </str>
   <str>
@@ -1076,7 +1076,7 @@
     <alt>Kikapcsolva</alt>
   </str>
   <str>
-    <main>pips</main>
+    <main>points</main>
     <alt>pip</alt>
   </str>
   <str>
@@ -1415,8 +1415,8 @@
     <alt>Állandó Stop Loss korlátozza a pozíció veszteségét</alt>
   </str>
   <str>
-    <main>pips per open lot (plus the charged spread and rollover).</main>
-    <alt>pips/nyitott egységek (+ az elszámolt spread és rollover).</alt>
+    <main>points per open lot (plus the charged spread and rollover).</main>
+    <alt>points/nyitott egységek (+ az elszámolt spread és rollover).</alt>
   </str>
   <str>
     <main>The strategy does not use a Permanent Take Profit.</main>
@@ -1427,8 +1427,8 @@
     <alt>The Permanent Take Profit closes a position at</alt>
   </str>
   <str>
-    <main>pips profit.</main>
-    <alt>pips profit.</alt>
+    <main>points profit.</main>
+    <alt>points profit.</alt>
   </str>
   <str>
     <main>The position's Stop Loss will be set to Break Even price when the profit reaches</main>
@@ -2314,7 +2314,7 @@
     <alt>Különbség a  Bid és Ask között.</alt>
   </str>
   <str>
-    <main>Number of pips you lose due to an inaccurate order execution.</main>
+    <main>Number of points you lose due to an inaccurate order execution.</main>
     <alt>Elvesztett pip-ek a pontatlan megbízásvégrehalytás miatt.</alt>
   </str>
   <!-- Data Horizon -->

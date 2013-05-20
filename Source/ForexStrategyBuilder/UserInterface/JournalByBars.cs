@@ -34,7 +34,7 @@ namespace ForexStrategyBuilder
         private int selectedRow; // The number of selected row
         private int shownBars; // How many bars are shown
         private string[] titlesInMoney; // Journal title second row
-        private string[] titlesInPips; // Journal title second row
+        private string[] titlesInPoints; // Journal title second row
         private int[] xPositions; // The horizontal position of the column
         private int[] xScaled; // The scaled horizontal position of the column
 
@@ -100,7 +100,7 @@ namespace ForexStrategyBuilder
                     g.MeasureString(longestBacktestEval, font).Width)
                     longestBacktestEval = Language.T(eval.ToString());
 
-            titlesInPips = new[]
+            titlesInPoints = new[]
                 {
                     Language.T("Bar"),
                     Language.T("Date"),
@@ -402,7 +402,7 @@ namespace ForexStrategyBuilder
             // Print the journal caption
             string unit = Configs.AccountInMoney
                               ? " [" + Configs.AccountCurrency + "]"
-                              : " [" + Language.T("pips") + "]";
+                              : " [" + Language.T("points") + "]";
             string accUnit = " [" + Configs.AccountCurrency + "]";
             g.SetClip(new RectangleF(Border, 0, ClientSize.Width - 2*Border, 2*rowHeight));
             g.DrawString(Language.T("Market Data"), font, brushCaptionText, hScroll + (xScaled[8] + xScaled[0])/2, 0,
@@ -424,7 +424,7 @@ namespace ForexStrategyBuilder
             else
             {
                 for (int i = 0; i < columns; i++)
-                    g.DrawString(titlesInPips[i], font, brushCaptionText, hScroll + (xScaled[i] + xScaled[i + 1])/2,
+                    g.DrawString(titlesInPoints[i], font, brushCaptionText, hScroll + (xScaled[i] + xScaled[i + 1])/2,
                                  rowHeight, sf);
             }
             g.ResetClip();

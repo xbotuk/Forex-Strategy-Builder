@@ -7,10 +7,10 @@
     <digits>5</digits>
     <contractSize>100000</contractSize>
     <spread>20</spread>
-    <swapType>pips</swapType>
+    <swapType>Points</swapType>
     <swapLong>2</swapLong>
     <swapShort>-2</swapShort>
-    <commissionType>pips</commissionType>
+    <commissionType>Points</commissionType>
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
     <commission>0</commission>
@@ -27,10 +27,10 @@
     <digits>5</digits>
     <contractSize>100000</contractSize>
     <spread>20</spread>
-    <swapType>pips</swapType>
+    <swapType>Points</swapType>
     <swapLong>2</swapLong>
     <swapShort>-2</swapShort>
-    <commissionType>pips</commissionType>
+    <commissionType>Points</commissionType>
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
     <commission>0</commission>
@@ -47,10 +47,10 @@
     <digits>5</digits>
     <contractSize>100000</contractSize>
     <spread>20</spread>
-    <swapType>pips</swapType>
+    <swapType>Points</swapType>
     <swapLong>2</swapLong>
     <swapShort>-2</swapShort>
-    <commissionType>pips</commissionType>
+    <commissionType>Points</commissionType>
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
     <commission>0</commission>
@@ -67,10 +67,10 @@
     <digits>3</digits>
     <contractSize>100000</contractSize>
     <spread>20</spread>
-    <swapType>pips</swapType>
+    <swapType>Points</swapType>
     <swapLong>2</swapLong>
     <swapShort>-2</swapShort>
-    <commissionType>pips</commissionType>
+    <commissionType>Points</commissionType>
     <commissionScope>lot</commissionScope>
     <commissionTime>openclose</commissionTime>
     <commission>0</commission>
@@ -87,10 +87,10 @@
     <digits>2</digits>
     <contractSize>100</contractSize>
     <spread>20</spread>
-    <swapType>percents</swapType>
+    <swapType>Percents</swapType>
     <swapLong>5</swapLong>
     <swapShort>-1</swapShort>
-    <commissionType>percents</commissionType>
+    <commissionType>Percents</commissionType>
     <commissionScope>deal</commissionScope>
     <commissionTime>openclose</commissionTime>
     <commission>0.25</commission>
@@ -107,10 +107,10 @@
     <digits>0</digits>
     <contractSize>1</contractSize>
     <spread>5</spread>
-    <swapType>percents</swapType>
+    <swapType>Percents</swapType>
     <swapLong>5</swapLong>
     <swapShort>-1</swapShort>
-    <commissionType>percents</commissionType>
+    <commissionType>Percents</commissionType>
     <commissionScope>deal</commissionScope>
     <commissionTime>openclose</commissionTime>
     <commission>0.25</commission>

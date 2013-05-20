@@ -312,7 +312,7 @@ namespace ForexStrategyBuilder
 
             if (isNotPaint) return;
 
-            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("pips")) + "]";
+            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("points")) + "]";
             string subHeader = isCounts ? Language.T("Count of Trades") : Language.T("Accumulated Amount") + unit;
             g.DrawString(subHeader, Font, new SolidBrush(LayoutColors.ColorChartFore), rectSubHeader, sfCaption);
             var formatCenter = new StringFormat {Alignment = StringAlignment.Center};
@@ -364,7 +364,7 @@ namespace ForexStrategyBuilder
             if (!isShowDynamicInfo || !Data.IsData || !Data.IsResult) return;
 
             int index = FindNearestMeaningfulX(e.X);
-            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("pips")) + "]";
+            string unit = " [" + (Configs.AccountInMoney ? Configs.AccountCurrency : Language.T("points")) + "]";
 
             if (chartData.Count == 0)
             {

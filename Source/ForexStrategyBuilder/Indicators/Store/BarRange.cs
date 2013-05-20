@@ -207,17 +207,17 @@ namespace ForexStrategyBuilder.Indicators.Store
                     break;
 
                 case "Bar Range is higher than the Level line":
-                    EntryFilterLongDescription += "is higher than " + sLevelLong + " pips";
-                    EntryFilterShortDescription += "is higher than " + sLevelShort + " pips";
-                    ExitFilterLongDescription += "is higher than " + sLevelLong + " pips";
-                    ExitFilterShortDescription += "is higher than " + sLevelShort + " pips";
+                    EntryFilterLongDescription += "is higher than " + sLevelLong + " points";
+                    EntryFilterShortDescription += "is higher than " + sLevelShort + " points";
+                    ExitFilterLongDescription += "is higher than " + sLevelLong + " points";
+                    ExitFilterShortDescription += "is higher than " + sLevelShort + " points";
                     break;
 
                 case "Bar Range is lower than the Level line":
-                    EntryFilterLongDescription += "is lower than " + sLevelLong + " pips";
-                    EntryFilterShortDescription += "is lower than " + sLevelShort + " pips";
-                    ExitFilterLongDescription += "is lower than " + sLevelLong + " pips";
-                    ExitFilterShortDescription += "is lower than " + sLevelShort + " pips";
+                    EntryFilterLongDescription += "is lower than " + sLevelLong + " points";
+                    EntryFilterShortDescription += "is lower than " + sLevelShort + " points";
+                    ExitFilterLongDescription += "is lower than " + sLevelLong + " points";
+                    ExitFilterShortDescription += "is lower than " + sLevelShort + " points";
                     break;
             }
         }

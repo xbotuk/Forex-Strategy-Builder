@@ -96,8 +96,8 @@
   <str><main>Account</main><alt>Акаунт</alt></str>
   <str><main>Information in Currency</main><alt>Информация в пари</alt></str>
   <str><main>Display the account and the statistics in currency.</main><alt>Показване на сметката и статистиката в пари.</alt></str>
-  <str><main>Information in Pips</main><alt>Информация в пипсове</alt></str>
-  <str><main>Display the account and the statistics in pips.</main><alt>Показване на сметката и статистиката в пипсове.</alt></str>
+  <str><main>Information in Points</main><alt>Информация в пункта</alt></str>
+  <str><main>Display the account and the statistics in points.</main><alt>Показване на сметката и статистиката в пункта.</alt></str>
   <str><main>Account Settings</main><alt>Настройки на акаунта</alt></str>
   <str><main>Set the account parameters.</main><alt>Настройване на параметрите на акаунта.</alt></str>
 
@@ -151,7 +151,7 @@
   <str><main>Bar Summary</main><alt>Обзор на бара</alt></str>
   <str><main>Export the transactions summary by bars as a spreadsheet.</main><alt>Експортиране на обзора на транзакциите по барове като електронна таблица.</alt></str>
   <str><main>Positions</main><alt>Позиции</alt></str>
-  <str><main>Export positions in pips as a spreadsheet.</main><alt>Експортиране на позициите в пипсове като електронна таблица.</alt></str>
+  <str><main>Export positions in points as a spreadsheet.</main><alt>Експортиране на позициите в пункта като електронна таблица.</alt></str>
   <str><main>Positions in Currency</main><alt>Позиции във валута</alt></str>
   <str><main>Export positions in currency as a spreadsheet.</main><alt>Експортиране на позициите в пари като електронна таблица.</alt></str>
   <str><main>without Transfers</main><alt>без трансфери</alt></str>
@@ -299,7 +299,7 @@
   <str><main>Accomplished</main><alt>Извършено</alt></str>
   <str><main>Not accomplished</main><alt>Неизвършено</alt></str>
   <str><main>Switched off</main><alt>Изключено</alt></str>
-  <str><main>pips</main><alt>пипса</alt></str>
+  <str><main>points</main><alt>пункта</alt></str>
   <str><main>pip</main><alt>пипс</alt></str>
   <str><main>No limits</main><alt>Без ограничения</alt></str>
 
@@ -389,10 +389,10 @@
   <str><main>Closing (Exit Signal)</main><alt>Затваряне (изходящ сигнал)</alt></str>
   <str><main>The strategy does not provide a permanent loss limitation.</main><alt>Стратегията не осигурява постоянно ограничение на загубата.</alt></str>
   <str><main>The Permanent Stop Loss limits the loss of a position to</main><alt>Постоянният Stop Loss ограничава загубата на позицията до</alt></str>
-  <str><main>pips per open lot (plus the charged spread and rollover).</main><alt>пипса на отворен лот (плюс начисления спред и роловер).</alt></str>
+  <str><main>points per open lot (plus the charged spread and rollover).</main><alt>пункта на отворен лот (плюс начисления спред и роловер).</alt></str>
   <str><main>The strategy does not use a Permanent Take Profit.</main><alt>Стратегията не използва постоянен Take Profit.</alt></str>
   <str><main>The Permanent Take Profit closes a position at</main><alt>Постоянният Take Profit затваря позицията на</alt></str>
-  <str><main>pips profit.</main><alt>пипса печалба.</alt></str>
+  <str><main>points profit.</main><alt>пункта печалба.</alt></str>
   <str><main>The position's Stop Loss will be set to Break Even price when the profit reaches</main><alt>Stop Loss на позицията ще се премести на цената Break Even, когато печалбата на позицията достигне</alt></str>
   <str><main>Use the indicator value from the previous bar for all asterisk-marked indicators!</main><alt>Използвайте стойността на индикатора от предишния бар за всички индикатори маркирани със звездичка.</alt></str>
   <str><main>The averaging rules apply to the entry signals only. Exit signals close a position. They cannot open, add or reduce one.</main><alt>Правилата за усредняване важат само за входящите сигнали. Изходящите сигнали затварят позицията. Те не могат да отварят, усредняват или отнемат от една позиция.</alt></str>
@@ -633,7 +633,7 @@
   <str><main>Swap number for a short position rollover</main><alt>Суап число за прехвърляне на къса позиция</alt></str>
   <str><main>A negative value decreases your profit.</main><alt>Отрицателната стойност намалява печалбата.</alt></str>
   <str><main>Difference between Bid and Ask prices.</main><alt>Разликата между цена купува и цена продава.</alt></str>
-  <str><main>Number of pips you lose due to an inaccurate order execution.</main><alt>Броя на пипсовете, които губите поради неакуратно изпълнение на ордера.</alt></str>
+  <str><main>Number of points you lose due to an inaccurate order execution.</main><alt>Броя пункта, които губите поради неакуратно изпълнение на ордера.</alt></str>
 
   <!-- Data Horizon -->
   <str><main>Maximum number of bars:</main><alt>Максимален брой барове:</alt></str>
@@ -652,7 +652,7 @@
   <str><main>Instrument Properties</main><alt>Свойства на инструмента</alt></str>
   <str><main>Add an Instrument</main><alt>Добавяне на инструмент</alt></str>
   <str><main>Digits</main><alt>Точност</alt></str>
-  <str><main>Point value</main><alt>Стойност на точка</alt></str>
+  <str><main>Point value</main><alt>Стойност на пункт</alt></str>
   <str><main>Spread in</main><alt>Спред в</alt></str>
   <str><main>Swap in</main><alt>Суап в</alt></str>
   <str><main>Commission</main><alt>Комисиона</alt></str>

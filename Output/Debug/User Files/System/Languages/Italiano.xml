@@ -331,12 +331,12 @@
     <alt>Visualizza il conto e le statistiche in valuta.</alt>
   </str>
   <str>
-    <main>Information in Pips</main>
-    <alt>Informatzioni in Pips</alt>
+    <main>Information in Points</main>
+    <alt>Informatzioni in points</alt>
   </str>
   <str>
-    <main>Display the account and the statistics in pips.</main>
-    <alt>Visualizza conto e statistiche in pips.</alt>
+    <main>Display the account and the statistics in points.</main>
+    <alt>Visualizza conto e statistiche in points.</alt>
   </str>
   <str>
     <main>Account Settings</main>
@@ -539,8 +539,8 @@
     <alt>Posizioni</alt>
   </str>
   <str>
-    <main>Export positions in pips as a spreadsheet.</main>
-    <alt>Esporta posizioni in pips come foglio di calcolo.</alt>
+    <main>Export positions in points as a spreadsheet.</main>
+    <alt>Esporta posizioni in points come foglio di calcolo.</alt>
   </str>
   <str>
     <main>Positions in Currency</main>
@@ -1076,8 +1076,8 @@
     <alt>Spento</alt>
   </str>
   <str>
-    <main>pips</main>
-    <alt>pips</alt>
+    <main>points</main>
+    <alt>points</alt>
   </str>
   <str>
     <main>pip</main>
@@ -1415,8 +1415,8 @@
     <alt>Lo Stop Loss permanente limita la perdita di una posizione di</alt>
   </str>
   <str>
-    <main>pips per open lot (plus the charged spread and rollover).</main>
-    <alt>pips per lotto aperto (piu' il ricarico di spread e rollover).</alt>
+    <main>points per open lot (plus the charged spread and rollover).</main>
+    <alt>points per lotto aperto (piu' il ricarico di spread e rollover).</alt>
   </str>
   <str>
     <main>The strategy does not use a Permanent Take Profit.</main>
@@ -1427,8 +1427,8 @@
     <alt>Il Take Profit permanente chiude una positione a</alt>
   </str>
   <str>
-    <main>pips profit.</main>
-    <alt>Profitto pips.</alt>
+    <main>points profit.</main>
+    <alt>Profitto points.</alt>
   </str>
   <str>
     <main>The position's Stop Loss will be set to Break Even price when the profit reaches</main>
@@ -2314,7 +2314,7 @@
     <alt>Differenza tra il prezzo Bid e Ask.</alt>
   </str>
   <str>
-    <main>Number of pips you lose due to an inaccurate order execution.</main>
+    <main>Number of points you lose due to an inaccurate order execution.</main>
     <alt>Un numero di pip si perdono a causa di una inesatta esecuzione degli ordini.</alt>
   </str>
   <!-- Data Horizon -->
