@@ -20,9 +20,12 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public RoundNumber()
         {
-            // General properties
             IndicatorName = "Round Number";
             PossibleSlots = SlotTypes.Open | SlotTypes.Close;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

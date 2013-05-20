@@ -24,6 +24,10 @@ namespace ForexStrategyBuilder.Indicators
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChartMinValue = 0;
             SeparatedChart  = true;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "A custom indicator for FSB and FST.";
         }
 
         public override void Initialize(SlotTypes slotType)

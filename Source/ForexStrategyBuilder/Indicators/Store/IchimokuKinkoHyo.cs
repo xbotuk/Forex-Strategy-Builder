@@ -23,6 +23,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndicatorName = "Ichimoku Kinko Hyo";
             PossibleSlots = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close;
             SeparatedChart = false;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

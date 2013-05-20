@@ -27,6 +27,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             if (IsBacktester)
                 WarningMessage =
                     "This indicator is designed to be used in the backtester only. It doesn't work in the trader.";
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

@@ -28,6 +28,10 @@ namespace ForexStrategyBuilder.Indicators.Store
                                  "It means that the indicator doesn't move the position's SL at every new top / bottom, as in the real trade, but only when a new bar begins." +
                                  Environment.NewLine +
                                  "The Stop Loss remains constant during the whole bar.";
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

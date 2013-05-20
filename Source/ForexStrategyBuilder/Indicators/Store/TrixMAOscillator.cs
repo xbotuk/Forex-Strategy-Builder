@@ -24,6 +24,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndicatorName = "Trix MA Oscillator";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
 

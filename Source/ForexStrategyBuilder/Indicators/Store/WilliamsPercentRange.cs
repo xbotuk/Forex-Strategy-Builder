@@ -25,6 +25,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             SeparatedChart = true;
             SeparatedChartMinValue = -100;
             SeparatedChartMaxValue = 0;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

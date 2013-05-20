@@ -23,6 +23,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             WarningMessage = "The Trailing Stop Limit indicator trails once per bar." +
                              " It means that the indicator doesn't move the position's SL at every new top / bottom, as in the real trade, but only when a new bar begins." +
                              " The Stop Loss remains constant during the whole bar. Take Profit level is constant by definition.";
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

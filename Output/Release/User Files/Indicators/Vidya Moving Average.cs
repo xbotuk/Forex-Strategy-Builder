@@ -22,6 +22,10 @@ namespace ForexStrategyBuilder.Indicators
         {
             IndicatorName = "Vidya Moving Average";
             PossibleSlots = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close | SlotTypes.CloseFilter;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "A custom indicator for FSB and FST.";
         }
 
         public override void Initialize(SlotTypes slotType)

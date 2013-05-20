@@ -70,6 +70,21 @@ namespace ForexStrategyBuilder.Indicators
         public bool LoaddedFromDll { get; set; }
 
         /// <summary>
+        ///     Gets the version text of the indicator
+        /// </summary>
+        public string IndicatorVersion { get; set;  }
+
+        /// <summary>
+        ///     Gets the author's name of the indicator
+        /// </summary>
+        public string IndicatorAuthor { get; set;  }
+
+        /// <summary>
+        ///     Gets the description text of the indicator
+        /// </summary>
+        public string IndicatorDescription { get; set;  }
+
+        /// <summary>
         ///     Time frame of the loaded historical data
         /// </summary>
         protected static DataPeriod Period

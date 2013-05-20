@@ -16,13 +16,17 @@ using ForexStrategyBuilder.Infrastructure.Interfaces;
 
 namespace ForexStrategyBuilder.Indicators
 {
-    public class MomentumMT : Indicator
+    public class MomentumMT_Pro : Indicator
     {
-        public MomentumMT()
+        public MomentumMT_Pro()
         {
             IndicatorName = "Momentum MT";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "A custom indicator for FSB and FST.";
         }
 
         public override void Initialize(SlotTypes slotType)

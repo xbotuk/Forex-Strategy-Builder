@@ -22,6 +22,10 @@ namespace ForexStrategyBuilder.Indicators
         {
             IndicatorName   = "Day of Month";
             PossibleSlots   = SlotTypes.OpenFilter;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "A custom indicator for FSB and FST.";
         }
 
         public override void Initialize(SlotTypes slotType)
@@ -64,22 +68,22 @@ namespace ForexStrategyBuilder.Indicators
             DataSet = dataSet;
 			
             // Reading the parameters
-            int fromDay  = (int)IndParam.NumParam[0].Value;
-            int untilDay = (int)IndParam.NumParam[1].Value;
+            int iFromDay  = (int)IndParam.NumParam[0].Value;
+            int iUntilDay = (int)IndParam.NumParam[1].Value;
 
             // Calculation
-            int firstBar = 1;
+            int iFirstBar = 1;
             double[] adBars = new double[Bars];
 
             // Calculation of the logic
-            for (int bar = firstBar; bar < Bars; bar++)
+            for (int iBar = iFirstBar; iBar < Bars; iBar++)
             {
-                if (fromDay < untilDay)
-                    adBars[bar] = Time[bar].Day >= fromDay && Time[bar].Day <  untilDay ? 1 : 0;
-                else if (fromDay > untilDay)
-                    adBars[bar] = Time[bar].Day >= fromDay || Time[bar].Day <  untilDay ? 1 : 0;
+                if (iFromDay < iUntilDay)
+                    adBars[iBar] = Time[iBar].Day >= iFromDay && Time[iBar].Day <  iUntilDay ? 1 : 0;
+                else if (iFromDay > iUntilDay)
+                    adBars[iBar] = Time[iBar].Day >= iFromDay || Time[iBar].Day <  iUntilDay ? 1 : 0;
                 else
-                    adBars[bar] = 1;
+                    adBars[iBar] = 1;
             }
 
             // Saving the components
@@ -90,7 +94,7 @@ namespace ForexStrategyBuilder.Indicators
             Component[0].DataType      = IndComponentType.AllowOpenLong;
             Component[0].ChartType     = IndChartType.NoChart;
             Component[0].ShowInDynInfo = false;
-            Component[0].FirstBar      = firstBar;
+            Component[0].FirstBar      = iFirstBar;
             Component[0].Value         = adBars;
 
             Component[1] = new IndicatorComp();
@@ -98,27 +102,27 @@ namespace ForexStrategyBuilder.Indicators
             Component[1].DataType      = IndComponentType.AllowOpenShort;
             Component[1].ChartType     = IndChartType.NoChart;
             Component[1].ShowInDynInfo = false;
-            Component[1].FirstBar      = firstBar;
+            Component[1].FirstBar      = iFirstBar;
             Component[1].Value         = adBars;
         }
 
         public override void SetDescription()
         {
-            int fromDay  = (int)IndParam.NumParam[0].Value;
-            int untilDay = (int)IndParam.NumParam[1].Value;
+            int iFromDay  = (int)IndParam.NumParam[0].Value;
+            int iUntilDay = (int)IndParam.NumParam[1].Value;
 
-            EntryFilterLongDescription  = "the day of month is from " + fromDay + " (incl.) to " + untilDay + " (excl.)";
-            EntryFilterShortDescription = "the day of month is from " + fromDay + " (incl.) to " + untilDay + " (excl.)";
+            EntryFilterLongDescription  = "the day of month is from " + iFromDay + " (incl.) to " + iUntilDay + " (excl.)";
+            EntryFilterShortDescription = "the day of month is from " + iFromDay + " (incl.) to " + iUntilDay + " (excl.)";
         }
 
         public override string ToString()
         {
-            int fromDay  = (int)IndParam.NumParam[0].Value;
-            int untilDay = (int)IndParam.NumParam[1].Value;
+            int iFromDay  = (int)IndParam.NumParam[0].Value;
+            int iUntilDay = (int)IndParam.NumParam[1].Value;
 
             return IndicatorName + " (" +
-                fromDay  + ", " + // From
-                untilDay + ")";   // Until
+                iFromDay  + ", " + // From
+                iUntilDay + ")";   // Until
         }
     }
 }

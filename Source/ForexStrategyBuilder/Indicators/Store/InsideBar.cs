@@ -18,9 +18,12 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public InsideBar()
         {
-            // General properties
             IndicatorName = "Inside Bar";
             PossibleSlots = SlotTypes.OpenFilter;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

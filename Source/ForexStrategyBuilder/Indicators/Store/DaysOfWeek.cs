@@ -23,6 +23,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             PossibleSlots = SlotTypes.OpenFilter;
             IndicatorName = "Day of Week";
             IsDeafultGroupAll = true;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

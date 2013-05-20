@@ -70,6 +70,26 @@ namespace ForexStrategyBuilder.Infrastructure.Interfaces
         bool CustomIndicator { get; set; }
 
         /// <summary>
+        ///     Shows if the indicator is loadded from a dll.
+        /// </summary>
+        bool LoaddedFromDll { get; set; }
+
+        /// <summary>
+        ///     Gets the version text of the indicator
+        /// </summary>
+        string IndicatorVersion { get; set; }
+
+        /// <summary>
+        ///     Gets the author's name of the indicator
+        /// </summary>
+        string IndicatorAuthor { get; set; }
+
+        /// <summary>
+        ///     Gets the description text of the indicator
+        /// </summary>
+        string IndicatorDescription { get; set; }
+
+        /// <summary>
         ///     Gets or sets a warning message about the indicator
         /// </summary>
         string WarningMessage { get; }

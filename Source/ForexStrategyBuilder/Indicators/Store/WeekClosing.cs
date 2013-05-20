@@ -22,6 +22,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndicatorName = "Week Closing";
             PossibleSlots = SlotTypes.Close;
             AllowClosingFilters = true;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

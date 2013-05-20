@@ -23,6 +23,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndicatorName = "Narrow Range";
             PossibleSlots = SlotTypes.OpenFilter;
             SeparatedChart = true;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

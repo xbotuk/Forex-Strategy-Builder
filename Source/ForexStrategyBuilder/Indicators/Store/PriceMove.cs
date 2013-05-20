@@ -21,6 +21,10 @@ namespace ForexStrategyBuilder.Indicators.Store
         {
             IndicatorName = "Price Move";
             PossibleSlots = SlotTypes.Open;
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)

@@ -33,6 +33,10 @@ namespace ForexStrategyBuilder.Indicators.Store
                                  "It prevents opening of new positions after the closing time on the same day." +
                                  Environment.NewLine +
                                  "The indicator uses the server time that comes from the broker together with ticks.";
+
+            IndicatorAuthor = "Miroslav Popov";
+            IndicatorVersion = "2.0";
+            IndicatorDescription = "Bundled in FSB distribution.";
         }
 
         public override void Initialize(SlotTypes slotType)
