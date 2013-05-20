@@ -557,9 +557,9 @@ namespace ForexStrategyBuilder
             double stDevLong = Math.Sqrt(sumPowLong/(totalLongTrades - 1));
             double stDevShort = Math.Sqrt(sumPowShort/(totalShortTrades - 1));
 
-            SharpeRatio = (averageHPR - 1)/stDev;
-            sharpeRatioLong = (averageHPRLong - 1)/stDevLong;
-            sharpeRatioShort = (averageHPRShort - 1)/stDevShort;
+            SharpeRatio = Math.Abs(stDev - 0) < micron ? 0 : (averageHPR - 1)/stDev;
+            sharpeRatioLong = Math.Abs(stDevLong - 0) < micron ? 0 : (averageHPRLong - 1) / stDevLong;
+            sharpeRatioShort = Math.Abs(stDevShort - 0) < micron ? 0 : (averageHPRShort - 1) / stDevShort;
 
             // Annualized Profit
             AnnualizedProfit = (365f/Time[Bars - 1].Subtract(Time[0]).Days)*(NetMoneyBalance - Configs.InitialAccount);
