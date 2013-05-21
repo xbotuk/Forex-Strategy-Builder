@@ -305,8 +305,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             cbxCustomSortingSimple = new ComboBox
             {
                 Parent = pnlSorting,
-                ForeColor = colorText,
-                BackColor = Color.White,
                 AutoSize = true,
                 Cursor = Cursors.Default,
                 Enabled = true,
@@ -316,8 +314,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             cbxCustomSortingAdvanced = new ComboBox
             {
                 Parent = pnlSorting,
-                ForeColor = colorText,
-                BackColor = Color.White,
                 AutoSize = true,
                 Cursor = Cursors.Default,
                 Enabled = true,
@@ -338,8 +334,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             cbxCustomSortingAdvancedCompareTo = new ComboBox
             {
                 Parent = pnlSorting,
-                ForeColor = colorText,
-                BackColor = Color.White,
                 AutoSize = true,
                 Cursor = Cursors.Default,
                 Enabled = true,

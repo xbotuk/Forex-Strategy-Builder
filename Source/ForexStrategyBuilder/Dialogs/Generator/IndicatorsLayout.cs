@@ -105,6 +105,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             layoutBase.Parent = this;
             layoutBase.Dock = DockStyle.Fill;
             layoutBase.BackColor = LayoutColors.ColorControlBack;
+            layoutBase.ForeColor = LayoutColors.ColorControlText;
 
             // Tool Strip Strategy
             tsIndLayout.Parent = this;
@@ -116,6 +117,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             flowLayoutIndicators.AutoSize = true;
             flowLayoutIndicators.FlowDirection = FlowDirection.TopDown;
             flowLayoutIndicators.BackColor = LayoutColors.ColorControlBack;
+            flowLayoutIndicators.ForeColor = LayoutColors.ColorControlText;
 
             // VScrollBarStrategy
             vScrollBar.Parent = layoutBase;
@@ -378,6 +380,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 chbxIndicator.Margin = new Padding(Space, Space, 0, 0);
                 chbxIndicator.Text = indicatorName;
                 chbxIndicator.Enabled = !isBlocked;
+                chbxIndicator.ForeColor = LayoutColors.ColorControlText;
+                chbxIndicator.BackColor = Color.Transparent;
                 chbxIndicator.CheckedChanged += ChbxIndicatorCheckedChanged;
                 flowLayoutIndicators.Controls.Add(chbxIndicator);
             }
