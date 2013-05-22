@@ -36,57 +36,61 @@ namespace ForexStrategyBuilder
             string libSettingsPath = Path.Combine(Data.SystemDir, "Libraries.xml");
             Libraries.LoadSettings(libSettingsPath);
 
-            string[] pathCsFiles = Directory.GetFiles(Data.SourceFolder, "*.cs");
-            if (pathCsFiles.Length != 0)
+            if (Directory.Exists(Data.SourceFolder))
             {
-                foreach (string sourcePath in pathCsFiles)
+                string[] pathCsFiles = Directory.GetFiles(Data.SourceFolder, "*.cs");
+                if (pathCsFiles.Length != 0)
                 {
-                    string errorMessages;
-                    if (Libraries.IsSourceCompiled(sourcePath))
-                        continue;
-
-                    LibRecord record = indicatorManager.LoadCompileSourceFile(sourcePath, out errorMessages);
-
-                    if (record != null)
+                    foreach (string sourcePath in pathCsFiles)
                     {
-                        Libraries.AddRecord(record);
-                        compiledDlls.Add(Path.GetFileNameWithoutExtension(sourcePath));
+                        string errorMessages;
+                        if (Libraries.IsSourceCompiled(sourcePath))
+                            continue;
+
+                        LibRecord record = indicatorManager.LoadCompileSourceFile(sourcePath, out errorMessages);
+
+                        if (record != null)
+                        {
+                            Libraries.AddRecord(record);
+                            compiledDlls.Add(Path.GetFileNameWithoutExtension(sourcePath));
+                        }
+
+                        if (string.IsNullOrEmpty(errorMessages)) continue;
+                        isError = true;
+
+                        errorReport.AppendLine("<h2>File name: " + Path.GetFileName(sourcePath) + "</h2>");
+                        string error = errorMessages.Replace(Environment.NewLine, "</br>");
+                        error = error.Replace("\t", "&nbsp; &nbsp; &nbsp;");
+                        errorReport.AppendLine("<p>" + error + "</p>");
                     }
-
-                    if (string.IsNullOrEmpty(errorMessages)) continue;
-                    isError = true;
-
-                    errorReport.AppendLine("<h2>File name: " + Path.GetFileName(sourcePath) + "</h2>");
-                    string error = errorMessages.Replace(Environment.NewLine, "</br>");
-                    error = error.Replace("\t", "&nbsp; &nbsp; &nbsp;");
-                    errorReport.AppendLine("<p>" + error + "</p>");
                 }
             }
-
-            string[] pathDllFiles = Directory.GetFiles(Data.LibraryDir, "*.dll");
-            if (pathDllFiles.Length != 0)
+            if (Directory.Exists(Data.LibraryDir))
             {
-                foreach (string dllPath in pathDllFiles)
+                string[] pathDllFiles = Directory.GetFiles(Data.LibraryDir, "*.dll");
+                if (pathDllFiles.Length != 0)
                 {
-                    string fileName = Path.GetFileNameWithoutExtension(dllPath);
-                    if (compiledDlls.Contains(fileName))
-                        continue;
+                    foreach (string dllPath in pathDllFiles)
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(dllPath);
+                        if (compiledDlls.Contains(fileName))
+                            continue;
 
-                    string errorMessages;
+                        string errorMessages;
 
-                    indicatorManager.LoadDllIndicator(dllPath, out errorMessages);
+                        indicatorManager.LoadDllIndicator(dllPath, out errorMessages);
 
-                    if (string.IsNullOrEmpty(errorMessages))
-                        continue;
-                    isError = true;
+                        if (string.IsNullOrEmpty(errorMessages))
+                            continue;
+                        isError = true;
 
-                    errorReport.AppendLine("<h2>File name: " + Path.GetFileName(dllPath) + "</h2>");
-                    string error = errorMessages.Replace(Environment.NewLine, "</br>");
-                    error = error.Replace("\t", "&nbsp; &nbsp; &nbsp;");
-                    errorReport.AppendLine("<p>" + error + "</p>");
+                        errorReport.AppendLine("<h2>File name: " + Path.GetFileName(dllPath) + "</h2>");
+                        string error = errorMessages.Replace(Environment.NewLine, "</br>");
+                        error = error.Replace("\t", "&nbsp; &nbsp; &nbsp;");
+                        errorReport.AppendLine("<p>" + error + "</p>");
+                    }
                 }
             }
-
             Libraries.SaveSettings(libSettingsPath);
 
             // Adds the custom indicators
