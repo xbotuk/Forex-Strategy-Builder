@@ -84,7 +84,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enumerations\DeviceCap.cs" />
     <Compile Include="IndicatorCompiler\StrategyToIndicator.cs" />
+    <Compile Include="Utils\PresentationUtils.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />
     <Compile Include="CustomControls\CloseButton.cs">
       <SubType>Component</SubType>

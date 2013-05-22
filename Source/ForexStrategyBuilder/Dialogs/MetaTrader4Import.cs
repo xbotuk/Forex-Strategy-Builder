@@ -208,10 +208,12 @@ namespace ForexStrategyBuilder
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
-            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var height = (int)(400 * Data.VDpiScale);
+            var buttonWidth = (int) (Data.HorizontalDlu*60* Data.HDpiScale);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
-            ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 400);
+
+
+            ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, height);
 
             // Starting DateTime
             DtpStartingDate.Value = string.IsNullOrEmpty(Configs.ImportStartingDate)
@@ -234,12 +236,12 @@ namespace ForexStrategyBuilder
             base.OnResize(e);
 
             var buttonHeight = (int) (Data.VerticalDlu*15.5);
-            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var buttonWidth = (int) (Data.HorizontalDlu*60*Data.HDpiScale);
             var btnVertSpace = (int) (Data.VerticalDlu*5.5);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             int textHeight = Font.Height;
-            const int nudWidth = 70;
+            int nudWidth =(int) (70*Data.HDpiScale);
 
             // Button Cancel
             BtnClose.Size = new Size(buttonWidth, buttonHeight);
@@ -263,7 +265,7 @@ namespace ForexStrategyBuilder
             ProgressBarFile.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDlu*9));
             ProgressBarFile.Location = new Point(border, ProgressBar.Top - ProgressBar.Height - btnVertSpace);
 
-            PnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 160);
+            PnlSettings.Size = new Size(ClientSize.Width - 2 * btnHrzSpace, (int) (160 * Data.VDpiScale));
             PnlSettings.Location = new Point(btnHrzSpace, border);
 
             PnlInfoBase.Size = new Size(ClientSize.Width - 2*btnHrzSpace,
@@ -283,7 +285,7 @@ namespace ForexStrategyBuilder
                                                   BtnBrowse.Top + (buttonHeight - TxbDataDirectory.Height)/2);
 
             // Date Pickers
-            const int pickerWidth = 200;
+            int pickerWidth = (int) (200 * Data.HDpiScale);
             int pickerLeft = PnlSettings.ClientSize.Width - nudWidth - btnHrzSpace - border + nudWidth - pickerWidth;
             DtpStartingDate.Size = new Size(pickerWidth, textHeight);
             DtpStartingDate.Location = new Point(pickerLeft, BtnBrowse.Bottom + border);

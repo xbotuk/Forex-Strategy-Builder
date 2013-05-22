@@ -20,6 +20,7 @@ using System.Windows.Forms;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 using ForexStrategyBuilder.Properties;
+using ForexStrategyBuilder.Utils;
 
 namespace ForexStrategyBuilder
 {
@@ -282,6 +283,9 @@ namespace ForexStrategyBuilder
         /// </summary>
         public static float VerticalDlu { get; set; }
 
+        public static double VDpiScale { get; set; }
+        public static double HDpiScale { get; set; }
+
         /// <summary>
         ///     Relative font width
         /// </summary>
@@ -313,6 +317,11 @@ namespace ForexStrategyBuilder
                 else
                     Dfs = asSs[0] + acDs[0] + asSs[1];
             }
+
+            var presentationUtils = new PresentationUtils();
+            Size dpi = presentationUtils.GetScreenDpi();
+            VDpiScale = dpi.Height/96.0;
+            HDpiScale = dpi.Width/96.0;
 
             // Point character
             CultureInfo cultureInfo = CultureInfo.CurrentCulture;
@@ -651,6 +660,7 @@ namespace ForexStrategyBuilder
         public static bool AutostartGenerator { get; set; }
 
         public static IDataSet DataSet { get; set; }
+
 
         #endregion
     }

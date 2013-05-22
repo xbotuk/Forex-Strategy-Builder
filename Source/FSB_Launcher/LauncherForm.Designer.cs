@@ -31,8 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LauncherForm));
             this.lblApplicationName = new System.Windows.Forms.Label();
             this.listBoxOutput = new System.Windows.Forms.ListBox();
-            this.lblCompany = new System.Windows.Forms.Label();
-            this.linkWebsite = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // lblApplicationName
@@ -60,37 +58,12 @@
             this.listBoxOutput.TabIndex = 3;
             this.listBoxOutput.TabStop = false;
             // 
-            // lblCompany
-            // 
-            this.lblCompany.AutoSize = true;
-            this.lblCompany.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblCompany.Location = new System.Drawing.Point(12, 276);
-            this.lblCompany.Name = "lblCompany";
-            this.lblCompany.Size = new System.Drawing.Size(104, 15);
-            this.lblCompany.TabIndex = 4;
-            this.lblCompany.Text = "Forex Software Ltd";
-            // 
-            // linkWebsite
-            // 
-            this.linkWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkWebsite.AutoSize = true;
-            this.linkWebsite.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.linkWebsite.Location = new System.Drawing.Point(301, 276);
-            this.linkWebsite.Name = "linkWebsite";
-            this.linkWebsite.Size = new System.Drawing.Size(107, 15);
-            this.linkWebsite.TabIndex = 5;
-            this.linkWebsite.TabStop = true;
-            this.linkWebsite.Text = "http://forexsb.com";
-            this.linkWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkWebsite_LinkClicked);
-            // 
             // LauncherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(420, 300);
-            this.Controls.Add(this.linkWebsite);
-            this.Controls.Add(this.lblCompany);
+            this.ClientSize = new System.Drawing.Size(420, 280);
             this.Controls.Add(this.listBoxOutput);
             this.Controls.Add(this.lblApplicationName);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -112,8 +85,6 @@
 
         private System.Windows.Forms.Label lblApplicationName;
         private System.Windows.Forms.ListBox listBoxOutput;
-        private System.Windows.Forms.Label lblCompany;
-        private System.Windows.Forms.LinkLabel linkWebsite;
     }
 }
 

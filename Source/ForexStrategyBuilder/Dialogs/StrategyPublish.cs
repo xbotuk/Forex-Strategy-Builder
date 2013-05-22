@@ -37,7 +37,6 @@ namespace ForexStrategyBuilder
             Controls.Add(BtnClose);
             Controls.Add(PnlBBCodeBase);
             Controls.Add(PnlInfoBase);
-            MinimumSize = new Size(400, 400);
             Text = Language.T("Publish a Strategy");
 
             PnlBBCodeBase.Padding = new Padding(4, 4, 2, 2);
@@ -94,8 +93,9 @@ namespace ForexStrategyBuilder
 
             var buttonWidth = (int) (Data.HorizontalDlu*60);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
-            ClientSize = new Size(4*buttonWidth + 3*btnHrzSpace, 480);
-            MinimumSize = new Size(Width, 300);
+
+            ClientSize = new Size(4 * buttonWidth + 3 * btnHrzSpace, (int) (480 * Data.VDpiScale));
+            MinimumSize = new Size(Width, (int) (300 * Data.VDpiScale));
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace ForexStrategyBuilder
                                             ClientSize.Height - buttonHeight - btnVertSpace);
 
             // PnlInfoBase
-            PnlInfoBase.Size = new Size(ClientSize.Width - 2*border, 65);
+            PnlInfoBase.Size = new Size(ClientSize.Width - 2 * border, (int) (65 * Data.VDpiScale));
             PnlInfoBase.Location = new Point(border, border);
 
             // PnlBBCodeBase

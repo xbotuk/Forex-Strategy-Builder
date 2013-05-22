@@ -237,7 +237,8 @@ namespace ForexStrategyBuilder
             var buttonWidth = (int) (Data.HorizontalDlu*60);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
 
-            ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 257);
+            var height = (int)(260 * Data.VDpiScale);
+            ClientSize = new Size(3 * buttonWidth + 4 * btnHrzSpace, height);
 
             CbxAccountCurrency.SelectedIndexChanged += ParamChanged;
             NudInitialAccount.ValueChanged += ParamChanged;

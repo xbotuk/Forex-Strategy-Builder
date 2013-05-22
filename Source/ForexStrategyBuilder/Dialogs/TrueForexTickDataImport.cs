@@ -196,9 +196,9 @@ namespace ForexStrategyBuilder.Dialogs
         {
             base.OnLoad(e);
 
-            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var buttonWidth = (int) (Data.HorizontalDlu*60*Data.HDpiScale);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
-            ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 400);
+            ClientSize = new Size(3 * buttonWidth + 4 * btnHrzSpace, (int) (400 * Data.VDpiScale));
             BtnBrowse.Focus();
         }
 
@@ -210,7 +210,7 @@ namespace ForexStrategyBuilder.Dialogs
             base.OnResize(e);
 
             var buttonHeight = (int) (Data.VerticalDlu*15.5);
-            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var buttonWidth = (int) (Data.HorizontalDlu*60*Data.HDpiScale);
             var btnVertSpace = (int) (Data.VerticalDlu*5.5);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
@@ -233,7 +233,7 @@ namespace ForexStrategyBuilder.Dialogs
             ProgressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDlu*9));
             ProgressBar.Location = new Point(border, BtnClose.Top - ProgressBar.Height - btnVertSpace);
 
-            PnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 180);
+            PnlSettings.Size = new Size(ClientSize.Width - 2 * btnHrzSpace, (int) (180 * Data.VDpiScale));
             PnlSettings.Location = new Point(btnHrzSpace, border);
 
             PnlImportInfo.Size = new Size(ClientSize.Width - 2*btnHrzSpace,

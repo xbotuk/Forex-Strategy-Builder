@@ -163,7 +163,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             alblIndicatorName[param].Font = fontIndicator;
             alblIndicatorName[param].ForeColor = LayoutColors.ColorSlotIndicatorText;
             alblIndicatorName[param].BackColor = Color.Transparent;
-            alblIndicatorName[param].Height = 18;
+            alblIndicatorName[param].Height = (int) (20 * Data.VDpiScale);
             alblIndicatorName[param].Width = 200;
 
             achbxParameterName[param].ForeColor = colorText;

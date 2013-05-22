@@ -30,34 +30,34 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private readonly Button btnAccept;
         private readonly Button btnCancel;
         private readonly Button btnGenerate;
-        private readonly CheckBox chbWorkingMinutes;
         private readonly CheckBox chbGenerateNewStrategy;
         private readonly CheckBox chbInitialOptimization;
-        private readonly CheckBox chbPreserveSameDirAction;
-        private readonly CheckBox chbPreserveOppDirAction;
         private readonly CheckBox chbPreserveBreakEven;
+        private readonly CheckBox chbPreserveOppDirAction;
         private readonly CheckBox chbPreservePermSL;
         private readonly CheckBox chbPreservePermTP;
+        private readonly CheckBox chbPreserveSameDirAction;
+        private readonly CheckBox chbWorkingMinutes;
         private readonly Color colorText;
+        private readonly CriteriaControls criteriaControls;
+        private readonly ScrollFlowPanel criteriaPanel;
         private readonly InfoPanel infpnlAccountStatistics;
-        private readonly Label lblCalcStrInfo;
-        private readonly Label lblCalcStrNumb;
         private readonly Label lblBenchmarkInfo;
         private readonly Label lblBenchmarkNumb;
+        private readonly Label lblCalcStrInfo;
+        private readonly Label lblCalcStrNumb;
         private readonly NumericUpDown nudWorkingMinutes;
         private readonly FancyPanel pnlCommon;
-        private readonly FancyPanel pnlIndicators;
         private readonly FancyPanel pnlCriteriaBase;
+        private readonly FancyPanel pnlIndicators;
         private readonly FancyPanel pnlSettings;
         private readonly FancyPanel pnlSorting;
         private readonly FancyPanel pnlTop10;
-        private readonly ScrollFlowPanel criteriaPanel;
-        private readonly CriteriaControls criteriaControls;
         private readonly ProgressBar progressBar;
         private readonly Random random = new Random();
         private readonly StrategyLayout strategyField;
-        private readonly ToolTip toolTip = new ToolTip();
         private readonly ToolStrip toolStrip;
+        private readonly ToolTip toolTip = new ToolTip();
         private Button btnReset;
         private double buttonWidthMultiplier = 1; // It's used in OnResize().
         private ComboBox cbxCustomSortingAdvanced;
@@ -75,8 +75,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private bool isReset;
         private Label lblCustomSortingAdvancedCompareTo;
 
-        private NumericUpDown nudMaxOpeningLogicSlots;
         private NumericUpDown nudMaxClosingLogicSlots;
+        private NumericUpDown nudMaxOpeningLogicSlots;
         private NumericUpDown nudOutOfSample;
         private RadioButton rbnCustomSortingAdvanced;
         private RadioButton rbnCustomSortingNone;
@@ -85,8 +85,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private ToolStripButton tsbtLinkAll;
         private ToolStripButton tsbtLockAll;
         private ToolStripButton tsbtOverview;
-        private ToolStripButton tsbtShowIndicators;
         private ToolStripButton tsbtShowCriteria;
+        private ToolStripButton tsbtShowIndicators;
         private ToolStripButton tsbtShowOptions;
         private ToolStripButton tsbtShowSettings;
         private ToolStripButton tsbtShowSorting;
@@ -249,6 +249,18 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 BtnGenerateClick(this, new EventArgs());
         }
 
+        public Form ParrentForm { private get; set; }
+
+        /// <summary>
+        ///     Gets the strategy description
+        /// </summary>
+        public string GeneratedDescription { get; private set; }
+
+        /// <summary>
+        ///     Whether the strategy was modified or entirely generated
+        /// </summary>
+        public bool IsStrategyModified { get; private set; }
+
         private void SetCriteriaPanel()
         {
             criteriaControls.BackColor = LayoutColors.ColorControlBack;
@@ -267,78 +279,78 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         private void SetPanelSorting()
         {
             rbnCustomSortingNone = new RadioButton
-            {
-                Parent = pnlSorting,
-                ForeColor = colorText,
-                BackColor = Color.Transparent,
-                Text = Language.T("Do not use custom sorting"),
-                AutoSize = true,
-                Checked = true,
-                Cursor = Cursors.Default
-            };
+                {
+                    Parent = pnlSorting,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Do not use custom sorting"),
+                    AutoSize = true,
+                    Checked = true,
+                    Cursor = Cursors.Default
+                };
             rbnCustomSortingNone.Click += RbnCustomSortingClick;
 
             rbnCustomSortingSimple = new RadioButton
-            {
-                Parent = pnlSorting,
-                ForeColor = colorText,
-                BackColor = Color.Transparent,
-                Text = Language.T("Simple"),
-                AutoSize = true,
-                Enabled = true,
-                Cursor = Cursors.Default
-            };
+                {
+                    Parent = pnlSorting,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Simple"),
+                    AutoSize = true,
+                    Enabled = true,
+                    Cursor = Cursors.Default
+                };
             rbnCustomSortingSimple.Click += RbnCustomSortingClick;
 
             rbnCustomSortingAdvanced = new RadioButton
-            {
-                Parent = pnlSorting,
-                ForeColor = colorText,
-                BackColor = Color.Transparent,
-                Text = Language.T("Advanced"),
-                AutoSize = true,
-                Enabled = true,
-                Cursor = Cursors.Default
-            };
+                {
+                    Parent = pnlSorting,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Advanced"),
+                    AutoSize = true,
+                    Enabled = true,
+                    Cursor = Cursors.Default
+                };
             rbnCustomSortingAdvanced.Click += RbnCustomSortingClick;
 
             cbxCustomSortingSimple = new ComboBox
-            {
-                Parent = pnlSorting,
-                AutoSize = true,
-                Cursor = Cursors.Default,
-                Enabled = true,
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
+                {
+                    Parent = pnlSorting,
+                    AutoSize = true,
+                    Cursor = Cursors.Default,
+                    Enabled = true,
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
 
             cbxCustomSortingAdvanced = new ComboBox
-            {
-                Parent = pnlSorting,
-                AutoSize = true,
-                Cursor = Cursors.Default,
-                Enabled = true,
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
+                {
+                    Parent = pnlSorting,
+                    AutoSize = true,
+                    Cursor = Cursors.Default,
+                    Enabled = true,
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
 
             lblCustomSortingAdvancedCompareTo = new Label
-            {
-                Parent = pnlSorting,
-                ForeColor = colorText,
-                BackColor = Color.Transparent,
-                Text = Language.T("Comparison Curve"),
-                AutoSize = true,
-                Cursor = Cursors.Default,
-                Enabled = true
-            };
+                {
+                    Parent = pnlSorting,
+                    ForeColor = colorText,
+                    BackColor = Color.Transparent,
+                    Text = Language.T("Comparison Curve"),
+                    AutoSize = true,
+                    Cursor = Cursors.Default,
+                    Enabled = true
+                };
 
             cbxCustomSortingAdvancedCompareTo = new ComboBox
-            {
-                Parent = pnlSorting,
-                AutoSize = true,
-                Cursor = Cursors.Default,
-                Enabled = true,
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
+                {
+                    Parent = pnlSorting,
+                    AutoSize = true,
+                    Cursor = Cursors.Default,
+                    Enabled = true,
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
 
             // Set the Simple Custom Sorting Options
             List<string> simpleCustomSortingOptions = GetSimpleCustomSortingOptions();
@@ -375,18 +387,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             cbxCustomSortingAdvancedCompareTo.Items.Add("Equity (with Transfers)");
             cbxCustomSortingAdvancedCompareTo.Text = "Balance";
         }
-
-        public Form ParrentForm { private get; set; }
-
-        /// <summary>
-        ///     Gets the strategy description
-        /// </summary>
-        public string GeneratedDescription { get; private set; }
-
-        /// <summary>
-        ///     Whether the strategy was modified or entirely generated
-        /// </summary>
-        public bool IsStrategyModified { get; private set; }
 
         /// <summary>
         ///     Loads and parses the generator's options.
@@ -477,7 +477,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             chbPreserveSameDirAction.Checked = true;
             chbPreserveSameDirAction.ForeColor = LayoutColors.ColorControlText;
             chbPreserveSameDirAction.BackColor = Color.Transparent;
-            
+
             // chbPreserveOppDirAction
             chbPreserveOppDirAction.Parent = pnlCommon;
             chbPreserveOppDirAction.Text = Language.T("Do not change the Opposite direction signal");
@@ -581,7 +581,6 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         /// </summary>
         private void SetPanelSettings()
         {
-
             //chbWorkingMinutes
             chbWorkingMinutes.Parent = pnlSettings;
             chbWorkingMinutes.Text = Language.T("Working time limit in minutes");
@@ -796,7 +795,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             toolStrip.Items.Add(tsbtShowSettings);
 
             // Button Sorting
-            tsbtShowSorting = new ToolStripButton { Name = "tsbtShowSorting", Text = Language.T("Sorting") };
+            tsbtShowSorting = new ToolStripButton {Name = "tsbtShowSorting", Text = Language.T("Sorting")};
             tsbtShowSorting.Click += ChangeGeneratorPanel;
             toolStrip.Items.Add(tsbtShowSorting);
 
@@ -837,14 +836,15 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             const int nudWidth = 55;
             pnlCommon.Width = 3*buttonWidth + 2*btnHrzSpace;
-            int borderWidth = (pnlCommon.Width - pnlCommon.ClientSize.Width) / 2;
+            int borderWidth = (pnlCommon.Width - pnlCommon.ClientSize.Width)/2;
             maxCheckBoxWidth = maxCheckBoxWidth + 2 + SystemInformation.VerticalScrollBarWidth;
 
-            if (maxCheckBoxWidth + 3 * btnHrzSpace + nudWidth + 4 > pnlCommon.ClientSize.Width)
+            if (maxCheckBoxWidth + 3*btnHrzSpace + nudWidth + 4 > pnlCommon.ClientSize.Width)
                 buttonWidthMultiplier = ((maxCheckBoxWidth + nudWidth + 3*btnHrzSpace + 2*borderWidth + 4)/3.0)/
                                         buttonWidth;
-
-            ClientSize = new Size(2*((int) (3*buttonWidth*buttonWidthMultiplier) + 2*btnHrzSpace) + 3*btnHrzSpace, 528);
+            var height = (int) (528*Data.VDpiScale);
+            ClientSize = new Size(2*((int) (3*buttonWidth*buttonWidthMultiplier) + 2*btnHrzSpace) + 3*btnHrzSpace,
+                                  height);
 
             OnResize(e);
 
@@ -869,7 +869,9 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             int rightSideLocation = ClientSize.Width - rightSideWidth - btnHrzSpace;
             int leftSideWidth = ClientSize.Width - 3*buttonWidth - 5*btnHrzSpace;
             const int nudWidth = 55;
-            const int optionsHeight = 228;
+
+            var height = (int)(228 * Data.VDpiScale);
+            int optionsHeight = height;
 
             //Button Cancel
             btnCancel.Size = new Size(buttonWidth, buttonHeight);
@@ -953,7 +955,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             lblCalcStrNumb.Location = new Point(lblCalcStrInfo.Right + border, lblCalcStrInfo.Top - 3);
 
             // Labels Benchmark
-            lblBenchmarkInfo.Location = new Point(lblBenchmarkNumb.Left - lblBenchmarkInfo.Width - border, pnlCommon.Height - nudMaxOpeningLogicSlots.Height - border);
+            lblBenchmarkInfo.Location = new Point(lblBenchmarkNumb.Left - lblBenchmarkInfo.Width - border,
+                                                  pnlCommon.Height - nudMaxOpeningLogicSlots.Height - border);
             lblBenchmarkNumb.Size = new Size(nudWidth, nudMaxOpeningLogicSlots.Height - 1);
             lblBenchmarkNumb.Location = new Point(nudLeft, lblCalcStrNumb.Top);
 
@@ -991,14 +994,17 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             // Custom Sorting (Simple) Combo Box
             cbxCustomSortingSimple.Width = 180;
-            cbxCustomSortingSimple.Location = new Point(pnlSorting.ClientSize.Width - cbxCustomSortingSimple.Width - border - 2, rbnCustomSortingSimple.Top - 1);
+            cbxCustomSortingSimple.Location =
+                new Point(pnlSorting.ClientSize.Width - cbxCustomSortingSimple.Width - border - 2,
+                          rbnCustomSortingSimple.Top - 1);
 
             // Custom Sorting (Advanced) Combo Box
             cbxCustomSortingAdvanced.Location = new Point(cbxCustomSortingSimple.Left, rbnCustomSortingAdvanced.Top - 1);
             cbxCustomSortingAdvanced.Width = cbxCustomSortingSimple.Width;
 
             // Custom Sorting (Advanced Comparison Curve) Combo Box
-            cbxCustomSortingAdvancedCompareTo.Location = new Point(cbxCustomSortingAdvanced.Left, cbxCustomSortingAdvanced.Bottom + border);
+            cbxCustomSortingAdvancedCompareTo.Location = new Point(cbxCustomSortingAdvanced.Left,
+                                                                   cbxCustomSortingAdvanced.Bottom + border);
             cbxCustomSortingAdvancedCompareTo.Width = cbxCustomSortingAdvanced.Width;
 
             // Custom Sorting (Advanced Comparison Curve) Label
@@ -1014,8 +1020,9 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             top10Field.Location = new Point(2, (int) pnlTop10.CaptionHeight);
 
             // Criteria Panel
-            criteriaPanel.Size = new Size(pnlCriteriaBase.Width - 2 * 2, pnlCriteriaBase.Height - (int)pnlCriteriaBase.CaptionHeight - 2);
-            criteriaPanel.Location = new Point(2, (int)pnlCriteriaBase.CaptionHeight);
+            criteriaPanel.Size = new Size(pnlCriteriaBase.Width - 2*2,
+                                          pnlCriteriaBase.Height - (int) pnlCriteriaBase.CaptionHeight - 2);
+            criteriaPanel.Location = new Point(2, (int) pnlCriteriaBase.CaptionHeight);
 
             // Indicators Layout
             indicatorsField.Size = new Size(pnlIndicators.Width - 2*2,
@@ -1159,8 +1166,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         {
             if (lblBenchmarkNumb.InvokeRequired)
             {
-
-                BeginInvoke(new SetBenchmarkCallback(SetBenchmarkText), new object[] { value });
+                BeginInvoke(new SetBenchmarkCallback(SetBenchmarkText), new object[] {value});
             }
             else
             {
@@ -1690,8 +1696,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                     {
                         Balance = balance,
                         Value = String.IsNullOrEmpty(top10Slot.CustomSortingOption)
-                                      ? balance
-                                      : bestValue,
+                                    ? balance
+                                    : bestValue,
                         Top10Slot = top10Slot,
                         TheStrategy = Data.Strategy.Clone()
                     };

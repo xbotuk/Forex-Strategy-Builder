@@ -596,7 +596,9 @@ namespace ForexStrategyBuilder
             var buttonWidth = (int) (Data.HorizontalDlu*65);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
 
-            ClientSize = new Size(6*buttonWidth + 11*btnHrzSpace + 4, 540);
+            var width = (int)(540 * Data.HDpiScale);
+
+            ClientSize = new Size(6*buttonWidth + 11*btnHrzSpace + 4, width);
 
             LbxInstruments.SelectedValueChanged += LbxInstrumentsSelectedValueChanged;
             LbxInstruments.SelectedIndex = LbxInstruments.Items.IndexOf(Data.Symbol);

@@ -409,13 +409,13 @@ namespace ForexStrategyBuilder
 
         private void SetFormSize()
         {
-            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var buttonWidth = (int)(Data.HorizontalDlu * 60 * Data.HDpiScale);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int space = btnHrzSpace;
-            const int leftComboBxWith = 80;
-            const int rightComboBxWith = 95;
-            const int nudWidth = 60;
-            const int lblPercentWidth = 15;
+            int leftComboBxWith = (int) (80 * Data.HDpiScale);
+            int rightComboBxWith = (int) (95 * Data.HDpiScale);
+            int nudWidth = (int) (60 * Data.HDpiScale);
+            int lblPercentWidth = (int) (15 * Data.HDpiScale);
             const int border = 2;
 
             leftPanelsWidth = 3*buttonWidth + 2*btnHrzSpace;
@@ -454,7 +454,8 @@ namespace ForexStrategyBuilder
             if (rightPanelsWidth < requiredRightPanelWidth)
                 rightPanelsWidth = requiredRightPanelWidth;
 
-            ClientSize = new Size(space + leftPanelsWidth + space + rightPanelsWidth + space, 390);
+            var height = (int)(390 * Data.VDpiScale);
+            ClientSize = new Size(space + leftPanelsWidth + space + rightPanelsWidth + space, height);
         }
 
         protected override void OnResize(EventArgs e)
@@ -467,21 +468,21 @@ namespace ForexStrategyBuilder
             int buttonWidth = ((rightPanelsWidth - 2*btnHrzSpace)/3);
             int space = btnHrzSpace;
             const int border = 2;
-            const int leftComboBxWith = 80;
-            const int rightComboBxWith = 95;
-            const int nudWidth = 60;
-            const int lblPercentWidth = 15;
+            int leftComboBxWith = (int)(80 * Data.HDpiScale);
+            int rightComboBxWith = (int)(95 * Data.HDpiScale);
+            int nudWidth = (int)(60 * Data.HDpiScale);
+            int lblPercentWidth = (int)(15 * Data.HDpiScale);
 
             // pnlAveraging
-            PnlAveraging.Size = new Size(leftPanelsWidth, 84);
+            PnlAveraging.Size = new Size(leftPanelsWidth, (int) (84 * Data.VDpiScale));
             PnlAveraging.Location = new Point(space, space);
 
             // pnlAmounts
-            PnlAmounts.Size = new Size(leftPanelsWidth, 252);
+            PnlAmounts.Size = new Size(leftPanelsWidth, (int) (252 * Data.VDpiScale));
             PnlAmounts.Location = new Point(space, PnlAveraging.Bottom + space);
 
             // pnlProtection
-            PnlProtection.Size = new Size(rightPanelsWidth, 110);
+            PnlProtection.Size = new Size(rightPanelsWidth, (int) (110 * Data.VDpiScale));
             PnlProtection.Location = new Point(PnlAveraging.Right + space, PnlAveraging.Top);
 
             // Averaging
@@ -502,31 +503,31 @@ namespace ForexStrategyBuilder
             FancyNudMaxOpenLots.Size = new Size(nudWidth, buttonHeight);
             FancyNudMaxOpenLots.Location = new Point(nudLeft, 0*buttonHeight + space + 22);
 
-            RbConstantUnits.Location = new Point(space + 3, 55);
-            RbVariableUnits.Location = new Point(space + 3, 79);
+            RbConstantUnits.Location = new Point(space + 3, (int) (55 * Data.VDpiScale));
+            RbVariableUnits.Location = new Point(space + 3, (int) (79 * Data.VDpiScale));
             RbVariableUnits.Size = new Size(leftPanelsWidth - 2*space, 2*buttonHeight);
 
-            LblEntryLots.Location = new Point(btnHrzSpace, 139);
+            LblEntryLots.Location = new Point(btnHrzSpace, (int) (139 * Data.VDpiScale));
             FancyNudEntryLots.Size = new Size(nudWidth, buttonHeight);
-            FancyNudEntryLots.Location = new Point(nudLeft, 137);
+            FancyNudEntryLots.Location = new Point(nudLeft, (int) (137 * Data.VDpiScale));
             LblPercent1.Width = lblPercentWidth;
             LblPercent1.Location = new Point(FancyNudEntryLots.Left - lblPercentWidth, LblEntryLots.Top);
 
-            LblAddingLots.Location = new Point(btnHrzSpace, 167);
+            LblAddingLots.Location = new Point(btnHrzSpace, (int) (167 * Data.VDpiScale));
             FancyNudAddingLots.Size = new Size(nudWidth, buttonHeight);
-            FancyNudAddingLots.Location = new Point(nudLeft, 165);
+            FancyNudAddingLots.Location = new Point(nudLeft, (int) (165 * Data.VDpiScale));
             LblPercent2.Width = lblPercentWidth;
             LblPercent2.Location = new Point(FancyNudAddingLots.Left - lblPercentWidth, LblAddingLots.Top);
 
-            LblReducingLots.Location = new Point(btnHrzSpace, 195);
+            LblReducingLots.Location = new Point(btnHrzSpace, (int) (195 * Data.VDpiScale));
             FancyNudReducingLots.Size = new Size(nudWidth, buttonHeight);
-            FancyNudReducingLots.Location = new Point(nudLeft, 193);
+            FancyNudReducingLots.Location = new Point(nudLeft, (int) (193 * Data.VDpiScale));
             LblPercent3.Width = lblPercentWidth;
             LblPercent3.Location = new Point(FancyNudReducingLots.Left - lblPercentWidth, LblReducingLots.Top);
 
-            CbxUseMartingale.Location = new Point(btnHrzSpace + 2, 223);
+            CbxUseMartingale.Location = new Point(btnHrzSpace + 2, (int) (223 * Data.VDpiScale));
             FancyNudMartingaleMultiplier.Size = new Size(nudWidth, buttonHeight);
-            FancyNudMartingaleMultiplier.Location = new Point(nudLeft, 221);
+            FancyNudMartingaleMultiplier.Location = new Point(nudLeft, (int) (221 * Data.VDpiScale));
 
             nudLeft = rightPanelsWidth - nudWidth - btnHrzSpace - border;
             comboBxLeft = nudLeft - space - rightComboBxWith;

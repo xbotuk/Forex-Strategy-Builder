@@ -70,8 +70,9 @@ namespace ForexStrategyBuilder.Dialogs.Analyzer
         {
             base.OnLoad(e);
 
-            ClientSize = new Size(650, 400);
-            MinimumSize = new Size(450, 200);
+            var height = (int)(400 * Data.VDpiScale);
+            ClientSize = new Size(650, height);
+            MinimumSize = new Size(450, height/2);
         }
 
         /// <summary>

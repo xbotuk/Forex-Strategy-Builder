@@ -147,7 +147,7 @@ namespace ForexStrategyBuilder
             MaximizeBox = false;
             MinimizeBox = false;
             ShowInTaskbar = false;
-            ClientSize = new Size(360, 310);
+            ClientSize = new Size(400, 330);
         }
 
         private FancyPanel PnlBase { get; set; }

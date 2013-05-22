@@ -143,8 +143,9 @@ namespace ForexStrategyBuilder
                 LblProgress.Visible = true;
                 ChbAutoscan.Visible = false;
 
-                Width = 300;
-                Height = 95;
+                var width = (int)(300 * Data.HDpiScale);
+                var height = (int)(95 * Data.VDpiScale);
+                ClientSize = new Size(width, height);
                 TopMost = true;
 
                 StartLoading();
@@ -154,8 +155,9 @@ namespace ForexStrategyBuilder
                 LblProgress.Visible = false;
                 ChbAutoscan.Visible = true;
                 BalanceChart.SetChartData();
-                Width = 460;
-                Height = 540;
+                var width = (int)(460 * Data.HDpiScale);
+                var height = (int)(540 * Data.VDpiScale);
+                ClientSize = new Size(width, height);
                 if (!isTickDataFile)
                     Height -= infoRowHeight;
             }

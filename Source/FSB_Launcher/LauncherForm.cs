@@ -40,8 +40,6 @@ namespace FSB_Launcher
 
             listBoxOutput.BackColor = backColor;
             lblApplicationName.ForeColor = foreColor;
-            lblCompany.ForeColor = foreColor;
-            linkWebsite.LinkColor = foreColor;
             listBoxOutput.ForeColor = foreColor;
         }
 
@@ -83,11 +81,6 @@ namespace FSB_Launcher
         private void FormLauncher_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Close();
-        }
-
-        private void LinkWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            presenter.VisitWebsite();
         }
     }
 }

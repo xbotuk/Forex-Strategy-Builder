@@ -108,7 +108,9 @@ namespace ForexStrategyBuilder
             base.OnLoad(e);
 
             Width = 450;
-            Height = 130;
+
+            var height = (int) (130*Data.VDpiScale);
+            Height = height;
 
             BtnAccept.Focus();
         }

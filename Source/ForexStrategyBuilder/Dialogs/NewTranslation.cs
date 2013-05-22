@@ -107,7 +107,9 @@ namespace ForexStrategyBuilder
         {
             base.OnLoad(e);
 
-            ClientSize = new Size(335, 220);
+            var width = (int)(335 * Data.HDpiScale);
+            var height = (int)(220 * Data.VDpiScale);
+            ClientSize = new Size(width, height);
         }
 
         /// <summary>
@@ -118,13 +120,13 @@ namespace ForexStrategyBuilder
             base.OnResize(e);
 
             var buttonHeight = (int) (Data.VerticalDlu*15.5);
-            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var buttonWidth = (int) (Data.HorizontalDlu*60 * Data.VDpiScale);
             var btnVertSpace = (int) (Data.VerticalDlu*5.5);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
-            const int width = 195; // Right side controls
+            int width = (int) (195 * Data.VDpiScale);
 
-            PnlInput.Size = new Size(ClientSize.Width - 2*border, 170);
+            PnlInput.Size = new Size(ClientSize.Width - 2*border, (int) (170* Data.VDpiScale));
             PnlInput.Location = new Point(border, border);
 
             int left = PnlInput.ClientSize.Width - width - btnHrzSpace - 1;

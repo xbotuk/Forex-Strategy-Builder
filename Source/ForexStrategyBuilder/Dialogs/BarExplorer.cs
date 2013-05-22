@@ -241,7 +241,8 @@ namespace ForexStrategyBuilder
 
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int clientSizeWidth = (Math.Max(aiColumnX[columns] + 2*btnHrzSpace, 550));
-            ClientSize = new Size(clientSizeWidth, 310 + infoRowHeight*(maxWayPoints + 2));
+            var height = (int)(310 * Data.VDpiScale);
+            ClientSize = new Size(clientSizeWidth, height + infoRowHeight*(maxWayPoints + 2));
         }
 
         /// <summary>

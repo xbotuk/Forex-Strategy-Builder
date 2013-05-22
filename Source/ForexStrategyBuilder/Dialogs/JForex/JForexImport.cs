@@ -211,9 +211,11 @@ namespace ForexStrategyBuilder.Dialogs.JForex
         {
             base.OnLoad(e);
 
-            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var buttonWidth = (int)(Data.HorizontalDlu * 60 * Data.HDpiScale);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
-            ClientSize = new Size(3*buttonWidth + 4*btnHrzSpace, 400);
+
+            var height = (int) (400*Data.VDpiScale);
+            ClientSize = new Size(3 * buttonWidth + 4 * btnHrzSpace, height);
 
             btnImport.Focus();
         }
@@ -226,11 +228,11 @@ namespace ForexStrategyBuilder.Dialogs.JForex
             base.OnResize(e);
 
             var buttonHeight = (int) (Data.VerticalDlu*15.5);
-            var buttonWidth = (int) (Data.HorizontalDlu*60);
+            var buttonWidth = (int) (Data.HorizontalDlu*60 * Data.HDpiScale);
             var btnVertSpace = (int) (Data.VerticalDlu*5.5);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
-            const int nudWidth = 70;
+            int nudWidth = (int)(70 * Data.HDpiScale);
 
             // Button Cancel
             btnClose.Size = new Size(buttonWidth, buttonHeight);
@@ -250,7 +252,8 @@ namespace ForexStrategyBuilder.Dialogs.JForex
             progressBar.Size = new Size(ClientSize.Width - 2*border, (int) (Data.VerticalDlu*9));
             progressBar.Location = new Point(border, btnClose.Top - progressBar.Height - btnVertSpace);
 
-            pnlSettings.Size = new Size(ClientSize.Width - 2*btnHrzSpace, 160);
+            var height = (int)(160 * Data.VDpiScale);
+            pnlSettings.Size = new Size(ClientSize.Width - 2 * btnHrzSpace, height);
             pnlSettings.Location = new Point(btnHrzSpace, border);
 
             pnlInfoBase.Size = new Size(ClientSize.Width - 2*btnHrzSpace,

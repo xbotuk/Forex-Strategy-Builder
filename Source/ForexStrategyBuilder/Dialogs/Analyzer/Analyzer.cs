@@ -140,7 +140,8 @@ namespace ForexStrategyBuilder.Dialogs.Analyzer
 
             PnlOptions.SetFSBVisiability();
 
-            ClientSize = new Size(500, 400);
+            var height = (int) (400*Data.VDpiScale);
+            ClientSize = new Size(500, height);
         }
 
         /// <summary>

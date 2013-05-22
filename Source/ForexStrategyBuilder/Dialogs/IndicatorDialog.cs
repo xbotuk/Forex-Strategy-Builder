@@ -389,9 +389,13 @@ namespace ForexStrategyBuilder
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            Width = 670;
-            Height = 570;
-            MinimumSize = new Size(Width, Height);
+
+            var height = (int) (570*Data.VDpiScale);
+            var width = (int) (670*Data.HDpiScale);
+
+            Width = width;
+            Height = height;
+            MinimumSize = new Size(width, height);
         }
 
         /// <summary>

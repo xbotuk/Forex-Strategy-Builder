@@ -279,7 +279,9 @@ namespace ForexStrategyBuilder
         {
             base.OnLoad(e);
 
-            ClientSize = new Size(350, 208);
+            var width = (int)(350 * Data.HDpiScale);
+            var height = (int)(208 * Data.VDpiScale);
+            ClientSize = new Size(width, height);
 
             BtnAccept.Focus();
         }

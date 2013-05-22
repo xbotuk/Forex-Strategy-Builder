@@ -115,9 +115,10 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             SetIndicatorParams();
             SelectParameters(lastSelectButton);
 
-            Width = 555;
-            Height = Math.Max(formHeight, 570);
-            MinimumSize = new Size(555, 570);
+            Width = 560;
+            var height = (int) (570*Data.VDpiScale);
+            Height = Math.Max(formHeight, height);
+            MinimumSize = new Size(560, height);
         }
 
         /// <summary>
@@ -153,7 +154,7 @@ namespace ForexStrategyBuilder.Dialogs.Optimizer
             progressBar.Size = new Size(ClientSize.Width - 2*space, (int) (Data.VerticalDlu*9));
             progressBar.Location = new Point(space, btnCancel.Top - progressBar.Height - btnVertSpace);
 
-            // Panel Preview
+            // Balance Chart
             balanceChart.Size = new Size(ClientSize.Width - 2*space, 200);
             balanceChart.Location = new Point(space, progressBar.Top - space - balanceChart.Height);
 
