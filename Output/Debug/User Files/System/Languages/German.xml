@@ -2694,8 +2694,8 @@
     <alt>Verbinde alle Slots.</alt>
   </str>
   <str>
-    <main>Generate a new strategy at every start</main>
-    <alt>Generiere bei jedem Start eine neue Strategie</alt>
+    <main>Generate higher profit than the initial strategy</main>
+    <alt>Generieren höheren gewinn als die anfangsstrategie</alt>
   </str>
   <str>
     <main>Do not change the Permanent Stop Loss</main>

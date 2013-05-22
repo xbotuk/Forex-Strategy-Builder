@@ -2694,8 +2694,8 @@
     <alt>Связать все слоты.</alt>
   </str>
   <str>
-    <main>Generate a new strategy at every start</main>
-    <alt>Создание новой стратегии при каждом запуске</alt>
+    <main>Generate higher profit than the initial strategy</main>
+    <alt>Генерировать более высокую прибыль, чем первоначальная</alt>
   </str>
   <str>
     <main>Do not change the Permanent Stop Loss</main>

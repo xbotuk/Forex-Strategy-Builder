@@ -2695,8 +2695,8 @@
     <alt>Collega tutti gli slot.</alt>
   </str>
   <str>
-    <main>Generate a new strategy at every start</main>
-    <alt>Generare una nuova strategia ad ogni avvio</alt>
+    <main>Generate higher profit than the initial strategy</main>
+    <alt>Generate higher profit than the initial strategy</alt>
   </str>
   <str>
     <main>Do not change the Permanent Stop Loss</main>

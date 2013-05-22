@@ -744,7 +744,7 @@
   <str><main>Lock all slots.</main><alt>Lock all slots.</alt></str>
   <str><main>Unlock all slots.</main><alt>Unlock all slots.</alt></str>
   <str><main>Link all slots.</main><alt>Link all slots.</alt></str>
-  <str><main>Generate a new strategy at every start</main><alt>Generate a new strategy at every start</alt></str>
+  <str><main>Generate higher profit than the initial strategy</main><alt>Generate higher profit than the initial strategy</alt></str>
   <str><main>Do not change the Permanent Stop Loss</main><alt>Do not change the Permanent Stop Loss</alt></str>
   <str><main>Do not change the Permanent Take Profit</main><alt>Do not change the Permanent Take Profit</alt></str>
   <str><main>Do not change the Break Even</main><alt>Do not change the Break Even</alt></str>
