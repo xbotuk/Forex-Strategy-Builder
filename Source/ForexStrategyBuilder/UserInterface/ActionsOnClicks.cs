@@ -22,6 +22,7 @@ using ForexStrategyBuilder.Dialogs;
 using ForexStrategyBuilder.Dialogs.Analyzer;
 using ForexStrategyBuilder.Dialogs.JForex;
 using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Infrastructure.Exceptions;
 using ForexStrategyBuilder.Utils;
 
 namespace ForexStrategyBuilder
@@ -202,6 +203,14 @@ namespace ForexStrategyBuilder
             {
                 xmlDoc.InnerXml = Clipboard.GetText();
                 tempStrategy = strategyXml.ParseXmlStrategy(xmlDoc);
+            }
+            catch (MissingIndicatorException exception)
+            {
+                string message = string.Format(
+                    "{2}{1}{0}{1}Please find this indicator in Repository or in Custom Indicators forum.",
+                    exception.Message, Environment.NewLine, "Cannot load the strategy.");
+                MessageBox.Show(message, "Load strategy", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
             catch (Exception exception)
             {

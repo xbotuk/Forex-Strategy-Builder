@@ -153,7 +153,7 @@ namespace ForexStrategyBuilder
         private static string OfflineDocsDir { get; set; }
 
         /// <summary>
-        ///     Gets the path to Lybrary Dir.
+        ///     Gets the path to Library Dir.
         /// </summary>
         public static string LibraryDir { get; private set; }
 

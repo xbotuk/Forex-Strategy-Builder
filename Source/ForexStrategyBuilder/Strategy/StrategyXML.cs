@@ -15,6 +15,7 @@ using System.Xml;
 using ForexStrategyBuilder.Common;
 using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Infrastructure.Enums;
+using ForexStrategyBuilder.Infrastructure.Exceptions;
 using ForexStrategyBuilder.Utils;
 
 namespace ForexStrategyBuilder
@@ -369,6 +370,12 @@ namespace ForexStrategyBuilder
 
                     // Indicator name.
                     string indicatorName = xmlSlotTagList[0].InnerText;
+                    if (!IndicatorManager.AllIndicatorsNames.Contains(indicatorName))
+                    {
+                        string message = string.Format("Indicator \"{0}\" was not found.", indicatorName);
+                        throw new MissingIndicatorException(message);
+                    }
+
                     Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
                     indicator.Initialize(slotType);
 

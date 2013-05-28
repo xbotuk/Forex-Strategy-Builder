@@ -10,18 +10,13 @@
 
 using System;
 
-namespace ForexStrategyBuilder.Library
+namespace ForexStrategyBuilder.Infrastructure.Exceptions
 {
-    public class LibRecord
+    public class MissingIndicatorException : Exception
     {
-        public string SourceFileName { get; set; }
-        public DateTime SourceLastWriteTime { get; set; }
-
-        public override string ToString()
+        public MissingIndicatorException(string message)
+            : base(message)
         {
-            return string.Format("{0} {1}",
-                                 SourceFileName,
-                                 SourceLastWriteTime.ToShortDateString());
         }
     }
 }
