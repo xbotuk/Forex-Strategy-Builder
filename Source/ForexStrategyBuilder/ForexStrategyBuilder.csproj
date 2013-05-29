@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enumerations\DeviceCap.cs" />
-    <Compile Include="IndicatorCompiler\StrategyToIndicator.cs" />
+    <Compile Include="Indicators\Compilation\StrategyToIndicator.cs" />
     <Compile Include="Infrastructure\Exceptions\MissingIndicatorException.cs" />
     <Compile Include="Utils\PresentationUtils.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />
@@ -349,10 +349,10 @@
     <Compile Include="Dialogs\BarExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="IndicatorCompiler\CSharpCompiler.cs" />
-    <Compile Include="IndicatorCompiler\IndicatorCompilationManager.cs" />
-    <Compile Include="IndicatorCompiler\CustomIndicators.cs" />
-    <Compile Include="IndicatorCompiler\IndicatorTester.cs" />
+    <Compile Include="Indicators\Compilation\CSharpCompiler.cs" />
+    <Compile Include="Indicators\Compilation\IndicatorCompilationManager.cs" />
+    <Compile Include="Indicators\Compilation\CustomIndicators.cs" />
+    <Compile Include="Indicators\Compilation\IndicatorTester.cs" />
     <Compile Include="Instruments\Bar.cs" />
     <Compile Include="CustomControls\ContextButton.cs">
       <SubType>Component</SubType>

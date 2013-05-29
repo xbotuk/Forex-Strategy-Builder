@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Windows.Forms;
 using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 using ForexStrategyBuilder.Library;
@@ -38,6 +37,7 @@ namespace ForexStrategyBuilder
             foreach (Assembly assembly in GetReferencedAndInitialAssembly(Assembly.GetEntryAssembly()))
             {
                 compiler.AddReferencedAssembly(assembly);
+                Console.WriteLine("############# " + assembly.FullName);
             }
         }
 
@@ -119,6 +119,9 @@ namespace ForexStrategyBuilder
                 return null;
             }
 
+            if (!ValidateSourceCode(sourcePath, sourceCode, out errorMessages))
+                return null;
+
             Dictionary<string, int> dictCompilationErrors;
             Assembly assembly = compiler.CompileSource(sourceCode, out dictCompilationErrors);
 
@@ -152,6 +155,24 @@ namespace ForexStrategyBuilder
                 return ExportIndicatorAsDll(sourcePath, sourceCode);
 
             return null;
+        }
+
+        private bool ValidateSourceCode(string sourcePath, string sourceCode, out string errorMessages)
+        {
+            errorMessages = string.Empty;
+
+            bool isEntities = sourceCode.Contains("ForexStrategyBuilder.Infrastructure.Entities");
+            bool isEnums = sourceCode.Contains("ForexStrategyBuilder.Infrastructure.Enums");
+            bool isInterfaces = sourceCode.Contains("ForexStrategyBuilder.Infrastructure.Interfaces");
+            bool isStore = sourceCode.Contains("ForexStrategyBuilder.Indicators.Store");
+
+            if (isEntities && isEnums && isInterfaces && isStore)
+                return true;
+
+            errorMessages = "ERROR: Obsolete format of source code in file [" +
+                            Path.GetFileName(sourcePath) + "]." + Environment.NewLine +
+                            "Get a newer version from Code Repository.";
+            return false;
         }
 
         /// <summary>
