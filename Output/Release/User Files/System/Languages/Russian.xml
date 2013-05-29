@@ -2694,8 +2694,8 @@
     <alt>Связать все слоты.</alt>
   </str>
   <str>
-    <main>Generate higher profit than the initial strategy</main>
-    <alt>Генерировать более высокую прибыль, чем первоначальная</alt>
+    <main>Generate from zero profit at every start</main>
+    <alt>Генерировать из нулевую прибыль при каждом запуске</alt>
   </str>
   <str>
     <main>Do not change the Permanent Stop Loss</main>
@@ -2763,7 +2763,7 @@
   </str>
   <str>
     <main>Max consecutive losses</main>
-    <alt>Max consecutive losses</alt>
+    <alt>Макс непрерывных проигрышей</alt>
   </str>
   <str>
     <main>Max long/short balance deviation</main>

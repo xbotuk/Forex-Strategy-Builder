@@ -2694,8 +2694,8 @@
     <alt>Link all slots.</alt>
   </str>
   <str>
-    <main>Generate higher profit than the initial strategy</main>
-    <alt>Generate higher profit than the initial strategy</alt>
+    <main>Generate from zero profit at every start</main>
+    <alt>Generar desde cero ganancias en cada arranque</alt>
   </str>
   <str>
     <main>Do not change the Permanent Stop Loss</main>

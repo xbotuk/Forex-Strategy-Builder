@@ -744,7 +744,7 @@
   <str><main>Lock all slots.</main><alt>Заключване на слотовете</alt></str>
   <str><main>Unlock all slots.</main><alt>Отключване на слотовете</alt></str>
   <str><main>Link all slots.</main><alt>Свързване на слотовете</alt></str>
-  <str><main>Generate higher profit than the initial strategy</main><alt>Генериране на по-голяма печалба от стартовата стратегия</alt></str>
+  <str><main>Generate from zero profit at every start</main><alt>Генериране от нулева печалба при всеки старт</alt></str>
   <str><main>Do not change the Permanent Stop Loss</main><alt>Без промяна на постоянния Stop Loss</alt></str>
   <str><main>Do not change the Permanent Take Profit</main><alt>Без промяна на постоянния Take Profit</alt></str>
   <str><main>Do not change the Break Even</main><alt>Без промяна на Break Even</alt></str>

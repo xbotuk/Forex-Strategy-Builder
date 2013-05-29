@@ -598,7 +598,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
 
             // chbGenerateNewStrategy
             chbGenerateNewStrategy.Parent = pnlSettings;
-            chbGenerateNewStrategy.Text = Language.T("Generate higher profit than the initial strategy");
+            chbGenerateNewStrategy.Text = Language.T("Generate from zero profit at every start");
             chbGenerateNewStrategy.AutoSize = true;
             chbGenerateNewStrategy.Checked = true;
             chbGenerateNewStrategy.ForeColor = LayoutColors.ColorControlText;
