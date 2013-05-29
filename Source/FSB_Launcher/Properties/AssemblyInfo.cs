@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FSB_Pro_Launcher")]
+[assembly: AssemblyTitle("FSB_Launcher")]
 [assembly: AssemblyDescription("Launches Forex Strategy Builder Pro")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Forex Software Ltd")]
-[assembly: AssemblyProduct("FSB_Pro_Launcher")]
+[assembly: AssemblyProduct("FSB_Launcher")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
