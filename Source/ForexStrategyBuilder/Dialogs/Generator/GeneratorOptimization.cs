@@ -289,6 +289,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                         if (num.Caption == "Level" && !indSlot.IndParam.ListParam[0].Text.Contains("Level")) break;
 
                         Indicator indicator = IndicatorManager.ConstructIndicator(indSlot.IndicatorName);
+                        indicator.Initialize(indSlot.SlotType);
                         double defaultValue = indicator.IndParam.NumParam[param].Value;
 
                         double numOldValue = num.Value;

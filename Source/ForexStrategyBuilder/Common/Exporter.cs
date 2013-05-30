@@ -141,6 +141,7 @@ namespace ForexStrategyBuilder
             for (int slot = 0; slot < Data.Strategy.Slots; slot++)
             {
                 Indicator indicator = IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
+                indicator.Initialize(Data.Strategy.Slot[slot].SlotType);
 
                 sb.Append(indicator + "\t");
                 for (int i = 0; i < Data.Strategy.Slot[slot].Component.Length; i++)

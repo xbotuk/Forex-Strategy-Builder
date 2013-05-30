@@ -400,6 +400,7 @@ namespace ForexStrategyBuilder
             string indicatorName = Data.Strategy.Slot[0].IndicatorName;
 
             Indicator indOpen = IndicatorManager.ConstructIndicator(indicatorName);
+            indOpen.Initialize(SlotTypes.Open);
             indOpen.IndParam = Data.Strategy.Slot[0].IndParam;
             indOpen.SetDescription();
 
@@ -478,6 +479,7 @@ namespace ForexStrategyBuilder
 
                         Indicator indOpenFilter =
                             IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
+                        indOpenFilter.Initialize(SlotTypes.OpenFilter);
                         indOpenFilter.IndParam = Data.Strategy.Slot[slot].IndParam;
                         indOpenFilter.SetDescription();
 
@@ -563,6 +565,7 @@ namespace ForexStrategyBuilder
 
                         Indicator indOpenFilter =
                             IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
+                        indOpenFilter.Initialize(SlotTypes.OpenFilter);
                         indOpenFilter.IndParam = Data.Strategy.Slot[slot].IndParam;
                         indOpenFilter.SetDescription();
 
@@ -597,6 +600,7 @@ namespace ForexStrategyBuilder
             string indicatorName = Data.Strategy.Slot[closingSlotNmb].IndicatorName;
 
             Indicator indClose = IndicatorManager.ConstructIndicator(indicatorName);
+            indClose.Initialize(SlotTypes.Close);
             indClose.IndParam = Data.Strategy.Slot[closingSlotNmb].IndParam;
             indClose.SetDescription();
 
@@ -669,6 +673,7 @@ namespace ForexStrategyBuilder
 
                         Indicator indCloseFilter =
                             IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
+                        indCloseFilter.Initialize(SlotTypes.CloseFilter);
                         indCloseFilter.IndParam = Data.Strategy.Slot[slot].IndParam;
                         indCloseFilter.SetDescription();
 
@@ -748,6 +753,7 @@ namespace ForexStrategyBuilder
 
                         Indicator indCloseFilter =
                             IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
+                        indCloseFilter.Initialize(SlotTypes.CloseFilter);
                         indCloseFilter.IndParam = Data.Strategy.Slot[slot].IndParam;
                         indCloseFilter.SetDescription();
 

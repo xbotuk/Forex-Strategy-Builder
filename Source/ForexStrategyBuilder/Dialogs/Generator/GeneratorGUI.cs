@@ -1221,6 +1221,7 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             {
                 string indName = Data.Strategy.Slot[slot].IndicatorName;
                 Indicator indicator = IndicatorManager.ConstructIndicator(indName);
+                indicator.Initialize(Data.Strategy.Slot[slot].SlotType);
                 if (indicator.CustomIndicator)
                 {
                     customIndCount++;

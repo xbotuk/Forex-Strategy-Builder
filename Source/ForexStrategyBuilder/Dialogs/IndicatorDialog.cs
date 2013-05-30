@@ -750,6 +750,7 @@ namespace ForexStrategyBuilder
         private void BtnDefaultClick(object sender, EventArgs e)
         {
             Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+            indicator.Initialize(slotType);
             UpdateFromIndicatorParam(indicator.IndParam);
             SetDefaultGroup();
             CalculateIndicator(true);

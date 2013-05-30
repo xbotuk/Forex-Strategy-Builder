@@ -348,14 +348,15 @@ namespace ForexStrategyBuilder
                 bar--;
 
                 var sb = new StringBuilder();
-                for (int iSlot = 0; iSlot < Data.Strategy.Slots; iSlot++)
+                for (int slot = 0; slot < Data.Strategy.Slots; slot++)
                 {
-                    Indicator indicator = IndicatorManager.ConstructIndicator(Data.Strategy.Slot[iSlot].IndicatorName);
+                    Indicator indicator = IndicatorManager.ConstructIndicator(Data.Strategy.Slot[slot].IndicatorName);
+                    indicator.Initialize(Data.Strategy.Slot[slot].SlotType);
 
                     sb.Append(Environment.NewLine + indicator + Environment.NewLine + "Logic: " +
                               indicator.IndParam.ListParam[0].Text + Environment.NewLine + "-----------------" +
                               Environment.NewLine);
-                    foreach (IndicatorComp indComp in Data.Strategy.Slot[iSlot].Component)
+                    foreach (IndicatorComp indComp in Data.Strategy.Slot[slot].Component)
                     {
                         sb.Append(indComp.CompName + "    ");
                         sb.Append(indComp.Value[bar] + Environment.NewLine);

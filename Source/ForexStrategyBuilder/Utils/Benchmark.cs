@@ -122,46 +122,54 @@ namespace ForexStrategyBuilder.Utils
                 };
 
             Indicator indicator = IndicatorManager.ConstructIndicator("Bar Opening");
+            indicator.Initialize(SlotTypes.Open);
             strategy.Slot[0].IndicatorName = indicator.IndicatorName;
             strategy.Slot[0].IndParam = indicator.IndParam.Clone();
             strategy.Slot[0].IsDefined = true;
 
             indicator = IndicatorManager.ConstructIndicator("Moving Average");
+            indicator.Initialize(SlotTypes.OpenFilter);
             strategy.Slot[1].IndicatorName = indicator.IndicatorName;
             strategy.Slot[1].IndParam = indicator.IndParam.Clone();
             strategy.Slot[1].LogicalGroup = "A";
             strategy.Slot[1].IsDefined = true;
 
             indicator = IndicatorManager.ConstructIndicator("MACD");
+            indicator.Initialize(SlotTypes.OpenFilter);
             strategy.Slot[2].IndicatorName = indicator.IndicatorName;
             strategy.Slot[2].IndParam = indicator.IndParam.Clone();
             strategy.Slot[2].LogicalGroup = "B";
             strategy.Slot[2].IsDefined = true;
 
             indicator = IndicatorManager.ConstructIndicator("RSI");
+            indicator.Initialize(SlotTypes.OpenFilter);
             strategy.Slot[3].IndicatorName = indicator.IndicatorName;
             strategy.Slot[3].IndParam = indicator.IndParam.Clone();
             strategy.Slot[3].LogicalGroup = "C";
             strategy.Slot[3].IsDefined = true;
 
             indicator = IndicatorManager.ConstructIndicator("ADX");
+            indicator.Initialize(SlotTypes.OpenFilter);
             strategy.Slot[4].IndicatorName = indicator.IndicatorName;
             strategy.Slot[4].IndParam = indicator.IndParam.Clone();
             strategy.Slot[4].LogicalGroup = "D";
             strategy.Slot[4].IsDefined = true;
 
             indicator = IndicatorManager.ConstructIndicator("Bar Closing");
+            indicator.Initialize(SlotTypes.Close);
             strategy.Slot[5].IndicatorName = indicator.IndicatorName;
             strategy.Slot[5].IndParam = indicator.IndParam.Clone();
             strategy.Slot[5].IsDefined = true;
 
             indicator = IndicatorManager.ConstructIndicator("Moving Average");
+            indicator.Initialize(SlotTypes.CloseFilter);
             strategy.Slot[6].IndicatorName = indicator.IndicatorName;
             strategy.Slot[6].IndParam = indicator.IndParam.Clone();
             strategy.Slot[6].LogicalGroup = "a";
             strategy.Slot[6].IsDefined = true;
 
             indicator = IndicatorManager.ConstructIndicator("RSI");
+            indicator.Initialize(SlotTypes.CloseFilter);
             strategy.Slot[7].IndicatorName = indicator.IndicatorName;
             strategy.Slot[7].IndParam = indicator.IndParam.Clone();
             strategy.Slot[7].LogicalGroup = "b";

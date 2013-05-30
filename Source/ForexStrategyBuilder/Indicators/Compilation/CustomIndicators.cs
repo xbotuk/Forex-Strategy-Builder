@@ -190,6 +190,7 @@ namespace ForexStrategyBuilder
             foreach (string indicatorName in IndicatorManager.CustomIndicatorNames)
             {
                 Indicator indicator = IndicatorManager.ConstructIndicator(indicatorName);
+                indicator.Initialize(SlotTypes.NotDefined);
                 string dll = indicator.LoaddedFromDll ? " (dll)" : " (cs)";
                 loadedIndicators.AppendLine(indicatorName + dll + "</br>");
             }

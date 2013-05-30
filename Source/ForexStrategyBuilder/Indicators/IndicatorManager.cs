@@ -260,6 +260,7 @@ namespace ForexStrategyBuilder.Indicators
             foreach (string indicatorName in ClosePointIndicators)
             {
                 Indicator indicator = ConstructIndicator(indicatorName);
+                indicator.Initialize(SlotTypes.NotDefined);
                 if (indicator.AllowClosingFilters)
                     ClosingIndicatorsWithClosingFilters.Add(indicatorName);
             }
