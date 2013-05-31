@@ -29,7 +29,7 @@ obj
 /Output/Release/User Files/System/Libraries.xml
 
 /Output/Debug/User Files/Libraries/*.dll
-/Output/Debug/User Files/Strategies/.csv
+/Output/Debug/User Files/Strategies/*.csv
 /Output/Debug/User Files/System/config.xml
 /Output/Debug/User Files/System/fsb-update.xml
 /Output/Debug/User Files/System/instruments.xml
