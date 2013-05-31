@@ -47,7 +47,7 @@ namespace ForexStrategyBuilder
             Application.Idle += ApplicationIdle;
 
             PrepareInstruments();
-            PrepareCustomIndicators();
+            LoadCustomIndicators();
             ProvideStrategy();
             Calculate(false);
             CheckUpdate.CheckForUpdate(Data.SystemDir, MiLiveContent, MiForex);
@@ -99,18 +99,33 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private void PrepareCustomIndicators()
+        private void LoadCustomIndicators()
         {
-            if (Configs.LoadCustomIndicators)
+            if (!Configs.LoadCustomIndicators)
             {
-                UpdateStatusLabel("- loading custom indicators...");
-                CustomIndicators.LoadCustomIndicators();
-
-                if (Configs.ShowCustomIndicators)
-                    CustomIndicators.ShowLoadedCustomIndicators();
-            }
-            else
                 IndicatorManager.CombineAllIndicators();
+                return;
+            }
+
+            UpdateStatusLabel("- loading custom indicators...");
+
+            try
+            {
+                CustomIndicators.LoadCustomIndicators();
+            }
+            catch (Exception e)
+            {
+                string msg = e.Message;
+                if (e.InnerException != null && e.InnerException.Message != "")
+                    msg += Environment.NewLine + e.InnerException.Message;
+
+                MessageBox.Show(msg, "Loading Custom Indicators;",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
+
+            if (Configs.ShowCustomIndicators)
+                CustomIndicators.ShowLoadedCustomIndicators();
         }
 
         private void ProvideStrategy()
@@ -688,11 +703,7 @@ namespace ForexStrategyBuilder
                     return;
             }
 
-            // Reload all the custom indicators
-            CustomIndicators.LoadCustomIndicators();
-
-            if (Configs.ShowCustomIndicators)
-                CustomIndicators.ShowLoadedCustomIndicators();
+            LoadCustomIndicators();
 
             if (strategyHasCustomIndicator)
             {
