@@ -20,6 +20,7 @@ using ForexStrategyBuilder.Dialogs.Optimizer;
 using ForexStrategyBuilder.Indicators;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Properties;
+using ForexStrategyBuilder.Utils;
 
 namespace ForexStrategyBuilder
 {
@@ -115,11 +116,23 @@ namespace ForexStrategyBuilder
             }
             catch (Exception e)
             {
-                string msg = e.Message;
-                if (e.InnerException != null && e.InnerException.Message != "")
-                    msg += Environment.NewLine + e.InnerException.Message;
+                var checker = new DotNetVersionChecker();
+                bool isNet35 = checker.IsDonNet35Installed();
+                string msg;
 
-                MessageBox.Show(msg, "Loading Custom Indicators;",
+                if (isNet35)
+                {
+                    msg = e.Message;
+                    if (e.InnerException != null && e.InnerException.Message != "")
+                        msg += Environment.NewLine + e.InnerException.Message;
+                }
+                else
+                {
+                    msg = "FSB cannot compile the custom indicators." + Environment.NewLine +
+                          "Please install .NET 3.5 or newer and try again.";
+                }
+
+                MessageBox.Show(msg, "Loading Custom Indicators",
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
             }

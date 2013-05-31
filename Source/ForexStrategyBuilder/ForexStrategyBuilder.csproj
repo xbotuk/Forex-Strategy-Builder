@@ -87,6 +87,7 @@
     <Compile Include="Enumerations\DeviceCap.cs" />
     <Compile Include="Indicators\Compilation\StrategyToIndicator.cs" />
     <Compile Include="Infrastructure\Exceptions\MissingIndicatorException.cs" />
+    <Compile Include="Utils\DotNetVersionChecker.cs" />
     <Compile Include="Utils\PresentationUtils.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />
     <Compile Include="CustomControls\CloseButton.cs">
