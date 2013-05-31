@@ -30,9 +30,7 @@ namespace ForexStrategyBuilder
         public CSharpCompiler()
         {
             var checker = new DotNetVersionChecker();
-            bool isNet35 = checker.IsDonNet35Installed();
-
-            codeProvider = isNet35
+            codeProvider = checker.IsDonNet35Installed()
                                ? new CSharpCodeProvider(new Dictionary<String, String> {{"CompilerVersion", "v3.5"}})
                                : new CSharpCodeProvider();
 
