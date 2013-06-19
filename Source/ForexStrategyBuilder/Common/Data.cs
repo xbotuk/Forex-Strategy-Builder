@@ -52,7 +52,7 @@ namespace ForexStrategyBuilder
             LibraryDir = "Libraries" + Path.DirectorySeparatorChar;
             UserFilesDir = "User Files";
             ProgramName = "Forex Strategy Builder";
-            IsProgramReleaseCandidate = true;
+            IsProgramReleaseCandidate = false;
             IsProgramBeta = false;
             LoadedSavedStrategy = "";
             StrategyName = "New.xml";
