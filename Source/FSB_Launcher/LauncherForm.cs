@@ -19,8 +19,9 @@ namespace FSB_Launcher
     {
         private readonly ILauncherPresenter presenter;
         private const int WmCopydata = 0x4A;
-
+        private const int ScClose = 0xF060;
         private Size? mouseGrabOffset;
+        private bool closeRequested;
 
         public LauncherForm()
         {
@@ -48,12 +49,21 @@ namespace FSB_Launcher
             listBoxOutput.Invoke((MethodInvoker) (() => listBoxOutput.Items.Add(record)));
         }
 
+        public void CloseLauncher()
+        {
+            Invoke((MethodInvoker) Close);
+        }
+
         protected override void WndProc(ref Message message)
         {
             if (message.Msg == WmCopydata)
             {
                 var dataStruct = (CopyDataStruct)message.GetLParam(typeof(CopyDataStruct));
                 presenter.ManageIncomingMassage(dataStruct.LpData);
+            }
+            else if ((int) message.WParam == ScClose)
+            {
+                closeRequested = true;
             }
 
             base.WndProc(ref message);
@@ -69,6 +79,9 @@ namespace FSB_Launcher
         {
             mouseGrabOffset = null;
             base.OnMouseUp(e);
+
+            if (closeRequested)
+                Close();
         }
 
         protected override void OnMouseMove(MouseEventArgs e)

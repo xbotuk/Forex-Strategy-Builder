@@ -64,7 +64,7 @@ namespace FSB_Launcher
 
         private void TimeHelper_CountDownElapsed(object sender, EventArgs e)
         {
-            view.Close();
+            view.CloseLauncher();
         }
 
         private void StartApplication()
