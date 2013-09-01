@@ -35,7 +35,7 @@ namespace ForexStrategyBuilder.Indicators.Store
                                  "The indicator uses the server time that comes from the broker together with ticks.";
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -48,47 +48,32 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
-            IndParam.ListParam[0].ItemList = new[] {"Exit the market at the end of the day"};
+            IndParam.ListParam[0].ItemList = new[] { "Exit the market at the end of the week" };
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
             IndParam.ListParam[0].ToolTip = "The execution price of all exit orders.";
 
             IndParam.ListParam[1].Caption = "Base price";
-            IndParam.ListParam[1].ItemList = new[] {"Close"};
+            IndParam.ListParam[1].ItemList = new[] { "Close" };
             IndParam.ListParam[1].Index = 0;
             IndParam.ListParam[1].Text = IndParam.ListParam[1].ItemList[IndParam.ListParam[1].Index];
             IndParam.ListParam[1].Enabled = true;
             IndParam.ListParam[1].ToolTip = "Exit price of the position.";
 
-            // The NumericUpDown parameters
-            IndParam.NumParam[0].Caption = "Day close hour";
-            IndParam.NumParam[0].Value = 23;
+            IndParam.NumParam[0].Caption = "Friday close hour";
+            IndParam.NumParam[0].Value = 19;
             IndParam.NumParam[0].Min = 0;
             IndParam.NumParam[0].Max = 23;
             IndParam.NumParam[0].Enabled = true;
-            IndParam.NumParam[0].ToolTip = "The hour we want to close at.";
+            IndParam.NumParam[0].ToolTip = "The hour we want to close at on Friday.";
 
-            IndParam.NumParam[1].Caption = "Day close min";
+            IndParam.NumParam[1].Caption = "Friday close min";
             IndParam.NumParam[1].Value = 59;
             IndParam.NumParam[1].Min = 0;
             IndParam.NumParam[1].Max = 59;
             IndParam.NumParam[1].Enabled = true;
             IndParam.NumParam[1].ToolTip = "The minutes of the closing hour";
-
-            IndParam.NumParam[2].Caption = "Friday close hour";
-            IndParam.NumParam[2].Value = 19;
-            IndParam.NumParam[2].Min = 0;
-            IndParam.NumParam[2].Max = 23;
-            IndParam.NumParam[2].Enabled = true;
-            IndParam.NumParam[2].ToolTip = "The hour we want to close at on Friday.";
-
-            IndParam.NumParam[3].Caption = "Friday close min";
-            IndParam.NumParam[3].Value = 59;
-            IndParam.NumParam[3].Min = 0;
-            IndParam.NumParam[3].Max = 59;
-            IndParam.NumParam[3].Enabled = true;
-            IndParam.NumParam[3].ToolTip = "The minutes of the closing hour";
         }
 
         public override void Calculate(IDataSet dataSet)
@@ -101,8 +86,8 @@ namespace ForexStrategyBuilder.Indicators.Store
                 return;
             }
 
-            var fridayClosingHour = (int) IndParam.NumParam[0].Value;
-            var fridayClosingMin = (int) IndParam.NumParam[1].Value;
+            var fridayClosingHour = (int)IndParam.NumParam[0].Value;
+            var fridayClosingMin = (int)IndParam.NumParam[1].Value;
 
             // Calculation
             DateTime time = ServerTime;
@@ -144,34 +129,34 @@ namespace ForexStrategyBuilder.Indicators.Store
             Component = new IndicatorComp[3];
 
             Component[0] = new IndicatorComp
-                {
-                    CompName = "Week Closing",
-                    DataType = IndComponentType.ClosePrice,
-                    ChartType = IndChartType.NoChart,
-                    ShowInDynInfo = false,
-                    FirstBar = firstBar,
-                    Value = adClosePrice
-                };
+            {
+                CompName = "Week Closing",
+                DataType = IndComponentType.ClosePrice,
+                ChartType = IndChartType.NoChart,
+                ShowInDynInfo = false,
+                FirstBar = firstBar,
+                Value = adClosePrice
+            };
 
             Component[1] = new IndicatorComp
-                {
-                    DataType = IndComponentType.AllowOpenLong,
-                    CompName = "Is long entry allowed",
-                    ChartType = IndChartType.NoChart,
-                    ShowInDynInfo = false,
-                    FirstBar = 2,
-                    Value = adAllowOpenLong
-                };
+            {
+                DataType = IndComponentType.AllowOpenLong,
+                CompName = "Is long entry allowed",
+                ChartType = IndChartType.NoChart,
+                ShowInDynInfo = false,
+                FirstBar = 2,
+                Value = adAllowOpenLong
+            };
 
             Component[2] = new IndicatorComp
-                {
-                    DataType = IndComponentType.AllowOpenShort,
-                    CompName = "Is short entry allowed",
-                    ChartType = IndChartType.NoChart,
-                    ShowInDynInfo = false,
-                    FirstBar = 2,
-                    Value = adAllowOpenShort
-                };
+            {
+                DataType = IndComponentType.AllowOpenShort,
+                CompName = "Is short entry allowed",
+                ChartType = IndChartType.NoChart,
+                ShowInDynInfo = false,
+                FirstBar = 2,
+                Value = adAllowOpenShort
+            };
         }
 
         private void CalculateForBacktester()
@@ -191,7 +176,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
 
             // Check the last bar
-            TimeSpan tsBarClosing = Time[Bars - 1].TimeOfDay.Add(new TimeSpan(0, (int) Period, 0));
+            TimeSpan tsBarClosing = Time[Bars - 1].TimeOfDay.Add(new TimeSpan(0, (int)Period, 0));
             var tsDayClosing = new TimeSpan(24, 0, 0);
             if (Time[Bars - 1].DayOfWeek == DayOfWeek.Friday && tsBarClosing == tsDayClosing)
                 adBars[Bars - 1] = Close[Bars - 1];
@@ -200,14 +185,14 @@ namespace ForexStrategyBuilder.Indicators.Store
             Component = new IndicatorComp[1];
 
             Component[0] = new IndicatorComp
-                {
-                    CompName = "Week Closing",
-                    DataType = IndComponentType.ClosePrice,
-                    ChartType = IndChartType.NoChart,
-                    ShowInDynInfo = false,
-                    FirstBar = firstBar,
-                    Value = adBars
-                };
+            {
+                CompName = "Week Closing",
+                DataType = IndComponentType.ClosePrice,
+                ChartType = IndChartType.NoChart,
+                ShowInDynInfo = false,
+                FirstBar = firstBar,
+                Value = adBars
+            };
         }
 
         public override void SetDescription()
