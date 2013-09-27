@@ -61,7 +61,7 @@ namespace FSB_Launcher
                 var dataStruct = (CopyDataStruct)message.GetLParam(typeof(CopyDataStruct));
                 presenter.ManageIncomingMassage(dataStruct.LpData);
             }
-            else if ((int) message.WParam == ScClose)
+            else if (message.WParam.ToInt64() == ScClose)
             {
                 closeRequested = true;
             }
