@@ -57,11 +57,6 @@ namespace FSB_Launcher
             view.UpdateStatus(messageText);
         }
 
-        public void VisitWebsite()
-        {
-            ioManager.VisitWebLink(@"http:\\forexsb.com\");
-        }
-
         private void TimeHelper_CountDownElapsed(object sender, EventArgs e)
         {
             view.CloseLauncher();
@@ -69,13 +64,16 @@ namespace FSB_Launcher
 
         private void StartApplication()
         {
-            view.UpdateStatus("- loading application...");
-
             string path = Path.Combine(ioManager.CurrentDirectory, settings.FSBPath);
-            if (ioManager.FileExists(path))
-                ioManager.RunFile(path, settings.Arguments);
-            else
-                view.UpdateStatus("Error: cannot find FSB!");
+            
+            if (!ioManager.FileExists(path))
+            {
+                view.UpdateStatus("Cannot find Forex Strategy Builder!");
+                return;
+            }
+ 
+            view.UpdateStatus("- loading application...");
+            ioManager.RunFile(path, settings.Arguments);
         }
     }
 }

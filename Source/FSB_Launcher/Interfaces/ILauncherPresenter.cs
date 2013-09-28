@@ -14,7 +14,6 @@ namespace FSB_Launcher.Interfaces
     {
         void SetView(ILauncherForm launcherForm);
         void ManageIncomingMassage(string messageText);
-        void VisitWebsite();
         void Proceede();
     }
 }
