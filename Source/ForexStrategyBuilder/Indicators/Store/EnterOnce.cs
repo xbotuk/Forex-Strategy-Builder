@@ -1,4 +1,5 @@
-﻿// Forex Strategy Builder
+﻿//==============================================================
+// Forex Strategy Builder
 // Copyright © Miroslav Popov. All rights reserved.
 //==============================================================
 // THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -7,6 +8,7 @@
 // A PARTICULAR PURPOSE.
 //==============================================================
 
+using ForexStrategyBuilder.Infrastructure.Entities;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 
