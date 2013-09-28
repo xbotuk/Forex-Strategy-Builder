@@ -48,7 +48,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
                 RemoveNeedlessFilters(worker);
 
                 // Tries to clear the Same / Opposite Signals
-                NormalizeSameOppositeSignalBehaviour(worker);
+                if (!chbPreserveSameDirAction.Checked && !chbPreserveOppDirAction.Checked)
+                    NormalizeSameOppositeSignalBehaviour(worker);
 
                 // Remove Permanent Stop Loss
                 if (!chbPreservePermSL.Checked && strategyBest.PropertiesStatus == StrategySlotStatus.Open &&
@@ -78,7 +79,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
         {
             if (strategyBest.PropertiesStatus != StrategySlotStatus.Open) return;
 
-            if (Data.Strategy.SameSignalAction != SameDirSignalAction.Nothing)
+            if (Data.Strategy.SameSignalAction != SameDirSignalAction.Nothing &&
+                !chbPreserveSameDirAction.Checked)
             {
                 if (!worker.CancellationPending)
                 {
@@ -90,7 +92,8 @@ namespace ForexStrategyBuilder.Dialogs.Generator
             }
 
             if (Data.Strategy.OppSignalAction != OppositeDirSignalAction.Nothing &&
-                Data.Strategy.Slot[Data.Strategy.CloseSlot].IndicatorName != "Close and Reverse")
+                Data.Strategy.Slot[Data.Strategy.CloseSlot].IndicatorName != "Close and Reverse" &&
+                !chbPreserveOppDirAction.Checked)
             {
                 if (!worker.CancellationPending)
                 {
