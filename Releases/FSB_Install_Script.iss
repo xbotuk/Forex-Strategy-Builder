@@ -1,6 +1,6 @@
 #define MyAppName      "Forex Strategy Builder"
-#define MyAppVersion   "3.0.0.0"
-#define MyAppVerText   "v3"
+#define MyAppVersion   "3.0.2.0"
+#define MyAppVerText   "v3.0.2"
 #define MyOutputPath   SourcePath
 #define MyCertPass     ReadIni(SourcePath + "\Install.ini", "Release", "CertificatePassoword")
 
