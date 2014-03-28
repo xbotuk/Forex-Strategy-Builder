@@ -24,7 +24,6 @@ namespace ForexStrategyBuilder
     public sealed class MetaTrader4Import : Form
     {
         private readonly BackgroundWorker bgWorker;
-        private readonly Color colorText;
         private readonly List<string> files = new List<string>();
         private DateTime endingDate;
         private bool isImporting;
@@ -55,7 +54,7 @@ namespace ForexStrategyBuilder
             LblEndingDate = new Label();
             DtpEndingDate = new DateTimePicker();
 
-            colorText = LayoutColors.ColorControlText;
+            Color colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -241,7 +240,7 @@ namespace ForexStrategyBuilder
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
             int textHeight = Font.Height;
-            int nudWidth =(int) (70*Data.HDpiScale);
+            var nudWidth =(int) (70*Data.HDpiScale);
 
             // Button Cancel
             BtnClose.Size = new Size(buttonWidth, buttonHeight);
@@ -285,7 +284,7 @@ namespace ForexStrategyBuilder
                                                   BtnBrowse.Top + (buttonHeight - TxbDataDirectory.Height)/2);
 
             // Date Pickers
-            int pickerWidth = (int) (200 * Data.HDpiScale);
+            var pickerWidth = (int) (200 * Data.HDpiScale);
             int pickerLeft = PnlSettings.ClientSize.Width - nudWidth - btnHrzSpace - border + nudWidth - pickerWidth;
             DtpStartingDate.Size = new Size(pickerWidth, textHeight);
             DtpStartingDate.Location = new Point(pickerLeft, BtnBrowse.Bottom + border);
@@ -578,11 +577,15 @@ namespace ForexStrategyBuilder
 
                         int seconds = br.ReadInt32(); // bar time in seconds since 1/1/1970
                         DateTime? dt = new DateTime(1970, 1, 1).AddSeconds(seconds); // bar time
+                        br.ReadInt32(); // datetime compensation of length
                         decimal open = Math.Round((decimal) br.ReadDouble(), digits); // open
-                        decimal low = Math.Round((decimal) br.ReadDouble(), digits); // low
                         decimal high = Math.Round((decimal) br.ReadDouble(), digits); // high
+                        decimal low = Math.Round((decimal) br.ReadDouble(), digits); // low
                         decimal close = Math.Round((decimal) br.ReadDouble(), digits); // close
-                        decimal volume = Math.Round((decimal) br.ReadDouble(), digits); // vol                       
+                        decimal volume = Math.Round((decimal) br.ReadInt64(), 0); // vol
+                        br.ReadInt32(); // spread
+                        br.ReadInt64(); // real_volume
+
                         DateTime dateTime = dt.GetValueOrDefault();
 
                         if (dateTime > startingDate && dateTime < endingDate)
