@@ -76,9 +76,6 @@ namespace ForexStrategyBuilder
                         100*int.Parse(version[2]) +
                         1*int.Parse(version[3]);
 
-            if (int.Parse(version[1])%2 != 0)
-                IsProgramBeta = true;
-
             Strategy.GenerateNew();
         }
 
