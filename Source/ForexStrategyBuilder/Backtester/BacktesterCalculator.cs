@@ -2395,15 +2395,15 @@ namespace ForexStrategyBuilder
                 }
             }
 
-            double targetBreakEven = Strategy.BreakEven*InstrProperties.Point;
+            double targetBreakEven = Strategy.BreakEven * InstrProperties.Point;
+            PosDirection posDir = session[bar].Summary.PosDir;
+            double posPrice = session[bar].Summary.PosPrice;
 
             // Check if Break Even has to be activated (if position has profit).
             if (!session[bar].Summary.IsBreakEvenActivated)
             {
-                if (session[bar].Summary.PosDir == PosDirection.Long &&
-                    price >= session[bar].Summary.PosPrice + targetBreakEven ||
-                    session[bar].Summary.PosDir == PosDirection.Short &&
-                    price <= session[bar].Summary.PosPrice - targetBreakEven)
+                if (posDir == PosDirection.Long && price >= posPrice + targetBreakEven - micron ||
+                    posDir == PosDirection.Short && price <= posPrice - targetBreakEven + micron)
                     session[bar].Summary.IsBreakEvenActivated = true;
                 else
                     return false;
@@ -2411,15 +2411,16 @@ namespace ForexStrategyBuilder
 
             // Set Break Even to the current position.
             const int ifOrder = 0;
-            int toPos = session[bar].Summary.PosNumb;
+            int posNumber = session[bar].Summary.PosNumb;
             double lots = session[bar].Summary.PosLots;
             double stop = session[bar].Summary.PosPrice;
-            string note = Language.T("Break Even to position") + " " + (toPos + 1);
 
-            if (session[bar].Summary.PosDir == PosDirection.Long)
-                OrdSellStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
-            else if (session[bar].Summary.PosDir == PosDirection.Short)
-                OrdBuyStop(bar, ifOrder, toPos, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
+            string note = Language.T("Break Even to position") + " " + (posNumber + 1);
+
+            if (posDir == PosDirection.Long)
+                OrdSellStop(bar, ifOrder, posNumber, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
+            else if (posDir == PosDirection.Short)
+                OrdBuyStop(bar, ifOrder, posNumber, lots, stop, OrderSender.Close, OrderOrigin.BreakEven, note);
 
             return true;
         }
