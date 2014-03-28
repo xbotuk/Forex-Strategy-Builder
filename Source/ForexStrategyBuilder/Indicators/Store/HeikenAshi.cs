@@ -299,31 +299,31 @@ namespace ForexStrategyBuilder.Indicators.Store
                     break;
 
                 case "White H.A. bar without lower shadow":
-                    EntryFilterLongDescription = "the " + ToString() + " bar is white and without lower shadow";
-                    EntryFilterShortDescription = "the " + ToString() + " bar is black and without upper shadow";
-                    ExitFilterLongDescription = "the " + ToString() + " bar is white and without lower shadow";
-                    ExitFilterShortDescription = "the " + ToString() + " bar is black and without upper shadow";
+                    EntryFilterLongDescription = ToString() + " bar is white and without lower shadow";
+                    EntryFilterShortDescription = ToString() + " bar is black and without upper shadow";
+                    ExitFilterLongDescription = ToString() + " bar is white and without lower shadow";
+                    ExitFilterShortDescription = ToString() + " bar is black and without upper shadow";
                     break;
 
                 case "Black H.A. bar without upper shadow":
-                    EntryFilterLongDescription = "the " + ToString() + " bar is black and without upper shadow";
-                    EntryFilterShortDescription = "the " + ToString() + " bar is white and without lower shadow";
-                    ExitFilterLongDescription = "the " + ToString() + " bar is black and without upper shadow";
-                    ExitFilterShortDescription = "the " + ToString() + " bar is white and without lower shadow";
+                    EntryFilterLongDescription = ToString() + " bar is black and without upper shadow";
+                    EntryFilterShortDescription = ToString() + " bar is white and without lower shadow";
+                    ExitFilterLongDescription = ToString() + " bar is black and without upper shadow";
+                    ExitFilterShortDescription = ToString() + " bar is white and without lower shadow";
                     break;
 
                 case "White H.A. bar":
-                    EntryFilterLongDescription = "the " + ToString() + " bar is white";
-                    EntryFilterShortDescription = "the " + ToString() + " bar is black";
-                    ExitFilterLongDescription = "the " + ToString() + " bar is white";
-                    ExitFilterShortDescription = "the " + ToString() + " bar is black";
+                    EntryFilterLongDescription = ToString() + " bar is white";
+                    EntryFilterShortDescription = ToString() + " bar is black";
+                    ExitFilterLongDescription = ToString() + " bar is white";
+                    ExitFilterShortDescription = ToString() + " bar is black";
                     break;
 
                 case "Black H.A. bar":
-                    EntryFilterLongDescription = "the " + ToString() + " bar is black";
-                    EntryFilterShortDescription = "the " + ToString() + " bar is white";
-                    ExitFilterLongDescription = "the " + ToString() + " bar is black";
-                    ExitFilterShortDescription = "the " + ToString() + " bar is white";
+                    EntryFilterLongDescription = ToString() + " bar is black";
+                    EntryFilterShortDescription = ToString() + " bar is white";
+                    ExitFilterLongDescription = ToString() + " bar is black";
+                    ExitFilterShortDescription = ToString() + " bar is white";
                     break;
             }
         }

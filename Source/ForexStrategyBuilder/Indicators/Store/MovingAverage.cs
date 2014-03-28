@@ -271,17 +271,17 @@ namespace ForexStrategyBuilder.Indicators.Store
             switch (IndParam.ListParam[0].Text)
             {
                 case "Moving Average rises":
-                    EntryFilterLongDescription = "the " + ToString() + " rises";
-                    EntryFilterShortDescription = "the " + ToString() + " falls";
-                    ExitFilterLongDescription = "the " + ToString() + " rises";
-                    ExitFilterShortDescription = "the " + ToString() + " falls";
+                    EntryFilterLongDescription = ToString() + " rises";
+                    EntryFilterShortDescription = ToString() + " falls";
+                    ExitFilterLongDescription = ToString() + " rises";
+                    ExitFilterShortDescription = ToString() + " falls";
                     break;
 
                 case "Moving Average falls":
-                    EntryFilterLongDescription = "the " + ToString() + " falls";
-                    EntryFilterShortDescription = "the " + ToString() + " rises";
-                    ExitFilterLongDescription = "the " + ToString() + " falls";
-                    ExitFilterShortDescription = "the " + ToString() + " rises";
+                    EntryFilterLongDescription = ToString() + " falls";
+                    EntryFilterShortDescription = ToString() + " rises";
+                    ExitFilterLongDescription = ToString() + " falls";
+                    ExitFilterShortDescription = ToString() + " rises";
                     break;
 
                 case "The bar opens above Moving Average":

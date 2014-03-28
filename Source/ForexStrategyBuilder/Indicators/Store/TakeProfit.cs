@@ -8,6 +8,8 @@
 // A PARTICULAR PURPOSE.
 //==============================================================
 
+using System;
+using System.Drawing;
 using ForexStrategyBuilder.Infrastructure.Entities;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
@@ -22,7 +24,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             PossibleSlots = SlotTypes.Close;
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -36,9 +38,9 @@ namespace ForexStrategyBuilder.Indicators.Store
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
             IndParam.ListParam[0].ItemList = new[]
-                {
-                    "Exit at the Take Profit level"
-                };
+            {
+                "Exit at Take Profit level"
+            };
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
@@ -50,7 +52,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].Min = 5;
             IndParam.NumParam[0].Max = 5000;
             IndParam.NumParam[0].Enabled = true;
-            IndParam.NumParam[0].ToolTip = "The Take Profit value (in points).";
+            IndParam.NumParam[0].ToolTip = "Take Profit value in points.";
         }
 
         public override void Calculate(IDataSet dataSet)
@@ -60,16 +62,17 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         public override void SetDescription()
         {
-            var iTakeProfit = (int) IndParam.NumParam[0].Value;
+            var takeProfit = (int) IndParam.NumParam[0].Value;
 
-            ExitPointLongDescription = "when the market rises " + iTakeProfit + " points from the last entry price";
-            ExitPointShortDescription = "when the market falls " + iTakeProfit + " points from the last entry price";
+            ExitPointLongDescription = string.Format("when the market rises {0} points from the last entry price", takeProfit);
+            ExitPointShortDescription = string.Format("when the market falls {0} points from the last entry price", takeProfit);
         }
 
         public override string ToString()
         {
-            return IndicatorName + " (" +
-                   IndParam.NumParam[0].ValueToString + ")"; // Take Profit
+            return string.Format("{0} ({1})",
+                IndicatorName,
+                IndParam.NumParam[0].ValueToString);
         }
     }
 }

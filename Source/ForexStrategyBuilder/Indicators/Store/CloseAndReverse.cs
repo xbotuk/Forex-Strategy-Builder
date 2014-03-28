@@ -20,6 +20,7 @@ namespace ForexStrategyBuilder.Indicators.Store
         {
             IndicatorName = "Close and Reverse";
             PossibleSlots = SlotTypes.Close;
+            IsGeneratable = false;
 
             IndicatorAuthor = "Miroslav Popov";
             IndicatorVersion = "2.0";

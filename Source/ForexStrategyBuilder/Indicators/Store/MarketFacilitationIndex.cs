@@ -24,7 +24,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             SeparatedChartMinValue = 0;
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -36,10 +36,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].Caption = "Logic";
             IndParam.ListParam[0].ItemList = new[]
                 {
-                    "The Market Facilitation Index rises",
-                    "The Market Facilitation Index falls",
-                    "The Market Facilitation Index changes its direction upward",
-                    "The Market Facilitation Index changes its direction downward"
+                    "Market Facilitation Index rises",
+                    "Market Facilitation Index falls",
+                    "Market Facilitation Index changes its direction upward",
+                    "Market Facilitation Index changes its direction downward"
                 };
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
@@ -119,19 +119,19 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The Market Facilitation Index rises":
+                case "Market Facilitation Index rises":
                     indLogic = IndicatorLogic.The_indicator_rises;
                     break;
 
-                case "The Market Facilitation Index falls":
+                case "Market Facilitation Index falls":
                     indLogic = IndicatorLogic.The_indicator_falls;
                     break;
 
-                case "The Market Facilitation Index changes its direction upward":
+                case "Market Facilitation Index changes its direction upward":
                     indLogic = IndicatorLogic.The_indicator_changes_its_direction_upward;
                     break;
 
-                case "The Market Facilitation Index changes its direction downward":
+                case "Market Facilitation Index changes its direction downward":
                     indLogic = IndicatorLogic.The_indicator_changes_its_direction_downward;
                     break;
             }
@@ -142,35 +142,35 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         public override void SetDescription()
         {
-            EntryFilterLongDescription = "the " + ToString() + " ";
-            EntryFilterShortDescription = "the " + ToString() + " ";
-            ExitFilterLongDescription = "the " + ToString() + " ";
-            ExitFilterShortDescription = "the " + ToString() + " ";
+            EntryFilterLongDescription = ToString() + " ";
+            EntryFilterShortDescription = ToString() + " ";
+            ExitFilterLongDescription = ToString() + " ";
+            ExitFilterShortDescription = ToString() + " ";
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The Market Facilitation Index rises":
+                case "Market Facilitation Index rises":
                     EntryFilterLongDescription += "rises";
                     EntryFilterShortDescription += "rises";
                     ExitFilterLongDescription += "rises";
                     ExitFilterShortDescription += "rises";
                     break;
 
-                case "The Market Facilitation Index falls":
+                case "Market Facilitation Index falls":
                     EntryFilterLongDescription += "falls";
                     EntryFilterShortDescription += "falls";
                     ExitFilterLongDescription += "falls";
                     ExitFilterShortDescription += "falls";
                     break;
 
-                case "The Market Facilitation Index changes its direction upward":
+                case "Market Facilitation Index changes its direction upward":
                     EntryFilterLongDescription += "changes its direction upward";
                     EntryFilterShortDescription += "changes its direction upward";
                     ExitFilterLongDescription += "changes its direction upward";
                     ExitFilterShortDescription += "changes its direction upward";
                     break;
 
-                case "The Market Facilitation Index changes its direction downward":
+                case "Market Facilitation Index changes its direction downward":
                     EntryFilterLongDescription += "changes its direction downward";
                     EntryFilterShortDescription += "changes its direction downward";
                     ExitFilterLongDescription += "changes its direction downward";

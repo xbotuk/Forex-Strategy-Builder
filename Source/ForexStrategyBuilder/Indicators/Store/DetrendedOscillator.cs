@@ -38,14 +38,14 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].Caption = "Logic";
             IndParam.ListParam[0].ItemList = new[]
                 {
-                    "The Detrended Oscillator rises",
-                    "The Detrended Oscillator falls",
-                    "The Detrended Oscillator is higher than the zero line",
-                    "The Detrended Oscillator is lower than the zero line",
-                    "The Detrended Oscillator crosses the zero line upward",
-                    "The Detrended Oscillator crosses the zero line downward",
-                    "The Detrended Oscillator changes its direction upward",
-                    "The Detrended Oscillator changes its direction downward"
+                    "Detrended Oscillator rises",
+                    "Detrended Oscillator falls",
+                    "Detrended Oscillator is higher than the zero line",
+                    "Detrended Oscillator is lower than the zero line",
+                    "Detrended Oscillator crosses the zero line upward",
+                    "Detrended Oscillator crosses the zero line downward",
+                    "Detrended Oscillator changes its direction upward",
+                    "Detrended Oscillator changes its direction downward"
                 };
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
@@ -168,35 +168,35 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The Detrended Oscillator rises":
+                case "Detrended Oscillator rises":
                     indLogic = IndicatorLogic.The_indicator_rises;
                     break;
 
-                case "The Detrended Oscillator falls":
+                case "Detrended Oscillator falls":
                     indLogic = IndicatorLogic.The_indicator_falls;
                     break;
 
-                case "The Detrended Oscillator is higher than the zero line":
+                case "Detrended Oscillator is higher than the zero line":
                     indLogic = IndicatorLogic.The_indicator_is_higher_than_the_level_line;
                     break;
 
-                case "The Detrended Oscillator is lower than the zero line":
+                case "Detrended Oscillator is lower than the zero line":
                     indLogic = IndicatorLogic.The_indicator_is_lower_than_the_level_line;
                     break;
 
-                case "The Detrended Oscillator crosses the zero line upward":
+                case "Detrended Oscillator crosses the zero line upward":
                     indLogic = IndicatorLogic.The_indicator_crosses_the_level_line_upward;
                     break;
 
-                case "The Detrended Oscillator crosses the zero line downward":
+                case "Detrended Oscillator crosses the zero line downward":
                     indLogic = IndicatorLogic.The_indicator_crosses_the_level_line_downward;
                     break;
 
-                case "The Detrended Oscillator changes its direction upward":
+                case "Detrended Oscillator changes its direction upward":
                     indLogic = IndicatorLogic.The_indicator_changes_its_direction_upward;
                     break;
 
-                case "The Detrended Oscillator changes its direction downward":
+                case "Detrended Oscillator changes its direction downward":
                     indLogic = IndicatorLogic.The_indicator_changes_its_direction_downward;
                     break;
             }
@@ -206,63 +206,63 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         public override void SetDescription()
         {
-            EntryFilterLongDescription = "the " + ToString() + " ";
-            EntryFilterShortDescription = "the " + ToString() + " ";
-            ExitFilterLongDescription = "the " + ToString() + " ";
-            ExitFilterShortDescription = "the " + ToString() + " ";
+            EntryFilterLongDescription = ToString() + " ";
+            EntryFilterShortDescription = ToString() + " ";
+            ExitFilterLongDescription = ToString() + " ";
+            ExitFilterShortDescription = ToString() + " ";
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The Detrended Oscillator rises":
+                case "Detrended Oscillator rises":
                     EntryFilterLongDescription += "rises";
                     EntryFilterShortDescription += "falls";
                     ExitFilterLongDescription += "rises";
                     ExitFilterShortDescription += "falls";
                     break;
 
-                case "The Detrended Oscillator falls":
+                case "Detrended Oscillator falls":
                     EntryFilterLongDescription += "falls";
                     EntryFilterShortDescription += "rises";
                     ExitFilterLongDescription += "falls";
                     ExitFilterShortDescription += "rises";
                     break;
 
-                case "The Detrended Oscillator is higher than the zero line":
+                case "Detrended Oscillator is higher than the zero line":
                     EntryFilterLongDescription += "is higher than the zero line";
                     EntryFilterShortDescription += "is lower than the zero line";
                     ExitFilterLongDescription += "is higher than the zero line";
                     ExitFilterShortDescription += "is lower than the zero line";
                     break;
 
-                case "The Detrended Oscillator is lower than the zero line":
+                case "Detrended Oscillator is lower than the zero line":
                     EntryFilterLongDescription += "is lower than the zero line";
                     EntryFilterShortDescription += "is higher than the zero line";
                     ExitFilterLongDescription += "is lower than the zero line";
                     ExitFilterShortDescription += "is higher than the zero line";
                     break;
 
-                case "The Detrended Oscillator crosses the zero line upward":
+                case "Detrended Oscillator crosses the zero line upward":
                     EntryFilterLongDescription += "crosses the zero line upward";
                     EntryFilterShortDescription += "crosses the zero line downward";
                     ExitFilterLongDescription += "crosses the zero line upward";
                     ExitFilterShortDescription += "crosses the zero line downward";
                     break;
 
-                case "The Detrended Oscillator crosses the zero line downward":
+                case "Detrended Oscillator crosses the zero line downward":
                     EntryFilterLongDescription += "crosses the zero line downward";
                     EntryFilterShortDescription += "crosses the zero line upward";
                     ExitFilterLongDescription += "crosses the zero line downward";
                     ExitFilterShortDescription += "crosses the zero line upward";
                     break;
 
-                case "The Detrended Oscillator changes its direction upward":
+                case "Detrended Oscillator changes its direction upward":
                     EntryFilterLongDescription += "changes its direction upward";
                     EntryFilterShortDescription += "changes its direction downward";
                     ExitFilterLongDescription += "changes its direction upward";
                     ExitFilterShortDescription += "changes its direction downward";
                     break;
 
-                case "The Detrended Oscillator changes its direction downward":
+                case "Detrended Oscillator changes its direction downward":
                     EntryFilterLongDescription += "changes its direction downward";
                     EntryFilterShortDescription += "changes its direction upward";
                     ExitFilterLongDescription += "changes its direction downward";

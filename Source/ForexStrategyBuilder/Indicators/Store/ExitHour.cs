@@ -21,9 +21,11 @@ namespace ForexStrategyBuilder.Indicators.Store
         {
             IndicatorName = "Exit Hour";
             PossibleSlots = SlotTypes.Close;
+            WarningMessage = "Exit Hour indicator works properly on 4H and lower time frame." + Environment.NewLine +
+                             "It sends close signal when bar closes at the specified hour.";
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -37,9 +39,9 @@ namespace ForexStrategyBuilder.Indicators.Store
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
             IndParam.ListParam[0].ItemList = new[]
-                {
-                    "Exit the market before the specified hour"
-                };
+            {
+                "Exit the market before the specified hour"
+            };
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
@@ -95,14 +97,14 @@ namespace ForexStrategyBuilder.Indicators.Store
             Component = new IndicatorComp[1];
 
             Component[0] = new IndicatorComp
-                {
-                    CompName = "Exit hour",
-                    DataType = IndComponentType.ClosePrice,
-                    ChartType = IndChartType.NoChart,
-                    ShowInDynInfo = false,
-                    FirstBar = firstBar,
-                    Value = adBars
-                };
+            {
+                CompName = "Exit hour",
+                DataType = IndComponentType.ClosePrice,
+                ChartType = IndChartType.NoChart,
+                ShowInDynInfo = false,
+                FirstBar = firstBar,
+                Value = adBars
+            };
         }
 
         public override void SetDescription()

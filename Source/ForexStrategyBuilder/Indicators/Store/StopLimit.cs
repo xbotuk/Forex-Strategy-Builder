@@ -24,7 +24,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             PossibleSlots = SlotTypes.Close;
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -36,30 +36,30 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.IndicatorType = TypeOfIndicator.Additional;
 
             // The ComboBox parameters
-            IndParam.ListParam[0].Caption  = "Logic";
-            IndParam.ListParam[0].ItemList = new string[]
+            IndParam.ListParam[0].Caption = "Logic";
+            IndParam.ListParam[0].ItemList = new[]
             {
-                "Exit at a Stop Loss or a Take Profit level",
+                "Exit at Stop Loss or at Take Profit"
             };
-            IndParam.ListParam[0].Index   = 0;
-            IndParam.ListParam[0].Text    = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
+            IndParam.ListParam[0].Index = 0;
+            IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
             IndParam.ListParam[0].ToolTip = "Logic of application of the indicator.";
 
             // The NumericUpDown parameters
             IndParam.NumParam[0].Caption = "Stop Loss";
-            IndParam.NumParam[0].Value   = 200;
-            IndParam.NumParam[0].Min     = 5;
-            IndParam.NumParam[0].Max     = 5000;
+            IndParam.NumParam[0].Value = 200;
+            IndParam.NumParam[0].Min = 5;
+            IndParam.NumParam[0].Max = 5000;
             IndParam.NumParam[0].Enabled = true;
-            IndParam.NumParam[0].ToolTip = "The Stop Loss value (in points).";
+            IndParam.NumParam[0].ToolTip = "Stop Loss value in points.";
 
             IndParam.NumParam[1].Caption = "Take Profit";
-            IndParam.NumParam[1].Value   = 200;
-            IndParam.NumParam[1].Min     = 5;
-            IndParam.NumParam[1].Max     = 5000;
+            IndParam.NumParam[1].Value = 200;
+            IndParam.NumParam[1].Min = 5;
+            IndParam.NumParam[1].Max = 5000;
             IndParam.NumParam[1].Enabled = true;
-            IndParam.NumParam[1].ToolTip = "The Take Profit value (in points).";
+            IndParam.NumParam[1].ToolTip = "Take Profit value in points.";
         }
 
         public override void Calculate(IDataSet dataSet)
@@ -69,18 +69,19 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         public override void SetDescription()
         {
-            var stopLoss   = (int)IndParam.NumParam[0].Value;
-            var takeProfit = (int)IndParam.NumParam[1].Value;
+            var stopLoss = (int) IndParam.NumParam[0].Value;
+            var takeProfit = (int) IndParam.NumParam[1].Value;
 
-            ExitPointLongDescription  = "when the market falls " + stopLoss + " points or rises " + takeProfit + " points from the last entry price";
-            ExitPointShortDescription = "when the market rises " + stopLoss + " points or falls " + takeProfit + " points from the last entry price";
+            ExitPointLongDescription = string.Format("when the market falls {0} points or rises {1} points from the last entry price", stopLoss, takeProfit);
+            ExitPointShortDescription = string.Format("when the market rises {0} points or falls {1} points from the last entry price", stopLoss, takeProfit);
         }
 
         public override string ToString()
         {
-            return IndicatorName + " (" +
-                IndParam.NumParam[0].ValueToString + ", " + // Stop Loss
-                IndParam.NumParam[1].ValueToString + ")";   // Take Profit
+            return string.Format("{0} ({1}, {2})",
+                IndicatorName,
+                IndParam.NumParam[0].ValueToString,
+                IndParam.NumParam[1].ValueToString);
         }
     }
 }

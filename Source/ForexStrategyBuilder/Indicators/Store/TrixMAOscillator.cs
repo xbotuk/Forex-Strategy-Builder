@@ -217,10 +217,10 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         public override void SetDescription()
         {
-            EntryFilterLongDescription = "the " + ToString() + " ";
-            EntryFilterShortDescription = "the " + ToString() + " ";
-            ExitFilterLongDescription = "the " + ToString() + " ";
-            ExitFilterShortDescription = "the " + ToString() + " ";
+            EntryFilterLongDescription = ToString() + " ";
+            EntryFilterShortDescription = ToString() + " ";
+            ExitFilterLongDescription = ToString() + " ";
+            ExitFilterShortDescription = ToString() + " ";
 
             switch (IndParam.ListParam[0].Text)
             {

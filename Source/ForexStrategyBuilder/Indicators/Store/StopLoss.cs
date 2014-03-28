@@ -24,7 +24,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             PossibleSlots = SlotTypes.Close;
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -39,7 +39,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].Caption  = "Logic";
             IndParam.ListParam[0].ItemList = new string[]
             {
-                "Exit at the Stop Loss level",
+                "Exit at Stop Loss level",
             };
             IndParam.ListParam[0].Index   = 0;
             IndParam.ListParam[0].Text    = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
@@ -52,7 +52,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.NumParam[0].Min     = 5;
             IndParam.NumParam[0].Max     = 5000;
             IndParam.NumParam[0].Enabled = true;
-            IndParam.NumParam[0].ToolTip = "The Stop value (in points).";
+            IndParam.NumParam[0].ToolTip = "Stop value in points.";
         }
 
         public override void Calculate(IDataSet dataSet)
@@ -62,16 +62,17 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         public override void SetDescription()
         {
-            int iStopLoss = (int)IndParam.NumParam[0].Value;
+            int stopLoss = (int)IndParam.NumParam[0].Value;
 
-            ExitPointLongDescription  = "when the market falls " + iStopLoss + " points from the last entry price";
-            ExitPointShortDescription = "when the market rises " + iStopLoss + " points from the last entry price";
+            ExitPointLongDescription  = string.Format("when the market falls {0} points from the last entry price", stopLoss);
+            ExitPointShortDescription = string.Format("when the market rises {0} points from the last entry price", stopLoss);
         }
 
         public override string ToString()
         {
-            return IndicatorName + " (" +
-                IndParam.NumParam[0].ValueToString + ")"; // Stop Loss
+            return string.Format("{0} ({1})",
+                IndicatorName,
+                IndParam.NumParam[0].ValueToString);
         }
     }
 }

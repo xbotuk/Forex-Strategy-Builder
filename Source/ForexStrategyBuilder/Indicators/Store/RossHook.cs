@@ -24,7 +24,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             PossibleSlots = SlotTypes.Open | SlotTypes.Close;
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -36,21 +36,21 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].Caption = "Logic";
             if (SlotType == SlotTypes.Open)
                 IndParam.ListParam[0].ItemList = new[]
-                    {
-                        "Enter long at an Up Ross hook",
-                        "Enter long at a Down Ross hook"
-                    };
+                {
+                    "Enter long at Up Ross hook",
+                    "Enter long at Down Ross hook"
+                };
             else if (SlotType == SlotTypes.Close)
                 IndParam.ListParam[0].ItemList = new[]
-                    {
-                        "Exit long at an Up Ross hook",
-                        "Exit long at a Down Ross hook"
-                    };
+                {
+                    "Exit long at Up Ross hook",
+                    "Exit long at Down Ross hook"
+                };
             else
                 IndParam.ListParam[0].ItemList = new[]
-                    {
-                        "Not Defined"
-                    };
+                {
+                    "Not Defined"
+                };
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
@@ -92,25 +92,25 @@ namespace ForexStrategyBuilder.Indicators.Store
             Component = new IndicatorComp[2];
 
             Component[0] = new IndicatorComp
-                {
-                    ChartType = IndChartType.Level,
-                    ChartColor = Color.SpringGreen,
-                    FirstBar = 5,
-                    Value = adRhUp
-                };
+            {
+                ChartType = IndChartType.Level,
+                ChartColor = Color.SpringGreen,
+                FirstBar = 5,
+                Value = adRhUp
+            };
 
             Component[1] = new IndicatorComp
-                {
-                    ChartType = IndChartType.Level,
-                    ChartColor = Color.DarkRed,
-                    FirstBar = 5,
-                    Value = adRhDn
-                };
+            {
+                ChartType = IndChartType.Level,
+                ChartColor = Color.DarkRed,
+                FirstBar = 5,
+                Value = adRhDn
+            };
 
             // Sets the Component's type
             if (SlotType == SlotTypes.Open)
             {
-                if (IndParam.ListParam[0].Text == "Enter long at an Up Ross hook")
+                if (IndParam.ListParam[0].Text == "Enter long at Up Ross hook")
                 {
                     Component[0].DataType = IndComponentType.OpenLongPrice;
                     Component[1].DataType = IndComponentType.OpenShortPrice;
@@ -125,7 +125,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
             else if (SlotType == SlotTypes.Close)
             {
-                if (IndParam.ListParam[0].Text == "Exit long at an Up Ross hook")
+                if (IndParam.ListParam[0].Text == "Exit long at Up Ross hook")
                 {
                     Component[0].DataType = IndComponentType.CloseLongPrice;
                     Component[1].DataType = IndComponentType.CloseShortPrice;
@@ -145,23 +145,23 @@ namespace ForexStrategyBuilder.Indicators.Store
             switch (IndParam.ListParam[0].Text)
             {
                 case "Enter long at an Up Ross hook":
-                    EntryPointLongDescription = "at the peak of an Up Ross hook";
-                    EntryPointShortDescription = "at the bottom of a Down  Ross hook";
+                    EntryPointLongDescription = "at the peak of Up Ross hook";
+                    EntryPointShortDescription = "at the bottom of Down Ross hook";
                     break;
 
                 case "Enter long at a Down Ross hook":
-                    EntryPointLongDescription = "at the bottom of a Down Ross hook";
-                    EntryPointShortDescription = "at the peak of an Up Ross hook";
+                    EntryPointLongDescription = "at the bottom of Down Ross hook";
+                    EntryPointShortDescription = "at the peak of Up Ross hook";
                     break;
 
                 case "Exit long at an Up Ross hook":
-                    ExitPointLongDescription = "at the peak of an Up Ross hook";
-                    ExitPointShortDescription = "at the bottom of a Down Ross hook";
+                    ExitPointLongDescription = "at the peak of Up Ross hook";
+                    ExitPointShortDescription = "at the bottom of Down Ross hook";
                     break;
 
                 case "Exit long at a Down Ross hook":
-                    ExitPointLongDescription = "at the bottom of a Down Ross hook";
-                    ExitPointShortDescription = "at the peak of an Up Fractal";
+                    ExitPointLongDescription = "at the bottom of Down Ross hook";
+                    ExitPointShortDescription = "at the peak of Up Ross hook";
                     break;
             }
         }

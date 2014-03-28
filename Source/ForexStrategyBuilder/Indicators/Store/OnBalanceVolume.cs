@@ -25,7 +25,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             SeparatedChart = true;
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -37,10 +37,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].Caption  = "Logic";
             IndParam.ListParam[0].ItemList = new string[]
             {
-                "The On Balance Volume rises",
-                "The On Balance Volume falls",
-                "The On Balance Volume changes its direction upward",
-                "The On Balance Volume changes its direction downward"
+                "On Balance Volume rises",
+                "On Balance Volume falls",
+                "On Balance Volume changes its direction upward",
+                "On Balance Volume changes its direction downward"
             };
             IndParam.ListParam[0].Index   = 0;
             IndParam.ListParam[0].Text    = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
@@ -64,7 +64,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             // Calculation
             double[] adOBV  = new double[Bars];
 
-            int iFirstBar = 5;
+            const int iFirstBar = 5;
 
             adOBV[0] = Volume[0];
 
@@ -126,19 +126,19 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The On Balance Volume rises":
+                case "On Balance Volume rises":
                     indLogic = IndicatorLogic.The_indicator_rises;
                     break;
 
-                case "The On Balance Volume falls":
+                case "On Balance Volume falls":
                     indLogic = IndicatorLogic.The_indicator_falls;
                     break;
 
-                case "The On Balance Volume changes its direction upward":
+                case "On Balance Volume changes its direction upward":
                     indLogic = IndicatorLogic.The_indicator_changes_its_direction_upward;
                     break;
 
-                case "The On Balance Volume changes its direction downward":
+                case "On Balance Volume changes its direction downward":
                     indLogic = IndicatorLogic.The_indicator_changes_its_direction_downward;
                     break;
             }
@@ -148,35 +148,35 @@ namespace ForexStrategyBuilder.Indicators.Store
         }
 
         public override void SetDescription()        {
-            EntryFilterLongDescription  = "the " + ToString() + " ";
-            EntryFilterShortDescription = "the " + ToString() + " ";
-            ExitFilterLongDescription   = "the " + ToString() + " ";
-            ExitFilterShortDescription  = "the " + ToString() + " ";
+            EntryFilterLongDescription  = ToString() + " ";
+            EntryFilterShortDescription = ToString() + " ";
+            ExitFilterLongDescription   = ToString() + " ";
+            ExitFilterShortDescription  = ToString() + " ";
 
             switch (IndParam.ListParam[0].Text)
             {
-                case "The On Balance Volume rises":
+                case "On Balance Volume rises":
                     EntryFilterLongDescription  += "rises";
                     EntryFilterShortDescription += "falls";
                     ExitFilterLongDescription   += "rises";
                     ExitFilterShortDescription  += "falls";
                     break;
 
-                case "The On Balance Volume falls":
+                case "On Balance Volume falls":
                     EntryFilterLongDescription  += "falls";
                     EntryFilterShortDescription += "rises";
                     ExitFilterLongDescription   += "falls";
                     ExitFilterShortDescription  += "rises";
                     break;
 
-                case "The On Balance Volume changes its direction upward":
+                case "On Balance Volume changes its direction upward":
                     EntryFilterLongDescription  += "changes its direction upward";
                     EntryFilterShortDescription += "changes its direction downward";
                     ExitFilterLongDescription   += "changes its direction upward";
                     ExitFilterShortDescription  += "changes its direction downward";
                     break;
 
-                case "The On Balance Volume changes its direction downward":
+                case "On Balance Volume changes its direction downward":
                     EntryFilterLongDescription  += "changes its direction downward";
                     EntryFilterShortDescription += "changes its direction upward";
                     ExitFilterLongDescription   += "changes its direction downward";

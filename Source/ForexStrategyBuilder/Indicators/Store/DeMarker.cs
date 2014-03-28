@@ -213,10 +213,10 @@ namespace ForexStrategyBuilder.Indicators.Store
             string sLevelLong = IndParam.NumParam[1].ValueToString;
             string sLevelShort = IndParam.NumParam[1].AnotherValueToString(1 - IndParam.NumParam[1].Value);
 
-            EntryFilterLongDescription = "the " + ToString() + " ";
-            EntryFilterShortDescription = "the " + ToString() + " ";
-            ExitFilterLongDescription = "the " + ToString() + " ";
-            ExitFilterShortDescription = "the " + ToString() + " ";
+            EntryFilterLongDescription = ToString() + " ";
+            EntryFilterShortDescription = ToString() + " ";
+            ExitFilterLongDescription = ToString() + " ";
+            ExitFilterShortDescription = ToString() + " ";
 
             switch (IndParam.ListParam[0].Text)
             {
