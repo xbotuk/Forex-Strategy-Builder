@@ -1,6 +1,6 @@
 #define MyAppName      "Forex Strategy Builder"
-#define MyAppVersion   "3.0.2.0"
-#define MyAppVerText   "v3.0.2"
+#define MyAppVersion   "3.1.0.0"
+#define MyAppVerText   "v3.1"
 #define MyOutputPath   SourcePath
 #define MyCertPass     ReadIni(SourcePath + "\Install.ini", "Release", "CertificatePassoword")
 
@@ -13,7 +13,7 @@ AppVerName         = {#MyAppName} {#MyAppVerText}
 ArchitecturesInstallIn64BitMode = x64 ia64
 AppPublisher       = Forex Software Ltd.
 AppPublisherURL    = http://forexsb.com/
-AppCopyright       = Copyright © 2006-2013 Miroslav Popov
+AppCopyright       = Copyright © 2006-2014 Miroslav Popov
 AppComments        = Freeware forex strategy back tester, generator and optimizer.
 DefaultDirName     = {pf}\{#MyAppName}
 DefaultGroupName   = {#MyAppName}
