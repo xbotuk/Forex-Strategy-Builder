@@ -30,7 +30,6 @@ namespace ForexStrategyBuilder.Dialogs.JForex
         private readonly Button btnDestFolder;
         private readonly Button btnHelp;
         private readonly Button btnImport;
-        private readonly Color colorText;
         private readonly List<JForexDataFiles> files = new List<JForexDataFiles>();
         private readonly Label lblDestFolder;
         private readonly Label lblIntro;
@@ -70,7 +69,7 @@ namespace ForexStrategyBuilder.Dialogs.JForex
             tbxDestFolder = new TextBox();
             btnDestFolder = new Button();
 
-            colorText = LayoutColors.ColorControlText;
+            Color colorText = LayoutColors.ColorControlText;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -182,7 +181,7 @@ namespace ForexStrategyBuilder.Dialogs.JForex
             btnHelp.Parent = this;
             btnHelp.Name = "Help";
             btnHelp.Text = Language.T("Help");
-            btnHelp.Click += btnHelpClick;
+            btnHelp.Click += BtnHelpClick;
             btnHelp.UseVisualStyleBackColor = true;
 
             // Button Close
@@ -232,7 +231,7 @@ namespace ForexStrategyBuilder.Dialogs.JForex
             var btnVertSpace = (int) (Data.VerticalDlu*5.5);
             var btnHrzSpace = (int) (Data.HorizontalDlu*3);
             int border = btnHrzSpace;
-            int nudWidth = (int)(70 * Data.HDpiScale);
+            var nudWidth = (int)(70 * Data.HDpiScale);
 
             // Button Cancel
             btnClose.Size = new Size(buttonWidth, buttonHeight);
@@ -341,7 +340,7 @@ namespace ForexStrategyBuilder.Dialogs.JForex
         /// <summary>
         ///     Button Help Click
         /// </summary>
-        private void btnHelpClick(object sender, EventArgs e)
+        private void BtnHelpClick(object sender, EventArgs e)
         {
             try
             {
@@ -464,8 +463,8 @@ namespace ForexStrategyBuilder.Dialogs.JForex
                         Math.Abs(open - low) < 0.000001 &&
                         Math.Abs(open - close) < 0.000001) continue;
 
-                    streamWriter.WriteLine(time.ToString("yyyy-MM-dd\tHH:mm") + "\t" +
-                                           open + "\t" + high + "\t" + low + "\t" + close + "\t" + volume);
+                    streamWriter.WriteLine("{0:yyyy-MM-dd\tHH:mm}\t{1}\t{2}\t{3}\t{4}\t{5}", time, open, high, low,
+                        close, volume);
                     bars++;
                 }
             }
@@ -482,7 +481,7 @@ namespace ForexStrategyBuilder.Dialogs.JForex
 
         private char FindDelimiter(string line)
         {
-            var delimiters = new[] {' ', ',', '.', '/'};
+            var delimiters = new[] {' ', ',', ';', '.', '/'};
 
             foreach (char delimiter in delimiters)
             {

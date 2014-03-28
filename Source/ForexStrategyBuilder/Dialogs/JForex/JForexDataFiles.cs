@@ -14,13 +14,11 @@ namespace ForexStrategyBuilder.Dialogs.JForex
 {
     public class JForexDataFiles
     {
-        private readonly string fileName;
-
         public JForexDataFiles(string filePath, string targetPath)
         {
             IsCorrect = false;
             FilePath = filePath;
-            fileName = Path.GetFileNameWithoutExtension(filePath);
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
             if (fileName != null)
             {
                 string[] fields = fileName.Split(new[] {'_'});
@@ -28,7 +26,7 @@ namespace ForexStrategyBuilder.Dialogs.JForex
                 if (fields.Length < 4)
                     return;
 
-                switch (fields[1])
+                switch (fields[2])
                 {
                     case "Ticks":
                         Period = 0;
