@@ -537,11 +537,11 @@ namespace ForexStrategyBuilder.Dialogs
                 for (int i = 1; i <= checkPoints; i++)
                 {
                     int firstBar = Data.FirstBar;
-                    int bar = Data.FirstBar + i*(Data.Bars - firstBar)/(checkPoints + 1);
+                    var bar = (int) (Data.FirstBar + i*(Data.Bars - firstBar)/(checkPoints + 1.0));
                     double netBalance = Backtester.NetMoneyBalance;
                     double startBalance = Backtester.MoneyBalance(firstBar);
                     double checkPointBalance = Backtester.MoneyBalance(bar);
-                    double targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1);
+                    double targetBalance = startBalance + i*(netBalance - startBalance)/(checkPoints + 1.0);
                     double minBalance = targetBalance*(1 - maxPercentDeviation);
                     double maxBalance = targetBalance*(1 + maxPercentDeviation);
                     if (checkPointBalance < minBalance || checkPointBalance > maxBalance)
