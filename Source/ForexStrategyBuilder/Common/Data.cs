@@ -14,13 +14,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
-using System.Net;
-using System.Net.NetworkInformation;
 using System.Windows.Forms;
 using ForexStrategyBuilder.Infrastructure.Enums;
 using ForexStrategyBuilder.Infrastructure.Interfaces;
 using ForexStrategyBuilder.Properties;
 using ForexStrategyBuilder.Utils;
+using ProgReporter;
 
 namespace ForexStrategyBuilder
 {
@@ -66,6 +65,8 @@ namespace ForexStrategyBuilder
             IsStrategyChanged = false;
             StackStrategy = new Stack<Strategy>();
             GeneratorHistory = new List<Strategy>();
+            ProgStats = new ProgStats();
+            ProgStats.AppStart("980834a958e961563091a670660243e7dd17d543");
             IsIntrabarData = false;
 
             // Program's Major, Minor, Version and Build numbers must be <= 99.
@@ -75,7 +76,6 @@ namespace ForexStrategyBuilder
                         10000*int.Parse(version[1]) +
                         100*int.Parse(version[2]) +
                         1*int.Parse(version[3]);
-
             Strategy.GenerateNew();
         }
 
@@ -191,6 +191,11 @@ namespace ForexStrategyBuilder
         ///     Gets or sets the strategy name for Configs.LastStrategy
         /// </summary>
         public static string LoadedSavedStrategy { get; set; }
+
+        /// <summary>
+        ///     User Experience Module
+        /// </summary>
+        public static IProgStats ProgStats { get; set; }
 
         /// <summary>
         ///     The current strategy.
@@ -374,46 +379,6 @@ namespace ForexStrategyBuilder
             }
 
             return !isStrategyIndicatorsChanged;
-        }
-
-        /// <summary>
-        ///     Collects usage statistics and sends them if it's allowed.
-        /// </summary>
-        public static void SendStats()
-        {
-            const string fileUrl = "http://forexsb.com/ustats/set-fsb.php";
-
-            string mac = "";
-            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (nic.OperationalStatus != OperationalStatus.Up) continue;
-                mac = nic.GetPhysicalAddress().ToString();
-                break;
-            }
-
-            string parameters = string.Empty;
-
-            if (Configs.SendUsageStats)
-            {
-                parameters =
-                    "?mac=" + mac +
-                    "&reg=" + RegionInfo.CurrentRegion.EnglishName +
-                    "&time=" + (int) (DateTime.Now - FSBStartTime).TotalSeconds +
-                    "&gen=" + GeneratorStarts +
-                    "&opt=" + OptimizerStarts +
-                    "&str=" + SavedStrategies;
-            }
-
-            try
-            {
-                var webClient = new WebClient();
-                Stream data = webClient.OpenRead(fileUrl + parameters);
-                if (data != null) data.Close();
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-            }
         }
 
         /// <summary>

@@ -1766,6 +1766,7 @@ namespace ForexStrategyBuilder
         {
             var mi = (ToolStripMenuItem) sender;
             Configs.SendUsageStats = mi.Checked;
+            Data.ProgStats.SendUsageStatistics = mi.Checked;
         }
 
         /// <summary>

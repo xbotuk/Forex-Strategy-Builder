@@ -1606,9 +1606,9 @@ namespace ForexStrategyBuilder
             }
 
             if (dataDirectory != "" && Directory.Exists(dataDirectory))
-            {
                 Data.OfflineDataDir = dataDirectory;
-            }
+
+            Data.ProgStats.SendUsageStatistics = SendUsageStats;
         }
 
         /// <summary>

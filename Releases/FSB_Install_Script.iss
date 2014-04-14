@@ -1,6 +1,6 @@
 #define MyAppName      "Forex Strategy Builder"
-#define MyAppVersion   "3.1.0.0"
-#define MyAppVerText   "v3.1"
+#define MyAppVersion   "3.4.0.0"
+#define MyAppVerText   "v3.4"
 #define MyOutputPath   SourcePath
 #define MyCertPass     ReadIni(SourcePath + "\Install.ini", "Release", "CertificatePassoword")
 
@@ -42,6 +42,7 @@ Source: FSB_Launcher.exe;                  DestDir: "{app}";                    
 Source: FSB_Launcher.xml;                  DestDir: "{app}";                                Components: main;
 Source: ReadMe.html;                       DestDir: "{app}";                                Components: main;
 Source: License.rtf;                       DestDir: "{app}";                                Components: main;
+Source: ProgReporter.dll;                  DestDir: "{app}";                                Components: main;
 Source: User Files\Indicators\*;           DestDir: "{app}\User Files\Indicators";          Components: custind;
 Source: User Files\Data\*;                 DestDir: "{app}\User Files\Data";                Components: data;
 Source: User Files\Strategies\*;           DestDir: "{app}\User Files\Strategies";          Components: strat;

@@ -78,6 +78,9 @@
   </Target>
   -->
   <ItemGroup>
+    <Reference Include="ProgReporter">
+      <HintPath>..\Lib\ProgReporter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />

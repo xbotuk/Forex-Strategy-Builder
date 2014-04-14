@@ -80,7 +80,6 @@ namespace ForexStrategyBuilder
             Language.InitLanguages();
             LayoutColors.InitColorSchemes();
             Data.InitMarketStatistic();
-
             Data.InstrProperties = Instruments.InstrumentList[Data.Strategy.Symbol].Clone();
 
             Application.Run(new Actions());
@@ -214,33 +213,29 @@ namespace ForexStrategyBuilder
             else if (dialogResult == DialogResult.Cancel)
                 e.Cancel = true;
 
-            if (!e.Cancel)
+            if (e.Cancel) return;
+
+            // Remember the last used strategy
+            if (Configs.RememberLastStr)
             {
-                // Remember the last used strategy
-                if (Configs.RememberLastStr)
+                if (Data.LoadedSavedStrategy != "")
                 {
-                    if (Data.LoadedSavedStrategy != "")
-                    {
-                        string strategyPath = Path.GetDirectoryName(Data.LoadedSavedStrategy) +
-                                              Path.DirectorySeparatorChar;
-                        string defaultPath = Path.Combine(Data.UserFilesDir, Data.DefaultStrategyDir);
-                        if (strategyPath == defaultPath)
-                            Data.LoadedSavedStrategy = Path.GetFileName(Data.LoadedSavedStrategy);
-                    }
-                    Configs.LastStrategy = Data.LoadedSavedStrategy;
+                    string strategyPath = Path.GetDirectoryName(Data.LoadedSavedStrategy) +
+                                          Path.DirectorySeparatorChar;
+                    string defaultPath = Path.Combine(Data.UserFilesDir, Data.DefaultStrategyDir);
+                    if (strategyPath == defaultPath)
+                        Data.LoadedSavedStrategy = Path.GetFileName(Data.LoadedSavedStrategy);
                 }
-
-                WindowState = FormWindowState.Normal;
-                Configs.MainScreenWidth = Width;
-                Configs.MainScreenHeight = Height;
-
-                Configs.SaveConfigs();
-                Instruments.SaveInstruments();
-#if !DEBUG
-                Hide();
-                Data.SendStats();
-#endif
+                Configs.LastStrategy = Data.LoadedSavedStrategy;
             }
+
+            WindowState = FormWindowState.Normal;
+            Configs.MainScreenWidth = Width;
+            Configs.MainScreenHeight = Height;
+
+            Configs.SaveConfigs();
+            Instruments.SaveInstruments();
+            Data.ProgStats.AppStop();
         }
 
 // ---------------------------------------------------------- //
@@ -798,7 +793,7 @@ namespace ForexStrategyBuilder
                     Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + " - " + Data.ProgramName;
                     Data.IsStrategyChanged = false;
                     Data.LoadedSavedStrategy = Data.StrategyPath;
-                    Data.SavedStrategies++;
+                    Data.ProgStats.FeatureClick(2);
                 }
                 catch (Exception exc)
                 {
@@ -832,7 +827,7 @@ namespace ForexStrategyBuilder
                 Text = Path.GetFileNameWithoutExtension(Data.StrategyName) + " - " + Data.ProgramName;
                 Data.IsStrategyChanged = false;
                 Data.LoadedSavedStrategy = Data.StrategyPath;
-                Data.SavedStrategies++;
+                Data.ProgStats.FeatureClick(2);
             }
             catch (Exception exc)
             {
@@ -1161,6 +1156,7 @@ namespace ForexStrategyBuilder
 
             var generator = new Generator {ParrentForm = this};
             generator.ShowDialog();
+            Data.ProgStats.FeatureClick(0);
 
             if (generator.DialogResult == DialogResult.OK)
             {
@@ -1190,8 +1186,6 @@ namespace ForexStrategyBuilder
                 // When we cancel the Generating, we return the original strategy.
                 UndoStrategy();
             }
-
-            Data.GeneratorStarts++;
         }
 
         /// <summary>
@@ -1213,6 +1207,7 @@ namespace ForexStrategyBuilder
 
             var optimizer = new Optimizer {SetParrentForm = this};
             optimizer.ShowDialog();
+            Data.ProgStats.FeatureClick(1);
 
             if (optimizer.DialogResult == DialogResult.OK)
             {
@@ -1227,8 +1222,6 @@ namespace ForexStrategyBuilder
                 // If we cancel the optimizing, we return the original strategy.
                 UndoStrategy();
             }
-
-            Data.OptimizerStarts++;
         }
 
         /// <summary>
