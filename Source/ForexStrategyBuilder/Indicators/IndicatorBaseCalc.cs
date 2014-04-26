@@ -206,6 +206,7 @@ namespace ForexStrategyBuilder.Indicators
                                        IndicatorLogic indLogic)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             switch (indLogic)
             {
@@ -384,6 +385,7 @@ namespace ForexStrategyBuilder.Indicators
                                                   ref IndicatorComp indComp, IndicatorLogic indLogic)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             switch (indLogic)
             {
@@ -537,6 +539,7 @@ namespace ForexStrategyBuilder.Indicators
                                           BandIndLogic indLogic)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             switch (indLogic)
             {
@@ -724,6 +727,7 @@ namespace ForexStrategyBuilder.Indicators
                                            ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -750,6 +754,7 @@ namespace ForexStrategyBuilder.Indicators
                                            ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -778,6 +783,7 @@ namespace ForexStrategyBuilder.Indicators
                                                                   ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -796,6 +802,7 @@ namespace ForexStrategyBuilder.Indicators
                                                                  ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -814,6 +821,7 @@ namespace ForexStrategyBuilder.Indicators
                                                                    ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -844,6 +852,7 @@ namespace ForexStrategyBuilder.Indicators
                                                                      ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -872,6 +881,7 @@ namespace ForexStrategyBuilder.Indicators
                                                    ref IndicatorComp indCompLong, ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -887,6 +897,7 @@ namespace ForexStrategyBuilder.Indicators
                                                    ref IndicatorComp indCompLong, ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -903,6 +914,7 @@ namespace ForexStrategyBuilder.Indicators
                                                                     ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -931,6 +943,7 @@ namespace ForexStrategyBuilder.Indicators
                                                                     ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -958,6 +971,7 @@ namespace ForexStrategyBuilder.Indicators
                                                     ref IndicatorComp indCompLong, ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
@@ -973,6 +987,7 @@ namespace ForexStrategyBuilder.Indicators
                                                     ref IndicatorComp indCompLong, ref IndicatorComp indCompShort)
         {
             double sigma = Sigma();
+            firstBar = Math.Max(firstBar, 2);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
