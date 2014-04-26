@@ -545,9 +545,9 @@ namespace ForexStrategyBuilder
                 }
             }
 
-            TestedDays = (Time[Bars - 1] - Time[FirstBar]).Days;
-            if (TestedDays < 1)
-                TestedDays = 1;
+            double days = (Time[Bars - 1] - Time[FirstBar]).TotalDays;
+            TestedDays = (int)Math.Round(days);
+            if (TestedDays < 1) TestedDays = 1;
 
             // Max consecutive loses
             int sum = 0;
