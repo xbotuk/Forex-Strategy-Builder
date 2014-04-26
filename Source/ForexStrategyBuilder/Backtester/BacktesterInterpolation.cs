@@ -72,16 +72,16 @@ namespace ForexStrategyBuilder
                     var prices = new[] {order.OrdPrice, order.OrdPrice2};
                     foreach (double price in prices)
                     {
-                        if (high + micron <= price || price <= low - micron)
+                        if (high + sigma <= price || price <= low - sigma)
                             continue;
 
                         if (isTopReachable)
-                            isTopReachable = current > price + micron;
+                            isTopReachable = current > price + sigma;
 
                         if (isBottomReachable)
-                            isBottomReachable = current < price - micron;
+                            isBottomReachable = current < price - sigma;
 
-                        if (price > current - micron && price < priceHigher + micron)
+                        if (price > current - sigma && price < priceHigher + sigma)
                         {
                             // New nearer Upper price
                             isHigherPrice = true;
@@ -89,7 +89,7 @@ namespace ForexStrategyBuilder
                             orderHigher = order;
                             isTopReachable = false;
                         }
-                        else if (price < current && price > priceLower - micron)
+                        else if (price < current && price > priceLower - sigma)
                         {
                             // New nearer Lower price
                             isLowerPrice = true;
@@ -111,12 +111,12 @@ namespace ForexStrategyBuilder
                     // There are a higher and a lower order
                     eval = BacktestEval.Ambiguous;
                 }
-                else if (isHigherPrice && priceHigher - current < micron)
+                else if (isHigherPrice && priceHigher - current < sigma)
                 {
                     // There is an order at the current price
                     eval = BacktestEval.Correct;
                 }
-                else if (isLowerPrice && current - priceLower < micron)
+                else if (isLowerPrice && current - priceLower < sigma)
                 {
                     // There is an order at the current price
                     eval = BacktestEval.Correct;
@@ -125,19 +125,19 @@ namespace ForexStrategyBuilder
                 {
                     // Check for a Closing Ambiguity
                     if (session[bar].IsBottomReached && session[bar].IsTopReached &&
-                        current > close - micron && close > priceLower)
+                        current > close - sigma && close > priceLower)
                         isClosingAmbiguity = true;
 
                     else if (session[bar].IsBottomReached && session[bar].IsTopReached &&
-                             current < close + micron && close < priceHigher)
+                             current < close + sigma && close < priceHigher)
                         isClosingAmbiguity = true;
 
                     else if (session[bar].IsTopReached && isHigherPrice &&
-                             current > close - micron)
+                             current > close - sigma)
                         isClosingAmbiguity = true;
 
                     else if (session[bar].IsBottomReached && isLowerPrice &&
-                             current < close + micron)
+                             current < close + sigma)
                         isClosingAmbiguity = true;
 
                     eval = isClosingAmbiguity
@@ -236,7 +236,7 @@ namespace ForexStrategyBuilder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + micron > high)
+                        if (TickData[bar][tick] + sigma > high)
                         {
                             // Top found
                             current = high;
@@ -245,7 +245,7 @@ namespace ForexStrategyBuilder
                             isScanningResult = true;
                             break;
                         }
-                        if (TickData[bar][tick] - micron < low)
+                        if (TickData[bar][tick] - sigma < low)
                         {
                             // Bottom found
                             current = low;
@@ -263,7 +263,7 @@ namespace ForexStrategyBuilder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + micron > high)
+                        if (TickData[bar][tick] + sigma > high)
                         {
                             // Top found
                             current = high;
@@ -281,7 +281,7 @@ namespace ForexStrategyBuilder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] - micron < low)
+                        if (TickData[bar][tick] - sigma < low)
                         {
                             // Bottom found
                             current = low;
@@ -317,7 +317,7 @@ namespace ForexStrategyBuilder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + micron > thePrice)
+                        if (TickData[bar][tick] + sigma > thePrice)
                         {
                             // The order is reached
                             current = thePrice;
@@ -325,7 +325,7 @@ namespace ForexStrategyBuilder
                             isScanningResult = true;
                             break;
                         }
-                        if (TickData[bar][tick] - micron < low)
+                        if (TickData[bar][tick] - sigma < low)
                         {
                             // Bottom is reached
                             current = low;
@@ -343,7 +343,7 @@ namespace ForexStrategyBuilder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + micron > high)
+                        if (TickData[bar][tick] + sigma > high)
                         {
                             // The Top is reached
                             current = high;
@@ -352,7 +352,7 @@ namespace ForexStrategyBuilder
                             isScanningResult = true;
                             break;
                         }
-                        if (TickData[bar][tick] - micron < thePrice)
+                        if (TickData[bar][tick] - sigma < thePrice)
                         {
                             // The order is reached
                             current = thePrice;
@@ -370,8 +370,8 @@ namespace ForexStrategyBuilder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (priceOld - micron < thePrice && TickData[bar][tick] + micron > thePrice ||
-                            priceOld + micron > thePrice && TickData[bar][tick] - micron < thePrice)
+                        if (priceOld - sigma < thePrice && TickData[bar][tick] + sigma > thePrice ||
+                            priceOld + sigma > thePrice && TickData[bar][tick] - sigma < thePrice)
                         {
                             // Order reached
                             current = thePrice;
@@ -392,7 +392,7 @@ namespace ForexStrategyBuilder
                     for (int tick = reachedTick; tick < tickCount; tick++)
                     {
                         reachedTick = tick;
-                        if (TickData[bar][tick] + micron > priceHigher)
+                        if (TickData[bar][tick] + sigma > priceHigher)
                         {
                             // Upper order is reached
                             current = priceHigher;
@@ -400,7 +400,7 @@ namespace ForexStrategyBuilder
                             isScanningResult = true;
                             break;
                         }
-                        if (TickData[bar][tick] - micron < priceLower)
+                        if (TickData[bar][tick] - sigma < priceLower)
                         {
                             // Lower order is reached
                             current = priceLower;
@@ -433,7 +433,7 @@ namespace ForexStrategyBuilder
                         for (int tick = reachedTick; tick < tickCount; tick++)
                         {
                             reachedTick = tick;
-                            if (TickData[bar][tick] + micron > thePrice)
+                            if (TickData[bar][tick] + sigma > thePrice)
                             {
                                 // The order is reached
                                 executeOrder = true;
@@ -448,7 +448,7 @@ namespace ForexStrategyBuilder
                         for (int tick = reachedTick; tick < tickCount; tick++)
                         {
                             reachedTick = tick;
-                            if (TickData[bar][tick] - micron < thePrice)
+                            if (TickData[bar][tick] - sigma < thePrice)
                             {
                                 // The order is reached
                                 executeOrder = true;
@@ -505,14 +505,14 @@ namespace ForexStrategyBuilder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + micron > high)
+                        if (IntraBarData[bar][intraBar].High + sigma > high)
                         {
                             // Top found
                             goUpward = true;
                             isScanningResult = true;
                         }
 
-                        if (IntraBarData[bar][intraBar].Low - micron < low)
+                        if (IntraBarData[bar][intraBar].Low - sigma < low)
                         {
                             // Bottom found
                             if (isScanningResult)
@@ -553,7 +553,7 @@ namespace ForexStrategyBuilder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + micron > high)
+                        if (IntraBarData[bar][intraBar].High + sigma > high)
                         {
                             // Top found
                             current = high;
@@ -571,7 +571,7 @@ namespace ForexStrategyBuilder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].Low - micron < low)
+                        if (IntraBarData[bar][intraBar].Low - sigma < low)
                         {
                             // Bottom found
                             current = low;
@@ -608,14 +608,14 @@ namespace ForexStrategyBuilder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + micron > thePrice)
+                        if (IntraBarData[bar][intraBar].High + sigma > thePrice)
                         {
                             // The order is reached
                             goUpward = true;
                             isScanningResult = true;
                         }
 
-                        if (IntraBarData[bar][intraBar].Low - micron < low)
+                        if (IntraBarData[bar][intraBar].Low - sigma < low)
                         {
                             // Bottom is reached
                             if (isScanningResult)
@@ -661,14 +661,14 @@ namespace ForexStrategyBuilder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + micron > high)
+                        if (IntraBarData[bar][intraBar].High + sigma > high)
                         {
                             // The Top is reached
                             goUpward = true;
                             isScanningResult = true;
                         }
 
-                        if (IntraBarData[bar][intraBar].Low - micron < thePrice)
+                        if (IntraBarData[bar][intraBar].Low - sigma < thePrice)
                         {
                             // The order is reached
                             if (isScanningResult)
@@ -715,8 +715,8 @@ namespace ForexStrategyBuilder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + micron > thePrice &&
-                            IntraBarData[bar][intraBar].Low - micron < thePrice)
+                        if (IntraBarData[bar][intraBar].High + sigma > thePrice &&
+                            IntraBarData[bar][intraBar].Low - sigma < thePrice)
                         {
                             // Order reached
                             if (tradedIntrabar == reachedIntrabar)
@@ -743,14 +743,14 @@ namespace ForexStrategyBuilder
                     {
                         reachedIntrabar = intraBar;
 
-                        if (IntraBarData[bar][intraBar].High + micron > priceHigher)
+                        if (IntraBarData[bar][intraBar].High + sigma > priceHigher)
                         {
                             // Upper order is reached
                             executeUpper = true;
                             isScanningResult = true;
                         }
 
-                        if (IntraBarData[bar][intraBar].Low - micron < priceLower)
+                        if (IntraBarData[bar][intraBar].Low - sigma < priceLower)
                         {
                             // Lower order is reached
                             if (isScanningResult)
@@ -814,7 +814,7 @@ namespace ForexStrategyBuilder
                         {
                             reachedIntrabar = intraBar;
 
-                            if (IntraBarData[bar][intraBar].High + micron > thePrice)
+                            if (IntraBarData[bar][intraBar].High + sigma > thePrice)
                             {
                                 // The order is reached
                                 executeOrder = true;
@@ -829,7 +829,7 @@ namespace ForexStrategyBuilder
                         {
                             reachedIntrabar = b;
 
-                            if (IntraBarData[bar][b].Low - micron < thePrice)
+                            if (IntraBarData[bar][b].Low - sigma < thePrice)
                             {
                                 // The order is reached
                                 executeOrder = true;
@@ -1324,9 +1324,9 @@ namespace ForexStrategyBuilder
             else
                 isGoUpward = open > close;
 
-            if (isLowerPrice && current - priceLower < micron)
+            if (isLowerPrice && current - priceLower < sigma)
                 isGoUpward = false;
-            if (isHigherPrice && priceHigher - current < micron)
+            if (isHigherPrice && priceHigher - current < sigma)
                 isGoUpward = true;
 
             if (eval == BacktestEval.None)
@@ -1511,9 +1511,9 @@ namespace ForexStrategyBuilder
                     // The order or the bottom
                     bool goUpward;
 
-                    if (current < low + micron)
+                    if (current < low + sigma)
                         goUpward = false;
-                    else if (thePrice - current < micron)
+                    else if (thePrice - current < sigma)
                         goUpward = true;
                     else if (theOrder.OrdDir == OrderDirection.Buy)
                         goUpward = !isOptimistic;
@@ -1541,9 +1541,9 @@ namespace ForexStrategyBuilder
                     // The order or the top
                     bool goUpward;
 
-                    if (current > high - micron)
+                    if (current > high - sigma)
                         goUpward = true;
-                    else if (current - thePrice < micron)
+                    else if (current - thePrice < sigma)
                         goUpward = false;
                     else if (theOrder.OrdDir == OrderDirection.Buy)
                         goUpward = !isOptimistic;
@@ -1581,9 +1581,9 @@ namespace ForexStrategyBuilder
                     // Execute one of both orders
                     bool executeUpper;
 
-                    if (priceHigher - current < micron)
+                    if (priceHigher - current < sigma)
                         executeUpper = true;
-                    else if (current - priceLower < micron)
+                    else if (current - priceLower < sigma)
                         executeUpper = false;
                     else if (session[bar].Summary.PosDir == PosDirection.Long)
                         executeUpper = isOptimistic;

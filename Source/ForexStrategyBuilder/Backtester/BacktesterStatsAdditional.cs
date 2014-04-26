@@ -557,15 +557,15 @@ namespace ForexStrategyBuilder
             double stDevLong = Math.Sqrt(sumPowLong/(totalLongTrades - 1));
             double stDevShort = Math.Sqrt(sumPowShort/(totalShortTrades - 1));
 
-            SharpeRatio = Math.Abs(stDev - 0) < micron ? 0 : (averageHPR - 1)/stDev;
-            sharpeRatioLong = Math.Abs(stDevLong - 0) < micron ? 0 : (averageHPRLong - 1) / stDevLong;
-            sharpeRatioShort = Math.Abs(stDevShort - 0) < micron ? 0 : (averageHPRShort - 1) / stDevShort;
+            SharpeRatio = Math.Abs(stDev - 0) < sigma ? 0 : (averageHPR - 1)/stDev;
+            sharpeRatioLong = Math.Abs(stDevLong - 0) < sigma ? 0 : (averageHPRLong - 1) / stDevLong;
+            sharpeRatioShort = Math.Abs(stDevShort - 0) < sigma ? 0 : (averageHPRShort - 1) / stDevShort;
 
             // Annualized Profit
             AnnualizedProfit = (365f/Time[Bars - 1].Subtract(Time[0]).Days)*(NetMoneyBalance - Configs.InitialAccount);
             AnnualizedProfitPercent = 100*AnnualizedProfit/Configs.InitialAccount;
 
-            ProfitFactor = Math.Abs(GrossMoneyLoss - 0) < micron ? GrossMoneyProfit : GrossMoneyProfit/GrossMoneyLoss;
+            ProfitFactor = Math.Abs(GrossMoneyLoss - 0) < sigma ? GrossMoneyProfit : GrossMoneyProfit/GrossMoneyLoss;
 
             if (Configs.AccountInMoney)
                 SetAdditionalMoneyStats();
@@ -806,7 +806,7 @@ namespace ForexStrategyBuilder
                     (100*((NetLongMoneyBalance - Configs.InitialAccount)/Configs.InitialAccount)).ToString("F2") + "%",
                     grossLongMoneyProfit.ToString("F2") + unit,
                     grossLongMoneyLoss.ToString("F2") + unit,
-                    (Math.Abs(grossLongMoneyLoss - 0) < micron
+                    (Math.Abs(grossLongMoneyLoss - 0) < sigma
                          ? grossLongMoneyProfit
                          : Math.Abs(grossLongMoneyProfit/grossLongMoneyLoss)).ToString("F2"),
                     ((365f/Time[Bars - 1].Subtract(Time[0]).Days)*
@@ -848,7 +848,7 @@ namespace ForexStrategyBuilder
                     (100*((NetShortMoneyBalance - Configs.InitialAccount)/Configs.InitialAccount)).ToString("F2") + "%",
                     grossShortMoneyProfit.ToString("F2") + unit,
                     grossShortMoneyLoss.ToString("F2") + unit,
-                    (Math.Abs(grossShortMoneyLoss - 0) < micron
+                    (Math.Abs(grossShortMoneyLoss - 0) < sigma
                          ? grossShortMoneyProfit
                          : Math.Abs(grossShortMoneyProfit/grossShortMoneyLoss)).ToString("F2"),
                     ((365f/Time[Bars - 1].Subtract(Time[0]).Days)*

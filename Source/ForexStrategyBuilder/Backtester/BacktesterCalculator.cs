@@ -35,7 +35,7 @@ namespace ForexStrategyBuilder
         private static double maximumLots = 100;
 
         // Additional
-        private static double micron = InstrProperties.Point/2;
+        private static double sigma = InstrProperties.Point/2;
         private static DateTime lastEntryTime;
 
         // Logical Groups
@@ -44,7 +44,6 @@ namespace ForexStrategyBuilder
         private static List<string> openingLogicGroups;
         private static List<string> closingLogicGroups;
 
-        // N Bars Exit indicator - Krog
         private static bool hasNBarsExit;
         private static int slotNBarsExit;
 
@@ -91,7 +90,7 @@ namespace ForexStrategyBuilder
             SentOrders = 0;
             totalPositions = 0;
             IsScanPerformed = false;
-            micron = InstrProperties.Point/2d;
+            sigma = InstrProperties.Point/2d;
             lastEntryTime = new DateTime();
 
             // Sets the maximum lots
@@ -319,8 +318,6 @@ namespace ForexStrategyBuilder
             double absoluteTP = positionOld.AbsoluteTP;
             double posBalanceOld = positionOld.Balance;
             double posEquityOld = positionOld.Equity;
-
-            // KROG - keep for N Bars Exit
             int openingBarOld = positionOld.OpeningBar;
 
             sessionPosition = sessionPosOld + 1;
@@ -343,7 +340,7 @@ namespace ForexStrategyBuilder
             if (posDirOld == PosDirection.Long && ordDir == OrderDirection.Sell && Math.Abs(lotsOld - lots) < 0.001)
             {
                 position.Transaction = Transaction.Close;
-                position.OpeningBar = openingBarOld; // KROG -- for N Bars Exit
+                position.OpeningBar = openingBarOld;
                 position.PosDir = PosDirection.Closed;
                 position.PosLots = 0;
                 position.AbsoluteSL = 0;
@@ -747,7 +744,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Tunes and Executes an order
         /// </summary>
-        private static void ExecOrd(int bar, Order order, double price, BacktestEval testEval)
+        private static void ExecOrd(int bar, Order order, double price, BacktestEval testEvaluation)
         {
             Position position = session[bar].Summary;
             PosDirection posDir = position.PosDir;
@@ -786,8 +783,8 @@ namespace ForexStrategyBuilder
                             case SameDirSignalAction.Winner:
                                 order.OrdLots = TradingSize(Strategy.AddingLots, bar);
                                 if (position.PosLots + TradingSize(Strategy.AddingLots, bar) <= maximumLots &&
-                                    (position.PosDir == PosDirection.Long && position.PosPrice < order.OrdPrice ||
-                                     position.PosDir == PosDirection.Short && position.PosPrice > order.OrdPrice))
+                                    (position.PosDir == PosDirection.Long && position.FloatingPL > sigma ||
+                                     position.PosDir == PosDirection.Short && position.FloatingPL > sigma))
                                 {
                                     // Adding
                                     wayPointType = WayPointType.Add;
@@ -952,7 +949,7 @@ namespace ForexStrategyBuilder
                 order.OrdStatus = OrderStatus.Executed;
 
                 // Set the evaluation
-                switch (testEval)
+                switch (testEvaluation)
                 {
                     case BacktestEval.Error:
                         session[bar].BacktestEval = BacktestEval.Error;
@@ -1320,7 +1317,7 @@ namespace ForexStrategyBuilder
         ///     Checks the slots for a permission to open a position.
         ///     If there are no filters that forbid it, sets the entry orders.
         /// </summary>
-        private static void AnalyseEntry(int bar)
+        private static void AnalyzeEntry(int bar)
         {
             // Do not send entry order when we are not on time
             if (openTimeExec == ExecutionTime.AtBarOpening &&
@@ -1378,7 +1375,7 @@ namespace ForexStrategyBuilder
                 EntryLogicConditions(bar, "A", openLongPrice, openShortPrice, ref canOpenLong, ref canOpenShort);
             }
 
-            if (canOpenLong && canOpenShort && Math.Abs(openLongPrice - openShortPrice) < micron)
+            if (canOpenLong && canOpenShort && Math.Abs(openLongPrice - openShortPrice) < sigma)
             {
                 session[bar].BacktestEval = BacktestEval.Ambiguous;
             }
@@ -1417,24 +1414,24 @@ namespace ForexStrategyBuilder
                     switch (component.PosPriceDependence)
                     {
                         case PositionPriceDependence.PriceBuyHigher:
-                            canOpenLong = canOpenLong && buyPrice > indVal + micron;
+                            canOpenLong = canOpenLong && buyPrice > indVal + sigma;
                             break;
                         case PositionPriceDependence.PriceBuyLower:
-                            canOpenLong = canOpenLong && buyPrice < indVal - micron;
+                            canOpenLong = canOpenLong && buyPrice < indVal - sigma;
                             break;
                         case PositionPriceDependence.PriceSellHigher:
-                            canOpenShort = canOpenShort && sellPrice > indVal + micron;
+                            canOpenShort = canOpenShort && sellPrice > indVal + sigma;
                             break;
                         case PositionPriceDependence.PriceSellLower:
-                            canOpenShort = canOpenShort && sellPrice < indVal - micron;
+                            canOpenShort = canOpenShort && sellPrice < indVal - sigma;
                             break;
                         case PositionPriceDependence.BuyHigherSellLower:
-                            canOpenLong = canOpenLong && buyPrice > indVal + micron;
-                            canOpenShort = canOpenShort && sellPrice < indVal - micron;
+                            canOpenLong = canOpenLong && buyPrice > indVal + sigma;
+                            canOpenShort = canOpenShort && sellPrice < indVal - sigma;
                             break;
                         case PositionPriceDependence.BuyLowerSelHigher:
-                            canOpenLong = canOpenLong && buyPrice < indVal - micron;
-                            canOpenShort = canOpenShort && sellPrice > indVal + micron;
+                            canOpenLong = canOpenLong && buyPrice < indVal - sigma;
+                            canOpenShort = canOpenShort && sellPrice > indVal + sigma;
                             break;
                     }
                 }
@@ -1444,7 +1441,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Sets the close orders for the indicated bar.
         /// </summary>
-        private static void AnalyseExit(int bar)
+        private static void AnalyzeExit(int bar)
         {
             if (closeTimeExec == ExecutionTime.AtBarClosing &&
                 Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar] < 0.001)
@@ -1453,25 +1450,25 @@ namespace ForexStrategyBuilder
             switch (Strategy.Slot[Strategy.CloseSlot].IndicatorName)
             {
                 case "Account Percent Stop":
-                    AnalyseAccountPercentStopExit(bar);
+                    AnalyzeAccountPercentStopExit(bar);
                     return;
                 case "ATR Stop":
-                    AnalyseATRStopExit(bar);
+                    AnalyzeAtrStopExit(bar);
                     return;
                 case "Stop Limit":
-                    AnalyseStopLimitExit(bar);
+                    AnalyzeStopLimitExit(bar);
                     return;
                 case "Stop Loss":
-                    AnalyseStopLossExit(bar);
+                    AnalyzeStopLossExit(bar);
                     return;
                 case "Take Profit":
-                    AnalyseTakeProfitExit(bar);
+                    AnalyzeTakeProfitExit(bar);
                     return;
                 case "Trailing Stop":
-                    AnalyseTrailingStopExit(bar);
+                    AnalyzeTrailingStopExit(bar);
                     return;
                 case "Trailing Stop Limit":
-                    AnalyseTrailingStopLimitExit(bar);
+                    AnalyzeTrailingStopLimitExit(bar);
                     return;
             }
 
@@ -1531,15 +1528,15 @@ namespace ForexStrategyBuilder
 
             if (Configs.UseLogicalGroups)
             {
-                AnalyseExitOrdersLogicalGroups(bar, priceExitShort, priceExitLong);
+                AnalyzeExitOrdersLogicalGroups(bar, priceExitShort, priceExitLong);
             }
             else
             {
-                AnalyseExitOrders(bar, priceExitLong, priceExitShort);
+                AnalyzeExitOrders(bar, priceExitLong, priceExitShort);
             }
         }
 
-        private static void AnalyseExitOrders(int bar, double priceExitLong, double priceExitShort)
+        private static void AnalyzeExitOrders(int bar, double priceExitLong, double priceExitShort)
         {
             bool stopSearching = false;
             for (int slot = Strategy.CloseSlot + 1; slot < Strategy.Slots && !stopSearching; slot++)
@@ -1565,7 +1562,7 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private static void AnalyseExitOrdersLogicalGroups(int bar, double priceExitShort, double priceExitLong)
+        private static void AnalyzeExitOrdersLogicalGroups(int bar, double priceExitShort, double priceExitLong)
         {
             foreach (string group in closingLogicGroups)
             {
@@ -1606,7 +1603,7 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private static void AnalyseATRStopExit(int bar)
+        private static void AnalyzeAtrStopExit(int bar)
         {
             double deltaStop = Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar];
 
@@ -1699,7 +1696,7 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private static void AnalyseStopLimitExit(int bar)
+        private static void AnalyzeStopLimitExit(int bar)
         {
             // If there is a position, sends a StopLimit Order for it.
             if (session[bar].Summary.PosDir == PosDirection.Long)
@@ -1769,7 +1766,7 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private static void AnalyseStopLossExit(int bar)
+        private static void AnalyzeStopLossExit(int bar)
         {
             // The stop is exactly n points below the entry point (also when add, reduce, reverse)
             double deltaStop = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
@@ -1829,7 +1826,7 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private static void AnalyseTakeProfitExit(int bar)
+        private static void AnalyzeTakeProfitExit(int bar)
         {
             double dDeltaLimit = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
 
@@ -1888,7 +1885,7 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private static void AnalyseTrailingStopExit(int bar)
+        private static void AnalyzeTrailingStopExit(int bar)
         {
             double deltaStop = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
 
@@ -2003,7 +2000,7 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private static void AnalyseTrailingStopLimitExit(int bar)
+        private static void AnalyzeTrailingStopLimitExit(int bar)
         {
             double deltaStop = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[0].Value*InstrProperties.Point;
             double dDeltaLimit = Strategy.Slot[Strategy.CloseSlot].IndParam.NumParam[1].Value*InstrProperties.Point;
@@ -2136,7 +2133,7 @@ namespace ForexStrategyBuilder
             }
         }
 
-        private static void AnalyseAccountPercentStopExit(int bar)
+        private static void AnalyzeAccountPercentStopExit(int bar)
         {
             // If there is a transferred position, sends a Stop Order for it.
             if (session[bar].Summary.PosDir == PosDirection.Long &&
@@ -2240,7 +2237,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Sets Permanent Stop Loss close orders for the indicated bar
         /// </summary>
-        private static void AnalysePermanentSLExit(int bar)
+        private static void AnalyzePermanentSLExit(int bar)
         {
             double deltaStop = Strategy.PermanentSL*InstrProperties.Point;
 
@@ -2306,7 +2303,7 @@ namespace ForexStrategyBuilder
         /// <summary>
         ///     Sets Permanent Take Profit close orders for the indicated bar
         /// </summary>
-        private static void AnalysePermanentTPExit(int bar)
+        private static void AnalyzePermanentTPExit(int bar)
         {
             double deltaStop = Strategy.PermanentTP*InstrProperties.Point;
 
@@ -2402,8 +2399,8 @@ namespace ForexStrategyBuilder
             // Check if Break Even has to be activated (if position has profit).
             if (!session[bar].Summary.IsBreakEvenActivated)
             {
-                if (posDir == PosDirection.Long && price >= posPrice + targetBreakEven - micron ||
-                    posDir == PosDirection.Short && price <= posPrice - targetBreakEven + micron)
+                if (posDir == PosDirection.Long && price >= posPrice + targetBreakEven - sigma ||
+                    posDir == PosDirection.Short && price <= posPrice - targetBreakEven + sigma)
                     session[bar].Summary.IsBreakEvenActivated = true;
                 else
                     return false;
@@ -2468,13 +2465,13 @@ namespace ForexStrategyBuilder
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
-                            AnalyseEntry(bar);
+                            AnalyzeEntry(bar);
                             ExecuteEntryAtOpeningPrice(bar);
                             CancelNoexecutedEntryOrders(bar);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
+                                AnalyzePermanentTPExit(bar);
                             BarInterpolation(bar);
                             CancelNoexecutedExitOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
@@ -2488,11 +2485,11 @@ namespace ForexStrategyBuilder
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
+                                AnalyzePermanentTPExit(bar);
                             BarInterpolation(bar);
-                            AnalyseEntry(bar);
+                            AnalyzeEntry(bar);
                             ExecuteEntryAtClosingPrice(bar);
                             CancelInvalidOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
@@ -2505,11 +2502,11 @@ namespace ForexStrategyBuilder
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
-                            AnalyseEntry(bar);
+                            AnalyzeEntry(bar);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
+                                AnalyzePermanentTPExit(bar);
                             BarInterpolation(bar);
                             CancelInvalidOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
@@ -2534,16 +2531,16 @@ namespace ForexStrategyBuilder
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
-                            AnalyseEntry(bar);
+                            AnalyzeEntry(bar);
                             ExecuteEntryAtOpeningPrice(bar);
                             CancelNoexecutedEntryOrders(bar);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
+                                AnalyzePermanentTPExit(bar);
                             BarInterpolation(bar);
                             CancelNoexecutedExitOrders(bar);
-                            AnalyseExit(bar);
+                            AnalyzeExit(bar);
                             ExecuteExitAtClosingPrice(bar);
                             CancelNoexecutedExitOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
@@ -2558,14 +2555,14 @@ namespace ForexStrategyBuilder
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
-                            AnalyseEntry(bar);
+                            AnalyzeEntry(bar);
                             ExecuteEntryAtOpeningPrice(bar);
                             CancelNoexecutedEntryOrders(bar);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
-                            AnalyseExit(bar);
+                                AnalyzePermanentTPExit(bar);
+                            AnalyzeExit(bar);
                             BarInterpolation(bar);
                             CancelInvalidOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
@@ -2579,7 +2576,7 @@ namespace ForexStrategyBuilder
                         // Closing price - Closing price
                         for (int bar = FirstBar; bar < Bars; bar++)
                         {
-                            AnalyseEntry(bar - 1);
+                            AnalyzeEntry(bar - 1);
                             ExecuteEntryAtClosingPrice(bar - 1);
                             CancelNoexecutedEntryOrders(bar - 1);
                             MarginCallCheckAtBarClosing(bar - 1);
@@ -2588,12 +2585,12 @@ namespace ForexStrategyBuilder
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
+                                AnalyzePermanentTPExit(bar);
                             BarInterpolation(bar);
                             CancelNoexecutedExitOrders(bar);
-                            AnalyseExit(bar);
+                            AnalyzeExit(bar);
                             ExecuteExitAtClosingPrice(bar);
                             CancelNoexecutedExitOrders(bar);
                         }
@@ -2603,7 +2600,7 @@ namespace ForexStrategyBuilder
                         // Closing price - Indicator
                         for (int bar = FirstBar; bar < Bars; bar++)
                         {
-                            AnalyseEntry(bar - 1);
+                            AnalyzeEntry(bar - 1);
                             ExecuteEntryAtClosingPrice(bar - 1);
                             CancelNoexecutedEntryOrders(bar - 1);
                             MarginCallCheckAtBarClosing(bar - 1);
@@ -2612,10 +2609,10 @@ namespace ForexStrategyBuilder
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
-                            AnalyseExit(bar);
+                                AnalyzePermanentTPExit(bar);
+                            AnalyzeExit(bar);
                             BarInterpolation(bar);
                             CancelInvalidOrders(bar);
                         }
@@ -2630,14 +2627,14 @@ namespace ForexStrategyBuilder
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
-                            AnalyseEntry(bar);
+                            AnalyzeEntry(bar);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
+                                AnalyzePermanentTPExit(bar);
                             BarInterpolation(bar);
                             CancelInvalidOrders(bar);
-                            AnalyseExit(bar);
+                            AnalyzeExit(bar);
                             ExecuteExitAtClosingPrice(bar);
                             CancelNoexecutedExitOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
@@ -2652,12 +2649,12 @@ namespace ForexStrategyBuilder
                             TransferFromPreviousBar(bar);
                             if (FastCalculating(bar)) break;
                             session[bar].SetWayPoint(Open[bar], WayPointType.Open);
-                            AnalyseEntry(bar);
+                            AnalyzeEntry(bar);
                             if (Strategy.UsePermanentSL)
-                                AnalysePermanentSLExit(bar);
+                                AnalyzePermanentSLExit(bar);
                             if (Strategy.UsePermanentTP)
-                                AnalysePermanentTPExit(bar);
-                            AnalyseExit(bar);
+                                AnalyzePermanentTPExit(bar);
+                            AnalyzeExit(bar);
                             BarInterpolation(bar);
                             CancelInvalidOrders(bar);
                             MarginCallCheckAtBarClosing(bar);
@@ -2738,14 +2735,14 @@ namespace ForexStrategyBuilder
             {
                 for (int b = 0; b < IntraBarBars[bar]; b++)
                 {
-                    if (IntraBarData[bar][b].High + micron > high)
+                    if (IntraBarData[bar][b].High + sigma > high)
                     {
                         // Top found
                         isTopFirst = true;
                         isOrderFound = true;
                     }
 
-                    if (IntraBarData[bar][b].Low - micron < low)
+                    if (IntraBarData[bar][b].Low - sigma < low)
                     {
                         // Bottom found
                         if (isOrderFound)

@@ -560,9 +560,9 @@ namespace ForexStrategyBuilder
                     position.Transaction != Transaction.Reverse)
                     continue; // There is no profit/loss taken.
 
-                if (position.ProfitLoss < micron)
+                if (position.ProfitLoss < sigma)
                     sum++;
-                else if (position.ProfitLoss > micron)
+                else if (position.ProfitLoss > sigma)
                     sum = 0;
 
                 if (sum > MaxConsecutiveLosses)
