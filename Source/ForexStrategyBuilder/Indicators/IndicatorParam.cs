@@ -10,17 +10,14 @@
 
 using System;
 using System.Text;
+using ForexStrategyBuilder.Indicators;
+using ForexStrategyBuilder.Infrastructure.Enums;
+using ForexStrategyBuilder.Infrastructure.Interfaces;
 
-namespace ForexStrategyBuilder.Indicators
+namespace ForexStrategyBuilder
 {
-    /// <summary>
-    ///     Describes an indicator fully
-    /// </summary>
     public class IndicatorParam
     {
-        /// <summary>
-        ///     Creates an empty parameter.
-        /// </summary>
         public IndicatorParam()
         {
             SlotNumber = 0;
@@ -29,6 +26,8 @@ namespace ForexStrategyBuilder.Indicators
             IndicatorName = String.Empty;
             IndicatorType = TypeOfIndicator.Indicator;
             ExecutionTime = ExecutionTime.DuringTheBar;
+            IsDeafultGroupAll = false;
+            IsAllowLTF = true;
             ListParam = new ListParam[5];
             NumParam = new NumericParam[6];
             CheckParam = new CheckParam[2];
@@ -49,14 +48,14 @@ namespace ForexStrategyBuilder.Indicators
         private int SlotNumber { get; set; }
 
         /// <summary>
-        ///     Gets or sets the type of the slot.
-        /// </summary>
-        public SlotTypes SlotType { get; set; }
-
-        /// <summary>
         ///     Gets or sets a value indicating whether the indicator is defined.
         /// </summary>
         private bool IsDefined { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the type of the slot.
+        /// </summary>
+        public SlotTypes SlotType { get; set; }
 
         /// <summary>
         ///     Gets or sets the indicator name.
@@ -67,6 +66,16 @@ namespace ForexStrategyBuilder.Indicators
         ///     Gets or sets the type of the indicator
         /// </summary>
         public TypeOfIndicator IndicatorType { get; set; }
+
+        /// <summary>
+        ///     Gets if the default group is "All"
+        /// </summary>
+        public bool IsDeafultGroupAll { get; set; }
+
+        /// <summary>
+        ///     Shows if the indicator allows using Longer Time Frame, Signal Shift and Signal Repeat
+        /// </summary>
+        public bool IsAllowLTF { get; set; }
 
         /// <summary>
         ///     Gets or sets the type of the time execution of the indicator
@@ -94,17 +103,19 @@ namespace ForexStrategyBuilder.Indicators
         public IndicatorParam Clone()
         {
             var indicatorParam = new IndicatorParam
-                {
-                    SlotNumber = SlotNumber,
-                    IsDefined = IsDefined,
-                    SlotType = SlotType,
-                    IndicatorName = IndicatorName,
-                    IndicatorType = IndicatorType,
-                    ExecutionTime = ExecutionTime,
-                    ListParam = new ListParam[5],
-                    NumParam = new NumericParam[6],
-                    CheckParam = new CheckParam[2]
-                };
+            {
+                SlotNumber = SlotNumber,
+                IsDefined = IsDefined,
+                SlotType = SlotType,
+                IndicatorName = IndicatorName,
+                IndicatorType = IndicatorType,
+                ExecutionTime = ExecutionTime,
+                IsDeafultGroupAll = IsDeafultGroupAll,
+                IsAllowLTF = IsAllowLTF,
+                ListParam = new ListParam[5],
+                NumParam = new NumericParam[6],
+                CheckParam = new CheckParam[2]
+            };
 
             for (int i = 0; i < 5; i++)
                 indicatorParam.ListParam[i] = ListParam[i].Clone();
@@ -127,15 +138,16 @@ namespace ForexStrategyBuilder.Indicators
 
             foreach (ListParam listParam in ListParam)
                 if (listParam.Enabled)
-                    stringBuilder.AppendLine(listParam.Caption + " - " + listParam.Text);
+                    stringBuilder.AppendLine(string.Format("{0}: {1}", listParam.Caption, listParam.Text));
 
             foreach (NumericParam numParam in NumParam)
                 if (numParam.Enabled)
-                    stringBuilder.AppendLine(numParam.Caption + " - " + numParam.ValueToString);
+                    stringBuilder.AppendLine(string.Format("{0}: {1}", numParam.Caption, numParam.ValueToString));
 
             foreach (CheckParam checkParam in CheckParam)
                 if (checkParam.Enabled)
-                    stringBuilder.AppendLine(checkParam.Caption + " - " + (checkParam.Checked ? "Yes" : "No"));
+                    stringBuilder.AppendLine(string.Format("{0}: {1}", checkParam.Caption,
+                                                           (checkParam.Checked ? "Yes" : "No")));
 
             return stringBuilder.ToString();
         }

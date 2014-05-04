@@ -28,7 +28,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                              Environment.NewLine +
                              "The Stop Loss remains constant during the whole bar. Take Profit level is constant by definition.";
 
-
             IndicatorAuthor = "Miroslav Popov";
             IndicatorVersion = "2.0";
             IndicatorDescription = "Bundled in FSB distribution.";
@@ -40,6 +39,7 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             // Setting up the indicator parameters
             IndParam.IndicatorType = TypeOfIndicator.Additional;
+            IndParam.IsAllowLTF = false;
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";

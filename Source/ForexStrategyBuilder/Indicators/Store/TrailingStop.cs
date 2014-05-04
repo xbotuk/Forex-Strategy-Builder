@@ -39,6 +39,7 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             // Setting up the indicator parameters
             IndParam.IndicatorType = TypeOfIndicator.Additional;
+            IndParam.IsAllowLTF = false;
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
@@ -90,8 +91,8 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         public override void SetDescription()
         {
-            ExitPointLongDescription = "at the " + ToString() + " level";
-            ExitPointShortDescription = "at the " + ToString() + " level";
+            ExitPointLongDescription = "at " + ToString() + " level";
+            ExitPointShortDescription = "at " + ToString() + " level";
         }
 
         public override string ToString()

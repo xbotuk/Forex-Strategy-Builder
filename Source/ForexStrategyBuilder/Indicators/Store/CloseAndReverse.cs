@@ -33,6 +33,7 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             IndParam.IndicatorType = TypeOfIndicator.Additional;
             IndParam.ExecutionTime = ExecutionTime.CloseAndReverse;
+            IndParam.IsAllowLTF = false;
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";

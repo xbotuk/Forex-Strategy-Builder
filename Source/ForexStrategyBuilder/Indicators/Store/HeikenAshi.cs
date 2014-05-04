@@ -279,23 +279,23 @@ namespace ForexStrategyBuilder.Indicators.Store
             switch (IndParam.ListParam[0].Text)
             {
                 case "Enter long at the H.A. High":
-                    EntryPointLongDescription = "at the " + ToString() + " High";
-                    EntryPointShortDescription = "at the " + ToString() + " Low";
+                    EntryPointLongDescription = "at " + ToString() + " High";
+                    EntryPointShortDescription = "at " + ToString() + " Low";
                     break;
 
                 case "Enter long at the H.A. Low":
-                    EntryPointLongDescription = "at the " + ToString() + " Low";
-                    EntryPointShortDescription = "at the " + ToString() + " High";
+                    EntryPointLongDescription = "at " + ToString() + " Low";
+                    EntryPointShortDescription = "at " + ToString() + " High";
                     break;
 
                 case "Exit long at the H.A. High":
-                    ExitPointLongDescription = "at the " + ToString() + " High";
-                    ExitPointShortDescription = "at the " + ToString() + " Low";
+                    ExitPointLongDescription = "at " + ToString() + " High";
+                    ExitPointShortDescription = "at " + ToString() + " Low";
                     break;
 
                 case "Exit long at the H.A. Low":
-                    ExitPointLongDescription = "at the " + ToString() + " Low";
-                    ExitPointShortDescription = "at the " + ToString() + " High";
+                    ExitPointLongDescription = "at " + ToString() + " Low";
+                    ExitPointShortDescription = "at " + ToString() + " High";
                     break;
 
                 case "White H.A. bar without lower shadow":

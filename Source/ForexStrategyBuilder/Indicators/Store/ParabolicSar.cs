@@ -34,6 +34,8 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
+            IndParam.IsAllowLTF = false;
+
             if (SlotType == SlotTypes.OpenFilter)
                 IndParam.ListParam[0].ItemList = new[]
                     {
@@ -182,8 +184,8 @@ namespace ForexStrategyBuilder.Indicators.Store
         {
             EntryFilterLongDescription = "the price is higher than the " + ToString();
             EntryFilterShortDescription = "the price is lower than the " + ToString();
-            ExitPointLongDescription = "at the " + ToString() + ". It determines the position direction also";
-            ExitPointShortDescription = "at the " + ToString() + ". It determines the position direction also";
+            ExitPointLongDescription = "at " + ToString() + ". It determines the position direction also";
+            ExitPointShortDescription = "at " + ToString() + ". It determines the position direction also";
         }
 
         public override string ToString()

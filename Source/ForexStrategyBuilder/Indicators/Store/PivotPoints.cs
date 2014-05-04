@@ -311,8 +311,8 @@ namespace ForexStrategyBuilder.Indicators.Store
             }
             else if (iShift == 0)
             {
-                sUpperTrade = "at the ";
-                sLowerTrade = "at the ";
+                sUpperTrade = "at ";
+                sLowerTrade = "at ";
             }
             else
             {

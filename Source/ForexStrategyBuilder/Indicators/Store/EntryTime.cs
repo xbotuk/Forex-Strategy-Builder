@@ -32,6 +32,7 @@ namespace ForexStrategyBuilder.Indicators.Store
         public override void Initialize(SlotTypes slotType)
         {
             SlotType = slotType;
+            IndParam.IsAllowLTF = false;
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";

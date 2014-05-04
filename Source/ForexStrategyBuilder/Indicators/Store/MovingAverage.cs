@@ -263,10 +263,10 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         public override void SetDescription()
         {
-            EntryPointLongDescription = "at the " + ToString();
-            EntryPointShortDescription = "at the " + ToString();
-            ExitPointLongDescription = "at the " + ToString();
-            ExitPointShortDescription = "at the " + ToString();
+            EntryPointLongDescription = "at " + ToString();
+            EntryPointShortDescription = "at " + ToString();
+            ExitPointLongDescription = "at " + ToString();
+            ExitPointShortDescription = "at " + ToString();
 
             switch (IndParam.ListParam[0].Text)
             {
