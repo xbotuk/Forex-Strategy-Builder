@@ -65,8 +65,8 @@ namespace ForexStrategyBuilder
             IsStrategyChanged = false;
             StackStrategy = new Stack<Strategy>();
             GeneratorHistory = new List<Strategy>();
-            ProgStats = new ProgStats();
-            ProgStats.AppStart("980834a958e961563091a670660243e7dd17d543");
+            ProgStats = new ProgStats {AppLicenseType = LicenseType.Valid};
+            ProgStats.AppStart("980834a958e961563091a670660243e7dd17d543", 5);
             IsIntrabarData = false;
 
             // Program's Major, Minor, Version and Build numbers must be <= 99.
