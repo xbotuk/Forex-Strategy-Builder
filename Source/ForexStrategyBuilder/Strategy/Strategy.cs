@@ -499,10 +499,10 @@ namespace ForexStrategyBuilder
         public int SetFirstBar()
         {
             // Searches the indicators' components to determine the first bar.
-            FirstBar = 0;
+            FirstBar = 2;
             foreach (IndicatorSlot slot in Slot)
                 foreach (IndicatorComp comp in slot.Component)
-                    if (comp.FirstBar > FirstBar)
+                    if (FirstBar < comp.FirstBar)
                         FirstBar = comp.FirstBar;
 
             return FirstBar;
