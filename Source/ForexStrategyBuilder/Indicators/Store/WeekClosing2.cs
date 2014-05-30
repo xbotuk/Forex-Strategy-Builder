@@ -35,7 +35,7 @@ namespace ForexStrategyBuilder.Indicators.Store
                                  "The indicator uses the server time that comes from the broker together with ticks.";
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.2";
+            IndicatorVersion = "2.3";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -81,11 +81,51 @@ namespace ForexStrategyBuilder.Indicators.Store
             DataSet = dataSet;
 
             if (IsBacktester)
-            {
                 CalculateForBacktester();
-                return;
+            else
+                CalculateForTrader();
+        }
+
+        private void CalculateForBacktester()
+        {
+            IndParam.ExecutionTime = ExecutionTime.AtBarClosing;
+
+            // Calculation
+            const int firstBar = 1;
+            var adBars = new double[Bars];
+
+            // Calculation of the logic
+            for (int bar = 0; bar < Bars - 1; bar++)
+            {
+                if (Time[bar].DayOfWeek > DayOfWeek.Wednesday &&
+                    Time[bar + 1].DayOfWeek < DayOfWeek.Wednesday)
+                    adBars[bar] = Close[bar];
+                else
+                    adBars[bar] = 0;
             }
 
+            // Check the last bar
+            TimeSpan tsBarClosing = Time[Bars - 1].TimeOfDay.Add(new TimeSpan(0, (int)Period, 0));
+            var tsDayClosing = new TimeSpan(24, 0, 0);
+            if (Time[Bars - 1].DayOfWeek == DayOfWeek.Friday && tsBarClosing == tsDayClosing)
+                adBars[Bars - 1] = Close[Bars - 1];
+
+            // Saving the components
+            Component = new IndicatorComp[1];
+
+            Component[0] = new IndicatorComp
+            {
+                CompName = "Week Closing",
+                DataType = IndComponentType.ClosePrice,
+                ChartType = IndChartType.NoChart,
+                ShowInDynInfo = false,
+                FirstBar = firstBar,
+                Value = adBars
+            };
+        }
+
+        private void CalculateForTrader()
+        {
             var fridayClosingHour = (int)IndParam.NumParam[0].Value;
             var fridayClosingMin = (int)IndParam.NumParam[1].Value;
 
@@ -156,42 +196,6 @@ namespace ForexStrategyBuilder.Indicators.Store
                 ShowInDynInfo = false,
                 FirstBar = 2,
                 Value = adAllowOpenShort
-            };
-        }
-
-        private void CalculateForBacktester()
-        {
-            // Calculation
-            const int firstBar = 1;
-            var adBars = new double[Bars];
-
-            // Calculation of the logic
-            for (int bar = 0; bar < Bars - 1; bar++)
-            {
-                if (Time[bar].DayOfWeek > DayOfWeek.Wednesday &&
-                    Time[bar + 1].DayOfWeek < DayOfWeek.Wednesday)
-                    adBars[bar] = Close[bar];
-                else
-                    adBars[bar] = 0;
-            }
-
-            // Check the last bar
-            TimeSpan tsBarClosing = Time[Bars - 1].TimeOfDay.Add(new TimeSpan(0, (int)Period, 0));
-            var tsDayClosing = new TimeSpan(24, 0, 0);
-            if (Time[Bars - 1].DayOfWeek == DayOfWeek.Friday && tsBarClosing == tsDayClosing)
-                adBars[Bars - 1] = Close[Bars - 1];
-
-            // Saving the components
-            Component = new IndicatorComp[1];
-
-            Component[0] = new IndicatorComp
-            {
-                CompName = "Week Closing",
-                DataType = IndComponentType.ClosePrice,
-                ChartType = IndChartType.NoChart,
-                ShowInDynInfo = false,
-                FirstBar = firstBar,
-                Value = adBars
             };
         }
 
