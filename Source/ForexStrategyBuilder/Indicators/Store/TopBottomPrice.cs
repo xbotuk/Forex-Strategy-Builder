@@ -24,7 +24,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             PossibleSlots = SlotTypes.Open | SlotTypes.OpenFilter | SlotTypes.Close | SlotTypes.CloseFilter;
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.2";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -40,41 +40,41 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ListParam[0].Caption = "Logic";
             if (SlotType == SlotTypes.Open)
                 IndParam.ListParam[0].ItemList = new[]
-                    {
-                        "Enter long at the top price",
-                        "Enter long at the bottom price"
-                    };
+                {
+                    "Enter long at the top price",
+                    "Enter long at the bottom price"
+                };
             else if (SlotType == SlotTypes.OpenFilter)
                 IndParam.ListParam[0].ItemList = new[]
-                    {
-                        "The bar opens below the top price",
-                        "The bar opens above the top price",
-                        "The bar opens below the bottom price",
-                        "The bar opens above the bottom price",
-                        "The position opens below the top price",
-                        "The position opens above the top price",
-                        "The position opens below the bottom price",
-                        "The position opens above the bottom price"
-                    };
+                {
+                    "The bar opens below the top price",
+                    "The bar opens above the top price",
+                    "The bar opens below the bottom price",
+                    "The bar opens above the bottom price",
+                    "The position opens below the top price",
+                    "The position opens above the top price",
+                    "The position opens below the bottom price",
+                    "The position opens above the bottom price"
+                };
             else if (SlotType == SlotTypes.Close)
                 IndParam.ListParam[0].ItemList = new[]
-                    {
-                        "Exit long at the top price",
-                        "Exit long at the bottom price"
-                    };
+                {
+                    "Exit long at the top price",
+                    "Exit long at the bottom price"
+                };
             else if (SlotType == SlotTypes.CloseFilter)
                 IndParam.ListParam[0].ItemList = new[]
-                    {
-                        "The bar closes below the top price",
-                        "The bar closes above the top price",
-                        "The bar closes below the bottom price",
-                        "The bar closes above the bottom price"
-                    };
+                {
+                    "The bar closes below the top price",
+                    "The bar closes above the top price",
+                    "The bar closes below the bottom price",
+                    "The bar closes above the bottom price"
+                };
             else
                 IndParam.ListParam[0].ItemList = new[]
-                    {
-                        "Not Defined"
-                    };
+                {
+                    "Not Defined"
+                };
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
@@ -105,25 +105,26 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         private bool IsPeriodChanged(int bar)
         {
-            bool bIsPeriodChanged = false;
+            bool isPeriodChanged = false;
             switch (IndParam.ListParam[2].Index)
             {
                 case 0: // Previous bar
-                    bIsPeriodChanged = true;
+                    isPeriodChanged = true;
                     break;
                 case 1: // Previous day
-                    bIsPeriodChanged = Time[bar].Day != Time[bar - 1].Day;
+                    isPeriodChanged = Time[bar].Day != Time[bar - 1].Day;
                     break;
                 case 2: // Previous week
-                    bIsPeriodChanged = Time[bar].DayOfWeek <= DayOfWeek.Wednesday &&
-                                       Time[bar - 1].DayOfWeek > DayOfWeek.Wednesday;
+                    isPeriodChanged = Period == DataPeriod.W1 ||
+                                      Time[bar].DayOfWeek <= DayOfWeek.Wednesday &&
+                                      Time[bar - 1].DayOfWeek > DayOfWeek.Wednesday;
                     break;
                 case 3: // Previous month
-                    bIsPeriodChanged = Time[bar].Month != Time[bar - 1].Month;
+                    isPeriodChanged = Time[bar].Month != Time[bar - 1].Month;
                     break;
             }
 
-            return bIsPeriodChanged;
+            return isPeriodChanged;
         }
 
         public override void Calculate(IDataSet dataSet)
@@ -135,80 +136,80 @@ namespace ForexStrategyBuilder.Indicators.Store
             const int firstBar = 1;
 
             // Calculation
-            var adTopPrice = new double[Bars];
-            var adBottomPrice = new double[Bars];
+            var topPrice = new double[Bars];
+            var bottomPrice = new double[Bars];
 
-            adTopPrice[0] = 0;
-            adBottomPrice[0] = 0;
+            topPrice[0] = 0;
+            bottomPrice[0] = 0;
 
-            double dTop = double.MinValue;
-            double dBottom = double.MaxValue;
+            double top = double.MinValue;
+            double bottom = double.MaxValue;
 
             for (int bar = 1; bar < Bars; bar++)
             {
-                if (High[bar - 1] > dTop)
-                    dTop = High[bar - 1];
-                if (Low[bar - 1] < dBottom)
-                    dBottom = Low[bar - 1];
+                if (High[bar - 1] > top)
+                    top = High[bar - 1];
+                if (Low[bar - 1] < bottom)
+                    bottom = Low[bar - 1];
 
                 if (IsPeriodChanged(bar))
                 {
-                    adTopPrice[bar] = dTop;
-                    adBottomPrice[bar] = dBottom;
-                    dTop = double.MinValue;
-                    dBottom = double.MaxValue;
+                    topPrice[bar] = top;
+                    bottomPrice[bar] = bottom;
+                    top = double.MinValue;
+                    bottom = double.MaxValue;
                 }
                 else
                 {
-                    adTopPrice[bar] = adTopPrice[bar - 1];
-                    adBottomPrice[bar] = adBottomPrice[bar - 1];
+                    topPrice[bar] = topPrice[bar - 1];
+                    bottomPrice[bar] = bottomPrice[bar - 1];
                 }
             }
 
-            var adUpperBand = new double[Bars];
-            var adLowerBand = new double[Bars];
+            var upperBand = new double[Bars];
+            var lowerBand = new double[Bars];
             for (int bar = firstBar; bar < Bars; bar++)
             {
-                adUpperBand[bar] = adTopPrice[bar] + shift;
-                adLowerBand[bar] = adBottomPrice[bar] - shift;
+                upperBand[bar] = topPrice[bar] + shift;
+                lowerBand[bar] = bottomPrice[bar] - shift;
             }
 
             // Saving the components
             Component = new IndicatorComp[4];
 
             Component[0] = new IndicatorComp
-                {
-                    CompName = "Top price",
-                    DataType = IndComponentType.IndicatorValue,
-                    ChartType = IndChartType.Level,
-                    ChartColor = Color.DarkGreen,
-                    FirstBar = firstBar,
-                    Value = adTopPrice
-                };
+            {
+                CompName = "Top price",
+                DataType = IndComponentType.IndicatorValue,
+                ChartType = IndChartType.Level,
+                ChartColor = Color.DarkGreen,
+                FirstBar = firstBar,
+                Value = topPrice
+            };
 
             Component[1] = new IndicatorComp
-                {
-                    CompName = "Bottom price",
-                    DataType = IndComponentType.IndicatorValue,
-                    ChartType = IndChartType.Level,
-                    ChartColor = Color.DarkRed,
-                    FirstBar = firstBar,
-                    Value = adBottomPrice
-                };
+            {
+                CompName = "Bottom price",
+                DataType = IndComponentType.IndicatorValue,
+                ChartType = IndChartType.Level,
+                ChartColor = Color.DarkRed,
+                FirstBar = firstBar,
+                Value = bottomPrice
+            };
 
             Component[2] = new IndicatorComp
-                {
-                    ChartType = IndChartType.NoChart,
-                    FirstBar = firstBar,
-                    Value = new double[Bars]
-                };
+            {
+                ChartType = IndChartType.NoChart,
+                FirstBar = firstBar,
+                Value = new double[Bars]
+            };
 
             Component[3] = new IndicatorComp
-                {
-                    ChartType = IndChartType.NoChart,
-                    FirstBar = firstBar,
-                    Value = new double[Bars]
-                };
+            {
+                ChartType = IndChartType.NoChart,
+                FirstBar = firstBar,
+                Value = new double[Bars]
+            };
 
             // Sets the Component's type
             if (SlotType == SlotTypes.Open)
@@ -244,45 +245,45 @@ namespace ForexStrategyBuilder.Indicators.Store
             {
                 case "Enter long at the top price":
                 case "Exit long at the top price":
-                    Component[2].Value = adUpperBand;
-                    Component[3].Value = adLowerBand;
+                    Component[2].Value = upperBand;
+                    Component[3].Value = lowerBand;
                     break;
                 case "Enter long at the bottom price":
                 case "Exit long at the bottom price":
-                    Component[2].Value = adLowerBand;
-                    Component[3].Value = adUpperBand;
+                    Component[2].Value = lowerBand;
+                    Component[3].Value = upperBand;
                     break;
                 case "The bar opens below the top price":
-                    BandIndicatorLogic(firstBar, 0, adUpperBand, adLowerBand, ref Component[2], ref Component[3],
-                                       BandIndLogic.The_bar_opens_below_the_Upper_Band);
+                    BandIndicatorLogic(firstBar, 0, upperBand, lowerBand, ref Component[2], ref Component[3],
+                        BandIndLogic.The_bar_opens_below_the_Upper_Band);
                     break;
                 case "The bar opens above the top price":
-                    BandIndicatorLogic(firstBar, 0, adUpperBand, adLowerBand, ref Component[2], ref Component[3],
-                                       BandIndLogic.The_bar_opens_above_the_Upper_Band);
+                    BandIndicatorLogic(firstBar, 0, upperBand, lowerBand, ref Component[2], ref Component[3],
+                        BandIndLogic.The_bar_opens_above_the_Upper_Band);
                     break;
                 case "The bar opens below the bottom price":
-                    BandIndicatorLogic(firstBar, 0, adUpperBand, adLowerBand, ref Component[2], ref Component[3],
-                                       BandIndLogic.The_bar_opens_below_the_Lower_Band);
+                    BandIndicatorLogic(firstBar, 0, upperBand, lowerBand, ref Component[2], ref Component[3],
+                        BandIndLogic.The_bar_opens_below_the_Lower_Band);
                     break;
                 case "The bar opens above the bottom price":
-                    BandIndicatorLogic(firstBar, 0, adUpperBand, adLowerBand, ref Component[2], ref Component[3],
-                                       BandIndLogic.The_bar_opens_above_the_Lower_Band);
+                    BandIndicatorLogic(firstBar, 0, upperBand, lowerBand, ref Component[2], ref Component[3],
+                        BandIndLogic.The_bar_opens_above_the_Lower_Band);
                     break;
                 case "The bar closes below the top price":
-                    BandIndicatorLogic(firstBar, 0, adUpperBand, adLowerBand, ref Component[2], ref Component[3],
-                                       BandIndLogic.The_bar_opens_below_the_Upper_Band);
+                    BandIndicatorLogic(firstBar, 0, upperBand, lowerBand, ref Component[2], ref Component[3],
+                        BandIndLogic.The_bar_opens_below_the_Upper_Band);
                     break;
                 case "The bar closes above the top price":
-                    BandIndicatorLogic(firstBar, 0, adUpperBand, adLowerBand, ref Component[2], ref Component[3],
-                                       BandIndLogic.The_bar_closes_above_the_Upper_Band);
+                    BandIndicatorLogic(firstBar, 0, upperBand, lowerBand, ref Component[2], ref Component[3],
+                        BandIndLogic.The_bar_closes_above_the_Upper_Band);
                     break;
                 case "The bar closes below the bottom price":
-                    BandIndicatorLogic(firstBar, 0, adUpperBand, adLowerBand, ref Component[2], ref Component[3],
-                                       BandIndLogic.The_bar_closes_below_the_Lower_Band);
+                    BandIndicatorLogic(firstBar, 0, upperBand, lowerBand, ref Component[2], ref Component[3],
+                        BandIndLogic.The_bar_closes_below_the_Lower_Band);
                     break;
                 case "The bar closes above the bottom price":
-                    BandIndicatorLogic(firstBar, 0, adUpperBand, adLowerBand, ref Component[2], ref Component[3],
-                                       BandIndLogic.The_bar_closes_above_the_Lower_Band);
+                    BandIndicatorLogic(firstBar, 0, upperBand, lowerBand, ref Component[2], ref Component[3],
+                        BandIndLogic.The_bar_closes_above_the_Lower_Band);
                     break;
                 case "The position opens above the top price":
                     Component[0].DataType = IndComponentType.Other;
@@ -293,8 +294,8 @@ namespace ForexStrategyBuilder.Indicators.Store
                     Component[3].CompName = "Shifted bottom price";
                     Component[3].DataType = IndComponentType.OpenShortPrice;
                     Component[3].PosPriceDependence = PositionPriceDependence.PriceSellLower;
-                    Component[2].Value = adUpperBand;
-                    Component[3].Value = adLowerBand;
+                    Component[2].Value = upperBand;
+                    Component[3].Value = lowerBand;
                     break;
                 case "The position opens below the top price":
                     Component[0].DataType = IndComponentType.Other;
@@ -305,8 +306,8 @@ namespace ForexStrategyBuilder.Indicators.Store
                     Component[3].CompName = "Shifted bottom price";
                     Component[3].DataType = IndComponentType.OpenShortPrice;
                     Component[3].PosPriceDependence = PositionPriceDependence.PriceSellHigher;
-                    Component[2].Value = adUpperBand;
-                    Component[3].Value = adLowerBand;
+                    Component[2].Value = upperBand;
+                    Component[3].Value = lowerBand;
                     break;
                 case "The position opens above the bottom price":
                     Component[0].DataType = IndComponentType.Other;
@@ -317,8 +318,8 @@ namespace ForexStrategyBuilder.Indicators.Store
                     Component[3].CompName = "Shifted top price";
                     Component[3].DataType = IndComponentType.OpenShortPrice;
                     Component[3].PosPriceDependence = PositionPriceDependence.PriceSellLower;
-                    Component[2].Value = adLowerBand;
-                    Component[3].Value = adUpperBand;
+                    Component[2].Value = lowerBand;
+                    Component[3].Value = upperBand;
                     break;
                 case "The position opens below the bottom price":
                     Component[0].DataType = IndComponentType.Other;
@@ -329,122 +330,115 @@ namespace ForexStrategyBuilder.Indicators.Store
                     Component[3].CompName = "Shifted top price";
                     Component[3].DataType = IndComponentType.OpenShortPrice;
                     Component[3].PosPriceDependence = PositionPriceDependence.PriceSellHigher;
-                    Component[2].Value = adLowerBand;
-                    Component[3].Value = adUpperBand;
+                    Component[2].Value = lowerBand;
+                    Component[3].Value = upperBand;
                     break;
             }
         }
 
         public override void SetDescription()
         {
-            var iShift = (int) IndParam.NumParam[0].Value;
+            var shift = (int) IndParam.NumParam[0].Value;
 
-            string sUpperTrade;
-            string sLowerTrade;
+            string upperTrade;
+            string lowerTrade;
 
-            if (iShift > 0)
+            if (shift > 0)
             {
-                sUpperTrade = iShift + " points above the ";
-                sLowerTrade = iShift + " points below the ";
+                upperTrade = shift + " points above the ";
+                lowerTrade = shift + " points below the ";
             }
-            else if (iShift == 0)
+            else if (shift == 0)
             {
                 if (IndParam.ListParam[0].Text == "Enter long at the top price" ||
                     IndParam.ListParam[0].Text == "Enter long at the bottom price" ||
                     IndParam.ListParam[0].Text == "Exit long at the top price" ||
                     IndParam.ListParam[0].Text == "Exit long at the bottom price")
                 {
-                    sUpperTrade = "at the ";
-                    sLowerTrade = "at the ";
+                    upperTrade = "at the ";
+                    lowerTrade = "at the ";
                 }
                 else
                 {
-                    sUpperTrade = "the ";
-                    sLowerTrade = "the ";
+                    upperTrade = "the ";
+                    lowerTrade = "the ";
                 }
             }
             else
             {
-                sUpperTrade = -iShift + " points below the ";
-                sLowerTrade = -iShift + " points above the ";
+                upperTrade = -shift + " points below the ";
+                lowerTrade = -shift + " points above the ";
             }
 
-            string sPeriod = "of the " + IndParam.ListParam[2].Text.ToLower();
+            string period = "of the " + IndParam.ListParam[2].Text.ToLower();
             switch (IndParam.ListParam[0].Text)
             {
                 case "Enter long at the top price":
-                    EntryPointLongDescription = sUpperTrade + "top price " + sPeriod;
-                    EntryPointShortDescription = sLowerTrade + "bottom price " + sPeriod;
+                    EntryPointLongDescription = upperTrade + "top price " + period;
+                    EntryPointShortDescription = lowerTrade + "bottom price " + period;
                     break;
                 case "Enter long at the bottom price":
-                    EntryPointLongDescription = sLowerTrade + "bottom price " + sPeriod;
-                    EntryPointShortDescription = sUpperTrade + "top price " + sPeriod;
+                    EntryPointLongDescription = lowerTrade + "bottom price " + period;
+                    EntryPointShortDescription = upperTrade + "top price " + period;
                     break;
                 case "Exit long at the top price":
-                    ExitPointLongDescription = sUpperTrade + "top price " + sPeriod;
-                    ExitPointShortDescription = sLowerTrade + "bottom price " + sPeriod;
+                    ExitPointLongDescription = upperTrade + "top price " + period;
+                    ExitPointShortDescription = lowerTrade + "bottom price " + period;
                     break;
                 case "Exit long at the bottom price":
-                    ExitPointLongDescription = sLowerTrade + "bottom price " + sPeriod;
-                    ExitPointShortDescription = sUpperTrade + "top price " + sPeriod;
+                    ExitPointLongDescription = lowerTrade + "bottom price " + period;
+                    ExitPointShortDescription = upperTrade + "top price " + period;
                     break;
 
                 case "The bar opens below the top price":
-                    EntryFilterLongDescription = "the bar opens lower than " + sUpperTrade + "top price " + sPeriod;
-                    EntryFilterShortDescription = "the bar opens higher than " + sLowerTrade + "bottom price " + sPeriod;
+                    EntryFilterLongDescription = "the bar opens lower than " + upperTrade + "top price " + period;
+                    EntryFilterShortDescription = "the bar opens higher than " + lowerTrade + "bottom price " + period;
                     break;
                 case "The bar opens above the top price":
-                    EntryFilterLongDescription = "the bar opens higher than " + sUpperTrade + "top price " + sPeriod;
-                    EntryFilterShortDescription = "the bar opens lower than " + sLowerTrade + "bottom price " + sPeriod;
+                    EntryFilterLongDescription = "the bar opens higher than " + upperTrade + "top price " + period;
+                    EntryFilterShortDescription = "the bar opens lower than " + lowerTrade + "bottom price " + period;
                     break;
                 case "The bar opens below the bottom price":
-                    EntryFilterLongDescription = "the bar opens lower than " + sLowerTrade + "bottom price " + sPeriod;
-                    EntryFilterShortDescription = "the bar opens higher than " + sUpperTrade + "top price " + sPeriod;
+                    EntryFilterLongDescription = "the bar opens lower than " + lowerTrade + "bottom price " + period;
+                    EntryFilterShortDescription = "the bar opens higher than " + upperTrade + "top price " + period;
                     break;
                 case "The bar opens above the bottom price":
-                    EntryFilterLongDescription = "the bar opens higher than " + sLowerTrade + "bottom price " + sPeriod;
-                    EntryFilterShortDescription = "the bar opens lower than " + sUpperTrade + "top price " + sPeriod;
+                    EntryFilterLongDescription = "the bar opens higher than " + lowerTrade + "bottom price " + period;
+                    EntryFilterShortDescription = "the bar opens lower than " + upperTrade + "top price " + period;
                     break;
 
                 case "The position opens below the top price":
-                    EntryFilterLongDescription = "the position opens lower than " + sUpperTrade + "top price " + sPeriod;
-                    EntryFilterShortDescription = "the position opens higher than " + sLowerTrade + "bottom price " +
-                                                  sPeriod;
+                    EntryFilterLongDescription = "the position opens lower than " + upperTrade + "top price " + period;
+                    EntryFilterShortDescription = "the position opens higher than " + lowerTrade + "bottom price " + period;
                     break;
                 case "The position opens above the top price":
-                    EntryFilterLongDescription = "the position opens higher than " + sUpperTrade + "top price " +
-                                                 sPeriod;
-                    EntryFilterShortDescription = "the position opens lower than " + sLowerTrade + "bottom price " +
-                                                  sPeriod;
+                    EntryFilterLongDescription = "the position opens higher than " + upperTrade + "top price " + period;
+                    EntryFilterShortDescription = "the position opens lower than " + lowerTrade + "bottom price " + period;
                     break;
                 case "The position opens below the bottom price":
-                    EntryFilterLongDescription = "the position opens lower than " + sLowerTrade + "bottom price " +
-                                                 sPeriod;
-                    EntryFilterShortDescription = "the position opens higher than " + sUpperTrade + "top price " +
-                                                  sPeriod;
+                    EntryFilterLongDescription = "the position opens lower than " + lowerTrade + "bottom price " + period;
+                    EntryFilterShortDescription = "the position opens higher than " + upperTrade + "top price " + period;
                     break;
                 case "The position opens above the bottom price":
-                    EntryFilterLongDescription = "the position opens higher than " + sLowerTrade + "bottom price " +
-                                                 sPeriod;
-                    EntryFilterShortDescription = "the position opens lower than " + sUpperTrade + "top price " +
-                                                  sPeriod;
+                    EntryFilterLongDescription = "the position opens higher than " + lowerTrade + "bottom price " + period;
+                    EntryFilterShortDescription = "the position opens lower than " + upperTrade + "top price " + period;
                     break;
 
                 case "The bar closes below the top price":
-                    ExitFilterLongDescription = "the bar closes lower than " + sUpperTrade + "top price " + sPeriod;
-                    ExitFilterShortDescription = "the bar closes higher than " + sLowerTrade + "bottom price " + sPeriod;
+                    ExitFilterLongDescription = "the bar closes lower than " + upperTrade + "top price " + period;
+                    ExitFilterShortDescription = "the bar closes higher than " + lowerTrade + "bottom price " + period;
                     break;
                 case "The bar closes above the top price":
-                    ExitFilterLongDescription = "the bar closes higher than " + sUpperTrade + "top price " + sPeriod;
-                    ExitFilterShortDescription = "the bar closes lower than " + sLowerTrade + "bottom price " + sPeriod;
+                    ExitFilterLongDescription = "the bar closes higher than " + upperTrade + "top price " + period;
+                    ExitFilterShortDescription = "the bar closes lower than " + lowerTrade + "bottom price " + period;
                     break;
                 case "The bar closes below the bottom price":
-                    ExitFilterLongDescription = "the bar closes lower than " + sLowerTrade + "bottom price " + sPeriod;
-                    ExitFilterShortDescription = "the bar closes higher than " + sUpperTrade + "top price " + sPeriod;
+                    ExitFilterLongDescription = "the bar closes lower than " + lowerTrade + "bottom price " + period;
+                    ExitFilterShortDescription = "the bar closes higher than " + upperTrade + "top price " + period;
                     break;
                 case "The bar closes above the bottom price":
-                    ExitFilterLongDescription = "the bar closes higher than " + sLowerTrade + "bottom price " + sPeriod;
-                    ExitFilterShortDescription = "the bar closes lower than " + sUpperTrade + "top price " + sPeriod;
+                    ExitFilterLongDescription = "the bar closes higher than " + lowerTrade + "bottom price " + period;
+                    ExitFilterShortDescription = "the bar closes lower than " + upperTrade + "top price " + period;
                     break;
             }
         }
