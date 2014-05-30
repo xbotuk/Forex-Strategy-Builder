@@ -20,7 +20,6 @@ namespace ForexStrategyBuilder.Indicators.Store
     {
         public RSI()
         {
-            // General properties
             IndicatorName = "RSI";
             PossibleSlots = SlotTypes.OpenFilter | SlotTypes.CloseFilter;
             SeparatedChart = true;
@@ -28,7 +27,7 @@ namespace ForexStrategyBuilder.Indicators.Store
             SeparatedChartMaxValue = 100;
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.0";
+            IndicatorVersion = "2.1";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -39,16 +38,16 @@ namespace ForexStrategyBuilder.Indicators.Store
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
             IndParam.ListParam[0].ItemList = new[]
-                {
-                    "RSI rises",
-                    "RSI falls",
-                    "RSI is higher than the Level line",
-                    "RSI is lower than the Level line",
-                    "RSI crosses the Level line upward",
-                    "RSI crosses the Level line downward",
-                    "RSI changes its direction upward",
-                    "RSI changes its direction downward"
-                };
+            {
+                "RSI rises",
+                "RSI falls",
+                "RSI is higher than the Level line",
+                "RSI is lower than the Level line",
+                "RSI crosses the Level line upward",
+                "RSI crosses the Level line downward",
+                "RSI changes its direction upward",
+                "RSI changes its direction downward"
+            };
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
@@ -97,59 +96,66 @@ namespace ForexStrategyBuilder.Indicators.Store
             var maMethod = (MAMethod) IndParam.ListParam[1].Index;
             var basePrice = (BasePrice) IndParam.ListParam[2].Index;
             var period = (int) IndParam.NumParam[0].Value;
-            double dLevel = IndParam.NumParam[1].Value;
-            int iPrvs = IndParam.CheckParam[0].Checked ? 1 : 0;
+            double level = IndParam.NumParam[1].Value;
+            int previous = IndParam.CheckParam[0].Checked ? 1 : 0;
 
             // Calculation
             int firstBar = period + 2;
-            double[] adBasePrice = Price(basePrice);
-            var adPos = new double[Bars];
-            var adNeg = new double[Bars];
-            var adRsi = new double[Bars];
+            double[] price = Price(basePrice);
+            var pos = new double[Bars];
+            var neg = new double[Bars];
+            var rsi = new double[Bars];
 
-            for (int iBar = 1; iBar < Bars; iBar++)
+            for (int bar = 1; bar < Bars; bar++)
             {
-                if (adBasePrice[iBar] > adBasePrice[iBar - 1]) adPos[iBar] = adBasePrice[iBar] - adBasePrice[iBar - 1];
-                if (adBasePrice[iBar] < adBasePrice[iBar - 1]) adNeg[iBar] = adBasePrice[iBar - 1] - adBasePrice[iBar];
+                if (price[bar] > price[bar - 1] + Epsilon)
+                    pos[bar] = price[bar] - price[bar - 1];
+                if (price[bar] < price[bar - 1] - Epsilon)
+                    neg[bar] = price[bar - 1] - price[bar];
             }
 
-            double[] adPosMA = MovingAverage(period, 0, maMethod, adPos);
-            double[] adNegMA = MovingAverage(period, 0, maMethod, adNeg);
+            double[] posMa = MovingAverage(period, 0, maMethod, pos);
+            double[] negMa = MovingAverage(period, 0, maMethod, neg);
 
             for (int bar = firstBar; bar < Bars; bar++)
             {
-                if (Math.Abs(adNegMA[bar] - 0) < Epsilon)
-                    adRsi[bar] = 100;
+                if (Math.Abs(negMa[bar]) > Epsilon)
+                    rsi[bar] = 100 - (100/(1 + posMa[bar]/negMa[bar]));
                 else
-                    adRsi[bar] = 100 - (100/(1 + adPosMA[bar]/adNegMA[bar]));
+                {
+                    if (Math.Abs(posMa[bar]) > Epsilon)
+                        rsi[bar] = 100;
+                    else
+                        rsi[bar] = 50;
+                }
             }
 
             // Saving the components
             Component = new IndicatorComp[3];
 
             Component[0] = new IndicatorComp
-                {
-                    CompName = "RSI",
-                    DataType = IndComponentType.IndicatorValue,
-                    ChartType = IndChartType.Line,
-                    ChartColor = Color.RoyalBlue,
-                    FirstBar = firstBar,
-                    Value = adRsi
-                };
+            {
+                CompName = "RSI",
+                DataType = IndComponentType.IndicatorValue,
+                ChartType = IndChartType.Line,
+                ChartColor = Color.RoyalBlue,
+                FirstBar = firstBar,
+                Value = rsi
+            };
 
             Component[1] = new IndicatorComp
-                {
-                    ChartType = IndChartType.NoChart,
-                    FirstBar = firstBar,
-                    Value = new double[Bars]
-                };
+            {
+                ChartType = IndChartType.NoChart,
+                FirstBar = firstBar,
+                Value = new double[Bars]
+            };
 
             Component[2] = new IndicatorComp
-                {
-                    ChartType = IndChartType.NoChart,
-                    FirstBar = firstBar,
-                    Value = new double[Bars]
-                };
+            {
+                ChartType = IndChartType.NoChart,
+                FirstBar = firstBar,
+                Value = new double[Bars]
+            };
 
             // Sets the Component's type
             if (SlotType == SlotTypes.OpenFilter)
@@ -184,22 +190,22 @@ namespace ForexStrategyBuilder.Indicators.Store
 
                 case "RSI is higher than the Level line":
                     indLogic = IndicatorLogic.The_indicator_is_higher_than_the_level_line;
-                    SpecialValues = new[] {dLevel, 100 - dLevel};
+                    SpecialValues = new[] {level, 100 - level};
                     break;
 
                 case "RSI is lower than the Level line":
                     indLogic = IndicatorLogic.The_indicator_is_lower_than_the_level_line;
-                    SpecialValues = new[] {dLevel, 100 - dLevel};
+                    SpecialValues = new[] {level, 100 - level};
                     break;
 
                 case "RSI crosses the Level line upward":
                     indLogic = IndicatorLogic.The_indicator_crosses_the_level_line_upward;
-                    SpecialValues = new[] {dLevel, 100 - dLevel};
+                    SpecialValues = new[] {level, 100 - level};
                     break;
 
                 case "RSI crosses the Level line downward":
                     indLogic = IndicatorLogic.The_indicator_crosses_the_level_line_downward;
-                    SpecialValues = new[] {dLevel, 100 - dLevel};
+                    SpecialValues = new[] {level, 100 - level};
                     break;
 
                 case "RSI changes its direction upward":
@@ -213,13 +219,13 @@ namespace ForexStrategyBuilder.Indicators.Store
                     break;
             }
 
-            OscillatorLogic(firstBar, iPrvs, adRsi, dLevel, 100 - dLevel, ref Component[1], ref Component[2], indLogic);
+            OscillatorLogic(firstBar, previous, rsi, level, 100 - level, ref Component[1], ref Component[2], indLogic);
         }
 
         public override void SetDescription()
         {
-            string sLevelLong = IndParam.NumParam[1].ValueToString;
-            string sLevelShort = IndParam.NumParam[1].AnotherValueToString(100 - IndParam.NumParam[1].Value);
+            string longLevel = IndParam.NumParam[1].ValueToString;
+            string shortLevel = IndParam.NumParam[1].AnotherValueToString(100 - IndParam.NumParam[1].Value);
 
             EntryFilterLongDescription = ToString() + " ";
             EntryFilterShortDescription = ToString() + " ";
@@ -243,31 +249,31 @@ namespace ForexStrategyBuilder.Indicators.Store
                     break;
 
                 case "RSI is higher than the Level line":
-                    EntryFilterLongDescription += "is higher than the Level " + sLevelLong;
-                    EntryFilterShortDescription += "is lower than the Level " + sLevelShort;
-                    ExitFilterLongDescription += "is higher than the Level " + sLevelLong;
-                    ExitFilterShortDescription += "is lower than the Level " + sLevelShort;
+                    EntryFilterLongDescription += "is higher than the Level " + longLevel;
+                    EntryFilterShortDescription += "is lower than the Level " + shortLevel;
+                    ExitFilterLongDescription += "is higher than the Level " + longLevel;
+                    ExitFilterShortDescription += "is lower than the Level " + shortLevel;
                     break;
 
                 case "RSI is lower than the Level line":
-                    EntryFilterLongDescription += "is lower than the Level " + sLevelLong;
-                    EntryFilterShortDescription += "is higher than the Level " + sLevelShort;
-                    ExitFilterLongDescription += "is lower than the Level " + sLevelLong;
-                    ExitFilterShortDescription += "is higher than the Level " + sLevelShort;
+                    EntryFilterLongDescription += "is lower than the Level " + longLevel;
+                    EntryFilterShortDescription += "is higher than the Level " + shortLevel;
+                    ExitFilterLongDescription += "is lower than the Level " + longLevel;
+                    ExitFilterShortDescription += "is higher than the Level " + shortLevel;
                     break;
 
                 case "RSI crosses the Level line upward":
-                    EntryFilterLongDescription += "crosses the Level " + sLevelLong + " upward";
-                    EntryFilterShortDescription += "crosses the Level " + sLevelShort + " downward";
-                    ExitFilterLongDescription += "crosses the Level " + sLevelLong + " upward";
-                    ExitFilterShortDescription += "crosses the Level " + sLevelShort + " downward";
+                    EntryFilterLongDescription += "crosses the Level " + longLevel + " upward";
+                    EntryFilterShortDescription += "crosses the Level " + shortLevel + " downward";
+                    ExitFilterLongDescription += "crosses the Level " + longLevel + " upward";
+                    ExitFilterShortDescription += "crosses the Level " + shortLevel + " downward";
                     break;
 
                 case "RSI crosses the Level line downward":
-                    EntryFilterLongDescription += "crosses the Level " + sLevelLong + " downward";
-                    EntryFilterShortDescription += "crosses the Level " + sLevelShort + " upward";
-                    ExitFilterLongDescription += "crosses the Level " + sLevelLong + " downward";
-                    ExitFilterShortDescription += "crosses the Level " + sLevelShort + " upward";
+                    EntryFilterLongDescription += "crosses the Level " + longLevel + " downward";
+                    EntryFilterShortDescription += "crosses the Level " + shortLevel + " upward";
+                    ExitFilterLongDescription += "crosses the Level " + longLevel + " downward";
+                    ExitFilterShortDescription += "crosses the Level " + shortLevel + " upward";
                     break;
 
                 case "RSI changes its direction upward":
