@@ -129,8 +129,10 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then
   begin
+    // Reset indicators
+    DeleteFile(ExpandConstant('{app}\User Files\System\Libraries.xml'));
+
     // Delete legacy content
-    DeleteFile(ExpandConstant('{app}\FSB Starter.exe'));
     DeleteFile(ExpandConstant('{app}\SplashConfig.cfg'));
     DeleteFile(ExpandConstant('{app}\ConnectWait.ico'));
     DelTree(ExpandConstant('{app}\SplashScreen'), True, True, True);
