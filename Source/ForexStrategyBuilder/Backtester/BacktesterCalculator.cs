@@ -783,8 +783,8 @@ namespace ForexStrategyBuilder
                             case SameDirSignalAction.Winner:
                                 order.OrdLots = TradingSize(Strategy.AddingLots, bar);
                                 if (position.PosLots + TradingSize(Strategy.AddingLots, bar) <= maximumLots &&
-                                    (position.PosDir == PosDirection.Long && position.FloatingPL > sigma ||
-                                     position.PosDir == PosDirection.Short && position.FloatingPL > sigma))
+                                    (position.PosDir == PosDirection.Long && position.PosPrice < order.OrdPrice - sigma ||
+                                     position.PosDir == PosDirection.Short && position.PosPrice > order.OrdPrice + sigma))
                                 {
                                     // Adding
                                     wayPointType = WayPointType.Add;
