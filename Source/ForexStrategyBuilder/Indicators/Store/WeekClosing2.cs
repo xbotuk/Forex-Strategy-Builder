@@ -26,7 +26,7 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             if (IsBacktester)
                 WarningMessage = "This indicator is designed to be used in the trader." + Environment.NewLine +
-                                 "It works as Week Closing indicator in the backtester.";
+                                 "It works like Week Closing indicator in the backtester.";
             else
                 WarningMessage = "The indicator sends a close signal at first tick after the selected time." +
                                  Environment.NewLine +
@@ -48,14 +48,14 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
-            IndParam.ListParam[0].ItemList = new[] { "Exit the market at the end of the week" };
+            IndParam.ListParam[0].ItemList = new[] {"Exit the market at the end of the week"};
             IndParam.ListParam[0].Index = 0;
             IndParam.ListParam[0].Text = IndParam.ListParam[0].ItemList[IndParam.ListParam[0].Index];
             IndParam.ListParam[0].Enabled = true;
             IndParam.ListParam[0].ToolTip = "The execution price of all exit orders.";
 
             IndParam.ListParam[1].Caption = "Base price";
-            IndParam.ListParam[1].ItemList = new[] { "Close" };
+            IndParam.ListParam[1].ItemList = new[] {"Close"};
             IndParam.ListParam[1].Index = 0;
             IndParam.ListParam[1].Text = IndParam.ListParam[1].ItemList[IndParam.ListParam[1].Index];
             IndParam.ListParam[1].Enabled = true;
@@ -91,24 +91,23 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.ExecutionTime = ExecutionTime.AtBarClosing;
 
             // Calculation
-            const int firstBar = 1;
-            var adBars = new double[Bars];
+            var adClosePrice = new double[Bars];
 
             // Calculation of the logic
             for (int bar = 0; bar < Bars - 1; bar++)
             {
                 if (Time[bar].DayOfWeek > DayOfWeek.Wednesday &&
                     Time[bar + 1].DayOfWeek < DayOfWeek.Wednesday)
-                    adBars[bar] = Close[bar];
+                    adClosePrice[bar] = Close[bar];
                 else
-                    adBars[bar] = 0;
+                    adClosePrice[bar] = 0;
             }
 
             // Check the last bar
-            TimeSpan tsBarClosing = Time[Bars - 1].TimeOfDay.Add(new TimeSpan(0, (int)Period, 0));
+            TimeSpan tsBarClosing = Time[Bars - 1].TimeOfDay.Add(new TimeSpan(0, (int) Period, 0));
             var tsDayClosing = new TimeSpan(24, 0, 0);
             if (Time[Bars - 1].DayOfWeek == DayOfWeek.Friday && tsBarClosing == tsDayClosing)
-                adBars[Bars - 1] = Close[Bars - 1];
+                adClosePrice[Bars - 1] = Close[Bars - 1];
 
             // Saving the components
             Component = new IndicatorComp[1];
@@ -119,25 +118,24 @@ namespace ForexStrategyBuilder.Indicators.Store
                 DataType = IndComponentType.ClosePrice,
                 ChartType = IndChartType.NoChart,
                 ShowInDynInfo = false,
-                FirstBar = firstBar,
-                Value = adBars
+                FirstBar = 2,
+                Value = adClosePrice
             };
         }
 
         private void CalculateForTrader()
         {
-            var fridayClosingHour = (int)IndParam.NumParam[0].Value;
-            var fridayClosingMin = (int)IndParam.NumParam[1].Value;
+            var fridayClosingHour = (int) IndParam.NumParam[0].Value;
+            var fridayClosingMin = (int) IndParam.NumParam[1].Value;
 
             // Calculation
             DateTime time = ServerTime;
             var fridayTime = new DateTime(time.Year, time.Month, time.Day, fridayClosingHour, fridayClosingMin, 0);
 
-            const int firstBar = 1;
             var adClosePrice = new double[Bars];
 
             // Calculation of the logic
-            for (int bar = firstBar; bar < Bars - 1; bar++)
+            for (int bar = 0; bar < Bars - 1; bar++)
             {
                 if (Time[bar].DayOfWeek > DayOfWeek.Wednesday &&
                     Time[bar + 1].DayOfWeek < DayOfWeek.Wednesday)
@@ -174,7 +172,7 @@ namespace ForexStrategyBuilder.Indicators.Store
                 DataType = IndComponentType.ClosePrice,
                 ChartType = IndChartType.NoChart,
                 ShowInDynInfo = false,
-                FirstBar = firstBar,
+                FirstBar = 2,
                 Value = adClosePrice
             };
 

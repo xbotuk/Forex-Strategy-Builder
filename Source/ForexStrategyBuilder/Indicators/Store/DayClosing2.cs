@@ -24,16 +24,18 @@ namespace ForexStrategyBuilder.Indicators.Store
             AllowClosingFilters = true;
             IsGeneratable = false;
 
-            WarningMessage = "This indicator is designed to be used in the trader."
-                             + Environment.NewLine +
-                             "The indicator sends a close signal at first tick after the selected time." +
-                             Environment.NewLine +
-                             "It prevents opening of new positions after the closing time on the same day." +
-                             Environment.NewLine +
-                             "The indicator uses the server time that comes from the broker together with ticks.";
+            if (IsBacktester)
+                WarningMessage = "This indicator is designed to be used in the trader." + Environment.NewLine +
+                                 "It works like Day Closing indicator in the backtester.";
+            else
+                WarningMessage = "The indicator sends a close signal at first tick after the selected time." +
+                                 Environment.NewLine +
+                                 "It prevents opening of new positions after the closing time on the same day." +
+                                 Environment.NewLine +
+                                 "The indicator uses the server time that comes from the broker together with ticks.";
 
             IndicatorAuthor = "Miroslav Popov";
-            IndicatorVersion = "2.1";
+            IndicatorVersion = "2.2";
             IndicatorDescription = "Bundled in FSB distribution.";
         }
 
@@ -94,11 +96,47 @@ namespace ForexStrategyBuilder.Indicators.Store
             DataSet = dataSet;
 
             if (IsBacktester)
-            {
                 CalculateForBacktester();
-                return;
+            else
+                CalculateForTrader();
+        }
+
+        private void CalculateForBacktester()
+        {
+            IndParam.ExecutionTime = ExecutionTime.AtBarClosing;
+
+            // Calculation
+            var adClosePrice = new double[Bars];
+
+            for (int bar = 1; bar < Bars; bar++)
+            {
+                if (Time[bar - 1].Day != Time[bar].Day)
+                    adClosePrice[bar - 1] = Close[bar - 1];
+                else
+                    adClosePrice[bar] = 0;
             }
 
+            // Check the last bar
+            TimeSpan tsBarClosing = Time[Bars - 1].TimeOfDay.Add(new TimeSpan(0, (int) Period, 0));
+            var tsDayClosing = new TimeSpan(24, 0, 0);
+            if (tsBarClosing == tsDayClosing)
+                adClosePrice[Bars - 1] = Close[Bars - 1];
+
+            // Saving the components
+            Component = new IndicatorComp[1];
+
+            Component[0] = new IndicatorComp
+            {
+                CompName = "Closing price of the day",
+                DataType = IndComponentType.ClosePrice,
+                ChartType = IndChartType.NoChart,
+                FirstBar = 2,
+                Value = adClosePrice
+            };
+        }
+
+        private void CalculateForTrader()
+        {
             // Reading the parameters
             var dayClosingHour = (int) IndParam.NumParam[0].Value;
             var dayClosingMin = (int) IndParam.NumParam[1].Value;
@@ -112,9 +150,14 @@ namespace ForexStrategyBuilder.Indicators.Store
 
             var adClosePrice = new double[Bars];
 
+            // Calculation of the logic
             for (int bar = 1; bar < Bars; bar++)
+            {
                 if (Time[bar - 1].Day != Time[bar].Day)
                     adClosePrice[bar - 1] = Close[bar - 1];
+                else
+                    adClosePrice[bar] = 0;
+            }
 
             var adAllowOpenLong = new double[Bars];
             var adAllowOpenShort = new double[Bars];
@@ -125,90 +168,50 @@ namespace ForexStrategyBuilder.Indicators.Store
                 adAllowOpenShort[bar] = 1;
             }
 
-            if (time.DayOfWeek != DayOfWeek.Friday)
+            // Check the last bar
+            DateTime closingPrice = time.DayOfWeek == DayOfWeek.Friday
+                ? fridayTime
+                : closingTime;
+            if (time >= closingPrice)
             {
-                // Not Friday
-                if (time >= closingTime)
-                {
-                    adClosePrice[Bars - 1] = Close[Bars - 1];
+                adClosePrice[Bars - 1] = Close[Bars - 1];
 
-                    // Prevent entries after closing time
-                    adAllowOpenLong[Bars - 1] = 0;
-                    adAllowOpenShort[Bars - 1] = 0;
-                }
-            }
-            else
-            {
-                // Friday
-                if (time >= fridayTime)
-                {
-                    adClosePrice[Bars - 1] = Close[Bars - 1];
-
-                    // Prevent entries after closing time
-                    adAllowOpenLong[Bars - 1] = 0;
-                    adAllowOpenShort[Bars - 1] = 0;
-                }
+                // Prevent entries after closing time
+                adAllowOpenLong[Bars - 1] = 0;
+                adAllowOpenShort[Bars - 1] = 0;
             }
 
             // Saving the components
             Component = new IndicatorComp[3];
 
             Component[0] = new IndicatorComp
-                {
-                    CompName = "Closing price of the day",
-                    DataType = IndComponentType.ClosePrice,
-                    ChartType = IndChartType.NoChart,
-                    FirstBar = 2,
-                    Value = adClosePrice
-                };
+            {
+                CompName = "Closing price of the day",
+                DataType = IndComponentType.ClosePrice,
+                ChartType = IndChartType.NoChart,
+                FirstBar = 2,
+                Value = adClosePrice
+            };
 
             Component[1] = new IndicatorComp
-                {
-                    DataType = IndComponentType.AllowOpenLong,
-                    CompName = "Is long entry allowed",
-                    ChartType = IndChartType.NoChart,
-                    ShowInDynInfo = false,
-                    FirstBar = 2,
-                    Value = adAllowOpenLong
-                };
+            {
+                DataType = IndComponentType.AllowOpenLong,
+                CompName = "Is long entry allowed",
+                ChartType = IndChartType.NoChart,
+                ShowInDynInfo = false,
+                FirstBar = 2,
+                Value = adAllowOpenLong
+            };
 
             Component[2] = new IndicatorComp
-                {
-                    DataType = IndComponentType.AllowOpenShort,
-                    CompName = "Is short entry allowed",
-                    ChartType = IndChartType.NoChart,
-                    ShowInDynInfo = false,
-                    FirstBar = 2,
-                    Value = adAllowOpenShort
-                };
-        }
-
-        private void CalculateForBacktester()
-        {
-            // Calculation
-            var adClosePrice = new double[Bars];
-
-            for (int bar = 1; bar < Bars; bar++)
-                if (Time[bar - 1].Day != Time[bar].Day)
-                    adClosePrice[bar - 1] = Close[bar - 1];
-
-            // Check the last bar
-            TimeSpan tsBarClosing = Time[Bars - 1].TimeOfDay.Add(new TimeSpan(0, (int) Period, 0));
-            var tsDayClosing = new TimeSpan(24, 0, 0);
-            if (tsBarClosing == tsDayClosing)
-                adClosePrice[Bars - 1] = Close[Bars - 1];
-
-            // Saving the components
-            Component = new IndicatorComp[1];
-
-            Component[0] = new IndicatorComp
-                {
-                    CompName = "Closing price of the day",
-                    DataType = IndComponentType.ClosePrice,
-                    ChartType = IndChartType.NoChart,
-                    FirstBar = 2,
-                    Value = adClosePrice
-                };
+            {
+                DataType = IndComponentType.AllowOpenShort,
+                CompName = "Is short entry allowed",
+                ChartType = IndChartType.NoChart,
+                ShowInDynInfo = false,
+                FirstBar = 2,
+                Value = adAllowOpenShort
+            };
         }
 
         public override void SetDescription()
