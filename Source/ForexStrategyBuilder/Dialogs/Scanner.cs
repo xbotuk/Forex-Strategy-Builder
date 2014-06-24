@@ -366,10 +366,7 @@ namespace ForexStrategyBuilder
                     g.DrawString(tickBars.ToString(CultureInfo.InvariantCulture), fontInfo, brush, (xp5 + xp4)/2, y, sf);
                     g.DrawString(percentage.ToString("F2"), fontInfo, brush, (xp6 + xp5)/2, y, sf);
 
-                    var rectf = new RectangleF(xp6 + 10, y + 4, xp7 - xp6 - 20, 9);
-                    Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriod.M1], 60);
-                    rectf = new RectangleF(xp6 + 10, y + 7, xp7 - xp6 - 20, 3);
-                    Data.GradientPaint(g, rectf, Data.PeriodColor[DataPeriod.D1], 60);
+                    Data.DrawCheckerBoard(g, Color.ForestGreen, new Rectangle(xp6 + 10, y + 4, xp7 - xp6 - 20, 9));
                 }
             }
 
