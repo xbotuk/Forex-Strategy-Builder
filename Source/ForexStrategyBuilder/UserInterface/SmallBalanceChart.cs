@@ -481,18 +481,14 @@ namespace ForexStrategyBuilder
                         if (Data.TickData[b] != null)
                             lastBarWithTicks = b;
                     }
-                    int xStart = (int) ((firstBarWithTicks - data.FirstBar)*xScale) + xLeft;
+                    int xStart = (int) (firstBarWithTicks*xScale) + xLeft;
                     int xEnd = (int) ((lastBarWithTicks - data.FirstBar)*xScale) + xLeft;
                     if (xStart < xLeft)
                         xStart = xLeft;
                     if (xEnd < xStart)
                         xEnd = xStart;
-                    Data.GradientPaint(g, new RectangleF(xStart, yBottom + 4, xEnd - xStart + 2, 5), color, 60);
 
-                    var rect = new RectangleF(xStart, yBottom + 4, xEnd - xStart + 2, 5);
-                    Data.GradientPaint(g, rect, Data.PeriodColor[DataPeriod.M1], 60);
-                    rect = new RectangleF(xStart, yBottom + 6, xEnd - xStart + 2, 1);
-                    Data.GradientPaint(g, rect, Data.PeriodColor[DataPeriod.D1], 60);
+                    Data.DrawCheckerBoard(g, Color.ForestGreen, new Rectangle(xStart, yBottom + 5, xEnd - xStart + 2, 3));
                 }
 
                 // Vertical coordinate axes

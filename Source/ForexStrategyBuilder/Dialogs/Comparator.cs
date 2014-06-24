@@ -651,6 +651,7 @@ namespace ForexStrategyBuilder
                          g.MeasureString(max.ToString(CultureInfo.InvariantCulture), Font).Width);
             labelWidth = Math.Max(labelWidth, 30);
             int xRight = pnl.ClientSize.Width - border - space - labelWidth;
+            int xLeft = border + space;
 
             //
             // Grid
@@ -673,7 +674,7 @@ namespace ForexStrategyBuilder
                 g.DrawLine(penGrid, border + space, labelY, xRight, labelY);
             }
 
-            float fScaleX = (xRight - 2*space - border)/(float) bars;
+            float xScale = (xRight - 2 * space - border) / (float)bars;
 
             if (isRandom)
             {
@@ -682,9 +683,9 @@ namespace ForexStrategyBuilder
                 var apntMaxRandom = new PointF[bars];
                 for (int iBar = 0; iBar < bars; iBar++)
                 {
-                    apntMinRandom[iBar].X = border + space + iBar*fScaleX;
+                    apntMinRandom[iBar].X = border + space + iBar*xScale;
                     apntMinRandom[iBar].Y = yBottom - (afMinRandom[iBar] - min)*scaleY;
-                    apntMaxRandom[iBar].X = border + space + iBar*fScaleX;
+                    apntMaxRandom[iBar].X = border + space + iBar*xScale;
                     apntMaxRandom[iBar].Y = yBottom - (afMaxRandom[iBar] - min)*scaleY;
                 }
                 apntMinRandom[0].Y = apntMaxRandom[0].Y;
@@ -706,7 +707,7 @@ namespace ForexStrategyBuilder
                 var apntLines = new PointF[bars];
                 for (int iBar = 0; iBar < bars; iBar++)
                 {
-                    apntLines[iBar].X = border + space + iBar*fScaleX;
+                    apntLines[iBar].X = border + space + iBar*xScale;
                     apntLines[iBar].Y = yBottom - (afMethods[m, iBar] - min)*scaleY;
                 }
 
@@ -736,19 +737,18 @@ namespace ForexStrategyBuilder
             var apntBalance = new PointF[bars];
             for (int bar = 0; bar < bars; bar++)
             {
-                apntBalance[bar].X = border + space + bar*fScaleX;
+                apntBalance[bar].X = border + space + bar*xScale;
                 apntBalance[bar].Y = yBottom - (afBalance[bar] - min)*scaleY;
             }
             g.DrawLines(penBalance, apntBalance);
 
             // Coordinate axes
-            g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space - 1, yTop - space, border + space - 1,
-                       yBottom);
-            g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space, yBottom, xRight, yBottom);
+            g.DrawLine(new Pen(LayoutColors.ColorChartFore), xLeft - 1, yTop - space, xLeft - 1, yBottom);
+            g.DrawLine(new Pen(LayoutColors.ColorChartFore), xLeft, yBottom, xRight, yBottom);
 
             // Balance label
             float fBalanceY = yBottom - (afBalance[bars - 1] - min)*scaleY;
-            g.DrawLine(new Pen(LayoutColors.ColorChartCross), border + space, fBalanceY, xRight - space, fBalanceY);
+            g.DrawLine(new Pen(LayoutColors.ColorChartCross), xLeft, fBalanceY, xRight - space, fBalanceY);
 
             var szBalance = new Size(labelWidth + space, Font.Height + 2);
             var point = new Point(xRight - space + 2, (int) (fBalanceY - Font.Height/2.0 - 1));
@@ -761,15 +761,17 @@ namespace ForexStrategyBuilder
             // Scanning note
             var fontNote = new Font(Font.FontFamily, Font.Size - 1);
             if (Configs.Autoscan && !Data.IsIntrabarData)
-                g.DrawString(Language.T("Load intrabar data"), fontNote, Brushes.Red, border + space, fCaptionHeight - 2);
+                g.DrawString(Language.T("Load intrabar data"), fontNote, Brushes.Red, xLeft, fCaptionHeight - 2);
             else if (Backtester.IsScanPerformed)
                 g.DrawString(Language.T("Scanned") + " MQ " + Data.ModellingQuality.ToString("N2") + "%", fontNote,
                              Brushes.LimeGreen, border + space, fCaptionHeight - 2);
 
             // Scanned bars
-            if (Data.IntraBars != null && Data.IsIntrabarData && Backtester.IsScanPerformed)
+            if (Backtester.IsScanPerformed &&
+                (Data.IntraBars != null && Data.IsIntrabarData ||
+                 Data.Period == DataPeriod.M1 && Data.IsTickData && Configs.UseTickData))
             {
-                g.DrawLine(new Pen(LayoutColors.ColorChartFore), border + space - 1, yBottom, border + space - 1,
+                g.DrawLine(new Pen(LayoutColors.ColorChartFore), xLeft - 1, yBottom, xLeft - 1,
                            yBottom + 8);
                 DataPeriod dataPeriod = Data.Period;
                 Color color = Data.PeriodColor[Data.Period];
@@ -778,14 +780,37 @@ namespace ForexStrategyBuilder
                 {
                     if (Data.IntraBarsPeriods[bar] != dataPeriod || bar == Data.Bars - 1)
                     {
-                        int xStart = (int) ((iFromBar - Data.FirstBar)*fScaleX) + border + space;
-                        int xEnd = (int) ((bar - Data.FirstBar)*fScaleX) + border + space;
+                        int xStart = (int)((iFromBar - Data.FirstBar) * xScale) + xLeft;
+                        int xEnd = (int)((bar - Data.FirstBar) * xScale) + xLeft;
                         iFromBar = bar;
                         dataPeriod = Data.IntraBarsPeriods[bar];
                         Data.GradientPaint(g, new RectangleF(xStart, yBottom + 3, xEnd - xStart + 2, 5), color, 60);
                         color = Data.PeriodColor[Data.IntraBarsPeriods[bar]];
                     }
                 }
+
+                // Tick Data
+                if (Data.IsTickData && Configs.UseTickData)
+                {
+                    int firstBarWithTicks = -1;
+                    int lastBarWithTicks = -1;
+                    for (int b = 0; b < Data.Bars; b++)
+                    {
+                        if (firstBarWithTicks == -1 && Data.TickData[b] != null)
+                            firstBarWithTicks = b;
+                        if (Data.TickData[b] != null)
+                            lastBarWithTicks = b;
+                    }
+                    int xStart = (int)(firstBarWithTicks * xScale) + xLeft;
+                    int xEnd = (int)((lastBarWithTicks - Data.FirstBar) * xScale) + xLeft;
+                    if (xStart < xLeft)
+                        xStart = xLeft;
+                    if (xEnd < xStart)
+                        xEnd = xStart;
+
+                    Data.DrawCheckerBoard(g, Color.ForestGreen, new Rectangle(xStart, yBottom + 4, xEnd - xStart + 2, 3));
+                }
+
             }
         }
 

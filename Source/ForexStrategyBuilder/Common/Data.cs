@@ -344,14 +344,14 @@ namespace ForexStrategyBuilder
             ColorDir = Path.Combine(SystemDir, ColorDir);
 
             // Scanner colors
-            PeriodColor.Add(DataPeriod.M1, Color.Yellow);
-            PeriodColor.Add(DataPeriod.M5, Color.Lime);
-            PeriodColor.Add(DataPeriod.M15, Color.Green);
-            PeriodColor.Add(DataPeriod.M30, Color.Orange);
-            PeriodColor.Add(DataPeriod.H1, Color.DarkSalmon);
-            PeriodColor.Add(DataPeriod.H4, Color.Peru);
-            PeriodColor.Add(DataPeriod.D1, Color.Red);
-            PeriodColor.Add(DataPeriod.W1, Color.DarkViolet);
+            PeriodColor.Add(DataPeriod.M1, ColorTranslator.FromHtml("#04FF14"));
+            PeriodColor.Add(DataPeriod.M5, ColorTranslator.FromHtml("#87E800"));
+            PeriodColor.Add(DataPeriod.M15, ColorTranslator.FromHtml("#FFED00"));
+            PeriodColor.Add(DataPeriod.M30, ColorTranslator.FromHtml("#E8C400"));
+            PeriodColor.Add(DataPeriod.H1, ColorTranslator.FromHtml("#E8AB00"));
+            PeriodColor.Add(DataPeriod.H4, ColorTranslator.FromHtml("#FF8B07"));
+            PeriodColor.Add(DataPeriod.D1, ColorTranslator.FromHtml("#E84006"));
+            PeriodColor.Add(DataPeriod.W1, ColorTranslator.FromHtml("#FF0E1F"));
         }
 
         /// <summary>
@@ -625,5 +625,21 @@ namespace ForexStrategyBuilder
 
 
         #endregion
+
+        public static void DrawCheckerBoard(Graphics g, Color color, Rectangle rectangle)
+        {
+            int x1 = rectangle.X;
+            int x2 = rectangle.X + rectangle.Width;
+            int y1 = rectangle.Y;
+            int y2 = rectangle.Y + rectangle.Height;
+
+            using (var penTick = new Pen(color) { DashPattern = new float[] { 1, 1 } })
+            {
+                for (int y = y1; y < y2; y += 2)
+                    g.DrawLine(penTick, x1, y, x2, y);
+                for (int y = y1 + 1; y < y2; y += 2)
+                    g.DrawLine(penTick, x1 + 1, y, x2, y);
+            }
+        }
     }
 }
