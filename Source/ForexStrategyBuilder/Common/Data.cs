@@ -66,7 +66,7 @@ namespace ForexStrategyBuilder
             StackStrategy = new Stack<Strategy>();
             GeneratorHistory = new List<Strategy>();
             ProgStats = new ProgStats {AppLicenseType = LicenseType.Valid};
-            ProgStats.AppStart("980834a958e961563091a670660243e7dd17d543", 5);
+            ProgStats.AppStart("980834a958e961563091a670660243e7dd17d543");
             IsIntrabarData = false;
 
             // Program's Major, Minor, Version and Build numbers must be <= 99.
@@ -446,6 +446,22 @@ namespace ForexStrategyBuilder
             return Color.FromArgb(r, g, b);
         }
 
+        public static void DrawCheckerBoard(Graphics g, Color color, Rectangle rectangle)
+        {
+            int x1 = rectangle.X;
+            int x2 = rectangle.X + rectangle.Width;
+            int y1 = rectangle.Y;
+            int y2 = rectangle.Y + rectangle.Height;
+
+            using (var penTick = new Pen(color) { DashPattern = new float[] { 1, 1 } })
+            {
+                for (int y = y1; y < y2; y += 2)
+                    g.DrawLine(penTick, x1, y, x2, y);
+                for (int y = y1 + 1; y < y2; y += 2)
+                    g.DrawLine(penTick, x1 + 1, y, x2, y);
+            }
+        }
+
         #region Market data arrays
 
         public static DateTime[] Time { get; set; }
@@ -613,33 +629,8 @@ namespace ForexStrategyBuilder
 
         #endregion
 
-        #region Usage stats
-
-        private static readonly DateTime FSBStartTime = DateTime.Now;
-        public static int GeneratorStarts { get; set; }
-        public static int OptimizerStarts { get; set; }
-        public static int SavedStrategies { get; set; }
         public static bool AutostartGenerator { get; set; }
 
         public static IDataSet DataSet { get; set; }
-
-
-        #endregion
-
-        public static void DrawCheckerBoard(Graphics g, Color color, Rectangle rectangle)
-        {
-            int x1 = rectangle.X;
-            int x2 = rectangle.X + rectangle.Width;
-            int y1 = rectangle.Y;
-            int y2 = rectangle.Y + rectangle.Height;
-
-            using (var penTick = new Pen(color) { DashPattern = new float[] { 1, 1 } })
-            {
-                for (int y = y1; y < y2; y += 2)
-                    g.DrawLine(penTick, x1, y, x2, y);
-                for (int y = y1 + 1; y < y2; y += 2)
-                    g.DrawLine(penTick, x1 + 1, y, x2, y);
-            }
-        }
     }
 }
