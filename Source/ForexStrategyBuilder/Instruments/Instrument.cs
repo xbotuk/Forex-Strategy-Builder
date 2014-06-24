@@ -132,7 +132,7 @@ namespace ForexStrategyBuilder
                 DataHorizon();
                 CheckMarketData();
                 SetDataStats();
-                Update = aBar[Bars - 1].Time;
+                Update = aBar[Bars - 1].Time.AddMinutes(Period);
                 respond = 0;
             }
 
@@ -157,7 +157,7 @@ namespace ForexStrategyBuilder
                 DataHorizon();
                 CheckMarketData();
                 SetDataStats();
-                Update = aBar[Bars - 1].Time;
+                Update = aBar[Bars - 1].Time.AddMinutes((int) period);
                 respond = 0;
             }
 
@@ -306,7 +306,7 @@ namespace ForexStrategyBuilder
                     aBar[bar - startBar] = aBarCopy[bar];
 
                 Bars = newBars;
-                Update = aBar[newBars - 1].Time;
+                Update = aBar[newBars - 1].Time.AddMinutes(Period);
                 Cut = true;
             }
         }
