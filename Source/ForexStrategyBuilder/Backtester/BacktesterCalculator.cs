@@ -873,10 +873,10 @@ namespace ForexStrategyBuilder
             else
             {
                 // We are out of the market
-                if (order.OrdSender == OrderSender.Open)
+                double entryAmount = TradingSize(Strategy.EntryLots, bar);
+                if (order.OrdSender == OrderSender.Open && entryAmount > 0.001)
                 {
                     // Open a new position
-                    double entryAmount = TradingSize(Strategy.EntryLots, bar);
                     if (Strategy.UseMartingale && consecutiveLosses > 0)
                     {
                         entryAmount = entryAmount*Math.Pow(Strategy.MartingaleMultiplier, consecutiveLosses);
@@ -885,7 +885,7 @@ namespace ForexStrategyBuilder
                     order.OrdLots = Math.Min(entryAmount, maximumLots);
                     wayPointType = WayPointType.Entry;
                 }
-                else // if (order.OrdSender == OrderSender.Close)
+                else
                 {
                     // The Close strategy cannot do anything
                     order.OrdStatus = OrderStatus.Cancelled;
