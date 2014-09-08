@@ -1320,9 +1320,16 @@ namespace ForexStrategyBuilder
         private static void AnalyzeEntry(int bar)
         {
             // Do not send entry order when we are not on time
-            if (openTimeExec == ExecutionTime.AtBarOpening &&
-                Strategy.Slot[Strategy.OpenSlot].Component[0].Value[bar] < 0.5)
-                return;
+            if (openTimeExec == ExecutionTime.AtBarOpening)
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                foreach (IndicatorComp component in Strategy.Slot[Strategy.OpenSlot].Component)
+                {
+                    if (component.DataType != IndComponentType.OpenLongPrice &&
+                        component.DataType != IndComponentType.OpenShortPrice &&
+                        component.DataType != IndComponentType.OpenPrice) continue;
+                    if (component.Value[bar] < 0.001)
+                        return;
+                }
 
             // Determining of the buy/sell entry price
             double openLongPrice = 0;
@@ -1443,9 +1450,17 @@ namespace ForexStrategyBuilder
         /// </summary>
         private static void AnalyzeExit(int bar)
         {
-            if (closeTimeExec == ExecutionTime.AtBarClosing &&
-                Strategy.Slot[Strategy.CloseSlot].Component[0].Value[bar] < 0.001)
-                return;
+            // Do not send exit order when we are not on time
+            if (closeTimeExec == ExecutionTime.AtBarClosing)
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                foreach (IndicatorComp component in Strategy.Slot[Strategy.CloseSlot].Component)
+                {
+                    if (component.DataType != IndComponentType.CloseLongPrice &&
+                        component.DataType != IndComponentType.CloseShortPrice &&
+                        component.DataType != IndComponentType.ClosePrice) continue;
+                    if (component.Value[bar] < 0.001)
+                        return;
+                }
 
             switch (Strategy.Slot[Strategy.CloseSlot].IndicatorName)
             {
