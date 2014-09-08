@@ -46,6 +46,9 @@ namespace ForexStrategyBuilder.Indicators.Store
             IndParam.IndicatorType = TypeOfIndicator.DateTime;
             IndParam.IsAllowLTF = false;
 
+            if (IsBacktester)
+                IndParam.ExecutionTime = ExecutionTime.AtBarClosing;
+
             // The ComboBox parameters
             IndParam.ListParam[0].Caption = "Logic";
             IndParam.ListParam[0].ItemList = new[] {"Exit the market at the end of the week"};
@@ -88,8 +91,6 @@ namespace ForexStrategyBuilder.Indicators.Store
 
         private void CalculateForBacktester()
         {
-            IndParam.ExecutionTime = ExecutionTime.AtBarClosing;
-
             // Calculation
             var adClosePrice = new double[Bars];
 
