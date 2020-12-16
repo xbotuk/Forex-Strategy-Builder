@@ -6,3 +6,6 @@ For support see http://forexsb.com/forum/
 
 Copyright (c) 2006-2013 Miroslav Popov
 See the License Agreement for license info.
+
+Also check amendments at https://github.com/sannysoft/Forex-Strategy-Builder/commits/master
+
